@@ -11,7 +11,7 @@ import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 import { getToken } from '../../../helpers';
 
-describe('updateQuestion', () => {
+describe('uploadVideo', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -29,7 +29,7 @@ describe('updateQuestion', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
         me {
-          updateQuestion(mentorId: "", question: "") {
+          uploadVideo(mentorId: "", questionId: "", video: "") {
             _id
           }
         }
@@ -44,18 +44,13 @@ describe('updateQuestion', () => {
 
   it(`throws an error if mentor is not the user's`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea2');
-    const question = encodeURI(
-      JSON.stringify({
-        question: '',
-      })
-    );
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateQuestion(mentorId: "5ffdf41a1ee2c62320b49ea1", question: "${question}") {
+            uploadVideo(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1", video: "A1") {
               _id
             }
           }
@@ -76,7 +71,7 @@ describe('updateQuestion', () => {
       .send({
         query: `mutation {
           me {
-            updateQuestion(question: "") {
+            uploadVideo(questionId: "A1", video: "A1") {
               _id
             }
           }
@@ -89,7 +84,7 @@ describe('updateQuestion', () => {
     );
   });
 
-  it(`throws an error if no question`, async () => {
+  it(`throws an error if no questionId`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
@@ -97,7 +92,7 @@ describe('updateQuestion', () => {
       .send({
         query: `mutation {
           me {
-            updateQuestion(mentorId: "5ffdf41a1ee2c62320b49ea1") {
+            uploadVideo(mentorId: "5ffdf41a1ee2c62320b49ea1", video: "A1") {
               _id
             }
           }
@@ -106,30 +101,61 @@ describe('updateQuestion', () => {
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'missing required param question'
+      'missing required param questionId'
     );
   });
 
-  it('updates a question', async () => {
+  it(`throws an error if no video`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const question = encodeURI(
-      JSON.stringify({
-        id: 'B1',
-        question: 'Who are you and what do you do?',
-        subject: '5ffdf41a1ee2c62320b49eb2',
-        topics: ['5ffdf41a1ee2c62320b49ec2'],
-        transcript:
-          "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-        status: 'Complete',
-      })
-    );
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateQuestion(mentorId: "5ffdf41a1ee2c62320b49ea1", question: "${question}") {
+            uploadVideo(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1") {
+              _id
+            }
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'missing required param video'
+    );
+  });
+
+  it(`throws an error if questionId is invalid`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            uploadVideo(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "D1", video: "A1") {
+              _id
+            }
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'no question with id D1'
+    );
+  });
+
+  it('uploads a video', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            uploadVideo(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1", video: "A1") {
               _id
               name
               shortName
@@ -142,7 +168,6 @@ describe('updateQuestion', () => {
                 id
                 question
                 status
-                transcript
                 video
                 subject {
                   _id
@@ -158,7 +183,7 @@ describe('updateQuestion', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.updateQuestion).to.eql({
+    expect(response.body.data.me.uploadVideo).to.eql({
       _id: '5ffdf41a1ee2c62320b49ea1',
       name: 'Clinton Anderson',
       shortName: 'Clint',
@@ -178,105 +203,8 @@ describe('updateQuestion', () => {
           id: 'A1',
           question: "Don't talk and stay still.",
           status: 'Incomplete',
-          video: null,
-          transcript: null,
-          subject: {
-            _id: '5ffdf41a1ee2c62320b49eb1',
-            name: 'Repeat After Me',
-          },
-          topics: [
-            {
-              _id: '5ffdf41a1ee2c62320b49ec1',
-              name: 'Idle',
-            },
-          ],
-        },
-        {
-          id: 'B1',
-          question: 'Who are you and what do you do?',
-          status: 'Complete',
-          video: null,
-          transcript:
-            "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-          subject: {
-            _id: '5ffdf41a1ee2c62320b49eb2',
-            name: 'Background',
-          },
-          topics: [
-            {
-              _id: '5ffdf41a1ee2c62320b49ec2',
-              name: 'Background',
-            },
-          ],
-        },
-      ],
-    });
-  });
-
-  it('adds a question', async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const question = encodeURI(
-      JSON.stringify({
-        id: 'C1',
-        question: 'Is STEM hard?',
-        subject: '5ffdf41a1ee2c62320b49eb3',
-        topics: ['5ffdf41a1ee2c62320b49ec3'],
-        status: 'Incomplete',
-      })
-    );
-    const response = await request(app)
-      .post('/graphql')
-      .set('Authorization', `bearer ${token}`)
-      .send({
-        query: `mutation {
-          me {
-            updateQuestion(mentorId: "5ffdf41a1ee2c62320b49ea1", question: "${question}") {
-              _id
-              name
-              shortName
-              title
-              subjects {
-                _id
-                name
-              }
-              questions {
-                id
-                question
-                status
-                subject {
-                  _id
-                  name
-                }
-                topics {
-                  _id
-                  name
-                }
-              }  
-            }
-          }
-        }`,
-      });
-    expect(response.status).to.equal(200);
-    expect(response.body.data.me.updateQuestion).to.eql({
-      _id: '5ffdf41a1ee2c62320b49ea1',
-      name: 'Clinton Anderson',
-      shortName: 'Clint',
-      title: "Nuclear Electrician's Mate",
-      subjects: [
-        {
-          _id: '5ffdf41a1ee2c62320b49eb1',
-          name: 'Repeat After Me',
-        },
-        {
-          _id: '5ffdf41a1ee2c62320b49eb2',
-          name: 'Background',
-        },
-      ],
-      questions: [
-        {
-          id: 'A1',
-          question: "Don't talk and stay still.",
-          status: 'Incomplete',
+          video:
+            'https://video.mentorpal.org/videos/mentors/clint/web/clintanderson_U1_1_1.mp4',
           subject: {
             _id: '5ffdf41a1ee2c62320b49eb1',
             name: 'Repeat After Me',
@@ -292,6 +220,7 @@ describe('updateQuestion', () => {
           id: 'B1',
           question: 'Who are you and what do you do?',
           status: 'Incomplete',
+          video: null,
           subject: {
             _id: '5ffdf41a1ee2c62320b49eb2',
             name: 'Background',
@@ -300,21 +229,6 @@ describe('updateQuestion', () => {
             {
               _id: '5ffdf41a1ee2c62320b49ec2',
               name: 'Background',
-            },
-          ],
-        },
-        {
-          id: 'C1',
-          question: 'Is STEM hard?',
-          status: 'Incomplete',
-          subject: {
-            _id: '5ffdf41a1ee2c62320b49eb3',
-            name: 'STEM',
-          },
-          topics: [
-            {
-              _id: '5ffdf41a1ee2c62320b49ec3',
-              name: 'Advice',
             },
           ],
         },

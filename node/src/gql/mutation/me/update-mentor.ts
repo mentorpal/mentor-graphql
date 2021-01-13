@@ -6,7 +6,7 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { GraphQLString, GraphQLObjectType } from 'graphql';
 import MentorType from 'gql/types/mentor';
-import { Mentor as MentorModel } from 'models';
+import { Mentor as MentorSchema } from 'models';
 import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
 
@@ -24,17 +24,12 @@ export const updateMentor = {
       throw new Error('missing required param mentor');
     }
     const mentor: Mentor = JSON.parse(decodeURI(args.mentor));
-    if (`${context.user._id}` !== `${mentor.id}`) {
+    if (`${context.user._id}` !== `${mentor._id}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    if (!mentor.videoId.match(/^[a-z\-]+$/)) {
-      throw new Error('videoId must match [a-z]');
-    }
-    // TODO: ensure videoId is unique
-
-    return await MentorModel.findOneAndUpdate(
+    return await MentorSchema.findOneAndUpdate(
       {
-        id: mentor.id,
+        _id: mentor._id,
       },
       {
         $set: {
@@ -42,7 +37,7 @@ export const updateMentor = {
         },
       },
       {
-        new: true, // return the updated doc rather than pre update
+        new: true,
         upsert: true,
       }
     );

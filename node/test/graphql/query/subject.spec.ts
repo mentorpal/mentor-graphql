@@ -11,7 +11,7 @@ import { describe } from 'mocha';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 
-describe('mentor', () => {
+describe('subject', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -28,7 +28,7 @@ describe('mentor', () => {
   it(`throws an error if invalid id`, async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
-          mentor(id: "111111111111111111111111") {
+          subject(id: "111111111111111111111111") {
             _id
           }
         }`,
@@ -36,86 +36,25 @@ describe('mentor', () => {
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'mentor not found for args "{"id":"111111111111111111111111"}"'
+      'subject not found for args "{"id":"111111111111111111111111"}"'
     );
   });
 
-  it('gets a mentor by id', async () => {
+  it('gets a subject by id', async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
-          mentor(id: "5ffdf41a1ee2c62320b49ea1") {
+          subject(id: "5ffdf41a1ee2c62320b49eb1") {
             _id
             name
-            shortName
-            title
-            subjects {
-              _id
-              name
-            }
-            questions {
-              id
-              question
-              status
-              subject {
-                _id
-                name
-              }
-              topics {
-                _id
-                name
-              }
-            }
+            description
           }
       }`,
     });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentor).to.eql({
-      _id: '5ffdf41a1ee2c62320b49ea1',
-      name: 'Clinton Anderson',
-      shortName: 'Clint',
-      title: "Nuclear Electrician's Mate",
-      subjects: [
-        {
-          _id: '5ffdf41a1ee2c62320b49eb1',
-          name: 'Repeat After Me',
-        },
-        {
-          _id: '5ffdf41a1ee2c62320b49eb2',
-          name: 'Background',
-        },
-      ],
-      questions: [
-        {
-          id: 'A1',
-          question: "Don't talk and stay still.",
-          status: 'Incomplete',
-          subject: {
-            _id: '5ffdf41a1ee2c62320b49eb1',
-            name: 'Repeat After Me',
-          },
-          topics: [
-            {
-              _id: '5ffdf41a1ee2c62320b49ec1',
-              name: 'Idle',
-            },
-          ],
-        },
-        {
-          id: 'B1',
-          question: 'Who are you and what do you do?',
-          status: 'Incomplete',
-          subject: {
-            _id: '5ffdf41a1ee2c62320b49eb2',
-            name: 'Background',
-          },
-          topics: [
-            {
-              _id: '5ffdf41a1ee2c62320b49ec2',
-              name: 'Background',
-            },
-          ],
-        },
-      ],
+    expect(response.body.data.subject).to.eql({
+      _id: '5ffdf41a1ee2c62320b49eb1',
+      name: 'Repeat After Me',
+      description: "These are miscellaneous phrases you'll be asked to repeat.",
     });
   });
 });

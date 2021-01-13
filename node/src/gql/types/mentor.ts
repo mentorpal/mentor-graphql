@@ -4,31 +4,43 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType, GraphQLList } from 'graphql';
-import { Topic } from 'models';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLList,
+  GraphQLBoolean,
+  GraphQLID,
+} from 'graphql';
+import { Subject as SubjectSchema } from 'models';
 import { Mentor } from 'models/Mentor';
-import TopicType from './topic';
 import QuestionType from './question';
+import SubjectType from './subject';
 
 export const MentorType = new GraphQLObjectType({
   name: 'Mentor',
   fields: {
-    id: { type: GraphQLString },
-    videoId: { type: GraphQLString },
+    _id: { type: GraphQLID },
     name: { type: GraphQLString },
     shortName: { type: GraphQLString },
     title: { type: GraphQLString },
-    topics: {
-      type: GraphQLList(TopicType),
+    isBuilt: { type: GraphQLBoolean },
+    subjects: {
+      type: GraphQLList(SubjectType),
       resolve: async function (mentor: Mentor) {
-        const resolveTopic = async (id: string) => {
-          return await Topic.findOne({ _id: id });
+        const resolveSubjects = async (id: string) => {
+          return await SubjectSchema.findOne({ _id: id });
         };
-        return Promise.all(mentor.topics.map((t) => resolveTopic(t)));
+        return Promise.all(
+          mentor.subjects.map((s: string) => resolveSubjects(s))
+        );
       },
     },
-    questions: { type: GraphQLList(QuestionType) },
-    utterances: { type: GraphQLList(QuestionType) },
+    questions: {
+      type: GraphQLList(QuestionType),
+      resolve: async function (mentor: Mentor) {
+        return mentor.questions;
+      },
+    },
   },
 });
 

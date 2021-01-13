@@ -30,6 +30,7 @@ describe('login', () => {
       query: `mutation {
         login {
           user {
+            _id
             name
             email
           }
@@ -46,13 +47,14 @@ describe('login', () => {
   });
 
   it(`returns an error if token expired`, async () => {
-    const token = getToken('5f0cfea3395d762ca65405d1', -1);
+    const token = getToken('5ffdf41a1ee2c62320b49ea1', -1);
     const response = await request(app)
       .post('/graphql')
       .send({
         query: `mutation {
           login(accessToken: "${token}") {
             user {
+              _id
               name
               email
             }
@@ -70,13 +72,14 @@ describe('login', () => {
 
   it(`returns user and updates token`, async () => {
     const date = new Date(Date.now() + 3000);
-    const token = getToken('5f0cfea3395d762ca65405d1', 300);
+    const token = getToken('5ffdf41a1ee2c62320b49ea1', 300);
     const response = await request(app)
       .post('/graphql')
       .send({
         query: `mutation {
           login(accessToken: "${token}") {
             user {
+              _id
               name
               email
             }
@@ -87,6 +90,7 @@ describe('login', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.login.user).to.eql({
+      _id: '5ffdf41a1ee2c62320b49ea1',
       name: 'Clinton Anderson',
       email: 'clint@anderson.com',
     });
@@ -98,7 +102,7 @@ describe('login', () => {
 
   it(`updates lastLoginAt`, async () => {
     const date = new Date(Date.now() - 1000);
-    const token = getToken('5f0cfea3395d762ca65405d1');
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
       .send({

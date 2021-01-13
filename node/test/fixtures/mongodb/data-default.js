@@ -8,116 +8,88 @@ import mongoose from 'mongoose';
 const { ObjectId } = mongoose.Types;
 
 module.exports = {
+  users: [
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ea1'),
+      name: 'Clinton Anderson',
+      email: 'clint@anderson.com',
+    },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ea2'),
+      name: 'Dan Davis',
+      email: 'dan@davis.com',
+    },
+  ],
+
   mentors: [
     {
-      _id: ObjectId('5f0cfea3395d762ca65405d1'),
-      id: '5f0cfea3395d762ca65405d1',
-      videoId: 'clintanderson',
+      _id: ObjectId('5ffdf41a1ee2c62320b49ea1'),
       name: 'Clinton Anderson',
       shortName: 'Clint',
       title: "Nuclear Electrician's Mate",
-      topics: ['5f0cfea3395d762ca65405d1', '5f0cfea3395d762ca65405d2'],
+      isBuilt: false,
+      subjects: ['5ffdf41a1ee2c62320b49eb1', '5ffdf41a1ee2c62320b49eb2'],
       questions: [
         {
+          id: 'A1',
+          question: "Don't talk and stay still.",
+          subject: '5ffdf41a1ee2c62320b49eb1',
+          topics: ['5ffdf41a1ee2c62320b49ec1'],
+        },
+        {
+          id: 'B1',
           question: 'Who are you and what do you do?',
-          topics: ['5f0cfea3395d762ca65405d1'],
-          videoId: 'A1_1_1',
-          video: null,
-          transcript: null,
-          status: 'Incomplete',
-        },
-        {
-          question: 'Can you give me some advice?',
-          topics: ['5f0cfea3395d762ca65405d2'],
-          videoId: 'A2_1_1',
-          video: null,
-          transcript: null,
-          status: 'Incomplete',
+          subject: '5ffdf41a1ee2c62320b49eb2',
+          topics: ['5ffdf41a1ee2c62320b49ec2'],
         },
       ],
-      utterances: [
+    },
+  ],
+
+  subjects: [
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49eb1'),
+      name: 'Repeat After Me',
+      description: "These are miscellaneous phrases you'll be asked to repeat.",
+      questions: [
         {
-          question:
-            'Please look at the camera for 30 seconds without speaking. Try to remain in the same position.',
-          topics: ['5f0cfea3395d762ca65405d3'],
-          videoId: 'U1_1_1',
-          video: null,
-          transcript: null,
-          status: 'Incomplete',
-        },
-        {
-          question:
-            'Please give a short introduction of yourself, which includes your name, current job, and title.',
-          topics: ['5f0cfea3395d762ca65405d4'],
-          videoId: 'U2_1_1',
-          video: null,
-          transcript: null,
-          status: 'Incomplete',
-        },
-        {
-          question:
-            "Please repeat the following: 'I couldn't understand the question. Try asking me something else.'",
-          topics: ['5f0cfea3395d762ca65405d5'],
-          videoId: 'U3_1_1',
-          video: null,
-          transcript: null,
-          status: 'Incomplete',
+          id: 'A1',
+          question: "Don't talk and stay still.",
+          subject: '5ffdf41a1ee2c62320b49eb1',
+          topics: ['5ffdf41a1ee2c62320b49ec1'],
         },
       ],
+    },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49eb2'),
+      name: 'Background',
+      description:
+        'These questions will ask general questions about your background that might be relevant to how people understand your career.',
+    },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49eb3'),
+      name: 'STEM',
+      description: 'These questions will ask about STEM careers.',
     },
   ],
 
   topics: [
     {
-      _id: ObjectId('5f0cfea3395d762ca65405d1'),
-      id: 'background',
+      _id: ObjectId('5ffdf41a1ee2c62320b49ec1'),
+      name: 'Idle',
+      description: '30-second idle clip',
+    },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ec2'),
       name: 'Background',
       description:
         'These questions will ask general questions about your background, that might be relevant to how people understand your career',
-      category: 'About Me',
     },
     {
-      _id: ObjectId('5f0cfea3395d762ca65405d2'),
-      id: 'advice',
+      _id: ObjectId('5ffdf41a1ee2c62320b49ec3'),
       name: 'Advice',
       description:
         'These questions will ask you to give advice to someone who is interested in your career',
-      category: 'What Does it Take?',
-    },
-    {
-      _id: ObjectId('5f0cfea3395d762ca65405d3'),
-      id: '_IDLE_',
-      name: 'Idle',
-      description: '30-second idle clip',
-      category: 'Utterance',
-    },
-    {
-      _id: ObjectId('5f0cfea3395d762ca65405d4'),
-      id: '_INTRO_',
-      name: 'Intro',
-      description: 'Short introduction about you',
-      category: 'Utterance',
-    },
-    {
-      _id: ObjectId('5f0cfea3395d762ca65405d5'),
-      id: '_OFF_TOPIC_',
-      name: 'Off-Topic',
-      description:
-        'Short responses to off-topic questions you do not have answers for or do not understand',
-      category: 'Utterance',
-    },
-  ],
-
-  users: [
-    {
-      _id: ObjectId('5f0cfea3395d762ca65405d1'),
-      name: 'Clinton Anderson',
-      email: 'clint@anderson.com',
-    },
-    {
-      _id: ObjectId('5f0cfea3395d762ca65405d2'),
-      name: 'Dan Davis',
-      email: 'dan@davis.com',
     },
   ],
 };

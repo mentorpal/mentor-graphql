@@ -4,13 +4,15 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Session } from 'models';
-import SessionType from 'gql/types/session';
-import findAll from './find-all';
+import { GraphQLString, GraphQLObjectType, GraphQLID } from 'graphql';
 
-export const sessions = findAll({
-  nodeType: SessionType,
-  model: Session,
+export const SubjectType = new GraphQLObjectType({
+  name: 'Subject',
+  fields: {
+    _id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    description: { type: GraphQLString },
+  },
 });
 
-export default sessions;
+export default SubjectType;

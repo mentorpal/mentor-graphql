@@ -12,26 +12,22 @@ const mongoPaging = require('mongo-cursor-pagination');
 mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
 
 export interface Mentor extends Document {
-  id: string;
-  videoId: string;
   name: string;
   shortName: string;
   title: string;
-  topics: [string];
+  isBuilt: boolean;
+  subjects: [string];
   questions: [Question];
-  utterances: [Question];
 }
 
 export const MentorSchema = new Schema(
   {
-    id: { type: String, required: true, unique: true },
-    videoId: { type: String, required: true, unique: true },
     name: { type: String },
     shortName: { type: String },
     title: { type: String },
-    topics: { type: [String] },
+    isBuilt: { type: Boolean },
+    subjects: { type: [String] },
     questions: { type: [QuestionSchema] },
-    utterances: { type: [QuestionSchema] },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
@@ -45,6 +41,7 @@ export interface MentorModel extends Model<Mentor> {
 }
 
 MentorSchema.index({ name: -1, _id: -1 });
+MentorSchema.index({ isBuilt: -1, _id: -1 });
 MentorSchema.plugin(mongoPaging.mongoosePlugin);
 
 export default mongoose.model<Mentor, MentorModel>('Mentor', MentorSchema);

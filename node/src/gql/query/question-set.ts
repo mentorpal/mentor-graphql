@@ -5,41 +5,30 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLString, GraphQLObjectType } from 'graphql';
-import LessonType from 'gql/types/lesson';
-import DateType from 'gql/types/date';
-import { Lesson as LessonModel } from 'models';
-import { Lesson } from 'models/Lesson';
+import { Subject as SubjectSchema } from 'models';
+import QuestionSetType, { QuestionSet } from 'gql/types/question-set';
 
-export const updateLastTrainedAt = {
-  type: LessonType,
+export const questionSet = {
+  type: QuestionSetType,
   args: {
-    lessonId: { type: GraphQLString },
-    date: { type: DateType },
+    subjectId: { type: GraphQLString },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { lessonId: string; date: Date }
-  ): Promise<Lesson> => {
-    if (!args.lessonId) {
-      throw new Error('missing required param lessonId');
+    args: { subjectId: string }
+  ): Promise<QuestionSet> => {
+    if (!args.subjectId) {
+      throw new Error('missing required param subjectId');
     }
-    if (!args.date) {
-      args.date = new Date();
+    const subject = await SubjectSchema.findOne({ _id: args.subjectId });
+    if (!subject) {
+      throw new Error(`could not find subject with id ${args.subjectId}`);
     }
-
-    return await LessonModel.findOneAndUpdate(
-      {
-        lessonId: args.lessonId,
-      },
-      {
-        lastTrainedAt: args.date,
-      },
-      {
-        new: true, // return the updated doc rather than pre update
-        upsert: true,
-      }
-    );
+    return {
+      subject: subject,
+      questions: subject.questions,
+    };
   },
 };
 
-export default updateLastTrainedAt;
+export default questionSet;

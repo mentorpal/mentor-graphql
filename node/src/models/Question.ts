@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose, { Schema, Document } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 
 export enum Status {
   INCOMPLETE = 'Incomplete',
@@ -12,9 +12,10 @@ export enum Status {
 }
 
 export interface Question extends Document {
+  id: string;
   question: string;
+  subject: string;
   topics: [string];
-  videoId: string;
   video: string;
   transcript: string;
   status: Status;
@@ -22,9 +23,10 @@ export interface Question extends Document {
 }
 
 export const QuestionSchema = new Schema({
+  id: { type: String, required: true, unique: true },
   question: { type: String },
+  subject: { type: String },
   topics: { type: [String] },
-  videoId: { type: String },
   video: { type: String },
   transcript: { type: String },
   status: {

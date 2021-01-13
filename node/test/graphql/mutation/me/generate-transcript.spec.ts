@@ -11,7 +11,7 @@ import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 import { getToken } from '../../../helpers';
 
-describe('updateMentor', () => {
+describe('generateTranscript', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -28,12 +28,10 @@ describe('updateMentor', () => {
   it(`throws an error if not logged in`, async () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
-          me {
-            updateMentor(mentor: "") {
-              _id
-            }
-          }
-        }`,
+        me {
+          generateTranscript(mentorId: "", questionId: "")
+        }
+      }`,
     });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
@@ -44,20 +42,13 @@ describe('updateMentor', () => {
 
   it(`throws an error if mentor is not the user's`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea2');
-    const mentor = encodeURI(
-      JSON.stringify({
-        _id: '5ffdf41a1ee2c62320b49ea1',
-      })
-    );
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateMentor(mentor: "${mentor}") {
-              _id
-            }
+            generateTranscript(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1")
           }
         }`,
       });
@@ -68,7 +59,7 @@ describe('updateMentor', () => {
     );
   });
 
-  it(`throws an error if no mentor`, async () => {
+  it(`throws an error if no mentorId`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
@@ -76,49 +67,101 @@ describe('updateMentor', () => {
       .send({
         query: `mutation {
           me {
-            updateMentor {
-              _id
-            }
+            generateTranscript(questionId: "A1")
           }
         }`,
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'missing required param mentor'
+      'missing required param mentorId'
     );
   });
 
-  it('updates mentor', async () => {
+  it(`throws an error if no questionId`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const mentor = encodeURI(
-      JSON.stringify({
-        _id: '5ffdf41a1ee2c62320b49ea1',
-        name: 'Clint Anderson',
-        isBuilt: true,
-      })
-    );
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateMentor(mentor: "${mentor}") {
-              _id
-              name
-              shortName
-              isBuilt
-            }
+            generateTranscript(mentorId: "5ffdf41a1ee2c62320b49ea1")
           }
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.updateMentor).to.eql({
-      _id: '5ffdf41a1ee2c62320b49ea1',
-      name: 'Clint Anderson',
-      shortName: 'Clint',
-      isBuilt: true,
-    });
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'missing required param questionId'
+    );
+  });
+
+  it(`throws an error if questionId is invalid`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            generateTranscript(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "D1")
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'no question with id D1'
+    );
+  });
+
+  it(`throws an error if question has no video to generate transcript from`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            generateTranscript(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1")
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'no video to generate a transcript from'
+    );
+  });
+
+  it('generates transcript from video', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            uploadVideo(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1", video: "A1") {
+              _id
+            }
+          }
+        }`,
+      });
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            generateTranscript(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1")
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.generateTranscript).to.eql(
+      'this is a placeholder text'
+    );
   });
 });

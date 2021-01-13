@@ -4,15 +4,23 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType, GraphQLBoolean } from 'graphql';
+import { GraphQLObjectType, GraphQLList } from 'graphql';
+import { Question } from 'models/Question';
+import { Subject } from 'models/Subject';
+import QuestionType from './question';
+import SubjectType from './subject';
 
-export const TrainingDataType = new GraphQLObjectType({
-  name: 'TrainingData',
+export interface QuestionSet {
+  subject: Subject;
+  questions: Question[];
+}
+
+export const QuestionSetType = new GraphQLObjectType({
+  name: 'QuestionSet',
   fields: {
-    config: { type: GraphQLString },
-    training: { type: GraphQLString },
-    isTrainable: { type: GraphQLBoolean },
+    subject: { type: SubjectType },
+    questions: { type: GraphQLList(QuestionType) },
   },
 });
 
-export default TrainingDataType;
+export default QuestionSetType;

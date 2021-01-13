@@ -4,13 +4,34 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Lesson } from 'models';
-import findAll from './find-all';
-import LessonType from 'gql/types/lesson';
+import mongoose, { Schema, Document, Model } from 'mongoose';
+import { PaginatedResolveResult } from './PaginatedResolveResult';
+import { Question, QuestionSchema } from './Question';
 
-export const lessons = findAll({
-  nodeType: LessonType,
-  model: Lesson,
+const mongoPaging = require('mongo-cursor-pagination');
+mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
+
+export interface Subject extends Document {
+  name: string;
+  description: string;
+  questions: [Question];
+}
+
+export const SubjectSchema = new Schema({
+  name: { type: String },
+  description: { type: String },
+  questions: { type: [QuestionSchema] },
 });
 
-export default lessons;
+export interface SubjectModel extends Model<Subject> {
+  paginate(
+    query?: any,
+    options?: any,
+    callback?: any
+  ): Promise<PaginatedResolveResult<Subject>>;
+}
+
+SubjectSchema.index({ name: -1, _id: -1 });
+SubjectSchema.plugin(mongoPaging.mongoosePlugin);
+
+export default mongoose.model<Subject, SubjectModel>('Subject', SubjectSchema);

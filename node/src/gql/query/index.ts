@@ -7,15 +7,21 @@ The full terms of this copyright and license should always be found in the root 
 import { GraphQLObjectType } from 'graphql';
 import mentor from './mentor';
 import mentors from './mentors';
+import subject from './subject';
+import subjects from './subjects';
 import topic from './topic';
 import topics from './topics';
+import questionSet from './question-set';
 
 export default new GraphQLObjectType({
   name: 'Query',
   fields: {
     mentor,
     mentors,
+    subject,
+    subjects,
     topic,
     topics,
+    questionSet,
   },
 });

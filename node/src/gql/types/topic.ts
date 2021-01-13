@@ -4,15 +4,14 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType } from 'graphql';
+import { GraphQLString, GraphQLObjectType, GraphQLID } from 'graphql';
 
 export const TopicType = new GraphQLObjectType({
   name: 'Topic',
   fields: {
-    id: { type: GraphQLString },
+    _id: { type: GraphQLID },
     name: { type: GraphQLString },
     description: { type: GraphQLString },
-    category: { type: GraphQLString },
   },
 });
 

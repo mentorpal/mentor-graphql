@@ -11,21 +11,14 @@ const mongoPaging = require('mongo-cursor-pagination');
 mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
 
 export interface Topic extends Document {
-  id: string;
   name: string;
   description: string;
-  category: string;
 }
 
-export const TopicSchema = new Schema(
-  {
-    id: { type: String, required: true, unique: true },
-    name: { type: String },
-    description: { type: String },
-    category: { type: String },
-  },
-  { timestamps: true, collation: { locale: 'en', strength: 2 } }
-);
+export const TopicSchema = new Schema({
+  name: { type: String },
+  description: { type: String },
+});
 
 export interface TopicModel extends Model<Topic> {
   paginate(

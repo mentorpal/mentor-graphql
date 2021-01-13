@@ -31,43 +31,27 @@ export const updateQuestion = {
     if (`${context.user._id}` !== `${args.mentorId}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    const mentor: Mentor = await MentorModel.findOne({ id: args.mentorId });
+    const mentor: Mentor = await MentorModel.findOne({ _id: args.mentorId });
     const question: Question = JSON.parse(decodeURI(args.question));
-    const isUtterance = question.videoId.startsWith('U');
-    const idx = isUtterance
-      ? mentor.utterances.findIndex(
-          (u: Question) => u.videoId === question.videoId
-        )
-      : mentor.questions.findIndex(
-          (q: Question) => q.videoId === question.videoId
-        );
-    if (isUtterance) {
-      if (idx === -1) {
-        mentor.utterances.push(question);
-      } else {
-        mentor.utterances.splice(idx, 1, question);
-      }
+    const idx = mentor.questions.findIndex(
+      (q: Question) => q.id === question.id
+    );
+    if (idx === -1) {
+      mentor.questions.push(question);
     } else {
-      if (idx === -1) {
-        mentor.questions.push(question);
-      } else {
-        mentor.questions.splice(idx, 1, question);
-      }
+      mentor.questions.splice(idx, 1, question);
     }
-
     return await MentorModel.findOneAndUpdate(
       {
-        id: context.user._id,
+        _id: args.mentorId,
       },
       {
         $set: {
           questions: mentor.questions,
-          utterances: mentor.utterances,
         },
       },
       {
-        new: true, // return the updated doc rather than pre update
-        upsert: true,
+        new: true,
       }
     );
   },
