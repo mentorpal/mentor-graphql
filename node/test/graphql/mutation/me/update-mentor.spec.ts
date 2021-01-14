@@ -107,7 +107,7 @@ describe('updateMentor', () => {
             updateMentor(mentor: "${mentor}") {
               _id
               name
-              shortName
+              firstName
               isBuilt
             }
           }
@@ -117,7 +117,7 @@ describe('updateMentor', () => {
     expect(response.body.data.me.updateMentor).to.eql({
       _id: '5ffdf41a1ee2c62320b49ea1',
       name: 'Clint Anderson',
-      shortName: 'Clint',
+      firstName: 'Clint',
       isBuilt: true,
     });
   });

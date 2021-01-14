@@ -13,7 +13,7 @@ mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
 
 export interface Mentor extends Document {
   name: string;
-  shortName: string;
+  firstName: string;
   title: string;
   isBuilt: boolean;
   subjects: [string];
@@ -23,7 +23,7 @@ export interface Mentor extends Document {
 export const MentorSchema = new Schema(
   {
     name: { type: String },
-    shortName: { type: String },
+    firstName: { type: String },
     title: { type: String },
     isBuilt: { type: Boolean },
     subjects: { type: [String] },

@@ -21,7 +21,7 @@ export const MentorType = new GraphQLObjectType({
   fields: {
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
-    shortName: { type: GraphQLString },
+    firstName: { type: GraphQLString },
     title: { type: GraphQLString },
     isBuilt: { type: GraphQLBoolean },
     subjects: {

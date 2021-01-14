@@ -1,0 +1,13 @@
+version: '3.2'
+services:
+  graphql:
+    image: mentor-admin-api:latest
+    ports:
+      - 3001:3001
+    environment:
+      - NODE_ENV
+      - MONGO_URI
+    volumes:
+      - type: bind
+        source: .env
+        target: /app/.env

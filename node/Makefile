@@ -91,3 +91,28 @@ test-lint: node_modules/eslint
 .PHONY: test-lint
 test-types: node_modules/typescript
 	npm run test:types
+
+
+
+
+
+DOTENV=$(PROJECT_ROOT)/env/$(ENV)/.env
+$(DOTENV):
+	@echo
+	@echo "Trying to run the app locally?"
+	@echo "You need a secrets-config file at $(DOTENV)"
+	@echo "Check with project admins/README for details"
+	@echo
+	@echo
+	@exit 1
+
+.env: $(DOTENV)
+	cp $(PROJECT_ROOT)/env/$(ENV)/.env .env
+
+.PHONY: run
+run: .env
+	NODE_ENV=$(ENV) \
+	ENV=$(ENV) \
+	LOG_LEVEL_DIALOG=$(LOG_LEVEL_DIALOG) \
+	docker-compose up
+

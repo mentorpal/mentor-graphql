@@ -158,7 +158,7 @@ describe('uploadVideo', () => {
             uploadVideo(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1", video: "A1") {
               _id
               name
-              shortName
+              firstName
               title
               subjects {
                 _id
@@ -186,7 +186,7 @@ describe('uploadVideo', () => {
     expect(response.body.data.me.uploadVideo).to.eql({
       _id: '5ffdf41a1ee2c62320b49ea1',
       name: 'Clinton Anderson',
-      shortName: 'Clint',
+      firstName: 'Clint',
       title: "Nuclear Electrician's Mate",
       subjects: [
         {

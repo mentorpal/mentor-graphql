@@ -132,7 +132,7 @@ describe('updateQuestion', () => {
             updateQuestion(mentorId: "5ffdf41a1ee2c62320b49ea1", question: "${question}") {
               _id
               name
-              shortName
+              firstName
               title
               subjects {
                 _id
@@ -161,7 +161,7 @@ describe('updateQuestion', () => {
     expect(response.body.data.me.updateQuestion).to.eql({
       _id: '5ffdf41a1ee2c62320b49ea1',
       name: 'Clinton Anderson',
-      shortName: 'Clint',
+      firstName: 'Clint',
       title: "Nuclear Electrician's Mate",
       subjects: [
         {
@@ -233,7 +233,7 @@ describe('updateQuestion', () => {
             updateQuestion(mentorId: "5ffdf41a1ee2c62320b49ea1", question: "${question}") {
               _id
               name
-              shortName
+              firstName
               title
               subjects {
                 _id
@@ -260,7 +260,7 @@ describe('updateQuestion', () => {
     expect(response.body.data.me.updateQuestion).to.eql({
       _id: '5ffdf41a1ee2c62320b49ea1',
       name: 'Clinton Anderson',
-      shortName: 'Clint',
+      firstName: 'Clint',
       title: "Nuclear Electrician's Mate",
       subjects: [
         {

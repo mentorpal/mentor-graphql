@@ -57,7 +57,7 @@ export const loginGoogle = {
               id: `${user._id}`,
               videoId: user._id,
               name: response.data.name,
-              shortName: response.data.given_name,
+              firstName: response.data.given_name,
             },
           },
           {
