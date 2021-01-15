@@ -65,11 +65,27 @@ module.exports = {
       name: 'Background',
       description:
         'These questions will ask general questions about your background that might be relevant to how people understand your career.',
+      questions: [
+        {
+          id: 'B1',
+          question: 'Who are you and what do you do?',
+          subject: '5ffdf41a1ee2c62320b49eb2',
+          topics: ['5ffdf41a1ee2c62320b49ec2'],
+        },
+      ],
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49eb3'),
       name: 'STEM',
       description: 'These questions will ask about STEM careers.',
+      questions: [
+        {
+          id: 'C1',
+          question: 'Is STEM fun?',
+          subject: '5ffdf41a1ee2c62320b49eb3',
+          topics: ['5ffdf41a1ee2c62320b49eb3'],
+        },
+      ],
     },
   ],
 
