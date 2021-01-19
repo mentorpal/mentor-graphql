@@ -13,6 +13,7 @@ import {
 } from 'graphql';
 import { Subject as SubjectSchema } from 'models';
 import { Mentor } from 'models/Mentor';
+import DateType from './date';
 import QuestionType from './question';
 import SubjectType from './subject';
 
@@ -24,6 +25,7 @@ export const MentorType = new GraphQLObjectType({
     firstName: { type: GraphQLString },
     title: { type: GraphQLString },
     isBuilt: { type: GraphQLBoolean },
+    lastTrainedAt: { type: DateType },
     subjects: {
       type: GraphQLList(SubjectType),
       resolve: async function (mentor: Mentor) {

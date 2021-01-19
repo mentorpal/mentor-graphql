@@ -18,6 +18,7 @@ export interface Mentor extends Document {
   isBuilt: boolean;
   subjects: [string];
   questions: [Question];
+  lastTrainedAt: Date;
 }
 
 export const MentorSchema = new Schema(
@@ -28,6 +29,7 @@ export const MentorSchema = new Schema(
     isBuilt: { type: Boolean },
     subjects: { type: [String] },
     questions: { type: [QuestionSchema] },
+    lastTrainedAt: { type: Date },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
