@@ -4,7 +4,7 @@ PROJECT_NAME?=$(shell v='$(PROJECT_ROOT)'; echo "$${v\#\#*/}")
 SERVICE_NAME?=$(shell v='$(DIR)'; echo "$${v\#\#*/}")
 DIR=$(shell pwd)
 ENV?=dev
-DOCKER_IMAGE?=mentor-api
+DOCKER_IMAGE?=mentor-graphql
 
 .PHONY: clean-dist
 clean-dist: 
@@ -27,7 +27,7 @@ docker-build: clean
 .PHONY: docker-run
 docker-run:
 	docker run \
-			--name mentor-api \
+			--name mentor-graphql \
 			--rm \
 			--init \
 			-p 3001:3001 \
@@ -36,7 +36,7 @@ docker-run:
 .PHONY: docker-run
 docker-run-shell:
 	docker run \
-			--name mentor-api \
+			--name mentor-graphql \
 			--rm \
 			-it \
 			--init \

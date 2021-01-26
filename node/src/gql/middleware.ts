@@ -11,7 +11,7 @@ import { Request, Response } from 'express';
 import { User } from 'models/User';
 
 function isApiReq(req: Request): boolean {
-  return Boolean(req.headers['mentor-api-req']);
+  return Boolean(req.headers['mentor-graphql-req']);
 }
 
 export default graphqlHTTP((req: Request, res: Response) => {
