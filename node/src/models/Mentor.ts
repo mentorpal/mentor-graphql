@@ -16,8 +16,8 @@ export interface Mentor extends Document {
   firstName: string;
   title: string;
   isBuilt: boolean;
-  subjects: [string];
-  questions: [Question];
+  subjects: string[];
+  questions: Question[];
   lastTrainedAt: Date;
 }
 
@@ -43,7 +43,7 @@ export interface MentorModel extends Model<Mentor> {
 }
 
 MentorSchema.index({ name: -1, _id: -1 });
-MentorSchema.index({ isBuilt: -1, _id: -1 });
+MentorSchema.index({ firstName: -1, _id: -1 });
 MentorSchema.plugin(mongoPaging.mongoosePlugin);
 
 export default mongoose.model<Mentor, MentorModel>('Mentor', MentorSchema);

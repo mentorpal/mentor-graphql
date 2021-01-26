@@ -50,12 +50,12 @@ jobs:
       - name: docker login
         run: docker login -u ${{ secrets.DOCKER_LOGIN }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: docker build
-        run: export DOCKER_IMAGE=uscictdocker/mentor-admin-api:${{ steps.tag.outputs.image_tag }} && make docker-build
+        run: export DOCKER_IMAGE=uscictdocker/mentor-api:${{ steps.tag.outputs.image_tag }} && make docker-build
       - name: docker tag release as version
         if: needs.publish-check.outputs.is_release == 'true'
-        run: docker tag "uscictdocker/mentor-admin-api:${{ steps.tag.outputs.image_tag }}" "uscictdocker/mentor-admin-api:${GITHUB_REF#refs/tags/}"
+        run: docker tag "uscictdocker/mentor-api:${{ steps.tag.outputs.image_tag }}" "uscictdocker/mentor-api:${GITHUB_REF#refs/tags/}"
       - name: docker tag main as latest
         if: github.ref == 'refs/heads/main'
-        run: docker tag "uscictdocker/mentor-admin-api:${{ steps.tag.outputs.image_tag }}" "uscictdocker/mentor-admin-api:latest"
+        run: docker tag "uscictdocker/mentor-api:${{ steps.tag.outputs.image_tag }}" "uscictdocker/mentor-api:latest"
       - name: docker push
-        run: docker push uscictdocker/mentor-admin-api
+        run: docker push uscictdocker/mentor-api

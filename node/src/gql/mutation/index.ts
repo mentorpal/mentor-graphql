@@ -14,6 +14,6 @@ export default new GraphQLObjectType({
   fields: {
     me,
     login,
-    // loginGoogle,
+    loginGoogle,
   },
 });

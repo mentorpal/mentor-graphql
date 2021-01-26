@@ -6,7 +6,11 @@ The full terms of this copyright and license should always be found in the root 
 */
 import axios from 'axios';
 import { GraphQLString, GraphQLObjectType } from 'graphql';
-import { User as UserSchema, Mentor as MentorSchema, Mentor } from 'models';
+import {
+  User as UserSchema,
+  Mentor as MentorSchema,
+  Subject as SubjectSchema,
+} from 'models';
 import {
   UserAccessTokenType,
   UserAccessToken,
@@ -26,17 +30,17 @@ export const loginGoogle = {
       throw new Error('missing required param accessToken');
     }
     try {
-      const endpoint = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${args.accessToken}`;
-      const response = await axios.get(endpoint);
+      const googleEndpoint = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${args.accessToken}`;
+      const googleResponse = await axios.get(googleEndpoint);
       const user = await UserSchema.findOneAndUpdate(
         {
-          googleId: response.data.id,
+          googleId: googleResponse.data.id,
         },
         {
           $set: {
-            googleId: response.data.id,
-            name: response.data.name,
-            email: response.data.email,
+            googleId: googleResponse.data.id,
+            name: googleResponse.data.name,
+            email: googleResponse.data.email,
             lastLoginAt: new Date(),
           },
         },
@@ -48,16 +52,22 @@ export const loginGoogle = {
       // Create a new mentor if creating a new user account
       const mentor = await MentorSchema.findOne({ id: user._id });
       if (!mentor) {
-        await Mentor.findOneAndUpdate(
+        // TODO: default subjects should *not* be hard-coded!
+        const bgSubject = await SubjectSchema.findOne({ name: 'Background' });
+        const utterances = await SubjectSchema.findOne({
+          name: 'Repeat After Me',
+        });
+        await MentorSchema.findOneAndUpdate(
           {
             id: user._id,
           },
           {
             $set: {
-              id: `${user._id}`,
-              videoId: user._id,
-              name: response.data.name,
-              firstName: response.data.given_name,
+              _id: user._id,
+              name: googleResponse.data.name,
+              firstName: googleResponse.data.given_name,
+              subjects: [bgSubject._id, utterances._id],
+              questions: [...bgSubject.questions, ...utterances.questions],
             },
           },
           {

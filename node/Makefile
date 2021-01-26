@@ -4,7 +4,7 @@ PROJECT_NAME?=$(shell v='$(PROJECT_ROOT)'; echo "$${v\#\#*/}")
 SERVICE_NAME?=$(shell v='$(DIR)'; echo "$${v\#\#*/}")
 DIR=$(shell pwd)
 ENV?=dev
-DOCKER_IMAGE?=mentor-admin-api
+DOCKER_IMAGE?=mentor-api
 
 .PHONY: clean-dist
 clean-dist: 
@@ -27,7 +27,7 @@ docker-build: clean
 .PHONY: docker-run
 docker-run:
 	docker run \
-			--name mentor-admin-api \
+			--name mentor-api \
 			--rm \
 			--init \
 			-p 3001:3001 \
@@ -36,7 +36,7 @@ docker-run:
 .PHONY: docker-run
 docker-run-shell:
 	docker run \
-			--name mentor-admin-api \
+			--name mentor-api \
 			--rm \
 			-it \
 			--init \
@@ -91,28 +91,3 @@ test-lint: node_modules/eslint
 .PHONY: test-lint
 test-types: node_modules/typescript
 	npm run test:types
-
-
-
-
-
-DOTENV=$(PROJECT_ROOT)/env/$(ENV)/.env
-$(DOTENV):
-	@echo
-	@echo "Trying to run the app locally?"
-	@echo "You need a secrets-config file at $(DOTENV)"
-	@echo "Check with project admins/README for details"
-	@echo
-	@echo
-	@exit 1
-
-.env: $(DOTENV)
-	cp $(PROJECT_ROOT)/env/$(ENV)/.env .env
-
-.PHONY: run
-run: .env
-	NODE_ENV=$(ENV) \
-	ENV=$(ENV) \
-	LOG_LEVEL_DIALOG=$(LOG_LEVEL_DIALOG) \
-	docker-compose up
-

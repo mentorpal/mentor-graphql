@@ -1,5 +1,5 @@
 {
-  "name": "mentor-admin-api",
+  "name": "mentor-api",
   "version": "1.0.0",
   "description": "mentor-admin project backend setup",
   "main": "dist/app.js",
