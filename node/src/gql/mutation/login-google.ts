@@ -17,6 +17,37 @@ import {
   generateAccessToken,
 } from 'gql/types/user-access-token';
 
+export interface GoogleResponse {
+  id: string;
+  name: string;
+  email: string;
+  given_name: string;
+}
+
+export interface GoogleAuthFunc {
+  (accessToken: string): Promise<GoogleResponse>;
+}
+
+let _googleAuthFuncOverride: GoogleAuthFunc;
+
+export function overrideGoogleAuthFunc(f: GoogleAuthFunc): void {
+  _googleAuthFuncOverride = f;
+}
+
+export function restoreGoogleAuthFunc(): void {
+  _googleAuthFuncOverride = undefined;
+}
+
+export async function authGoogle(accessToken: string): Promise<GoogleResponse> {
+  if (_googleAuthFuncOverride) {
+    return _googleAuthFuncOverride(accessToken);
+  }
+  const res = await axios.get<GoogleResponse>(
+    `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${accessToken}`
+  );
+  return res.data;
+}
+
 export const loginGoogle = {
   type: UserAccessTokenType,
   args: {
@@ -30,17 +61,16 @@ export const loginGoogle = {
       throw new Error('missing required param accessToken');
     }
     try {
-      const googleEndpoint = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${args.accessToken}`;
-      const googleResponse = await axios.get(googleEndpoint);
+      const googleResponse = await authGoogle(args.accessToken);
       const user = await UserSchema.findOneAndUpdate(
         {
-          googleId: googleResponse.data.id,
+          googleId: googleResponse.id,
         },
         {
           $set: {
-            googleId: googleResponse.data.id,
-            name: googleResponse.data.name,
-            email: googleResponse.data.email,
+            googleId: googleResponse.id,
+            name: googleResponse.name,
+            email: googleResponse.email,
             lastLoginAt: new Date(),
           },
         },
@@ -64,10 +94,13 @@ export const loginGoogle = {
           {
             $set: {
               user: user._id,
-              name: googleResponse.data.name,
-              firstName: googleResponse.data.given_name,
+              name: googleResponse.name,
+              firstName: googleResponse.given_name,
               subjects: [bgSubject._id, utterances._id],
-              questions: [...bgSubject.questions, ...utterances.questions],
+              // TODO: these need to be answers not questions,
+              // e.g { text: "my answer", question: qid }
+              questions: [],
+              // questions: [...bgSubject.questions, ...utterances.questions],
             },
           },
           {
