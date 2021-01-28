@@ -50,7 +50,7 @@ export const loginGoogle = {
         }
       );
       // Create a new mentor if creating a new user account
-      const mentor = await MentorSchema.findOne({ id: user._id });
+      const mentor = await MentorSchema.findOne({ user: user._id });
       if (!mentor) {
         // TODO: default subjects should *not* be hard-coded!
         const bgSubject = await SubjectSchema.findOne({ name: 'Background' });
@@ -59,11 +59,11 @@ export const loginGoogle = {
         });
         await MentorSchema.findOneAndUpdate(
           {
-            id: user._id,
+            user: user._id,
           },
           {
             $set: {
-              _id: user._id,
+              user: user._id,
               name: googleResponse.data.name,
               firstName: googleResponse.data.given_name,
               subjects: [bgSubject._id, utterances._id],
