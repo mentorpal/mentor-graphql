@@ -61,7 +61,7 @@ describe('updateQuestion', () => {
       .send({
         query: `mutation {
           me {
-            updateQuestion(mentorId: "5ffdf41a1ee2c62320b49ea1", question: "${question}") {
+            updateQuestion(mentorId: "5ffdf41a1ee2c62111111111", question: "${question}") {
               _id
             }
           }
@@ -103,7 +103,7 @@ describe('updateQuestion', () => {
       .send({
         query: `mutation {
           me {
-            updateQuestion(mentorId: "5ffdf41a1ee2c62320b49ea1") {
+            updateQuestion(mentorId: "5ffdf41a1ee2c62111111111") {
               _id
             }
           }
@@ -135,7 +135,7 @@ describe('updateQuestion', () => {
       .send({
         query: `mutation {
           me {
-            updateQuestion(mentorId: "5ffdf41a1ee2c62320b49ea1", question: "${question}") {
+            updateQuestion(mentorId: "5ffdf41a1ee2c62111111111", question: "${question}") {
               _id
               name
               firstName
@@ -165,7 +165,7 @@ describe('updateQuestion', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateQuestion).to.eql({
-      _id: '5ffdf41a1ee2c62320b49ea1',
+      _id: '5ffdf41a1ee2c62111111111',
       name: 'Clinton Anderson',
       firstName: 'Clint',
       title: "Nuclear Electrician's Mate",
@@ -236,7 +236,7 @@ describe('updateQuestion', () => {
       .send({
         query: `mutation {
           me {
-            updateQuestion(mentorId: "5ffdf41a1ee2c62320b49ea1", question: "${question}") {
+            updateQuestion(mentorId: "5ffdf41a1ee2c62111111111", question: "${question}") {
               _id
               name
               firstName
@@ -264,7 +264,7 @@ describe('updateQuestion', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateQuestion).to.eql({
-      _id: '5ffdf41a1ee2c62320b49ea1',
+      _id: '5ffdf41a1ee2c62111111111',
       name: 'Clinton Anderson',
       firstName: 'Clint',
       title: "Nuclear Electrician's Mate",

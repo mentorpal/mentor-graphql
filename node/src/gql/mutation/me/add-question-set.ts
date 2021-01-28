@@ -6,7 +6,7 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { GraphQLString, GraphQLObjectType } from 'graphql';
 import MentorType from 'gql/types/mentor';
-import { Mentor as MentorSchema, Subject as SubjectSchema } from 'models';
+import { Mentor as MentorModel, Subject as SubjectModel } from 'models';
 import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
 
@@ -27,21 +27,20 @@ export const addQuestionSet = {
     if (!args.subjectId) {
       throw new Error('missing required param subjectId');
     }
-    if (`${context.user._id}` !== `${args.mentorId}`) {
+    const mentor = await MentorModel.findOne({ _id: args.mentorId });
+    if (!mentor) {
+      throw new Error(`no mentor found for id '${args.mentorId}'`);
+    }
+    if (`${context.user._id}` !== `${mentor.user}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    const mentor = await MentorSchema.findOne({ _id: args.mentorId });
-    if (!mentor) {
-      throw new Error(`could not find mentor ${args.mentorId}`);
-    }
-    const subject = await SubjectSchema.findOne({ _id: args.subjectId });
+    const subject = await SubjectModel.findOne({ _id: args.subjectId });
     if (!subject) {
-      throw new Error(`could not find subject ${args.subjectId}`);
+      throw new Error(`no subject found for id '${args.subjectId}'`);
     }
     mentor.subjects.push(subject._id);
     mentor.questions.push(...subject.questions);
-
-    return await MentorSchema.findOneAndUpdate(
+    return await MentorModel.findOneAndUpdate(
       {
         _id: mentor._id,
       },

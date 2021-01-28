@@ -56,7 +56,7 @@ describe('uploadVideo', () => {
       .send({
         query: `mutation {
           me {
-            uploadVideo(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1", video: "A1") {
+            uploadVideo(mentorId: "5ffdf41a1ee2c62111111111", questionId: "A1", video: "A1") {
               _id
             }
           }
@@ -98,7 +98,7 @@ describe('uploadVideo', () => {
       .send({
         query: `mutation {
           me {
-            uploadVideo(mentorId: "5ffdf41a1ee2c62320b49ea1", video: "A1") {
+            uploadVideo(mentorId: "5ffdf41a1ee2c62111111111", video: "A1") {
               _id
             }
           }
@@ -119,7 +119,7 @@ describe('uploadVideo', () => {
       .send({
         query: `mutation {
           me {
-            uploadVideo(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1") {
+            uploadVideo(mentorId: "5ffdf41a1ee2c62111111111", questionId: "A1") {
               _id
             }
           }
@@ -140,7 +140,7 @@ describe('uploadVideo', () => {
       .send({
         query: `mutation {
           me {
-            uploadVideo(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "D1", video: "A1") {
+            uploadVideo(mentorId: "5ffdf41a1ee2c62111111111", questionId: "D1", video: "A1") {
               _id
             }
           }
@@ -161,7 +161,7 @@ describe('uploadVideo', () => {
       .send({
         query: `mutation {
           me {
-            uploadVideo(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1", video: "A1") {
+            uploadVideo(mentorId: "5ffdf41a1ee2c62111111111", questionId: "A1", video: "A1") {
               _id
               name
               firstName
@@ -190,7 +190,7 @@ describe('uploadVideo', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.uploadVideo).to.eql({
-      _id: '5ffdf41a1ee2c62320b49ea1',
+      _id: '5ffdf41a1ee2c62111111111',
       name: 'Clinton Anderson',
       firstName: 'Clint',
       title: "Nuclear Electrician's Mate",

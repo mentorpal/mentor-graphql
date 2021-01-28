@@ -6,7 +6,7 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { GraphQLString, GraphQLObjectType } from 'graphql';
 import MentorType from 'gql/types/mentor';
-import { Mentor as MentorSchema } from 'models';
+import { Mentor as MentorModel } from 'models';
 import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
 
@@ -23,17 +23,18 @@ export const updateMentor = {
     if (!args.mentor) {
       throw new Error('missing required param mentor');
     }
-    const mentor: Mentor = JSON.parse(decodeURI(args.mentor));
-    if (`${context.user._id}` !== `${mentor._id}`) {
+    const mentorUpdate: Mentor = JSON.parse(decodeURI(args.mentor));
+    const mentor: Mentor = await MentorModel.findOne({ _id: mentorUpdate._id });
+    if (mentor && `${context.user._id}` !== `${mentor.user}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    return await MentorSchema.findOneAndUpdate(
+    return await MentorModel.findOneAndUpdate(
       {
-        _id: mentor._id,
+        _id: mentorUpdate._id,
       },
       {
         $set: {
-          ...mentor,
+          ...mentorUpdate,
         },
       },
       {

@@ -52,7 +52,7 @@ describe('updateMentor', () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea2');
     const mentor = encodeURI(
       JSON.stringify({
-        _id: '5ffdf41a1ee2c62320b49ea1',
+        _id: '5ffdf41a1ee2c62111111111',
       })
     );
     const response = await request(app)
@@ -99,7 +99,7 @@ describe('updateMentor', () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const mentor = encodeURI(
       JSON.stringify({
-        _id: '5ffdf41a1ee2c62320b49ea1',
+        _id: '5ffdf41a1ee2c62111111111',
         name: 'Clint Anderson',
         isBuilt: true,
       })
@@ -121,7 +121,7 @@ describe('updateMentor', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateMentor).to.eql({
-      _id: '5ffdf41a1ee2c62320b49ea1',
+      _id: '5ffdf41a1ee2c62111111111',
       name: 'Clint Anderson',
       firstName: 'Clint',
       isBuilt: true,

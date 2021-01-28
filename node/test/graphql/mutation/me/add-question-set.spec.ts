@@ -56,7 +56,7 @@ describe('addQuestionSet', () => {
       .send({
         query: `mutation {
           me {
-            addQuestionSet(mentorId: "5ffdf41a1ee2c62320b49ea1", subjectId: "5ffdf41a1ee2c62320b49eb3") {
+            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111", subjectId: "5ffdf41a1ee2c62320b49eb3") {
               _id
             }
           }
@@ -98,7 +98,7 @@ describe('addQuestionSet', () => {
       .send({
         query: `mutation {
           me {
-            addQuestionSet(mentorId: "5ffdf41a1ee2c62320b49ea1") {
+            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111") {
               _id
             }
           }
@@ -119,7 +119,7 @@ describe('addQuestionSet', () => {
       .send({
         query: `mutation {
           me {
-            addQuestionSet(mentorId: "5ffdf41a1ee2c62320b49ea1", subjectId: "5ffdf41a1ee2c62320b49eb4") {
+            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111", subjectId: "5ffdf41a1ee2c62320b49eb4") {
               _id
             }
           }
@@ -128,7 +128,7 @@ describe('addQuestionSet', () => {
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'could not find subject 5ffdf41a1ee2c62320b49eb4'
+      "no subject found for id '5ffdf41a1ee2c62320b49eb4'"
     );
   });
 
@@ -140,7 +140,7 @@ describe('addQuestionSet', () => {
       .send({
         query: `mutation {
           me {
-            addQuestionSet(mentorId: "5ffdf41a1ee2c62320b49ea1", subjectId: "5ffdf41a1ee2c62320b49eb3") {
+            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111", subjectId: "5ffdf41a1ee2c62320b49eb3") {
               _id
               subjects {
                 _id
@@ -159,7 +159,7 @@ describe('addQuestionSet', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.addQuestionSet).to.eql({
-      _id: '5ffdf41a1ee2c62320b49ea1',
+      _id: '5ffdf41a1ee2c62111111111',
       subjects: [
         {
           _id: '5ffdf41a1ee2c62320b49eb1',
