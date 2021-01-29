@@ -6,6 +6,8 @@ The full terms of this copyright and license should always be found in the root 
 */
 import Mentor from './Mentor';
 export { default as Mentor } from './Mentor';
+import Question from './Question';
+export { default as Question } from './Question';
 import Subject from './Subject';
 export { default as Subject } from './Subject';
 import Topic from './Topic';
@@ -15,6 +17,7 @@ export { default as User } from './User';
 
 export default {
   Mentor,
+  Question,
   Subject,
   Topic,
   User,

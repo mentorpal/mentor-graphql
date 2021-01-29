@@ -47,46 +47,76 @@ module.exports = {
     },
   ],
 
+  answers: [
+    {
+      user: ObjectId('5ffdf41a1ee2c62111111111'),
+      question: ObjectId(),
+    },
+  ],
+
+  questions: [
+    {
+      _id: ObjectId('511111111111111111111111'),
+      question: "Don't talk and stay still.",
+      subject: '5ffdf41a1ee2c62320b49eb1',
+      topics: ['5ffdf41a1ee2c62320b49ec1'],
+    },
+    {
+      _id: ObjectId('511111111111111111111112'),
+      question: 'Who are you and what do you do?',
+      subject: '5ffdf41a1ee2c62320b49eb2',
+      topics: ['5ffdf41a1ee2c62320b49ec2'],
+    },
+    {
+      _id: ObjectId('511111111111111111111113'),
+      question: 'Is STEM fun?',
+      subject: '5ffdf41a1ee2c62320b49eb3',
+      topics: ['5ffdf41a1ee2c62320b49eb3'],
+    },
+  ],
+
   subjects: [
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49eb1'),
       name: 'Repeat After Me',
       description: "These are miscellaneous phrases you'll be asked to repeat.",
-      questions: [
-        {
-          id: 'A1',
-          question: "Don't talk and stay still.",
-          subject: '5ffdf41a1ee2c62320b49eb1',
-          topics: ['5ffdf41a1ee2c62320b49ec1'],
-        },
-      ],
+      questions: ['511111111111111111111111'],
+      //   {
+      //     id: 'A1',
+      //     question: "Don't talk and stay still.",
+      //     subject: '5ffdf41a1ee2c62320b49eb1',
+      //     topics: ['5ffdf41a1ee2c62320b49ec1'],
+      //   },
+      // ],
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49eb2'),
       name: 'Background',
       description:
         'These questions will ask general questions about your background that might be relevant to how people understand your career.',
-      questions: [
-        {
-          id: 'B1',
-          question: 'Who are you and what do you do?',
-          subject: '5ffdf41a1ee2c62320b49eb2',
-          topics: ['5ffdf41a1ee2c62320b49ec2'],
-        },
-      ],
+      questions: ['511111111111111111111112'],
+      // questions: [
+      //   {
+      //     id: 'B1',
+      //     question: 'Who are you and what do you do?',
+      //     subject: '5ffdf41a1ee2c62320b49eb2',
+      //     topics: ['5ffdf41a1ee2c62320b49ec2'],
+      //   },
+      // ],
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49eb3'),
       name: 'STEM',
       description: 'These questions will ask about STEM careers.',
-      questions: [
-        {
-          id: 'C1',
-          question: 'Is STEM fun?',
-          subject: '5ffdf41a1ee2c62320b49eb3',
-          topics: ['5ffdf41a1ee2c62320b49eb3'],
-        },
-      ],
+      questions: ['511111111111111111111113'],
+      // questions: [
+      //   {
+      //     id: 'C1',
+      //     question: 'Is STEM fun?',
+      //     subject: '5ffdf41a1ee2c62320b49eb3',
+      //     topics: ['5ffdf41a1ee2c62320b49eb3'],
+      //   },
+      // ],
     },
   ],
 

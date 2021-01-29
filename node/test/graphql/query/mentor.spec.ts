@@ -123,5 +123,60 @@ describe('mentor', () => {
         },
       ],
     });
+
+    // it('mentor/answers gets answers for all questions, including incomplete (CHANGE THIS to /mentor/subject/answers)', async () => {
+    //   const response = await request(app).post('/graphql').send({
+    //     query: `query {
+    //       mentor(id: "5ffdf41a1ee2c62111111111") {
+    //         _id
+    //         name
+    //         answers {
+    //           video
+    //           transcript
+    //           status
+    //           recordedAt
+    //         }
+    //       }
+    //     }
+    //   `,
+    //   });
+    //   expect(response.status).to.equal(200);
+    //   expect(response.body.data.mentor).to.eql({
+    //     _id: '5ffdf41a1ee2c62111111111',
+    //     name: 'Clinton Anderson',
+    //     answers: [
+    //       {
+    //         question: {
+    //           _id: 'A1',
+    //           text: "Don't talk and stay still.",
+    //         status: 'Incomplete',
+    //         subject: {
+    //           _id: '5ffdf41a1ee2c62320b49eb1',
+    //           name: 'Repeat After Me',
+    //         },
+    //         topics: [
+    //           {
+    //             _id: '5ffdf41a1ee2c62320b49ec1',
+    //             name: 'Idle',
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         id: 'B1',
+    //         question: 'Who are you and what do you do?',
+    //         status: 'Incomplete',
+    //         subject: {
+    //           _id: '5ffdf41a1ee2c62320b49eb2',
+    //           name: 'Background',
+    //         },
+    //         topics: [
+    //           {
+    //             _id: '5ffdf41a1ee2c62320b49ec2',
+    //             name: 'Background',
+    //           },
+    //         ],
+    //       },
+    //     ]
+    //   });
   });
 });
