@@ -49,7 +49,7 @@ describe('mentor', () => {
   it('gets a mentor by id', async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
-          mentor(id: "5ffdf41a1ee2c62320b49ea1") {
+          mentor(id: "5ffdf41a1ee2c62111111111") {
             _id
             name
             firstName
@@ -76,7 +76,7 @@ describe('mentor', () => {
     });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
-      _id: '5ffdf41a1ee2c62320b49ea1',
+      _id: '5ffdf41a1ee2c62111111111',
       name: 'Clinton Anderson',
       firstName: 'Clint',
       title: "Nuclear Electrician's Mate",

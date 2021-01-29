@@ -26,10 +26,13 @@ export const generateTranscript = {
     if (!args.questionId) {
       throw new Error('missing required param questionId');
     }
-    if (`${context.user._id}` !== `${args.mentorId}`) {
+    const mentor = await MentorModel.findOne({ _id: args.mentorId });
+    if (!mentor) {
+      throw new Error(`no mentor found for id '${args.mentorId}'`);
+    }
+    if (`${context.user._id}` !== `${mentor.user}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    const mentor = await MentorModel.findOne({ _id: args.mentorId });
     const question = mentor.questions.find(
       (q: Question) => q.id === args.questionId
     );

@@ -28,10 +28,10 @@ export const updateQuestion = {
     if (!args.question) {
       throw new Error('missing required param question');
     }
-    if (`${context.user._id}` !== `${args.mentorId}`) {
+    const mentor: Mentor = await MentorModel.findOne({ _id: args.mentorId });
+    if (`${context.user._id}` !== `${mentor.user}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    const mentor: Mentor = await MentorModel.findOne({ _id: args.mentorId });
     const question: Question = JSON.parse(decodeURI(args.question));
     const idx = mentor.questions.findIndex(
       (q: Question) => q.id === question.id

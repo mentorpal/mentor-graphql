@@ -54,7 +54,7 @@ describe('generateTranscript', () => {
       .send({
         query: `mutation {
           me {
-            generateTranscript(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1")
+            generateTranscript(mentorId: "5ffdf41a1ee2c62111111111", questionId: "A1")
           }
         }`,
       });
@@ -84,6 +84,25 @@ describe('generateTranscript', () => {
     );
   });
 
+  it(`throws an error if mentor not found`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {            
+            generateTranscript(questionId: "A1", mentorId: "5ffdf41a1ee2c62399999999")
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      "no mentor found for id '5ffdf41a1ee2c62399999999'"
+    );
+  });
+
   it(`throws an error if no questionId`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
@@ -92,7 +111,7 @@ describe('generateTranscript', () => {
       .send({
         query: `mutation {
           me {
-            generateTranscript(mentorId: "5ffdf41a1ee2c62320b49ea1")
+            generateTranscript(mentorId: "5ffdf41a1ee2c62111111111")
           }
         }`,
       });
@@ -111,7 +130,7 @@ describe('generateTranscript', () => {
       .send({
         query: `mutation {
           me {
-            generateTranscript(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "D1")
+            generateTranscript(mentorId: "5ffdf41a1ee2c62111111111", questionId: "D1")
           }
         }`,
       });
@@ -130,7 +149,7 @@ describe('generateTranscript', () => {
       .send({
         query: `mutation {
           me {
-            generateTranscript(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1")
+            generateTranscript(mentorId: "5ffdf41a1ee2c62111111111", questionId: "A1")
           }
         }`,
       });
@@ -149,7 +168,7 @@ describe('generateTranscript', () => {
       .send({
         query: `mutation {
           me {
-            uploadVideo(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1", video: "A1") {
+            uploadVideo(mentorId: "5ffdf41a1ee2c62111111111", questionId: "A1", video: "A1") {
               _id
             }
           }
@@ -161,7 +180,7 @@ describe('generateTranscript', () => {
       .send({
         query: `mutation {
           me {
-            generateTranscript(mentorId: "5ffdf41a1ee2c62320b49ea1", questionId: "A1")
+            generateTranscript(mentorId: "5ffdf41a1ee2c62111111111", questionId: "A1")
           }
         }`,
       });

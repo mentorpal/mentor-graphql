@@ -20,7 +20,7 @@ export interface Mentor extends Document {
   subjects: string[];
   questions: Question[];
   lastTrainedAt: Date;
-  user: User;
+  user: User['_id'];
 }
 
 export const MentorSchema = new Schema(

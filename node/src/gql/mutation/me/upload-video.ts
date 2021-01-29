@@ -32,10 +32,10 @@ export const uploadVideo = {
     if (!args.video) {
       throw new Error('missing required param video');
     }
-    if (`${context.user._id}` !== `${args.mentorId}`) {
+    const mentor = await MentorModel.findOne({ _id: args.mentorId });
+    if (`${context.user._id}` !== `${mentor.user}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    const mentor = await MentorModel.findOne({ _id: args.mentorId });
     const idx = mentor.questions.findIndex(
       (q: Question) => q.id === args.questionId
     );
