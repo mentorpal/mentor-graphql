@@ -116,7 +116,7 @@ describe('updateQuestion', () => {
     );
   });
 
-  it('updates a question', async () => {
+  it.only('updates a question', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const question = encodeURI(
       JSON.stringify({

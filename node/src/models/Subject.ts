@@ -6,7 +6,7 @@ The full terms of this copyright and license should always be found in the root 
 */
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import { PaginatedResolveResult } from './PaginatedResolveResult';
-import { Question, QuestionSchema } from './Question';
+import { Question } from './Question';
 
 const mongoPaging = require('mongo-cursor-pagination');
 mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
@@ -14,13 +14,13 @@ mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
 export interface Subject extends Document {
   name: string;
   description: string;
-  questions: [Question];
+  questions: [Question['_id']];
 }
 
 export const SubjectSchema = new Schema({
   name: { type: String },
   description: { type: String },
-  questions: { type: [QuestionSchema] },
+  questions: [{ type: mongoose.Types.ObjectId, ref: 'Question' }],
 });
 
 export interface SubjectModel extends Model<Subject> {

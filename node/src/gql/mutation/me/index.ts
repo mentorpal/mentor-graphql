@@ -14,13 +14,13 @@ import uploadVideo from './upload-video';
 
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeMutation',
-  fields: {
+  fields: () => ({
     addQuestionSet,
     generateTranscript,
     updateMentor,
     updateQuestion,
     uploadVideo,
-  },
+  }),
 });
 
 export const me = {

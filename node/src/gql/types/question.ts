@@ -13,8 +13,8 @@ import TopicType from './topic';
 
 export const QuestionType = new GraphQLObjectType({
   name: 'Question',
-  fields: {
-    id: { type: GraphQLString },
+  fields: () => ({
+    _id: { type: GraphQLString },
     question: { type: GraphQLString },
     video: { type: GraphQLString },
     transcript: { type: GraphQLString },
@@ -35,7 +35,7 @@ export const QuestionType = new GraphQLObjectType({
         return Promise.all(question.topics.map((t) => resolveTopic(t)));
       },
     },
-  },
+  }),
 });
 
 export default QuestionType;
