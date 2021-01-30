@@ -24,7 +24,6 @@ export interface Answer extends Document {
 }
 
 export const AnswerSchema = new Schema({
-  id: { type: String, required: true, unique: true },
   mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
   question: { type: mongoose.Types.ObjectId, ref: 'Question' },
   topics: { type: [String] },
@@ -38,7 +37,7 @@ export const AnswerSchema = new Schema({
   recordedAt: { type: Date },
 });
 
-AnswerSchema.index({ question: -1 });
+AnswerSchema.index({ question: -1, mentor: -1 }, { unique: true });
 AnswerSchema.index({ mentor: -1 });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

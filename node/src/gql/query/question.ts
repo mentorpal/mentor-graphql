@@ -4,19 +4,19 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Question } from 'models';
+import { Question as QuestionModel } from 'models';
 import { QuestionType } from 'gql/types/question';
 import findOne from 'gql/query/find-one';
 import findByParentField from 'gql/query/find-by-parent-field';
 
 export const questionFindOne = findOne({
-  model: Question,
+  model: QuestionModel,
   type: QuestionType,
   typeName: 'question',
 });
 
 export function questionFieldWithName(field = 'question') {
-  return findByParentField(QuestionType, Question, field);
+  return findByParentField(QuestionType, QuestionModel, field);
 }
 
 export const questionField = questionFieldWithName();

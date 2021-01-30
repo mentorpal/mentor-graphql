@@ -15,9 +15,9 @@ import { expect } from 'chai';
 import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
-import { getToken } from '../../../helpers';
+import { getToken } from 'test/helpers';
 
-describe('uploadVideo', () => {
+describe('updateAnswer', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -35,9 +35,7 @@ describe('uploadVideo', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
         me {
-          uploadVideo(mentorId: "", questionId: "", video: "") {
-            _id
-          }
+          updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111111112", answer: "{}")
         }
       }`,
     });
@@ -50,15 +48,18 @@ describe('uploadVideo', () => {
 
   it(`throws an error if mentor is not the user's`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea2');
+    const question = encodeURI(
+      JSON.stringify({
+        question: '',
+      })
+    );
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            uploadVideo(mentorId: "5ffdf41a1ee2c62111111111", questionId: "A1", video: "A1") {
-              _id
-            }
+            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111111112" answer: "${question}")
           }
         }`,
       });
@@ -77,9 +78,7 @@ describe('uploadVideo', () => {
       .send({
         query: `mutation {
           me {
-            uploadVideo(questionId: "A1", video: "A1") {
-              _id
-            }
+            updateAnswer(answer: "") 
           }
         }`,
       });
@@ -98,9 +97,7 @@ describe('uploadVideo', () => {
       .send({
         query: `mutation {
           me {
-            uploadVideo(mentorId: "5ffdf41a1ee2c62111111111", video: "A1") {
-              _id
-            }
+            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", answer: "{}")
           }
         }`,
       });
@@ -111,7 +108,7 @@ describe('uploadVideo', () => {
     );
   });
 
-  it(`throws an error if no video`, async () => {
+  it(`throws an error if no answer`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
@@ -119,126 +116,99 @@ describe('uploadVideo', () => {
       .send({
         query: `mutation {
           me {
-            uploadVideo(mentorId: "5ffdf41a1ee2c62111111111", questionId: "A1") {
-              _id
-            }
+            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111111112")
           }
         }`,
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'missing required param video'
+      'missing required param answer'
     );
   });
 
-  it(`throws an error if questionId is invalid`, async () => {
+  it('updates an answer', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const questionId = '511111111111111111111112';
+    const answer = encodeURI(
+      JSON.stringify({
+        transcript:
+          "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+        status: 'Complete',
+      })
+    );
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            uploadVideo(mentorId: "5ffdf41a1ee2c62111111111", questionId: "D1", video: "A1") {
-              _id
-            }
+            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "${questionId}", answer: "${answer}")
           }
         }`,
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'no question with id D1'
+      'data.me.updateAnswer',
+      true
     );
-  });
-
-  it('uploads a video', async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const response = await request(app)
-      .post('/graphql')
-      .set('Authorization', `bearer ${token}`)
-      .send({
-        query: `mutation {
-          me {
-            uploadVideo(mentorId: "5ffdf41a1ee2c62111111111", questionId: "A1", video: "A1") {
-              _id
-              name
-              firstName
-              title
-              subjects {
+    const r2 = await request(app).post('/graphql').send({
+      query: `query {
+          mentor(id: "5ffdf41a1ee2c62111111111") {
+            answers {
+              transcript
+              question {
                 _id
-                name
               }
-              questions {
-                id
-                question
-                status
-                video
-                subject {
-                  _id
-                  name
-                }
-                topics {
-                  _id
-                  name
-                }
-              }  
             }
           }
-        }`,
+      }`,
+    });
+    expect(r2.status).to.equal(200);
+    const updatedAnswer = r2.body.data.mentor.answers.find(
+      (a: any) => a.question._id === questionId
+    );
+    expect(updatedAnswer).to.have.property(
+      'transcript',
+      "My name is Clint Anderson and I'm a Nuclear Electrician's Mate"
+    );
+  });
+
+  it(`throws an error if mentor does not exist`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+        me {
+          updateAnswer(mentorId: "5ffdf41a1ee2c62111199999", questionId: "511111111111111111111112", answer: "{}")
+        }
+      }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.uploadVideo).to.eql({
-      _id: '5ffdf41a1ee2c62111111111',
-      name: 'Clinton Anderson',
-      firstName: 'Clint',
-      title: "Nuclear Electrician's Mate",
-      subjects: [
-        {
-          _id: '5ffdf41a1ee2c62320b49eb1',
-          name: 'Repeat After Me',
-        },
-        {
-          _id: '5ffdf41a1ee2c62320b49eb2',
-          name: 'Background',
-        },
-      ],
-      questions: [
-        {
-          id: 'A1',
-          question: "Don't talk and stay still.",
-          status: 'Incomplete',
-          video:
-            'https://video.mentorpal.org/videos/mentors/clint/web/clintanderson_U1_1_1.mp4',
-          subject: {
-            _id: '5ffdf41a1ee2c62320b49eb1',
-            name: 'Repeat After Me',
-          },
-          topics: [
-            {
-              _id: '5ffdf41a1ee2c62320b49ec1',
-              name: 'Idle',
-            },
-          ],
-        },
-        {
-          id: 'B1',
-          question: 'Who are you and what do you do?',
-          status: 'Incomplete',
-          video: null,
-          subject: {
-            _id: '5ffdf41a1ee2c62320b49eb2',
-            name: 'Background',
-          },
-          topics: [
-            {
-              _id: '5ffdf41a1ee2c62320b49ec2',
-              name: 'Background',
-            },
-          ],
-        },
-      ],
-    });
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      `no mentor found for id '5ffdf41a1ee2c62111199999'`
+    );
+  });
+
+  it(`throws an error if question does not exist`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+        me {
+          updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111999999", answer: "{}")
+        }
+      }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      `no question found for id '511111111111111111999999'`
+    );
   });
 });

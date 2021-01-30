@@ -11,18 +11,13 @@ import {
   GraphQLBoolean,
   GraphQLID,
 } from 'graphql';
-import {
-  Answer as AnswerModel,
-  Question as QuestionModel,
-  Subject as SubjectModel,
-} from 'models';
+import { Answer as AnswerModel, Subject as SubjectModel } from 'models';
 import { Answer, Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
 import { Subject } from 'models/Subject';
 import mongoose from 'mongoose';
 import DateType from './date';
 import AnswerType from './answer';
-import QuestionType from './question';
 import SubjectType from './subject';
 
 export const MentorType = new GraphQLObjectType({
@@ -58,7 +53,7 @@ export const MentorType = new GraphQLObjectType({
           },
           {}
         );
-        const answerResult = questionIds.map((qid, i) => {
+        const answerResult = questionIds.map((qid) => {
           return (
             answersByQid[`${qid}`] || {
               mentor: parent._id,
@@ -81,12 +76,6 @@ export const MentorType = new GraphQLObjectType({
         return Promise.all(
           mentor.subjects.map((s: string) => resolveSubjects(s))
         );
-      },
-    },
-    questions: {
-      type: GraphQLList(QuestionType),
-      resolve: async function (mentor: Mentor) {
-        return mentor.questions;
       },
     },
   }),

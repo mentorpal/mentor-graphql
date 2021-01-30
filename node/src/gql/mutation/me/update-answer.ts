@@ -4,47 +4,68 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType } from 'graphql';
-import { Mentor as MentorModel } from 'models';
+import { GraphQLString, GraphQLObjectType, GraphQLBoolean } from 'graphql';
+import mongoose from 'mongoose';
+import {
+  Answer as AnswerModel,
+  Mentor as MentorModel,
+  Question as QuestionModel,
+} from 'models';
+import { Answer } from 'models/Answer';
+import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
-import { Question } from 'models/Question';
 
-export const generateTranscript = {
-  type: GraphQLString,
+export const updateAnswer = {
+  type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLString },
     questionId: { type: GraphQLString },
+    answer: { type: GraphQLString },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentorId: string; questionId: string },
+    args: { mentorId: string; answer: string; questionId: string },
     context: { user: User }
-  ): Promise<string> => {
+  ): Promise<boolean> => {
     if (!args.mentorId) {
       throw new Error('missing required param mentorId');
+    }
+    if (!args.answer) {
+      throw new Error('missing required param answer');
     }
     if (!args.questionId) {
       throw new Error('missing required param questionId');
     }
-    const mentor = await MentorModel.findOne({ _id: args.mentorId });
+    const mentor: Mentor = await MentorModel.findOne({ _id: args.mentorId });
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
+    }
+    if (
+      !(await QuestionModel.exists({
+        _id: mongoose.Types.ObjectId(args.questionId),
+      }))
+    ) {
+      throw new Error(`no question found for id '${args.questionId}'`);
     }
     if (`${context.user._id}` !== `${mentor.user}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    const question = mentor.questions.find(
-      (q: Question) => q.id === args.questionId
+    const answerUpdate: Answer = JSON.parse(decodeURI(args.answer));
+    const answer = await AnswerModel.findOneAndUpdate(
+      {
+        mentor: mentor._id,
+        question: mongoose.Types.ObjectId(args.questionId),
+      },
+      {
+        $set: answerUpdate,
+      },
+      {
+        upsert: true,
+        new: true,
+      }
     );
-    if (!question) {
-      throw new Error(`no question with id ${args.questionId}`);
-    }
-    if (!question.video) {
-      throw new Error(`no video to generate a transcript from`);
-    }
-    //TODO
-    return 'this is a placeholder text';
+    return Boolean(answer);
   },
 };
 
-export default generateTranscript;
+export default updateAnswer;

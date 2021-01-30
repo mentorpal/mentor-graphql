@@ -14,7 +14,7 @@ export function findByParentFieldQuery<T>(
   gqlType: GraphQLObjectType,
   model: HasFindById<T>,
   fieldName: string
-) {
+): any {
   return {
     type: gqlType,
     resolve: async (parent: any) => {

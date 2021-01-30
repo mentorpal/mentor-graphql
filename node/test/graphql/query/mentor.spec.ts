@@ -58,19 +58,6 @@ describe('mentor', () => {
               _id
               name
             }
-            questions {
-              id
-              question
-              status
-              subject {
-                _id
-                name
-              }
-              topics {
-                _id
-                name
-              }
-            }
           }
       }`,
     });
@@ -88,38 +75,6 @@ describe('mentor', () => {
         {
           _id: '5ffdf41a1ee2c62320b49eb2',
           name: 'Background',
-        },
-      ],
-      questions: [
-        {
-          id: 'A1',
-          question: "Don't talk and stay still.",
-          status: 'Incomplete',
-          subject: {
-            _id: '5ffdf41a1ee2c62320b49eb1',
-            name: 'Repeat After Me',
-          },
-          topics: [
-            {
-              _id: '5ffdf41a1ee2c62320b49ec1',
-              name: 'Idle',
-            },
-          ],
-        },
-        {
-          id: 'B1',
-          question: 'Who are you and what do you do?',
-          status: 'Incomplete',
-          subject: {
-            _id: '5ffdf41a1ee2c62320b49eb2',
-            name: 'Background',
-          },
-          topics: [
-            {
-              _id: '5ffdf41a1ee2c62320b49ec2',
-              name: 'Background',
-            },
-          ],
         },
       ],
     });
