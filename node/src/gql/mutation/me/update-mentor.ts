@@ -4,14 +4,14 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType } from 'graphql';
+import { GraphQLString, GraphQLObjectType, GraphQLBoolean } from 'graphql';
 import { MentorType } from 'gql/types/mentor';
 import { Mentor as MentorModel } from 'models';
 import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
 
 export const updateMentor = {
-  type: MentorType,
+  type: GraphQLBoolean,
   args: {
     mentor: { type: GraphQLString },
   },
@@ -19,7 +19,7 @@ export const updateMentor = {
     _root: GraphQLObjectType,
     args: { mentor: string },
     context: { user: User }
-  ): Promise<Mentor> => {
+  ): Promise<boolean> => {
     if (!args.mentor) {
       throw new Error('missing required param mentor');
     }
@@ -28,7 +28,7 @@ export const updateMentor = {
     if (mentor && `${context.user._id}` !== `${mentor.user}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    return await MentorModel.findOneAndUpdate(
+    const updated = await MentorModel.findOneAndUpdate(
       {
         _id: mentorUpdate._id,
       },
@@ -42,6 +42,7 @@ export const updateMentor = {
         upsert: true,
       }
     );
+    return Boolean(updated);
   },
 };
 

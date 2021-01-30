@@ -35,9 +35,7 @@ describe('updateMentor', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
           me {
-            updateMentor(mentor: "") {
-              _id
-            }
+            updateMentor(mentor: "")
           }
         }`,
     });
@@ -61,9 +59,7 @@ describe('updateMentor', () => {
       .send({
         query: `mutation {
           me {
-            updateMentor(mentor: "${mentor}") {
-              _id
-            }
+            updateMentor(mentor: "${mentor}")
           }
         }`,
       });
@@ -82,9 +78,7 @@ describe('updateMentor', () => {
       .send({
         query: `mutation {
           me {
-            updateMentor {
-              _id
-            }
+            updateMentor
           }
         }`,
       });
@@ -110,21 +104,20 @@ describe('updateMentor', () => {
       .send({
         query: `mutation {
           me {
-            updateMentor(mentor: "${mentor}") {
-              _id
-              name
-              firstName
-              isBuilt
-            }
+            updateMentor(mentor: "${mentor}")
           }
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.updateMentor).to.eql({
-      _id: '5ffdf41a1ee2c62111111111',
-      name: 'Clint Anderson',
-      firstName: 'Clint',
-      isBuilt: true,
-    });
+    expect(response.body).to.have.deep.nested.property(
+      'data.me.updateMentor',
+      true
+    );
+    // expect(response.body.data.me.updateMentor).to.eql({
+    //   _id: '5ffdf41a1ee2c62111111111',
+    //   name: 'Clint Anderson',
+    //   firstName: 'Clint',
+    //   isBuilt: true,
+    // });
   });
 });
