@@ -17,10 +17,10 @@ export interface QuestionSet {
 
 export const QuestionSetType = new GraphQLObjectType({
   name: 'QuestionSet',
-  fields: {
+  fields: () => ({
     subject: { type: SubjectType },
     questions: { type: GraphQLList(QuestionType) },
-  },
+  }),
 });
 
 export default QuestionSetType;

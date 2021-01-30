@@ -4,31 +4,21 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType } from 'graphql';
-import { Subject as SubjectSchema } from 'models';
-import QuestionSetType, { QuestionSet } from 'gql/types/question-set';
+import { Question as QuestionModel } from 'models';
+import { QuestionType } from 'gql/types/question';
+import findOne from 'gql/query/find-one';
+import findByParentField from 'gql/query/find-by-parent-field';
 
-export const questionSet = {
-  type: QuestionSetType,
-  args: {
-    subjectId: { type: GraphQLString },
-  },
-  resolve: async (
-    _root: GraphQLObjectType,
-    args: { subjectId: string }
-  ): Promise<QuestionSet> => {
-    if (!args.subjectId) {
-      throw new Error('missing required param subjectId');
-    }
-    const subject = await SubjectSchema.findOne({ _id: args.subjectId });
-    if (!subject) {
-      throw new Error(`could not find subject with id ${args.subjectId}`);
-    }
-    return {
-      subject: subject,
-      questions: subject.questions,
-    };
-  },
-};
+export const questionFindOne = findOne({
+  model: QuestionModel,
+  type: QuestionType,
+  typeName: 'question',
+});
 
-export default questionSet;
+export function questionFieldWithName(field = 'question') {
+  return findByParentField(QuestionType, QuestionModel, field);
+}
+
+export const questionField = questionFieldWithName();
+
+export default questionFindOne;

@@ -4,15 +4,28 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType, GraphQLID } from 'graphql';
+import {
+  GraphQLBoolean,
+  GraphQLID,
+  GraphQLObjectType,
+  GraphQLString,
+} from 'graphql';
+
+import { Subject } from 'models/Subject';
 
 export const SubjectType = new GraphQLObjectType({
   name: 'Subject',
-  fields: {
+  fields: () => ({
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
     description: { type: GraphQLString },
-  },
+    isRequired: {
+      type: GraphQLBoolean!,
+      resolve: async (subject: Subject) => {
+        return Promise.resolve(Boolean(subject.isRequired));
+      },
+    },
+  }),
 });
 
 export default SubjectType;

@@ -12,7 +12,6 @@ import subject from './subject';
 import subjects from './subjects';
 import topic from './topic';
 import topics from './topics';
-import questionSet from './question-set';
 
 export default new GraphQLObjectType({
   name: 'Query',
@@ -24,6 +23,5 @@ export default new GraphQLObjectType({
     subjects,
     topic,
     topics,
-    questionSet,
   },
 });
