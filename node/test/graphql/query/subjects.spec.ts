@@ -32,6 +32,7 @@ describe('subjects', () => {
             node {
               _id
               name
+              isRequired
             }
           }
           pageInfo {
@@ -48,18 +49,21 @@ describe('subjects', () => {
           node: {
             _id: '5ffdf41a1ee2c62320b49eb3',
             name: 'STEM',
+            isRequired: false,
           },
         },
         {
           node: {
             _id: '5ffdf41a1ee2c62320b49eb2',
             name: 'Background',
+            isRequired: true,
           },
         },
         {
           node: {
             _id: '5ffdf41a1ee2c62320b49eb1',
             name: 'Repeat After Me',
+            isRequired: true,
           },
         },
       ],

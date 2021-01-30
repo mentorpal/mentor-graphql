@@ -88,6 +88,7 @@ module.exports = {
       name: 'Repeat After Me',
       description: "These are miscellaneous phrases you'll be asked to repeat.",
       questions: [ObjectId('511111111111111111111111')],
+      isRequired: true,
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49eb2'),
@@ -95,6 +96,7 @@ module.exports = {
       description:
         'These questions will ask general questions about your background that might be relevant to how people understand your career.',
       questions: [ObjectId('511111111111111111111112')],
+      isRequired: true,
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49eb3'),

@@ -15,12 +15,14 @@ export interface Subject extends Document {
   name: string;
   description: string;
   questions: [Question['_id']];
+  isRequired: boolean;
 }
 
 export const SubjectSchema = new Schema({
   name: { type: String },
   description: { type: String },
   questions: [{ type: mongoose.Types.ObjectId, ref: 'Question' }],
+  isRequired: { type: Boolean },
 });
 
 export interface SubjectModel extends Model<Subject> {

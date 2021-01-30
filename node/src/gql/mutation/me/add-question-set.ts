@@ -37,7 +37,6 @@ export const addQuestionSet = {
       throw new Error(`no subject found for id '${args.subjectId}'`);
     }
     mentor.subjects.push(subject._id);
-    // mentor.questions.push(...subject.questions);
     const updatedMentor = await MentorModel.findOneAndUpdate(
       {
         _id: mentor._id,
@@ -45,7 +44,6 @@ export const addQuestionSet = {
       {
         $set: {
           subjects: mentor.subjects,
-          // questions: mentor.questions,
         },
       },
       {
