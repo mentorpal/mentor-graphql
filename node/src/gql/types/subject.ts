@@ -7,11 +7,15 @@ The full terms of this copyright and license should always be found in the root 
 import {
   GraphQLBoolean,
   GraphQLID,
+  GraphQLList,
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
 
+import { Question as QuestionModel } from 'models';
 import { Subject } from 'models/Subject';
+import { Question } from 'models/Question';
+import QuestionType from './question';
 
 export const SubjectType = new GraphQLObjectType({
   name: 'Subject',
@@ -23,6 +27,12 @@ export const SubjectType = new GraphQLObjectType({
       type: GraphQLBoolean!,
       resolve: async (subject: Subject) => {
         return Promise.resolve(Boolean(subject.isRequired));
+      },
+    },
+    questions: {
+      type: GraphQLList(QuestionType),
+      resolve: async function (subject: Subject) {
+        return QuestionModel.find({ _id: { $in: subject.questions } });
       },
     },
   }),

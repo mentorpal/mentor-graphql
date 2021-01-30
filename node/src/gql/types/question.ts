@@ -8,7 +8,6 @@ import { GraphQLString, GraphQLObjectType, GraphQLList } from 'graphql';
 import { Subject as SubjectSchema, Topic } from 'models';
 import { Question } from 'models/Question';
 import DateType from './date';
-import SubjectType from './subject';
 import TopicType from './topic';
 
 export const QuestionType = new GraphQLObjectType({
@@ -20,12 +19,6 @@ export const QuestionType = new GraphQLObjectType({
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
     recordedAt: { type: DateType },
-    subject: {
-      type: SubjectType,
-      resolve: async function (question: Question) {
-        return await SubjectSchema.findOne({ _id: question.subject });
-      },
-    },
     topics: {
       type: GraphQLList(TopicType),
       resolve: async function (question: Question) {
