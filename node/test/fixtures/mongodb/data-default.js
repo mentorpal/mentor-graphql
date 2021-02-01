@@ -33,20 +33,6 @@ module.exports = {
         ObjectId('5ffdf41a1ee2c62320b49eb2'),
       ],
       user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
-      questions: [
-        {
-          id: 'A1',
-          question: "Don't talk and stay still.",
-          subject: '5ffdf41a1ee2c62320b49eb1',
-          topics: ['5ffdf41a1ee2c62320b49ec1'],
-        },
-        {
-          id: 'B1',
-          question: 'Who are you and what do you do?',
-          subject: '5ffdf41a1ee2c62320b49eb2',
-          topics: ['5ffdf41a1ee2c62320b49ec2'],
-        },
-      ],
     },
   ],
 
@@ -65,20 +51,15 @@ module.exports = {
     {
       _id: ObjectId('511111111111111111111111'),
       question: "Don't talk and stay still.",
-      subject: '5ffdf41a1ee2c62320b49eb1',
-      topics: ['5ffdf41a1ee2c62320b49ec1'],
+      name: 'idle',
     },
     {
       _id: ObjectId('511111111111111111111112'),
       question: 'Who are you and what do you do?',
-      subject: '5ffdf41a1ee2c62320b49eb2',
-      topics: ['5ffdf41a1ee2c62320b49ec2'],
     },
     {
       _id: ObjectId('511111111111111111111113'),
       question: 'Is STEM fun?',
-      subject: '5ffdf41a1ee2c62320b49eb3',
-      topics: ['5ffdf41a1ee2c62320b49eb3'],
     },
   ],
 
