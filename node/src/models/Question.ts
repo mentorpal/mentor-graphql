@@ -15,27 +15,13 @@ export enum Status {
 export interface Question extends Document {
   id: string;
   question: string;
-  subject: string;
-  topics: [string];
-  video: string;
-  transcript: string;
-  status: Status;
-  recordedAt: Date;
+  name: string;
 }
 
 export const QuestionSchema = new Schema({
   id: { type: String, required: true, unique: true },
   question: { type: String },
-  subject: { type: String },
-  topics: { type: [String] },
-  video: { type: String },
-  transcript: { type: String },
-  status: {
-    type: String,
-    enum: [Status.INCOMPLETE, Status.COMPLETE],
-    default: Status.INCOMPLETE,
-  },
-  recordedAt: { type: Date },
+  name: { type: String },
 });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

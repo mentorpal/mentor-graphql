@@ -26,7 +26,6 @@ export interface Answer extends Document {
 export const AnswerSchema = new Schema({
   mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
   question: { type: mongoose.Types.ObjectId, ref: 'Question' },
-  topics: { type: [String] },
   video: { type: String },
   transcript: { type: String },
   status: {
