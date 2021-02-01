@@ -14,7 +14,6 @@ import {
 
 import { Question as QuestionModel } from 'models';
 import { Subject } from 'models/Subject';
-import { Question } from 'models/Question';
 import QuestionType from './question';
 
 export const SubjectType = new GraphQLObjectType({
