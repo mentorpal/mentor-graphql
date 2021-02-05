@@ -89,6 +89,9 @@ describe('mentor', () => {
           answers {
             question {
               _id
+              topics {
+                name
+              }
             }
             transcript
           }
@@ -104,12 +107,18 @@ describe('mentor', () => {
         {
           question: {
             _id: '511111111111111111111111',
+            topics: [],
           },
           transcript: '[being still]',
         },
         {
           question: {
             _id: '511111111111111111111112',
+            topics: [
+              {
+                name: 'Background',
+              },
+            ],
           },
           transcript: '',
         },

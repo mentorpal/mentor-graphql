@@ -56,6 +56,7 @@ module.exports = {
     {
       _id: ObjectId('511111111111111111111112'),
       question: 'Who are you and what do you do?',
+      topics: [ObjectId('5ffdf41a1ee2c62320b49ec2')],
     },
     {
       _id: ObjectId('511111111111111111111113'),
