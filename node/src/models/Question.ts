@@ -6,6 +6,7 @@ The full terms of this copyright and license should always be found in the root 
 */
 
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { Topic } from './Topic';
 
 export enum Status {
   INCOMPLETE = 'Incomplete',
@@ -16,12 +17,14 @@ export interface Question extends Document {
   id: string;
   question: string;
   name: string;
+  topics: [Topic['_id']];
 }
 
 export const QuestionSchema = new Schema({
   id: { type: String, required: true, unique: true },
   question: { type: String },
   name: { type: String },
+  topics: [{ type: mongoose.Types.ObjectId, ref: 'Topic' }],
 });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
