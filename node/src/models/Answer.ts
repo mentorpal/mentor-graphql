@@ -10,8 +10,8 @@ import { Question } from './Question';
 import { Mentor } from './Mentor';
 
 export enum Status {
-  INCOMPLETE = 'Incomplete',
-  COMPLETE = 'Complete',
+  INCOMPLETE = 'INCOMPLETE',
+  COMPLETE = 'COMPLETE',
 }
 
 export interface Answer extends Document {

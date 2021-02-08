@@ -8,14 +8,15 @@ The full terms of this copyright and license should always be found in the root 
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import { Topic } from './Topic';
 
-export enum Status {
-  INCOMPLETE = 'Incomplete',
-  COMPLETE = 'Complete',
+export enum QuestionType {
+  UTTERANCE = 'UTTERANCE',
+  QUESTION = 'QUESTION',
 }
 
 export interface Question extends Document {
   id: string;
   question: string;
+  type: QuestionType;
   name: string;
   topics: [Topic['_id']];
 }
@@ -23,6 +24,11 @@ export interface Question extends Document {
 export const QuestionSchema = new Schema({
   id: { type: String, required: true, unique: true },
   question: { type: String },
+  type: {
+    type: String,
+    enum: [QuestionType.UTTERANCE, QuestionType.QUESTION],
+    default: QuestionType.QUESTION,
+  },
   name: { type: String },
   topics: [{ type: mongoose.Types.ObjectId, ref: 'Topic' }],
 });

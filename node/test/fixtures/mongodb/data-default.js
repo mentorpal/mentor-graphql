@@ -42,7 +42,7 @@ module.exports = {
       question: ObjectId('511111111111111111111111'),
       transcript: '[being still]',
       video: 'https://idle/url',
-      status: 'Complete',
+      status: 'COMPLETE',
       recordedAt: new Date('2020-04-29T21:08:07.453Z'),
     },
   ],
