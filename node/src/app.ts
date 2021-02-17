@@ -12,7 +12,7 @@ import morgan from 'morgan';
 import path from 'path';
 import { logger } from 'utils/logging';
 
-export default async function createApp(): Promise<Express> {
+export async function createApp(): Promise<Express> {
   const gqlMiddleware = (await import('gql/middleware')).default;
   if (process.env.NODE_ENV !== 'production') {
     require('longjohn'); // full stack traces when testing
@@ -75,3 +75,5 @@ export async function appStop(): Promise<void> {
     logger.error('error on mongoose disconnect: ' + err);
   }
 }
+
+export default createApp;

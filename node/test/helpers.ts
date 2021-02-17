@@ -4,8 +4,13 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
+import { Express } from 'express';
+import mongoUnit from 'mongo-unit';
 import path from 'path';
+import request from 'supertest';
 import jwt from 'jsonwebtoken';
+
+import * as app from 'app';
 
 export function fixturePath(p: string): string {
   return path.join(__dirname, 'fixtures', p);
@@ -29,4 +34,31 @@ export function getToken(userId: string, expiresIn?: number): string {
     { expiresIn: expirationDate.getTime() - new Date().getTime() }
   );
   return accessToken;
+}
+
+export const USER_DEFAULT = '5ffdf41a1ee2c62320b49ea1';
+export async function gqlWithAuth(
+  app: Express,
+  gql: any,
+  user: string = USER_DEFAULT
+): Promise<request.Response> {
+  const token = getToken(user);
+  return await request(app)
+    .post('/graphql')
+    .set('Authorization', `bearer ${token}`)
+    .send(gql);
+}
+
+export async function appStart(
+  fixtureMongoData = 'test/fixtures/mongodb/data-default.js'
+): Promise<Express> {
+  await mongoUnit.load(require(fixtureMongoData));
+  const inst = await app.createApp();
+  await app.appStart();
+  return inst;
+}
+
+export async function appStop(): Promise<void> {
+  await app.appStop();
+  await mongoUnit.drop();
 }
