@@ -4,21 +4,13 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType, GraphQLID } from 'graphql';
+import { Question } from 'models';
+import { QuestionType } from 'gql/types/question';
+import findAll from 'gql/query/find-all';
 
-export interface TopicGQL {
-  _id: string;
-  name: string;
-  description: string;
-}
-
-export const TopicType = new GraphQLObjectType({
-  name: 'Topic',
-  fields: () => ({
-    _id: { type: GraphQLID },
-    name: { type: GraphQLString },
-    description: { type: GraphQLString },
-  }),
+export const questions = findAll({
+  nodeType: QuestionType,
+  model: Question,
 });
 
-export default TopicType;
+export default questions;

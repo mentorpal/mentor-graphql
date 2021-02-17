@@ -9,6 +9,9 @@ import { User } from 'models/User';
 import addQuestionSet from './add-question-set';
 import updateMentor from './update-mentor';
 import updateAnswer from './update-answer';
+import updateQuestion from './update-question';
+import updateSubject from './update-subject';
+import updateTopic from './update-topic';
 
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeMutation',
@@ -16,6 +19,9 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
     addQuestionSet,
     updateMentor,
     updateAnswer,
+    updateQuestion,
+    updateSubject,
+    updateTopic,
   }),
 });
 

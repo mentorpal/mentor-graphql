@@ -14,7 +14,7 @@ mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
 export interface Subject extends Document {
   name: string;
   description: string;
-  questions: [Question['_id']];
+  questions: Question['_id'][];
   isRequired: boolean;
 }
 

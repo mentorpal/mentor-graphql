@@ -8,6 +8,8 @@ import { GraphQLObjectType } from 'graphql';
 import me from './me';
 import mentor from './mentor';
 import mentors from './mentors';
+import question from './question';
+import questions from './questions';
 import subject from './subject';
 import subjects from './subjects';
 import topic from './topic';
@@ -19,6 +21,8 @@ export default new GraphQLObjectType({
     me,
     mentor,
     mentors,
+    question,
+    questions,
     subject,
     subjects,
     topic,

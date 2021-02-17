@@ -4,7 +4,6 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString } from 'graphql';
 import { Topic } from 'models';
 import TopicType from 'gql/types/topic';
 import findOne from 'gql/query/find-one';
@@ -13,12 +12,6 @@ export const topic = findOne({
   model: Topic,
   type: TopicType,
   typeName: 'topic',
-  argsConfig: {
-    id: {
-      description: 'id of the topic',
-      type: GraphQLString,
-    },
-  },
 });
 
 export default topic;

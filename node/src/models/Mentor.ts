@@ -29,7 +29,6 @@ export const MentorSchema = new Schema(
     title: { type: String },
     isBuilt: { type: Boolean },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
-    // TODO: replace list of questions here with a list of Answer objects
     lastTrainedAt: { type: Date },
     user: {
       type: Schema.Types.ObjectId,
