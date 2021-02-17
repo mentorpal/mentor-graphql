@@ -5,13 +5,14 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose from 'mongoose';
-import { GraphQLString, GraphQLObjectType, GraphQLBoolean } from 'graphql';
+import { GraphQLString, GraphQLObjectType } from 'graphql';
 import { Topic as TopicModel } from 'models';
 import { User } from 'models/User';
-import { TopicGQL } from 'gql/types/topic';
+import TopicType, { TopicGQL } from 'gql/types/topic';
+import { Topic } from 'models/Topic';
 
 export const updateTopic = {
-  type: GraphQLBoolean,
+  type: TopicType,
   args: {
     topic: { type: GraphQLString },
   },
@@ -19,12 +20,12 @@ export const updateTopic = {
     _root: GraphQLObjectType,
     args: { topic: string },
     context: { user: User }
-  ): Promise<boolean> => {
+  ): Promise<Topic> => {
     if (!args.topic) {
       throw new Error('missing required param topic');
     }
     const topicUpdate: TopicGQL = JSON.parse(decodeURI(args.topic));
-    const updated = await TopicModel.findOneAndUpdate(
+    return await TopicModel.findOneAndUpdate(
       {
         _id: topicUpdate._id || mongoose.Types.ObjectId(),
       },
@@ -39,7 +40,6 @@ export const updateTopic = {
         upsert: true,
       }
     );
-    return Boolean(updated);
   },
 };
 

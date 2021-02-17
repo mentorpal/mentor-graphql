@@ -4,12 +4,6 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-/*
-This software is Copyright ©️ 2020 The University of Southern California. All Rights Reserved.
-Permission to use, copy, modify, and distribute this software and its documentation for educational, research and non-profit purposes, without fee, and without a written agreement is hereby granted, provided that the above copyright notice and subject to the full license file found in the root of this software deliverable. Permission to make commercial use of this software may be obtained by contacting:  USC Stevens Center for Innovation University of Southern California 1150 S. Olive Street, Suite 2300, Los Angeles, CA 90115, USA Email: accounting@stevens.usc.edu
-
-The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
-*/
 import createApp, { appStart, appStop } from 'app';
 import { expect } from 'chai';
 import { Express } from 'express';
@@ -35,7 +29,9 @@ describe('updateSubject', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
           me {
-            updateSubject(subject: "")
+            updateSubject(subject: "") {
+              _id
+            }
           }
         }`,
     });
@@ -54,7 +50,9 @@ describe('updateSubject', () => {
       .send({
         query: `mutation {
           me {
-            updateSubject(subject: "")
+            updateSubject(subject: "") {
+              _id
+            }
           }
         }`,
       });
@@ -92,34 +90,24 @@ describe('updateSubject', () => {
       .send({
         query: `mutation {
           me {
-            updateSubject(subject: "${subject}")
+            updateSubject(subject: "${subject}") {
+              _id
+              name
+              description
+              questions {
+                _id
+                question
+                topics {
+                  name
+                  description
+                }
+              }    
+            }
           }
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'data.me.updateSubject',
-      true
-    );
-    const updatedSubject = await request(app).post('/graphql').send({
-      query: `query {
-        subject(id: "5ffdf41a1ee2c62320b49eb3") {
-          _id
-          name
-          description
-          questions {
-            _id
-            question
-            topics {
-              name
-              description
-            }
-          }
-        }
-      }`,
-    });
-    expect(updatedSubject.status).to.equal(200);
-    expect(updatedSubject.body.data.subject).to.eql({
+    expect(response.body.data.me.updateSubject).to.eql({
       _id: '5ffdf41a1ee2c62320b49eb3',
       name: 'stem',
       description: 'These questions will ask about STEM careers.',
@@ -163,20 +151,7 @@ describe('updateSubject', () => {
       .send({
         query: `mutation {
           me {
-            updateSubject(subject: "${subject}")
-          }
-        }`,
-      });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'data.me.updateSubject',
-      true
-    );
-    const updatedSubjects = await request(app).post('/graphql').send({
-      query: `query {
-        subjects(sortBy: "name", sortAscending: true, limit: 1) {
-          edges {
-            node {
+            updateSubject(subject: "${subject}") {
               name
               description
               questions {
@@ -188,28 +163,21 @@ describe('updateSubject', () => {
               }
             }
           }
-        }
-      }`,
-    });
-    expect(updatedSubjects.status).to.equal(200);
-    expect(updatedSubjects.body.data.subjects).to.eql({
-      edges: [
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateSubject).to.eql({
+      name: '_new',
+      description: 'new subject description',
+      questions: [
         {
-          node: {
-            name: '_new',
-            description: 'new subject description',
-            questions: [
-              {
-                question: 'new question',
-                topics: [
-                  {
-                    name: 'new topic',
-                    description: 'new topic description',
-                  },
-                ],
-              },
-            ],
-          },
+          question: 'new question',
+          topics: [
+            {
+              name: 'new topic',
+              description: 'new topic description',
+            },
+          ],
         },
       ],
     });

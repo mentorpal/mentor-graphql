@@ -5,13 +5,14 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose from 'mongoose';
-import { GraphQLString, GraphQLObjectType, GraphQLBoolean } from 'graphql';
+import { GraphQLString, GraphQLObjectType } from 'graphql';
 import { Question as QuestionModel, Topic as TopicModel } from 'models';
 import { User } from 'models/User';
-import { QuestionGQL } from 'gql/types/question';
+import { Question } from 'models/Question';
+import QuestionType, { QuestionGQL } from 'gql/types/question';
 
 export const updateQuestion = {
-  type: GraphQLBoolean,
+  type: QuestionType,
   args: {
     question: { type: GraphQLString },
   },
@@ -19,7 +20,7 @@ export const updateQuestion = {
     _root: GraphQLObjectType,
     args: { question: string },
     context: { user: User }
-  ): Promise<boolean> => {
+  ): Promise<Question> => {
     if (!args.question) {
       throw new Error('missing required param question');
     }
@@ -42,7 +43,7 @@ export const updateQuestion = {
       );
       questionUpdate.topics[i] = t;
     }
-    const updated = await QuestionModel.findOneAndUpdate(
+    return await QuestionModel.findOneAndUpdate(
       {
         _id: questionUpdate._id || mongoose.Types.ObjectId(),
       },
@@ -60,7 +61,6 @@ export const updateQuestion = {
         upsert: true,
       }
     );
-    return Boolean(updated);
   },
 };
 
