@@ -4,92 +4,72 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-
 import createApp, { appStart, appStop } from 'app';
 import { expect } from 'chai';
 import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
-import {
-  GoogleAuthFunc,
-  GoogleResponse,
-  restoreGoogleAuthFunc,
-  overrideGoogleAuthFunc,
-} from 'gql/mutation/login-google';
+import { getToken } from '../../helpers';
 
-describe('login with google', () => {
+describe('query me/mentor', () => {
   let app: Express;
-  let googleAuthFunc: GoogleAuthFunc = (accessToken: string) => {
-    return Promise.reject('override me');
-  };
-
-  function googleAuthFuncOverride(
-    accessToken: string
-  ): Promise<GoogleResponse> {
-    return googleAuthFunc(accessToken);
-  }
 
   beforeEach(async () => {
-    overrideGoogleAuthFunc(googleAuthFuncOverride);
     await mongoUnit.load(require('test/fixtures/mongodb/data-default.js'));
     app = await createApp();
     await appStart();
   });
 
   afterEach(async () => {
-    restoreGoogleAuthFunc();
     await appStop();
     await mongoUnit.drop();
   });
 
-  it(`returns an error if no accessToken`, async () => {
+  it(`throws an error if not logged in`, async () => {
     const response = await request(app).post('/graphql').send({
-      query: `mutation {
-        loginGoogle(accessToken: "") {
-          user {
-            name
-            email
+      query: `query {
+          me {
+            mentor {
+              _id
+            }
           }
-          accessToken
-          expirationDate
-        }
-      }`,
+        }`,
     });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'missing required param accessToken'
+      'Only authenticated users'
     );
   });
 
-  it(`creates a new user and mentor for new google login`, async () => {
-    googleAuthFunc = (accessToken: string) =>
-      Promise.resolve<GoogleResponse>({
-        id: 'someid',
-        name: 'somename',
-        email: 'x@y.com',
-        given_name: 'somegivenname',
+  it(`provides the mentor for the authenticated user`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              mentor {
+                _id
+                name
+                title
+              }
+            }
+          }`,
       });
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
-        loginGoogle(accessToken: "anything") {
-          user {
-            name
-            email
-          }
-          accessToken
-          expirationDate
-        }
-      }`,
-    });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
-      'data.loginGoogle.user.name',
-      'somename'
+      'data.me.mentor._id',
+      '5ffdf41a1ee2c62111111111'
     );
     expect(response.body).to.have.deep.nested.property(
-      'data.loginGoogle.user.email',
-      'x@y.com'
+      'data.me.mentor.name',
+      'Clinton Anderson'
+    );
+    expect(response.body).to.have.deep.nested.property(
+      'data.me.mentor.title',
+      "Nuclear Electrician's Mate"
     );
   });
 });

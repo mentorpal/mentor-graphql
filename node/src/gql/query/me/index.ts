@@ -4,15 +4,27 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType } from 'graphql';
+import { GraphQLObjectType } from 'graphql';
+import { User } from 'models/User';
+import { mentor } from './mentor';
 
-export const QuestionType = new GraphQLObjectType({
-  name: 'Question',
-  fields: () => ({
-    _id: { type: GraphQLString },
-    question: { type: GraphQLString },
-    name: { type: GraphQLString },
-  }),
+export const Me: GraphQLObjectType = new GraphQLObjectType({
+  name: 'MeQuery',
+  fields: {
+    mentor,
+  },
 });
 
-export default QuestionType;
+export const me = {
+  type: Me,
+  resolve: (_: any, args: any, context: { user: User }) => {
+    if (!context.user) {
+      throw new Error('Only authenticated users');
+    }
+    return {
+      user: context.user,
+    };
+  },
+};
+
+export default me;

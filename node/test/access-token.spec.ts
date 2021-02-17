@@ -34,7 +34,6 @@ describe('acessToken', () => {
 
   it(`generates an accessToken for a user`, () => {
     const token = getToken('5fffcd36ca39fa32f6beb954');
-    console.log(token);
     expect(token).to.not.eql('');
   });
 });

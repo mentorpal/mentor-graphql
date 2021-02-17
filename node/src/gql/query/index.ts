@@ -5,23 +5,23 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLObjectType } from 'graphql';
+import me from './me';
 import mentor from './mentor';
 import mentors from './mentors';
 import subject from './subject';
 import subjects from './subjects';
 import topic from './topic';
 import topics from './topics';
-import questionSet from './question-set';
 
 export default new GraphQLObjectType({
   name: 'Query',
   fields: {
+    me,
     mentor,
     mentors,
     subject,
     subjects,
     topic,
     topics,
-    questionSet,
   },
 });

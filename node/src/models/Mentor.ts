@@ -6,7 +6,8 @@ The full terms of this copyright and license should always be found in the root 
 */
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import { PaginatedResolveResult } from './PaginatedResolveResult';
-import { Question, QuestionSchema } from './Question';
+import { Subject } from './Subject';
+import { User } from './User';
 
 const mongoPaging = require('mongo-cursor-pagination');
 mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
@@ -16,9 +17,9 @@ export interface Mentor extends Document {
   firstName: string;
   title: string;
   isBuilt: boolean;
-  subjects: string[];
-  questions: Question[];
+  subjects: Subject['_id'][];
   lastTrainedAt: Date;
+  user: User['_id'];
 }
 
 export const MentorSchema = new Schema(
@@ -27,9 +28,15 @@ export const MentorSchema = new Schema(
     firstName: { type: String },
     title: { type: String },
     isBuilt: { type: Boolean },
-    subjects: { type: [String] },
-    questions: { type: [QuestionSchema] },
+    subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
+    // TODO: replace list of questions here with a list of Answer objects
     lastTrainedAt: { type: Date },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: '{PATH} is required!',
+      unique: true,
+    },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );

@@ -9,12 +9,12 @@ import { DateType } from './date';
 
 export const UserType = new GraphQLObjectType({
   name: 'User',
-  fields: {
+  fields: () => ({
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
     email: { type: GraphQLString },
     lastLoginAt: { type: DateType },
-  },
+  }),
 });
 
 export default UserType;

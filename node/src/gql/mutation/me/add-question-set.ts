@@ -4,14 +4,12 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType } from 'graphql';
-import MentorType from 'gql/types/mentor';
-import { Mentor as MentorSchema, Subject as SubjectSchema } from 'models';
-import { Mentor } from 'models/Mentor';
+import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql';
+import { Mentor as MentorModel, Subject as SubjectModel } from 'models';
 import { User } from 'models/User';
 
 export const addQuestionSet = {
-  type: MentorType,
+  type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLString },
     subjectId: { type: GraphQLString },
@@ -20,41 +18,43 @@ export const addQuestionSet = {
     _root: GraphQLObjectType,
     args: { mentorId: string; subjectId: string },
     context: { user: User }
-  ): Promise<Mentor> => {
+  ): Promise<boolean> => {
     if (!args.mentorId) {
       throw new Error('missing required param mentorId');
     }
     if (!args.subjectId) {
       throw new Error('missing required param subjectId');
     }
-    if (`${context.user._id}` !== `${args.mentorId}`) {
+    const mentor = await MentorModel.findOne({ _id: args.mentorId });
+    if (!mentor) {
+      throw new Error(`no mentor found for id '${args.mentorId}'`);
+    }
+    if (`${context.user._id}` !== `${mentor.user}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    const mentor = await MentorSchema.findOne({ _id: args.mentorId });
-    if (!mentor) {
-      throw new Error(`could not find mentor ${args.mentorId}`);
-    }
-    const subject = await SubjectSchema.findOne({ _id: args.subjectId });
+    const subject = await SubjectModel.findOne({ _id: args.subjectId });
     if (!subject) {
-      throw new Error(`could not find subject ${args.subjectId}`);
+      throw new Error(`no subject found for id '${args.subjectId}'`);
     }
     mentor.subjects.push(subject._id);
-    mentor.questions.push(...subject.questions);
-
-    return await MentorSchema.findOneAndUpdate(
+    const updatedMentor = await MentorModel.findOneAndUpdate(
       {
         _id: mentor._id,
       },
       {
         $set: {
           subjects: mentor.subjects,
-          questions: mentor.questions,
         },
       },
       {
         new: true,
         upsert: true,
       }
+    );
+    return Boolean(
+      updatedMentor &&
+        updatedMentor.subjects &&
+        updatedMentor.subjects.find((s) => `${s._id}` === args.subjectId)
     );
   },
 };

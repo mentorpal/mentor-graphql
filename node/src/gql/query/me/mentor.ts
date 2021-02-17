@@ -4,3 +4,23 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
+
+import { Types } from 'mongoose';
+import { User } from 'models/User';
+import { Mentor as MentorModel } from 'models';
+import { MentorType } from 'gql/types/mentor';
+
+export const mentor = {
+  type: MentorType,
+  resolve: async (_: any, args: any, context: { user: User }) => {
+    if (!context.user) {
+      throw new Error('Only authenticated users');
+    }
+    const mentor = await MentorModel.findOne({
+      user: Types.ObjectId(`${context.user._id}`),
+    });
+    return mentor;
+  },
+};
+
+export default mentor;

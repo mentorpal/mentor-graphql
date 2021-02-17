@@ -35,9 +35,7 @@ describe('addQuestionSet', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
           me {
-            addQuestionSet(mentorId: "") {
-              _id
-            }
+            addQuestionSet(mentorId: "")
           }
         }`,
     });
@@ -56,9 +54,7 @@ describe('addQuestionSet', () => {
       .send({
         query: `mutation {
           me {
-            addQuestionSet(mentorId: "5ffdf41a1ee2c62320b49ea1", subjectId: "5ffdf41a1ee2c62320b49eb3") {
-              _id
-            }
+            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111", subjectId: "5ffdf41a1ee2c62320b49eb3")
           }
         }`,
       });
@@ -77,9 +73,7 @@ describe('addQuestionSet', () => {
       .send({
         query: `mutation {
           me {
-            addQuestionSet(subjectId: "5ffdf41a1ee2c62320b49eb3") {
-              _id
-            }
+            addQuestionSet(subjectId: "5ffdf41a1ee2c62320b49eb3")
           }
         }`,
       });
@@ -98,9 +92,7 @@ describe('addQuestionSet', () => {
       .send({
         query: `mutation {
           me {
-            addQuestionSet(mentorId: "5ffdf41a1ee2c62320b49ea1") {
-              _id
-            }
+            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111")
           }
         }`,
       });
@@ -119,16 +111,14 @@ describe('addQuestionSet', () => {
       .send({
         query: `mutation {
           me {
-            addQuestionSet(mentorId: "5ffdf41a1ee2c62320b49ea1", subjectId: "5ffdf41a1ee2c62320b49eb4") {
-              _id
-            }
+            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111", subjectId: "5ffdf41a1ee2c62320b49eb4")
           }
         }`,
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'could not find subject 5ffdf41a1ee2c62320b49eb4'
+      "no subject found for id '5ffdf41a1ee2c62320b49eb4'"
     );
   });
 
@@ -140,63 +130,42 @@ describe('addQuestionSet', () => {
       .send({
         query: `mutation {
           me {
-            addQuestionSet(mentorId: "5ffdf41a1ee2c62320b49ea1", subjectId: "5ffdf41a1ee2c62320b49eb3") {
-              _id
-              subjects {
-                _id
-                name
-              }
-              questions {
-                id
-                subject {
-                  _id
-                  name
-                }
-              }
-            }
+            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111", subjectId: "5ffdf41a1ee2c62320b49eb3")
           }
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.addQuestionSet).to.eql({
-      _id: '5ffdf41a1ee2c62320b49ea1',
-      subjects: [
-        {
-          _id: '5ffdf41a1ee2c62320b49eb1',
-          name: 'Repeat After Me',
+    expect(response.body.data.me.addQuestionSet).to.eql(true);
+    const r2 = await request(app).post('/graphql').send({
+      query: `query {
+          mentor(id: "5ffdf41a1ee2c62111111111") {
+            subjects {
+              _id
+              name
+            }
+          }
+      }`,
+    });
+    expect(r2.status).to.equal(200);
+    expect(r2.body).to.eql({
+      data: {
+        mentor: {
+          subjects: [
+            {
+              _id: '5ffdf41a1ee2c62320b49eb1',
+              name: 'Repeat After Me',
+            },
+            {
+              _id: '5ffdf41a1ee2c62320b49eb2',
+              name: 'Background',
+            },
+            {
+              _id: '5ffdf41a1ee2c62320b49eb3',
+              name: 'STEM',
+            },
+          ],
         },
-        {
-          _id: '5ffdf41a1ee2c62320b49eb2',
-          name: 'Background',
-        },
-        {
-          _id: '5ffdf41a1ee2c62320b49eb3',
-          name: 'STEM',
-        },
-      ],
-      questions: [
-        {
-          id: 'A1',
-          subject: {
-            _id: '5ffdf41a1ee2c62320b49eb1',
-            name: 'Repeat After Me',
-          },
-        },
-        {
-          id: 'B1',
-          subject: {
-            _id: '5ffdf41a1ee2c62320b49eb2',
-            name: 'Background',
-          },
-        },
-        {
-          id: 'C1',
-          subject: {
-            _id: '5ffdf41a1ee2c62320b49eb3',
-            name: 'STEM',
-          },
-        },
-      ],
+      },
     });
   });
 });

@@ -4,15 +4,21 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType } from 'graphql';
+import { Question as QuestionModel } from 'models';
+import { QuestionType } from 'gql/types/question';
+import findOne from 'gql/query/find-one';
+import findByParentField from 'gql/query/find-by-parent-field';
 
-export const QuestionType = new GraphQLObjectType({
-  name: 'Question',
-  fields: () => ({
-    _id: { type: GraphQLString },
-    question: { type: GraphQLString },
-    name: { type: GraphQLString },
-  }),
+export const questionFindOne = findOne({
+  model: QuestionModel,
+  type: QuestionType,
+  typeName: 'question',
 });
 
-export default QuestionType;
+export function questionFieldWithName(field = 'question') {
+  return findByParentField(QuestionType, QuestionModel, field);
+}
+
+export const questionField = questionFieldWithName();
+
+export default questionFindOne;

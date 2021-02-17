@@ -8,11 +8,11 @@ import { GraphQLString, GraphQLObjectType, GraphQLID } from 'graphql';
 
 export const TopicType = new GraphQLObjectType({
   name: 'Topic',
-  fields: {
+  fields: () => ({
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
     description: { type: GraphQLString },
-  },
+  }),
 });
 
 export default TopicType;

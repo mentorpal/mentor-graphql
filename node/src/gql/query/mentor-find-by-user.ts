@@ -4,23 +4,21 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType, GraphQLList } from 'graphql';
-import { Question } from 'models/Question';
-import { Subject } from 'models/Subject';
-import QuestionType from './question';
-import SubjectType from './subject';
+import { GraphQLString } from 'graphql';
+import { Mentor } from 'models';
+import { MentorType } from 'gql/types/mentor';
+import findOne from 'gql/query/find-one';
 
-export interface QuestionSet {
-  subject: Subject;
-  questions: Question[];
-}
-
-export const QuestionSetType = new GraphQLObjectType({
-  name: 'QuestionSet',
-  fields: {
-    subject: { type: SubjectType },
-    questions: { type: GraphQLList(QuestionType) },
+export const mentor = findOne({
+  model: Mentor,
+  type: MentorType,
+  typeName: 'mentor',
+  argsConfig: {
+    user: {
+      description: 'id of the user',
+      type: GraphQLString,
+    },
   },
 });
 
-export default QuestionSetType;
+export default mentor;

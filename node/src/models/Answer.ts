@@ -6,28 +6,40 @@ The full terms of this copyright and license should always be found in the root 
 */
 
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { Question } from './Question';
+import { Mentor } from './Mentor';
 
 export enum Status {
   INCOMPLETE = 'Incomplete',
   COMPLETE = 'Complete',
 }
 
-export interface Question extends Document {
-  id: string;
-  question: string;
-  name: string;
+export interface Answer extends Document {
+  mentor: Mentor['_id'];
+  question: Question['_id'];
+  video: string;
+  transcript: string;
+  status: Status;
+  recordedAt?: Date;
 }
 
-export const QuestionSchema = new Schema({
-  id: { type: String, required: true, unique: true },
-  question: { type: String },
-  name: { type: String },
+export const AnswerSchema = new Schema({
+  mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
+  question: { type: mongoose.Types.ObjectId, ref: 'Question' },
+  video: { type: String },
+  transcript: { type: String },
+  status: {
+    type: String,
+    enum: [Status.INCOMPLETE, Status.COMPLETE],
+    default: Status.INCOMPLETE,
+  },
+  recordedAt: { type: Date },
 });
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface QuestionModel extends Model<Question> {}
+AnswerSchema.index({ question: -1, mentor: -1 }, { unique: true });
+AnswerSchema.index({ mentor: -1 });
 
-export default mongoose.model<Question, QuestionModel>(
-  'Question',
-  QuestionSchema
-);
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface AnswerModel extends Model<Answer> {}
+
+export default mongoose.model<Answer, AnswerModel>('Answer', AnswerSchema);

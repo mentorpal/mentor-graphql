@@ -11,39 +11,74 @@ import {
   GraphQLBoolean,
   GraphQLID,
 } from 'graphql';
-import { Subject as SubjectSchema } from 'models';
+import { Answer as AnswerModel, Subject as SubjectModel } from 'models';
+import { Answer, Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
+import { Subject } from 'models/Subject';
+import mongoose from 'mongoose';
 import DateType from './date';
-import QuestionType from './question';
+import AnswerType from './answer';
 import SubjectType from './subject';
 
 export const MentorType = new GraphQLObjectType({
   name: 'Mentor',
-  fields: {
+  fields: () => ({
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
     firstName: { type: GraphQLString },
     title: { type: GraphQLString },
     isBuilt: { type: GraphQLBoolean },
     lastTrainedAt: { type: DateType },
+    answers: {
+      type: GraphQLList(AnswerType),
+      resolve: async function (parent: {
+        _id: mongoose.Types.ObjectId;
+        subjects: Subject['_id'][];
+      }) {
+        const questionIds = (
+          (await SubjectModel.find({
+            _id: { $in: parent.subjects },
+          })) || []
+        ).reduce((acc: mongoose.Types.ObjectId[], cur) => {
+          return [...acc, ...(cur.questions || [])];
+        }, []);
+        const answers = await AnswerModel.find({
+          mentor: parent._id,
+          question: { $in: questionIds },
+        });
+        const answersByQid = answers.reduce(
+          (acc: Record<string, Answer>, cur) => {
+            acc[`${cur.question}`] = cur;
+            return acc;
+          },
+          {}
+        );
+        const answerResult = questionIds.map((qid) => {
+          return (
+            answersByQid[`${qid}`] || {
+              mentor: parent._id,
+              question: qid,
+              status: Status.INCOMPLETE,
+              transcript: '',
+              video: '',
+            }
+          );
+        });
+        return answerResult;
+      },
+    },
     subjects: {
       type: GraphQLList(SubjectType),
       resolve: async function (mentor: Mentor) {
         const resolveSubjects = async (id: string) => {
-          return await SubjectSchema.findOne({ _id: id });
+          return await SubjectModel.findOne({ _id: id });
         };
         return Promise.all(
           mentor.subjects.map((s: string) => resolveSubjects(s))
         );
       },
     },
-    questions: {
-      type: GraphQLList(QuestionType),
-      resolve: async function (mentor: Mentor) {
-        return mentor.questions;
-      },
-    },
-  },
+  }),
 });
 
 export default MentorType;

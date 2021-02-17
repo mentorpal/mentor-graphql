@@ -63,4 +63,24 @@ describe('subject', () => {
       description: "These are miscellaneous phrases you'll be asked to repeat.",
     });
   });
+
+  it('has a questions connection', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+          subject(id: "5ffdf41a1ee2c62320b49eb1") {
+            questions {
+              _id
+              question
+            }
+          }
+      }`,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.subject.questions).to.eql([
+      {
+        _id: '511111111111111111111111',
+        question: "Don't talk and stay still.",
+      },
+    ]);
+  });
 });
