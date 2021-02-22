@@ -6,6 +6,8 @@ The full terms of this copyright and license should always be found in the root 
 */
 import Answer from './Answer';
 export { default as Answer } from './Answer';
+import Feedback from './Feedback';
+export { default as Feedback } from './Feedback';
 import Mentor from './Mentor';
 export { default as Mentor } from './Mentor';
 import Question from './Question';
@@ -19,6 +21,7 @@ export { default as User } from './User';
 
 export default {
   Answer,
+  Feedback,
   Mentor,
   Question,
   Subject,

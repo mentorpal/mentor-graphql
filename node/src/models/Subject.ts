@@ -34,6 +34,7 @@ export interface SubjectModel extends Model<Subject> {
 }
 
 SubjectSchema.index({ name: -1, _id: -1 });
+SubjectSchema.index({ isRequired: -1, _id: -1 });
 SubjectSchema.plugin(mongoPaging.mongoosePlugin);
 
 export default mongoose.model<Subject, SubjectModel>('Subject', SubjectSchema);

@@ -8,6 +8,8 @@ import { GraphQLObjectType } from 'graphql';
 import me from './me';
 import login from './login';
 import loginGoogle from './login-google';
+import updateFeedback from './update-feedback';
+import updateMentorTraining from './update-mentor-training';
 
 export default new GraphQLObjectType({
   name: 'Mutation',
@@ -15,5 +17,7 @@ export default new GraphQLObjectType({
     me,
     login,
     loginGoogle,
+    updateFeedback,
+    updateMentorTraining,
   },
 });
