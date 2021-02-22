@@ -4,39 +4,39 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
+import { GraphQLObjectType, GraphQLList, GraphQLNonNull } from 'graphql';
+import { Topic as TopicModel } from 'models';
 import { User } from 'models/User';
-import addQuestionSet from './add-question-set';
-import updateMentor from './update-mentor';
-import updateAnswer from './update-answer';
-import updateQuestion from './update-question';
-import updateSubject from './update-subject';
-import updateTopic from './update-topic';
-import topicsCreate from './topics-create';
+import {
+  TopicCreateInput,
+  TopicCreateInputType,
+  TopicsPayload,
+  TopicsPayloadType,
+} from 'gql/types/topic';
 
-export const Me: GraphQLObjectType = new GraphQLObjectType({
-  name: 'MeMutation',
-  fields: () => ({
-    addQuestionSet,
-    topicsCreate,
-    updateMentor,
-    updateAnswer,
-    updateQuestion,
-    updateSubject,
-    updateTopic,
-  }),
-});
-
-export const me = {
-  type: Me,
-  resolve: (_: any, args: any, context: { user: User }) => {
-    if (!context.user) {
-      throw new Error('Only authenticated users');
+export const topicsCreate = {
+  type: TopicsPayloadType,
+  args: {
+    topics: {
+      type: new GraphQLNonNull(
+        new GraphQLList(new GraphQLNonNull(TopicCreateInputType))
+      ),
+    },
+  },
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { topics: TopicCreateInput[] },
+    context: { user: User }
+  ): Promise<TopicsPayload> => {
+    if (!args.topics) {
+      throw new Error('missing required param topic');
     }
-    return {
-      user: context.user,
-    };
+    if (args.topics.length === 0) {
+      throw new Error('input topics must include at least one item');
+    }
+    const topics = await TopicModel.insertMany(args.topics);
+    return { topics };
   },
 };
 
-export default me;
+export default topicsCreate;
