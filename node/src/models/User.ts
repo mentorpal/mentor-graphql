@@ -37,6 +37,7 @@ export interface UserModel extends Model<User> {
 
 UserSchema.index({ name: -1, _id: -1 });
 UserSchema.index({ email: -1, _id: -1 });
+UserSchema.index({ lastLoginAt: -1, _id: -1 });
 UserSchema.plugin(mongoPaging.mongoosePlugin);
 
 export default mongoose.model<User, UserModel>('User', UserSchema);

@@ -4,32 +4,14 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import me from './me';
-import feedback from './feedback';
-import feedbacks from './feedbacks';
-import mentor from './mentor';
-import mentors from './mentors';
-import question from './question';
-import questions from './questions';
-import subject from './subject';
-import subjects from './subjects';
-import topic from './topic';
-import topics from './topics';
+import { Feedback } from 'models';
+import { FeedbackType } from 'gql/types/feedback';
+import findOne from 'gql/query/find-one';
 
-export default new GraphQLObjectType({
-  name: 'Query',
-  fields: {
-    me,
-    feedback,
-    feedbacks,
-    mentor,
-    mentors,
-    question,
-    questions,
-    subject,
-    subjects,
-    topic,
-    topics,
-  },
+export const feedback = findOne({
+  model: Feedback,
+  type: FeedbackType,
+  typeName: 'feedback',
 });
+
+export default feedback;

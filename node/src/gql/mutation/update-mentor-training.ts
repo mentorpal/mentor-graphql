@@ -4,32 +4,38 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import me from './me';
-import feedback from './feedback';
-import feedbacks from './feedbacks';
-import mentor from './mentor';
-import mentors from './mentors';
-import question from './question';
-import questions from './questions';
-import subject from './subject';
-import subjects from './subjects';
-import topic from './topic';
-import topics from './topics';
+import { GraphQLString, GraphQLObjectType } from 'graphql';
+import { MentorType } from 'gql/types/mentor';
+import { Mentor as MentorModel } from 'models';
+import { Mentor } from 'models/Mentor';
 
-export default new GraphQLObjectType({
-  name: 'Query',
-  fields: {
-    me,
-    feedback,
-    feedbacks,
-    mentor,
-    mentors,
-    question,
-    questions,
-    subject,
-    subjects,
-    topic,
-    topics,
+export const updateMentorTraining = {
+  type: MentorType,
+  args: {
+    id: { type: GraphQLString },
   },
-});
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { id: string }
+  ): Promise<Mentor> => {
+    if (!args.id) {
+      throw new Error('missing required param id');
+    }
+    return await MentorModel.findOneAndUpdate(
+      {
+        _id: args.id,
+      },
+      {
+        $set: {
+          lastTrainedAt: new Date(),
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+  },
+};
+
+export default updateMentorTraining;
