@@ -5,31 +5,35 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLObjectType } from 'graphql';
-import me from './me';
-import userQuestion from './user-question';
-import userQuestions from './user-questions';
-import mentor from './mentor';
-import mentors from './mentors';
-import question from './question';
-import questions from './questions';
-import subject from './subject';
-import subjects from './subjects';
-import topic from './topic';
-import topics from './topics';
+import { UserQuestion as UserQuestionModel } from 'models';
+import { UserQuestion, Feedback } from 'models/UserQuestion';
+import {
+  UserQuestionCreateInput,
+  UserQuestionCreateInputType,
+  UserQuestionType,
+} from 'gql/types/user-question';
 
-export default new GraphQLObjectType({
-  name: 'Query',
-  fields: {
-    me,
-    mentor,
-    mentors,
-    question,
-    questions,
-    subject,
-    subjects,
-    topic,
-    topics,
-    userQuestion,
-    userQuestions,
+export const userQuestionCreate = {
+  type: UserQuestionType,
+  args: {
+    userQuestion: { type: UserQuestionCreateInputType },
   },
-});
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { userQuestion: UserQuestionCreateInput }
+  ): Promise<UserQuestion> => {
+    if (!args.userQuestion) {
+      throw new Error('missing required param userQuestion');
+    }
+    return await UserQuestionModel.create({
+      mentor: args.userQuestion.mentor,
+      question: args.userQuestion.question,
+      confidence: args.userQuestion.confidence,
+      classifierAnswer: args.userQuestion.classifierAnswer,
+      graderAnswer: null,
+      feedback: Feedback.NEUTRAL,
+    });
+  },
+};
+
+export default userQuestionCreate;

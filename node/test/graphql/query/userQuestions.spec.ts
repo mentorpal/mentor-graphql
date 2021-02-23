@@ -10,7 +10,7 @@ import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 
-describe('updateFeedback', () => {
+describe('userQuestions', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -24,61 +24,35 @@ describe('updateFeedback', () => {
     await mongoUnit.drop();
   });
 
-  it(`returns an error if no feedback`, async () => {
+  it('gets a list of userQuestions', async () => {
     const response = await request(app).post('/graphql').send({
-      query: `mutation {
-        updateFeedback(feedback: "") {
-          _id
+      query: `query {
+        userQuestions {
+          edges {
+            node {
+              _id
+            }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
         }
       }`,
     });
     expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param feedback'
-    );
-  });
-
-  it(`updates feedback`, async () => {
-    const feedback = encodeURI(
-      JSON.stringify({
-        _id: '5ffdf41a1ee2c62320b49ee1',
-        question: 'updated',
-      })
-    );
-    const response = await request(app)
-      .post('/graphql')
-      .send({
-        query: `mutation {
-          updateFeedback(feedback: "${feedback}") {
-            question
-          }
-        }`,
-      });
-    expect(response.status).to.equal(200);
-    expect(response.body.data.updateFeedback).to.eql({
-      question: 'updated',
-    });
-  });
-
-  it(`creates a new feedback`, async () => {
-    const feedback = encodeURI(
-      JSON.stringify({
-        question: 'new',
-      })
-    );
-    const response = await request(app)
-      .post('/graphql')
-      .send({
-        query: `mutation {
-          updateFeedback(feedback: "${feedback}") {
-            question
-          }
-        }`,
-      });
-    expect(response.status).to.equal(200);
-    expect(response.body.data.updateFeedback).to.eql({
-      question: 'new',
+    expect(response.body.data.userQuestions).to.eql({
+      edges: [
+        {
+          node: {
+            _id: '5ffdf41a1ee2c62320b49ee1',
+          },
+        },
+      ],
+      pageInfo: {
+        hasNextPage: false,
+        endCursor: null,
+      },
     });
   });
 });

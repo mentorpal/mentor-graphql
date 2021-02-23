@@ -4,14 +4,13 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Feedback } from 'models';
-import { FeedbackType } from 'gql/types/feedback';
-import findOne from 'gql/query/find-one';
+import { UserQuestion } from 'models';
+import { UserQuestionType } from 'gql/types/user-question';
+import findAll from 'gql/query/find-all';
 
-export const feedback = findOne({
-  model: Feedback,
-  type: FeedbackType,
-  typeName: 'feedback',
+export const userQuestions = findAll({
+  nodeType: UserQuestionType,
+  model: UserQuestion,
 });
 
-export default feedback;
+export default userQuestions;

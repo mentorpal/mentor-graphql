@@ -11,7 +11,7 @@ import { describe } from 'mocha';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 
-describe('feedback', () => {
+describe('userQuestion', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -28,7 +28,7 @@ describe('feedback', () => {
   it(`throws an error if invalid id`, async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
-          feedback(id: "111111111111111111111111") {
+          userQuestion(id: "111111111111111111111111") {
             _id
           }
         }`,
@@ -36,21 +36,21 @@ describe('feedback', () => {
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'feedback not found for args "{"id":"111111111111111111111111"}"'
+      'userQuestion not found for args "{"id":"111111111111111111111111"}"'
     );
   });
 
-  it('gets a feedback by id', async () => {
+  it('gets a userQuestion by id', async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
-          feedback(id: "5ffdf41a1ee2c62320b49ee1") {
+          userQuestion(id: "5ffdf41a1ee2c62320b49ee1") {
             _id
             question
           }
       }`,
     });
     expect(response.status).to.equal(200);
-    expect(response.body.data.feedback).to.eql({
+    expect(response.body.data.userQuestion).to.eql({
       _id: '5ffdf41a1ee2c62320b49ee1',
       question: 'who are you?',
     });

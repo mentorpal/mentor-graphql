@@ -4,45 +4,44 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType } from 'graphql';
-import mongoose from 'mongoose';
-import { Feedback as FeedbackModel } from 'models';
-import { Feedback } from 'models/Feedback';
-import { FeedbackType } from 'gql/types/feedback';
+import { GraphQLObjectType, GraphQLString } from 'graphql';
+import { UserQuestion as UserQuestionModel } from 'models';
+import { UserQuestion } from 'models/UserQuestion';
+import { UserQuestionType } from 'gql/types/user-question';
 
-export const updateFeedback = {
-  type: FeedbackType,
+export const userQuestionSetFeedback = {
+  type: UserQuestionType,
   args: {
+    id: { type: GraphQLString },
     feedback: { type: GraphQLString },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { feedback: string }
-  ): Promise<Feedback> => {
+    args: { id: string; feedback: string }
+  ): Promise<UserQuestion> => {
+    if (!args.id) {
+      throw new Error('missing required param id');
+    }
     if (!args.feedback) {
       throw new Error('missing required param feedback');
     }
-    const feedbackUpdate: Feedback = JSON.parse(decodeURI(args.feedback));
-    return await FeedbackModel.findOneAndUpdate(
+    if (!(await UserQuestionModel.findOne({ _id: args.id }))) {
+      throw new Error('invalid id');
+    }
+    return await UserQuestionModel.findOneAndUpdate(
       {
-        _id: feedbackUpdate._id || mongoose.Types.ObjectId(),
+        _id: args.id,
       },
       {
         $set: {
-          mentor: feedbackUpdate.mentor,
-          question: feedbackUpdate.question,
-          classifierAnswer: feedbackUpdate.classifierAnswer,
-          graderAnswer: feedbackUpdate.graderAnswer,
-          confidence: feedbackUpdate.confidence,
-          grade: feedbackUpdate.grade,
+          feedback: args.feedback,
         },
       },
       {
-        upsert: true,
         new: true,
       }
     );
   },
 };
 
-export default updateFeedback;
+export default userQuestionSetFeedback;

@@ -9,38 +9,65 @@ import {
   GraphQLObjectType,
   GraphQLID,
   GraphQLFloat,
+  GraphQLInputObjectType,
 } from 'graphql';
 import { Answer as AnswerModel, Mentor as MentorModel } from 'models';
-import { Feedback } from 'models/Feedback';
+import { UserQuestion } from 'models/UserQuestion';
 import AnswerType from './answer';
 import MentorType from './mentor';
 
-export const FeedbackType = new GraphQLObjectType({
-  name: 'Feedback',
+export interface UserQuestionCreateInput {
+  question: string;
+  mentor: string;
+  classifierAnswer: string;
+  confidence: number;
+}
+
+export const UserQuestionCreateInputType = new GraphQLInputObjectType({
+  name: 'UserQuestionCreateInput',
+  description: 'Input for creating a user question',
+  fields: () => ({
+    question: {
+      type: GraphQLString,
+    },
+    mentor: {
+      type: GraphQLID,
+    },
+    classifierAnswer: {
+      type: GraphQLID,
+    },
+    confidence: {
+      type: GraphQLFloat,
+    },
+  }),
+});
+
+export const UserQuestionType = new GraphQLObjectType({
+  name: 'UserQuestion',
   fields: () => ({
     _id: { type: GraphQLID },
     question: { type: GraphQLString },
     confidence: { type: GraphQLFloat },
-    grade: { type: GraphQLString },
+    feedback: { type: GraphQLString },
     mentor: {
       type: MentorType,
-      resolve: async function (feedback: Feedback) {
-        return MentorModel.findOne({ _id: feedback.mentor });
+      resolve: async function (uq: UserQuestion) {
+        return MentorModel.findOne({ _id: uq.mentor });
       },
     },
     classifierAnswer: {
       type: AnswerType,
-      resolve: async function (feedback: Feedback) {
-        return AnswerModel.findOne({ _id: feedback.classifierAnswer });
+      resolve: async function (uq: UserQuestion) {
+        return AnswerModel.findOne({ _id: uq.classifierAnswer });
       },
     },
     graderAnswer: {
       type: AnswerType,
-      resolve: async function (feedback: Feedback) {
-        return AnswerModel.findOne({ _id: feedback.graderAnswer });
+      resolve: async function (uq: UserQuestion) {
+        return AnswerModel.findOne({ _id: uq.graderAnswer });
       },
     },
   }),
 });
 
-export default FeedbackType;
+export default UserQuestionType;

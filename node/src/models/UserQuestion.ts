@@ -12,50 +12,50 @@ import { Answer } from './Answer';
 const mongoPaging = require('mongo-cursor-pagination');
 mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
 
-enum Grade {
+export enum Feedback {
   GOOD = 'GOOD',
   BAD = 'BAD',
   NEUTRAL = 'NEUTRAL',
 }
 
-export interface Feedback extends Document {
+export interface UserQuestion extends Document {
   mentor: Mentor['_id'];
   question: string;
   classifierAnswer: Answer['_id'];
   graderAnswer: Answer['_id'];
   confidence: number;
-  grade: string;
+  feedback: string;
 }
 
-export const FeedbackSchema = new Schema({
+export const UserQuestionSchema = new Schema({
   mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
   question: { type: String },
   classifierAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
   graderAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
   confidence: { type: mongoose.Types.Decimal128 },
-  grade: {
+  feedback: {
     type: String,
-    enum: [Grade.GOOD, Grade.BAD, Grade.NEUTRAL],
-    default: Grade.NEUTRAL,
+    enum: [Feedback.GOOD, Feedback.BAD, Feedback.NEUTRAL],
+    default: Feedback.NEUTRAL,
   },
 });
 
-export interface FeedbackModel extends Model<Feedback> {
+export interface UserQuestionModel extends Model<UserQuestion> {
   paginate(
     query?: any,
     options?: any,
     callback?: any
-  ): Promise<PaginatedResolveResult<Feedback>>;
+  ): Promise<PaginatedResolveResult<UserQuestion>>;
 }
 
-FeedbackSchema.index({ mentor: -1, _id: -1 });
-FeedbackSchema.index({ question: -1, _id: -1 });
-FeedbackSchema.index({ classifierAnswer: -1, _id: -1 });
-FeedbackSchema.index({ confidence: -1, _id: -1 });
-FeedbackSchema.index({ grade: -1, _id: -1 });
-FeedbackSchema.plugin(mongoPaging.mongoosePlugin);
+UserQuestionSchema.index({ mentor: -1, _id: -1 });
+UserQuestionSchema.index({ question: -1, _id: -1 });
+UserQuestionSchema.index({ classifierAnswer: -1, _id: -1 });
+UserQuestionSchema.index({ confidence: -1, _id: -1 });
+UserQuestionSchema.index({ feedback: -1, _id: -1 });
+UserQuestionSchema.plugin(mongoPaging.mongoosePlugin);
 
-export default mongoose.model<Feedback, FeedbackModel>(
-  'Feedback',
-  FeedbackSchema
+export default mongoose.model<UserQuestion, UserQuestionModel>(
+  'UserQuestion',
+  UserQuestionSchema
 );

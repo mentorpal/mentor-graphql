@@ -10,7 +10,7 @@ import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 
-describe('feedbacks', () => {
+describe('userQuestionCreate', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -24,35 +24,37 @@ describe('feedbacks', () => {
     await mongoUnit.drop();
   });
 
-  it('gets a list of feedbacks', async () => {
+  it(`returns an error if no userQuestion`, async () => {
     const response = await request(app).post('/graphql').send({
-      query: `query {
-        feedbacks {
-          edges {
-            node {
-              _id
-            }
-          }
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
+      query: `mutation {
+        userQuestionCreate {
+          _id
         }
       }`,
     });
     expect(response.status).to.equal(200);
-    expect(response.body.data.feedbacks).to.eql({
-      edges: [
-        {
-          node: {
-            _id: '5ffdf41a1ee2c62320b49ee1',
-          },
-        },
-      ],
-      pageInfo: {
-        hasNextPage: false,
-        endCursor: null,
-      },
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'missing required param userQuestion'
+    );
+  });
+
+  it(`creates userQuestion`, async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `mutation {
+          userQuestionCreate(userQuestion: {
+            question: "new",
+            mentor: "5ffdf41a1ee2c62111111111",
+            classifierAnswer: "511111111111111111111112",
+            confidence: 1,      
+          }) {
+            question
+          }
+        }`,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.userQuestionCreate).to.eql({
+      question: 'new',
     });
   });
 });
