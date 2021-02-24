@@ -76,11 +76,7 @@ describe('updateMentor', () => {
           }
         }`,
       });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param mentor'
-    );
+    expect(response.status).to.equal(400);
   });
 
   it('updates mentor', async () => {

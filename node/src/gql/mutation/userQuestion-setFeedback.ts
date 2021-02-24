@@ -4,7 +4,12 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType, GraphQLString } from 'graphql';
+import {
+  GraphQLID,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+} from 'graphql';
 import { UserQuestion as UserQuestionModel } from 'models';
 import { UserQuestion } from 'models/UserQuestion';
 import { UserQuestionType } from 'gql/types/user-question';
@@ -12,35 +17,26 @@ import { UserQuestionType } from 'gql/types/user-question';
 export const userQuestionSetFeedback = {
   type: UserQuestionType,
   args: {
-    id: { type: GraphQLString },
-    feedback: { type: GraphQLString },
+    id: { type: GraphQLNonNull(GraphQLID) },
+    feedback: { type: GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: { id: string; feedback: string }
   ): Promise<UserQuestion> => {
-    if (!args.id) {
-      throw new Error('missing required param id');
-    }
-    if (!args.feedback) {
-      throw new Error('missing required param feedback');
-    }
-    if (!(await UserQuestionModel.findOne({ _id: args.id }))) {
-      throw new Error('invalid id');
-    }
-    return await UserQuestionModel.findOneAndUpdate(
+    const update = await UserQuestionModel.findByIdAndUpdate(
+      args.id,
       {
-        _id: args.id,
-      },
-      {
-        $set: {
-          feedback: args.feedback,
-        },
+        feedback: args.feedback,
       },
       {
         new: true,
       }
     );
+    if (!update) {
+      throw new Error('invalid id');
+    }
+    return update;
   },
 };
 

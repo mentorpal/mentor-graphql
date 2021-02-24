@@ -76,11 +76,7 @@ describe('updateAnswer', () => {
           }
         }`,
       });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param mentorId'
-    );
+    expect(response.status).to.equal(400);
   });
 
   it(`throws an error if no questionId`, async () => {
@@ -95,11 +91,7 @@ describe('updateAnswer', () => {
           }
         }`,
       });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param questionId'
-    );
+    expect(response.status).to.equal(400);
   });
 
   it(`throws an error if no answer`, async () => {
@@ -114,11 +106,7 @@ describe('updateAnswer', () => {
           }
         }`,
       });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param answer'
-    );
+    expect(response.status).to.equal(400);
   });
 
   it('updates an answer', async () => {

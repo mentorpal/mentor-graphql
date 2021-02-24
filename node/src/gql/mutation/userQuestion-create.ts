@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
+import { GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import { UserQuestion as UserQuestionModel } from 'models';
 import { UserQuestion, Feedback } from 'models/UserQuestion';
 import {
@@ -16,15 +16,12 @@ import {
 export const userQuestionCreate = {
   type: UserQuestionType,
   args: {
-    userQuestion: { type: UserQuestionCreateInputType },
+    userQuestion: { type: GraphQLNonNull(UserQuestionCreateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: { userQuestion: UserQuestionCreateInput }
   ): Promise<UserQuestion> => {
-    if (!args.userQuestion) {
-      throw new Error('missing required param userQuestion');
-    }
     return await UserQuestionModel.create({
       mentor: args.userQuestion.mentor,
       question: args.userQuestion.question,

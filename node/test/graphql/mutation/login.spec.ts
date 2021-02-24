@@ -39,11 +39,7 @@ describe('login', () => {
         }
       }`,
     });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param accessToken'
-    );
+    expect(response.status).to.equal(400);
   });
 
   it(`returns an error if token expired`, async () => {

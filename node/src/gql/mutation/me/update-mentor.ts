@@ -4,7 +4,12 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType, GraphQLBoolean } from 'graphql';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLBoolean,
+  GraphQLNonNull,
+} from 'graphql';
 import { Mentor as MentorModel } from 'models';
 import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
@@ -12,16 +17,13 @@ import { User } from 'models/User';
 export const updateMentor = {
   type: GraphQLBoolean,
   args: {
-    mentor: { type: GraphQLString },
+    mentor: { type: GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: { mentor: string },
     context: { user: User }
   ): Promise<boolean> => {
-    if (!args.mentor) {
-      throw new Error('missing required param mentor');
-    }
     const mentorUpdate: Mentor = JSON.parse(decodeURI(args.mentor));
     const mentor: Mentor = await MentorModel.findOne({ _id: mentorUpdate._id });
     if (mentor && `${context.user._id}` !== `${mentor.user}`) {

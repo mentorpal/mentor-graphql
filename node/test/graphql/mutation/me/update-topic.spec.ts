@@ -50,17 +50,13 @@ describe('updateTopic', () => {
       .send({
         query: `mutation {
           me {
-            updateTopic(topic: "") {
+            updateTopic {
               _id
             }
           }
         }`,
       });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param topic'
-    );
+    expect(response.status).to.equal(400);
   });
 
   it('updates topic', async () => {

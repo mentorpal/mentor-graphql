@@ -4,7 +4,13 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType, GraphQLBoolean } from 'graphql';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLBoolean,
+  GraphQLNonNull,
+  GraphQLID,
+} from 'graphql';
 import mongoose from 'mongoose';
 import {
   Answer as AnswerModel,
@@ -18,24 +24,15 @@ import { User } from 'models/User';
 export const updateAnswer = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLString },
-    questionId: { type: GraphQLString },
-    answer: { type: GraphQLString },
+    mentorId: { type: GraphQLNonNull(GraphQLID) },
+    questionId: { type: GraphQLNonNull(GraphQLID) },
+    answer: { type: GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: { mentorId: string; answer: string; questionId: string },
     context: { user: User }
   ): Promise<boolean> => {
-    if (!args.mentorId) {
-      throw new Error('missing required param mentorId');
-    }
-    if (!args.answer) {
-      throw new Error('missing required param answer');
-    }
-    if (!args.questionId) {
-      throw new Error('missing required param questionId');
-    }
     const mentor: Mentor = await MentorModel.findOne({ _id: args.mentorId });
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);

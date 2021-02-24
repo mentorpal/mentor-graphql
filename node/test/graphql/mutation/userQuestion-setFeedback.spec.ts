@@ -32,11 +32,7 @@ describe('userQuestionSetFeedback', () => {
         }
       }`,
     });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param id'
-    );
+    expect(response.status).to.equal(400);
   });
 
   it(`returns an error if no feedback`, async () => {
@@ -47,11 +43,7 @@ describe('userQuestionSetFeedback', () => {
         }
       }`,
     });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param feedback'
-    );
+    expect(response.status).to.equal(400);
   });
 
   it(`returns an error if invalid id`, async () => {

@@ -5,12 +5,8 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import axios from 'axios';
-import { GraphQLString, GraphQLObjectType } from 'graphql';
-import {
-  User as UserSchema,
-  Mentor as MentorSchema,
-  Subject as SubjectSchema,
-} from 'models';
+import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
+import { User as UserSchema, Mentor as MentorSchema } from 'models';
 import {
   UserAccessTokenType,
   UserAccessToken,
@@ -51,15 +47,12 @@ export async function authGoogle(accessToken: string): Promise<GoogleResponse> {
 export const loginGoogle = {
   type: UserAccessTokenType,
   args: {
-    accessToken: { type: GraphQLString },
+    accessToken: { type: GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: { accessToken: string }
   ): Promise<UserAccessToken> => {
-    if (!args.accessToken) {
-      throw new Error('missing required param accessToken');
-    }
     try {
       const googleResponse = await authGoogle(args.accessToken);
       const user = await UserSchema.findOneAndUpdate(
@@ -83,25 +76,21 @@ export const loginGoogle = {
         throw new Error('failed to create user');
       }
       // Create a new mentor if creating a new user account
-      const mentor = await MentorSchema.findOne({ user: user._id });
-      if (!mentor) {
-        await MentorSchema.findOneAndUpdate(
-          {
+      await MentorSchema.findOneAndUpdate(
+        {
+          user: user._id,
+        },
+        {
+          $setOnInsert: {
             user: user._id,
+            name: googleResponse.name,
+            firstName: googleResponse.given_name,
           },
-          {
-            $set: {
-              user: user._id,
-              name: googleResponse.name,
-              firstName: googleResponse.given_name,
-            },
-          },
-          {
-            new: true,
-            upsert: true,
-          }
-        );
-      }
+        },
+        {
+          upsert: true,
+        }
+      );
       return generateAccessToken(user);
     } catch (error) {
       throw new Error(error);

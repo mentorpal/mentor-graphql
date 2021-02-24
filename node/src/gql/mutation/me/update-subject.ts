@@ -5,7 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose from 'mongoose';
-import { GraphQLString, GraphQLObjectType } from 'graphql';
+import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
 import {
   Subject as SubjectModel,
   Topic as TopicModel,
@@ -18,16 +18,13 @@ import { Subject } from 'models/Subject';
 export const updateSubject = {
   type: SubjectType,
   args: {
-    subject: { type: GraphQLString },
+    subject: { type: GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: { subject: string },
     context: { user: User }
   ): Promise<Subject> => {
-    if (!args.subject) {
-      throw new Error('missing required param subject');
-    }
     const subjectUpdate: SubjectGQL = JSON.parse(decodeURI(args.subject));
     for (const [i, question] of subjectUpdate.questions.entries()) {
       for (const [i, topic] of question.topics.entries()) {

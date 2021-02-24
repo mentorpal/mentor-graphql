@@ -116,5 +116,10 @@ module.exports = {
       question: 'who are you?',
       feedback: 'NEUTRAL',
     },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ee2'),
+      question: 'how are you?',
+      feedback: 'BAD',
+    },
   ],
 };

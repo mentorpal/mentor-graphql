@@ -5,7 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose from 'mongoose';
-import { GraphQLString, GraphQLObjectType } from 'graphql';
+import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
 import { Topic as TopicModel } from 'models';
 import { User } from 'models/User';
 import TopicType, { TopicGQL } from 'gql/types/topic';
@@ -14,16 +14,13 @@ import { Topic } from 'models/Topic';
 export const updateTopic = {
   type: TopicType,
   args: {
-    topic: { type: GraphQLString },
+    topic: { type: GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: { topic: string },
     context: { user: User }
   ): Promise<Topic> => {
-    if (!args.topic) {
-      throw new Error('missing required param topic');
-    }
     const topicUpdate: TopicGQL = JSON.parse(decodeURI(args.topic));
     return await TopicModel.findOneAndUpdate(
       {

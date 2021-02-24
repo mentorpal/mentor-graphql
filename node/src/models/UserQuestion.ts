@@ -27,18 +27,21 @@ export interface UserQuestion extends Document {
   feedback: string;
 }
 
-export const UserQuestionSchema = new Schema({
-  mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
-  question: { type: String },
-  classifierAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
-  graderAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
-  confidence: { type: mongoose.Types.Decimal128 },
-  feedback: {
-    type: String,
-    enum: [Feedback.GOOD, Feedback.BAD, Feedback.NEUTRAL],
-    default: Feedback.NEUTRAL,
+export const UserQuestionSchema = new Schema(
+  {
+    mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
+    question: { type: String },
+    classifierAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
+    graderAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
+    confidence: { type: Number },
+    feedback: {
+      type: String,
+      enum: [Feedback.GOOD, Feedback.BAD, Feedback.NEUTRAL],
+      default: Feedback.NEUTRAL,
+    },
   },
-});
+  { timestamps: true, collation: { locale: 'en', strength: 2 } }
+);
 
 export interface UserQuestionModel extends Model<UserQuestion> {
   paginate(

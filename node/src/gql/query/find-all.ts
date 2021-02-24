@@ -11,6 +11,7 @@ import {
   PaginatedResolveResult,
 } from 'gql/types/connection';
 import { HasPaginate } from 'gql/types/mongoose-type-helpers';
+import mongoose from 'mongoose';
 
 export function findAll<T extends PaginatedResolveResult>(config: {
   nodeType: GraphQLObjectType;
@@ -21,9 +22,17 @@ export function findAll<T extends PaginatedResolveResult>(config: {
     nodeType,
     resolve: async (resolveArgs: PaginatedResolveArgs) => {
       const { args } = resolveArgs;
-      const query = args.filter ? JSON.parse(decodeURI(args.filter)) : {};
-      const filter = Object.assign({}, query, {
+      const filter = Object.assign({}, args.filter || {}, {
         $or: [{ deleted: false }, { deleted: null }],
+      });
+      Object.keys(filter).map((key, i) => {
+        if (typeof filter[key] === 'string') {
+          try {
+            filter[key] = {
+              $in: [filter[key], mongoose.Types.ObjectId(filter[key])],
+            };
+          } catch (err) {}
+        }
       });
 
       const cursor = args.cursor;

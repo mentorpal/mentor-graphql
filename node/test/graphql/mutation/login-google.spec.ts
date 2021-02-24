@@ -45,7 +45,7 @@ describe('login with google', () => {
   it(`returns an error if no accessToken`, async () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
-        loginGoogle(accessToken: "") {
+        loginGoogle {
           user {
             name
             email
@@ -55,11 +55,7 @@ describe('login with google', () => {
         }
       }`,
     });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param accessToken'
-    );
+    expect(response.status).to.equal(400);
   });
 
   it(`creates a new user and mentor for new google login`, async () => {

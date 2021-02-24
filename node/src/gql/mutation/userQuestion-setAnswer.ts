@@ -4,7 +4,13 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType, GraphQLString } from 'graphql';
+import {
+  GraphQLID,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+} from 'graphql';
+import mongoose from 'mongoose';
 import {
   UserQuestion as UserQuestionModel,
   Answer as AnswerModel,
@@ -13,63 +19,38 @@ import {
 import { UserQuestion } from 'models/UserQuestion';
 import { UserQuestionType } from 'gql/types/user-question';
 import { Answer } from 'models/Answer';
-import { Question } from 'models/Question';
 
 export const userQuestionSetAnswer = {
   type: UserQuestionType,
   args: {
-    id: { type: GraphQLString },
+    id: { type: GraphQLNonNull(GraphQLID) },
     answer: { type: GraphQLString },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: { id: string; answer: string }
   ): Promise<UserQuestion> => {
-    if (!args.id) {
-      throw new Error('missing required param id');
-    }
-    if (!args.answer) {
-      throw new Error('missing required param answer');
-    }
-    const feedback: UserQuestion = await UserQuestionModel.findOne({
-      _id: args.id,
-    });
-    if (!feedback) {
-      throw new Error('invalid id');
-    }
-    const answer: Answer = await AnswerModel.findOne({ _id: args.answer });
-    if (!answer) {
-      throw new Error('invalid answer');
-    }
-    const question: Question = await QuestionModel.findOne({
-      _id: answer.question,
-    });
-    if (!question.paraphrases.includes(feedback.question)) {
-      await QuestionModel.findOneAndUpdate(
-        {
-          _id: answer.question,
-        },
-        {
-          $set: {
-            paraphrases: [...question.paraphrases, feedback.question],
-          },
-        }
-      );
-    }
-
-    return await UserQuestionModel.findOneAndUpdate(
+    const userQuestion: UserQuestion = await UserQuestionModel.findByIdAndUpdate(
+      args.id,
       {
-        _id: args.id,
-      },
-      {
-        $set: {
-          graderAnswer: args.answer,
-        },
+        graderAnswer: args.answer ? mongoose.Types.ObjectId(args.answer) : null,
       },
       {
         new: true,
       }
     );
+    if (!userQuestion) {
+      throw new Error('invalid id');
+    }
+    const answer: Answer = await AnswerModel.findById(args.answer);
+    if (answer) {
+      await QuestionModel.findByIdAndUpdate(answer.question, {
+        $addToSet: {
+          paraphrases: userQuestion.question,
+        },
+      });
+    }
+    return userQuestion;
   },
 };
 

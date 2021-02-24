@@ -29,7 +29,7 @@ describe('addQuestionSet', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
           me {
-            addQuestionSet(mentorId: "")
+            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111", subjectId: "5ffdf41a1ee2c62320b49eb3")
           }
         }`,
     });
@@ -71,11 +71,7 @@ describe('addQuestionSet', () => {
           }
         }`,
       });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param mentorId'
-    );
+    expect(response.status).to.equal(400);
   });
 
   it(`throws an error if no subjectId`, async () => {
@@ -90,11 +86,7 @@ describe('addQuestionSet', () => {
           }
         }`,
       });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param subjectId'
-    );
+    expect(response.status).to.equal(400);
   });
 
   it(`throws an error if subject does not exist`, async () => {

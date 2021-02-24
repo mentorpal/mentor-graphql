@@ -32,26 +32,7 @@ describe('userQuestionSetAnswer', () => {
         }
       }`,
     });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param id'
-    );
-  });
-
-  it(`returns an error if no answer`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
-        userQuestionSetAnswer(id: "5ffdf41a1ee2c62320b49ee1") {
-          _id
-        }
-      }`,
-    });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'missing required param answer'
-    );
+    expect(response.status).to.equal(400);
   });
 
   it(`returns an error if invalid id`, async () => {
@@ -66,21 +47,6 @@ describe('userQuestionSetAnswer', () => {
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
       'invalid id'
-    );
-  });
-
-  it(`returns an error if invalid answer`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
-        userQuestionSetAnswer(id: "5ffdf41a1ee2c62320b49ee1", answer: "111111111111111111111111") {
-          _id
-        }
-      }`,
-    });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'invalid answer'
     );
   });
 
@@ -110,6 +76,37 @@ describe('userQuestionSetAnswer', () => {
     expect(question.status).to.equal(200);
     expect(question.body.data.question).to.eql({
       paraphrases: ['who are you?'],
+    });
+  });
+
+  it(`removes graderAnswer from userQuestion`, async () => {
+    let response = await request(app).post('/graphql').send({
+      query: `mutation {
+        userQuestionSetAnswer(id: "5ffdf41a1ee2c62320b49ee1", answer: "511111111111111111111112") {
+          graderAnswer {
+            _id
+          }
+        }
+      }`,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.userQuestionSetAnswer).to.eql({
+      graderAnswer: {
+        _id: '511111111111111111111112',
+      },
+    });
+    response = await request(app).post('/graphql').send({
+      query: `mutation {
+        userQuestionSetAnswer(id: "5ffdf41a1ee2c62320b49ee1") {
+          graderAnswer {
+            _id
+          }
+        }
+      }`,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.userQuestionSetAnswer).to.eql({
+      graderAnswer: null,
     });
   });
 });
