@@ -18,12 +18,20 @@ export enum Feedback {
   NEUTRAL = 'NEUTRAL',
 }
 
+export enum ClassifierAnswerType {
+  CLASSIFIER = 'CLASSIFIER',
+  OFF_TOPIC = 'OFF_TOPIC',
+  EXACT_MATCH = 'EXACT',
+  PARAPHRASE = 'PARAPHRASE',
+}
+
 export interface UserQuestion extends Document {
   mentor: Mentor['_id'];
   question: string;
   classifierAnswer: Answer['_id'];
   graderAnswer: Answer['_id'];
   confidence: number;
+  classifierAnswerType: string;
   feedback: string;
 }
 
@@ -34,6 +42,16 @@ export const UserQuestionSchema = new Schema(
     classifierAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
     graderAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
     confidence: { type: Number },
+    classifierAnswerType: {
+      type: String,
+      enum: [
+        ClassifierAnswerType.CLASSIFIER,
+        ClassifierAnswerType.OFF_TOPIC,
+        ClassifierAnswerType.EXACT_MATCH,
+        ClassifierAnswerType.PARAPHRASE,
+      ],
+      default: ClassifierAnswerType.CLASSIFIER,
+    },
     feedback: {
       type: String,
       enum: [Feedback.GOOD, Feedback.BAD, Feedback.NEUTRAL],

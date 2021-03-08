@@ -14,12 +14,14 @@ import {
 import { Answer as AnswerModel, Mentor as MentorModel } from 'models';
 import { UserQuestion } from 'models/UserQuestion';
 import AnswerType from './answer';
+import DateType from './date';
 import MentorType from './mentor';
 
 export interface UserQuestionCreateInput {
   question: string;
   mentor: string;
   classifierAnswer: string;
+  classifierAnswerType: string;
   confidence: number;
 }
 
@@ -36,6 +38,9 @@ export const UserQuestionCreateInputType = new GraphQLInputObjectType({
     classifierAnswer: {
       type: GraphQLID,
     },
+    classifierAnswerType: {
+      type: GraphQLString,
+    },
     confidence: {
       type: GraphQLFloat,
     },
@@ -48,6 +53,7 @@ export const UserQuestionType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     question: { type: GraphQLString },
     confidence: { type: GraphQLFloat },
+    classifierAnswerType: { type: GraphQLString },
     feedback: { type: GraphQLString },
     mentor: {
       type: MentorType,
@@ -67,6 +73,8 @@ export const UserQuestionType = new GraphQLObjectType({
         return AnswerModel.findOne({ _id: uq.graderAnswer });
       },
     },
+    createdAt: { type: DateType },
+    updatedAt: { type: DateType },
   }),
 });
 

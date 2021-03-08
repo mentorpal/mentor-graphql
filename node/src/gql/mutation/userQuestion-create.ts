@@ -6,7 +6,11 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import { UserQuestion as UserQuestionModel } from 'models';
-import { UserQuestion, Feedback } from 'models/UserQuestion';
+import {
+  UserQuestion,
+  Feedback,
+  ClassifierAnswerType,
+} from 'models/UserQuestion';
 import {
   UserQuestionCreateInput,
   UserQuestionCreateInputType,
@@ -27,6 +31,9 @@ export const userQuestionCreate = {
       question: args.userQuestion.question,
       confidence: args.userQuestion.confidence,
       classifierAnswer: args.userQuestion.classifierAnswer,
+      classifierAnswerType:
+        args.userQuestion.classifierAnswerType ||
+        ClassifierAnswerType.CLASSIFIER,
       graderAnswer: null,
       feedback: Feedback.NEUTRAL,
     });

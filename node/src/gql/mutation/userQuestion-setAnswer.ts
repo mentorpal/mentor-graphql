@@ -30,6 +30,29 @@ export const userQuestionSetAnswer = {
     _root: GraphQLObjectType,
     args: { id: string; answer: string }
   ): Promise<UserQuestion> => {
+    // Remove old answer as a paraphrase from question
+    const oldUserQuestion: UserQuestion = await UserQuestionModel.findById(
+      args.id
+    );
+    if (!oldUserQuestion) {
+      throw new Error('invalid id');
+    }
+    if (`${oldUserQuestion.graderAnswer}` === `${args.answer}`) {
+      // no changes needed
+      return oldUserQuestion;
+    }
+    const oldAnswer: Answer = await AnswerModel.findById(
+      oldUserQuestion.graderAnswer
+    );
+    if (oldAnswer) {
+      await QuestionModel.findByIdAndUpdate(oldAnswer.question, {
+        $pull: {
+          paraphrases: oldUserQuestion.question,
+        },
+      });
+    }
+
+    // Add new answer as a paraphrase to question
     const userQuestion: UserQuestion = await UserQuestionModel.findByIdAndUpdate(
       args.id,
       {
@@ -39,9 +62,6 @@ export const userQuestionSetAnswer = {
         new: true,
       }
     );
-    if (!userQuestion) {
-      throw new Error('invalid id');
-    }
     const answer: Answer = await AnswerModel.findById(args.answer);
     if (answer) {
       await QuestionModel.findByIdAndUpdate(answer.question, {

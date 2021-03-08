@@ -95,6 +95,18 @@ describe('userQuestionSetAnswer', () => {
         _id: '511111111111111111111112',
       },
     });
+    let question = await request(app).post('/graphql').send({
+      query: `query {
+        question(id: "511111111111111111111111") {
+          paraphrases
+        }
+      }`,
+    });
+    expect(question.status).to.equal(200);
+    expect(question.body.data.question).to.eql({
+      paraphrases: ['who are you?'],
+    });
+
     response = await request(app).post('/graphql').send({
       query: `mutation {
         userQuestionSetAnswer(id: "5ffdf41a1ee2c62320b49ee1") {
@@ -107,6 +119,17 @@ describe('userQuestionSetAnswer', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.userQuestionSetAnswer).to.eql({
       graderAnswer: null,
+    });
+    question = await request(app).post('/graphql').send({
+      query: `query {
+        question(id: "511111111111111111111111") {
+          paraphrases
+        }
+      }`,
+    });
+    expect(question.status).to.equal(200);
+    expect(question.body.data.question).to.eql({
+      paraphrases: [],
     });
   });
 });
