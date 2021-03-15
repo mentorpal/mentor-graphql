@@ -8,14 +8,11 @@ import {
   GraphQLString,
   GraphQLObjectType,
   GraphQLList,
-  GraphQLBoolean,
   GraphQLID,
 } from 'graphql';
-import { Answer as AnswerModel, Subject as SubjectModel } from 'models';
+import { Answer as AnswerModel, Mentor as MentorModel } from 'models';
 import { Answer, Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
-import { Subject } from 'models/Subject';
-import mongoose from 'mongoose';
 import DateType from './date';
 import AnswerType from './answer';
 import SubjectType from './subject';
@@ -27,24 +24,48 @@ export const MentorType = new GraphQLObjectType({
     name: { type: GraphQLString },
     firstName: { type: GraphQLString },
     title: { type: GraphQLString },
-    isBuilt: { type: GraphQLBoolean },
     lastTrainedAt: { type: DateType },
+    mentorType: { type: GraphQLString },
+    subjects: {
+      type: GraphQLList(SubjectType),
+      resolve: async function (mentor: Mentor) {
+        return await MentorModel.getSubjects(mentor);
+      },
+    },
+    topics: {
+      type: GraphQLList(SubjectType),
+      args: {
+        subject: { type: GraphQLID },
+      },
+      resolve: async function (mentor: Mentor, args: { subject: string }) {
+        return await MentorModel.getTopics(mentor, args.subject);
+      },
+    },
     answers: {
       type: GraphQLList(AnswerType),
-      resolve: async function (parent: {
-        _id: mongoose.Types.ObjectId;
-        subjects: Subject['_id'][];
-      }) {
-        const questionIds = (
-          (await SubjectModel.find({
-            _id: { $in: parent.subjects },
-          })) || []
-        ).reduce((acc: mongoose.Types.ObjectId[], cur) => {
-          return [...acc, ...(cur.questions || [])];
-        }, []);
-        const answers = await AnswerModel.find({
-          mentor: parent._id,
+      args: {
+        subject: { type: GraphQLID },
+        topic: { type: GraphQLID },
+      },
+      resolve: async function (
+        mentor: Mentor,
+        args: { subject: string; topic: string }
+      ) {
+        const questions = await MentorModel.getQuestions(
+          mentor,
+          args.subject,
+          args.topic
+        );
+        const questionIds = questions.map((q) => q._id);
+        const answers: Answer[] = await AnswerModel.find({
+          mentor: mentor._id,
           question: { $in: questionIds },
+        });
+        answers.sort((a: Answer, b: Answer) => {
+          return (
+            questionIds.indexOf(a.question._id) -
+            questionIds.indexOf(b.question._id)
+          );
         });
         const answersByQid = answers.reduce(
           (acc: Record<string, Answer>, cur) => {
@@ -56,7 +77,7 @@ export const MentorType = new GraphQLObjectType({
         const answerResult = questionIds.map((qid) => {
           return (
             answersByQid[`${qid}`] || {
-              mentor: parent._id,
+              mentor: mentor._id,
               question: qid,
               status: Status.INCOMPLETE,
               transcript: '',
@@ -65,17 +86,6 @@ export const MentorType = new GraphQLObjectType({
           );
         });
         return answerResult;
-      },
-    },
-    subjects: {
-      type: GraphQLList(SubjectType),
-      resolve: async function (mentor: Mentor) {
-        const resolveSubjects = async (id: string) => {
-          return await SubjectModel.findOne({ _id: id });
-        };
-        return Promise.all(
-          mentor.subjects.map((s: string) => resolveSubjects(s))
-        );
       },
     },
   }),

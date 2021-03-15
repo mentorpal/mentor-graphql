@@ -11,12 +11,12 @@ import { Question } from 'models/Question';
 import TopicType, { TopicGQL } from './topic';
 
 export interface QuestionGQL {
-  _id: string;
-  question: string;
-  topics: TopicGQL[];
-  paraphrases: string[];
-  type: string;
-  name: string;
+  _id?: string;
+  question?: string;
+  topics?: TopicGQL[];
+  paraphrases?: string[];
+  type?: string;
+  name?: string;
 }
 
 export const QuestionType = new GraphQLObjectType({

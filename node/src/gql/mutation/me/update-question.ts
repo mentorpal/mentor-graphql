@@ -9,6 +9,7 @@ import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
 import { Question as QuestionModel, Topic as TopicModel } from 'models';
 import { User } from 'models/User';
 import { Question } from 'models/Question';
+import { Topic } from 'models/Topic';
 import QuestionType, { QuestionGQL } from 'gql/types/question';
 
 export const updateQuestion = {
@@ -22,23 +23,26 @@ export const updateQuestion = {
     context: { user: User }
   ): Promise<Question> => {
     const questionUpdate: QuestionGQL = JSON.parse(decodeURI(args.question));
-    for (const [i, topic] of questionUpdate.topics.entries()) {
-      const t = await TopicModel.findOneAndUpdate(
-        {
-          _id: topic._id || mongoose.Types.ObjectId(),
-        },
-        {
-          $set: {
-            name: topic.name,
-            description: topic.description,
+    if (questionUpdate.topics) {
+      for (const [i, topic] of questionUpdate.topics.entries()) {
+        const t = await TopicModel.findOneAndUpdate(
+          {
+            _id: topic._id || mongoose.Types.ObjectId(),
           },
-        },
-        {
-          new: true,
-          upsert: true,
-        }
-      );
-      questionUpdate.topics[i] = t;
+          {
+            $set: {
+              name: topic.name,
+              description: topic.description,
+            },
+          },
+          {
+            new: true,
+            upsert: true,
+          }
+        );
+        questionUpdate.topics[i] = t;
+      }
+      questionUpdate.topics = questionUpdate.topics.map((t: Topic) => t._id);
     }
     return await QuestionModel.findOneAndUpdate(
       {
@@ -46,11 +50,7 @@ export const updateQuestion = {
       },
       {
         $set: {
-          question: questionUpdate.question,
-          topics: questionUpdate.topics.map((t) => t._id),
-          paraphrases: questionUpdate.paraphrases,
-          type: questionUpdate.type,
-          name: questionUpdate.name,
+          ...questionUpdate,
         },
       },
       {

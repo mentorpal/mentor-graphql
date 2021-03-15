@@ -11,7 +11,7 @@ import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 import { getToken } from '../../../helpers';
 
-describe('addQuestionSet', () => {
+describe('setQuestionSets', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -29,7 +29,7 @@ describe('addQuestionSet', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
           me {
-            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111", subjectId: "5ffdf41a1ee2c62320b49eb3")
+            setQuestionSets(mentorId: "5ffdf41a1ee2c62111111111", subjectIds: ["5ffdf41a1ee2c62320b49eb3"])
           }
         }`,
     });
@@ -48,7 +48,7 @@ describe('addQuestionSet', () => {
       .send({
         query: `mutation {
           me {
-            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111", subjectId: "5ffdf41a1ee2c62320b49eb3")
+            setQuestionSets(mentorId: "5ffdf41a1ee2c62111111111", subjectIds: ["5ffdf41a1ee2c62320b49eb3"])
           }
         }`,
       });
@@ -67,7 +67,7 @@ describe('addQuestionSet', () => {
       .send({
         query: `mutation {
           me {
-            addQuestionSet(subjectId: "5ffdf41a1ee2c62320b49eb3")
+            setQuestionSets(subjectIds: ["5ffdf41a1ee2c62320b49eb3"])
           }
         }`,
       });
@@ -82,30 +82,11 @@ describe('addQuestionSet', () => {
       .send({
         query: `mutation {
           me {
-            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111")
+            setQuestionSets(mentorId: "5ffdf41a1ee2c62111111111")
           }
         }`,
       });
     expect(response.status).to.equal(400);
-  });
-
-  it(`throws an error if subject does not exist`, async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const response = await request(app)
-      .post('/graphql')
-      .set('Authorization', `bearer ${token}`)
-      .send({
-        query: `mutation {
-          me {
-            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111", subjectId: "5ffdf41a1ee2c62320b49eb4")
-          }
-        }`,
-      });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      "no subject found for id '5ffdf41a1ee2c62320b49eb4'"
-    );
   });
 
   it('adds subject', async () => {
@@ -116,12 +97,12 @@ describe('addQuestionSet', () => {
       .send({
         query: `mutation {
           me {
-            addQuestionSet(mentorId: "5ffdf41a1ee2c62111111111", subjectId: "5ffdf41a1ee2c62320b49eb3")
+            setQuestionSets(mentorId: "5ffdf41a1ee2c62111111111", subjectIds: ["5ffdf41a1ee2c62320b49eb3"])
           }
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.addQuestionSet).to.eql(true);
+    expect(response.body.data.me.setQuestionSets).to.eql(true);
     const r2 = await request(app).post('/graphql').send({
       query: `query {
           mentor(id: "5ffdf41a1ee2c62111111111") {
@@ -138,18 +119,54 @@ describe('addQuestionSet', () => {
         mentor: {
           subjects: [
             {
-              _id: '5ffdf41a1ee2c62320b49eb1',
-              name: 'Repeat After Me',
-            },
-            {
-              _id: '5ffdf41a1ee2c62320b49eb2',
-              name: 'Background',
-            },
-            {
               _id: '5ffdf41a1ee2c62320b49eb3',
               name: 'STEM',
             },
           ],
+        },
+      },
+    });
+  });
+
+  it('removes subject', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            setQuestionSets(mentorId: "5ffdf41a1ee2c62111111111", subjectIds: ["5ffdf41a1ee2c62320b49eb3"])
+          }
+        }`,
+      });
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            setQuestionSets(mentorId: "5ffdf41a1ee2c62111111111", subjectIds: [])
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.setQuestionSets).to.eql(true);
+    const r2 = await request(app).post('/graphql').send({
+      query: `query {
+          mentor(id: "5ffdf41a1ee2c62111111111") {
+            subjects {
+              _id
+              name
+            }
+          }
+      }`,
+    });
+    expect(r2.status).to.equal(200);
+    expect(r2.body).to.eql({
+      data: {
+        mentor: {
+          subjects: [],
         },
       },
     });

@@ -10,6 +10,7 @@ import { Express } from 'express';
 import { describe } from 'mocha';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
+import { getToken } from '../../helpers';
 
 describe('subject', () => {
   let app: Express;
@@ -55,6 +56,80 @@ describe('subject', () => {
       _id: '5ffdf41a1ee2c62320b49eb1',
       name: 'Repeat After Me',
       description: "These are miscellaneous phrases you'll be asked to repeat.",
+    });
+  });
+
+  it('get all topics in subject in alphabetical order', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+          subject(id: "5ffdf41a1ee2c62320b49eb2") {
+            topics {
+              name
+            }
+          }
+      }`,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.subject.topics).to.eql([
+      {
+        name: 'Advice',
+      },
+      {
+        name: 'Background',
+      },
+    ]);
+  });
+
+  it('get all topics in subject in custom order', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const subject = encodeURI(
+      JSON.stringify({
+        _id: '5ffdf41a1ee2c62320b49eb2',
+        topicsOrder: ['5ffdf41a1ee2c62320b49ec2', '5ffdf41a1ee2c62320b49ec3'],
+      })
+    );
+    await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            updateSubject(subject: "${subject}") {
+              _id
+            }
+          }
+        }`,
+      });
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+          subject(id: "5ffdf41a1ee2c62320b49eb2") {
+            topicsOrder {
+              name
+            }
+            topics {
+              name
+            }
+          }
+      }`,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.subject).to.eql({
+      topicsOrder: [
+        {
+          name: 'Background',
+        },
+        {
+          name: 'Advice',
+        },
+      ],
+      topics: [
+        {
+          name: 'Background',
+        },
+        {
+          name: 'Advice',
+        },
+      ],
     });
   });
 
