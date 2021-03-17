@@ -28,8 +28,7 @@ export const updateTopic = {
       },
       {
         $set: {
-          name: topicUpdate.name,
-          description: topicUpdate.description,
+          ...topicUpdate,
         },
       },
       {

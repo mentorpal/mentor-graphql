@@ -63,31 +63,23 @@ describe('mentor', () => {
       title: "Nuclear Electrician's Mate",
       subjects: [
         {
-          _id: '5ffdf41a1ee2c62320b49eb1',
-          name: 'Repeat After Me',
-        },
-        {
           _id: '5ffdf41a1ee2c62320b49eb2',
           name: 'Background',
+        },
+        {
+          _id: '5ffdf41a1ee2c62320b49eb1',
+          name: 'Repeat After Me',
         },
       ],
     });
   });
 
-  it('mentor/answers gets answers for all questions, including incomplete (CHANGE THIS to /mentor/subject/answers)', async () => {
+  it('mentor/subjects gets all subjects for mentor in alphabetical order', async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
-        mentor(id: "5ffdf41a1ee2c62111111111") {
-          _id
-          name
-          answers {
-            question {
-              _id
-              topics {
-                name
-              }
-            }
-            transcript
+        mentor(id: "5ffdf41a1ee2c62111111112") {
+          subjects {
+            name
           }
         }
       }
@@ -95,19 +87,126 @@ describe('mentor', () => {
     });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
-      _id: '5ffdf41a1ee2c62111111111',
+      subjects: [
+        {
+          name: 'Background',
+        },
+        {
+          name: 'Repeat After Me',
+        },
+        {
+          name: 'STEM',
+        },
+      ],
+    });
+  });
+
+  it('mentor/topics gets all topics for mentor in alphabetical order', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111112") {
+          topics {
+            name
+          }
+        }
+      }
+    `,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor).to.eql({
+      topics: [
+        {
+          name: 'Advice',
+        },
+        {
+          name: 'Background',
+        },
+        {
+          name: 'Idle',
+        },
+      ],
+    });
+  });
+
+  it('mentor/topics gets topics in subject in subject order', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111112") {
+          topics(subject: "5ffdf41a1ee2c62320b49eb2") {
+            name
+          }
+        }
+      }
+    `,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor).to.eql({
+      topics: [
+        {
+          name: 'Advice',
+        },
+        {
+          name: 'Background',
+        },
+      ],
+    });
+  });
+
+  it('mentor/topics fails to get topics in subject mentor does not have', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111111") {
+          topics(subject: "5ffdf41a1ee2c62320b49eb3") {
+            name
+          }
+        }
+      }
+    `,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor).to.eql({
+      topics: [],
+    });
+  });
+
+  it('mentor/answers gets answers for all questions, including incomplete', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111111") {
+          name
+          answers {
+            question {
+              question
+              topics {
+                name
+              }
+            }
+            transcript
+            status
+          }
+        }
+      }
+    `,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor).to.eql({
       name: 'Clinton Anderson',
       answers: [
         {
           question: {
-            _id: '511111111111111111111111',
-            topics: [],
+            question: 'Do you like your job?',
+            topics: [
+              {
+                name: 'Advice',
+              },
+            ],
           },
-          transcript: '[being still]',
+          transcript: '',
+          status: 'INCOMPLETE',
         },
         {
           question: {
-            _id: '511111111111111111111112',
+            question: 'How old are you?',
             topics: [
               {
                 name: 'Background',
@@ -115,6 +214,205 @@ describe('mentor', () => {
             ],
           },
           transcript: '',
+          status: 'INCOMPLETE',
+        },
+        {
+          question: {
+            question: 'Who are you and what do you do?',
+            topics: [
+              {
+                name: 'Background',
+              },
+            ],
+          },
+          transcript: '',
+          status: 'INCOMPLETE',
+        },
+        {
+          question: {
+            question: "Don't talk and stay still.",
+            topics: [
+              {
+                name: 'Idle',
+              },
+            ],
+          },
+          transcript: '[being still]',
+          status: 'COMPLETE',
+        },
+      ],
+    });
+  });
+
+  it('mentor/answers gets complete answers for all questions', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111111") {
+          name
+          answers(status: "COMPLETE") {
+            question {
+              question
+              topics {
+                name
+              }
+            }
+            transcript
+            status
+          }
+        }
+      }
+    `,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor).to.eql({
+      name: 'Clinton Anderson',
+      answers: [
+        {
+          question: {
+            question: "Don't talk and stay still.",
+            topics: [
+              {
+                name: 'Idle',
+              },
+            ],
+          },
+          transcript: '[being still]',
+          status: 'COMPLETE',
+        },
+      ],
+    });
+  });
+
+  it('mentor/answers gets answers for questions in subject, including incomplete', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111111") {
+          answers(subject: "5ffdf41a1ee2c62320b49eb1") {
+            question {
+              question
+              topics {
+                name
+              }
+            }
+            transcript
+            status
+          }
+        }
+      }
+    `,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor).to.eql({
+      answers: [
+        {
+          question: {
+            question: "Don't talk and stay still.",
+            topics: [
+              {
+                name: 'Idle',
+              },
+            ],
+          },
+          transcript: '[being still]',
+          status: 'COMPLETE',
+        },
+      ],
+    });
+  });
+
+  it('mentor/answers fails to get answers for subject mentor does not have, including incomplete', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111111") {
+          answers(subject: "5ffdf41a1ee2c62320b49eb3") {
+            question {
+              question
+              topics {
+                name
+              }
+            }
+            transcript
+            status
+          }
+        }
+      }
+    `,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor).to.eql({
+      answers: [],
+    });
+  });
+
+  it('mentor/answers gets answers for questions in topic, including incomplete', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111111") {
+          answers(topic: "5ffdf41a1ee2c62320b49ec3") {
+            question {
+              question
+              topics {
+                name
+              }
+            }
+            transcript
+            status
+          }
+        }
+      }
+    `,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor).to.eql({
+      answers: [
+        {
+          question: {
+            question: 'Do you like your job?',
+            topics: [
+              {
+                name: 'Advice',
+              },
+            ],
+          },
+          transcript: '',
+          status: 'INCOMPLETE',
+        },
+      ],
+    });
+  });
+
+  it('mentor/utterances gets all utterances, including incomplete', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111111") {
+          utterances {
+            question {
+              question
+              topics {
+                name
+              }
+            }
+            transcript
+            status
+          }
+        }
+      }
+    `,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor).to.eql({
+      utterances: [
+        {
+          question: {
+            question: "Don't talk and stay still.",
+            topics: [
+              {
+                name: 'Idle',
+              },
+            ],
+          },
+          transcript: '[being still]',
+          status: 'COMPLETE',
         },
       ],
     });

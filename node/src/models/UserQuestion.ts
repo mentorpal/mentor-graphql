@@ -28,20 +28,20 @@ export enum ClassifierAnswerType {
 export interface UserQuestion extends Document {
   mentor: Mentor['_id'];
   question: string;
-  classifierAnswer: Answer['_id'];
-  graderAnswer: Answer['_id'];
   confidence: number;
-  classifierAnswerType: string;
   feedback: string;
+  classifierAnswer: Answer['_id'];
+  classifierAnswerType: string;
+  graderAnswer: Answer['_id'];
 }
 
 export const UserQuestionSchema = new Schema(
   {
     mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
     question: { type: String },
+    confidence: { type: Number },
     classifierAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
     graderAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
-    confidence: { type: Number },
     classifierAnswerType: {
       type: String,
       enum: [
@@ -71,9 +71,10 @@ export interface UserQuestionModel extends Model<UserQuestion> {
 
 UserQuestionSchema.index({ mentor: -1, _id: -1 });
 UserQuestionSchema.index({ question: -1, _id: -1 });
-UserQuestionSchema.index({ classifierAnswer: -1, _id: -1 });
 UserQuestionSchema.index({ confidence: -1, _id: -1 });
 UserQuestionSchema.index({ feedback: -1, _id: -1 });
+UserQuestionSchema.index({ classifierAnswer: -1, _id: -1 });
+UserQuestionSchema.index({ graderAnswer: -1, _id: -1 });
 UserQuestionSchema.plugin(mongoPaging.mongoosePlugin);
 
 export default mongoose.model<UserQuestion, UserQuestionModel>(

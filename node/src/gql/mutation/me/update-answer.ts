@@ -54,7 +54,9 @@ export const updateAnswer = {
         question: mongoose.Types.ObjectId(args.questionId),
       },
       {
-        $set: answerUpdate,
+        $set: {
+          ...answerUpdate,
+        },
       },
       {
         upsert: true,

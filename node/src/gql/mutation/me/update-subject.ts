@@ -12,8 +12,10 @@ import {
   Question as QuestionModel,
 } from 'models';
 import { User } from 'models/User';
-import SubjectType, { SubjectGQL } from 'gql/types/subject';
 import { Subject } from 'models/Subject';
+import { Topic } from 'models/Topic';
+import { Question } from 'models/Question';
+import SubjectType, { SubjectGQL } from 'gql/types/subject';
 
 export const updateSubject = {
   type: SubjectType,
@@ -26,16 +28,33 @@ export const updateSubject = {
     context: { user: User }
   ): Promise<Subject> => {
     const subjectUpdate: SubjectGQL = JSON.parse(decodeURI(args.subject));
-    for (const [i, question] of subjectUpdate.questions.entries()) {
-      for (const [i, topic] of question.topics.entries()) {
-        const t = await TopicModel.findOneAndUpdate(
+    if (subjectUpdate.questions) {
+      for (const [i, question] of subjectUpdate.questions.entries()) {
+        for (const [i, topic] of question.topics.entries()) {
+          const t = await TopicModel.findOneAndUpdate(
+            {
+              _id: topic._id || mongoose.Types.ObjectId(),
+            },
+            {
+              $set: {
+                ...topic,
+              },
+            },
+            {
+              new: true,
+              upsert: true,
+            }
+          );
+          question.topics[i] = t;
+        }
+        const q = await QuestionModel.findOneAndUpdate(
           {
-            _id: topic._id || mongoose.Types.ObjectId(),
+            _id: question._id || mongoose.Types.ObjectId(),
           },
           {
             $set: {
-              name: topic.name,
-              description: topic.description,
+              ...question,
+              topics: question.topics.map((t: Topic) => t._id),
             },
           },
           {
@@ -43,27 +62,9 @@ export const updateSubject = {
             upsert: true,
           }
         );
-        question.topics[i] = t;
+        subjectUpdate.questions[i] = q;
       }
-      const q = await QuestionModel.findOneAndUpdate(
-        {
-          _id: question._id || mongoose.Types.ObjectId(),
-        },
-        {
-          $set: {
-            question: question.question,
-            topics: question.topics.map((t) => t._id),
-            paraphrases: question.paraphrases,
-            type: question.type,
-            name: question.name,
-          },
-        },
-        {
-          new: true,
-          upsert: true,
-        }
-      );
-      subjectUpdate.questions[i] = q;
+      subjectUpdate.questions.map((q: Question) => q._id);
     }
     return await SubjectModel.findOneAndUpdate(
       {
@@ -71,10 +72,7 @@ export const updateSubject = {
       },
       {
         $set: {
-          name: subjectUpdate.name,
-          description: subjectUpdate.description,
-          isRequired: subjectUpdate.isRequired,
-          questions: subjectUpdate.questions.map((q) => q._id),
+          ...subjectUpdate,
         },
       },
       {

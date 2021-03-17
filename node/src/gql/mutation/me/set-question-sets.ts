@@ -6,22 +6,24 @@ The full terms of this copyright and license should always be found in the root 
 */
 import {
   GraphQLBoolean,
+  GraphQLList,
   GraphQLID,
   GraphQLNonNull,
   GraphQLObjectType,
 } from 'graphql';
-import { Mentor as MentorModel, Subject as SubjectModel } from 'models';
+import mongoose from 'mongoose';
+import { Mentor as MentorModel } from 'models';
 import { User } from 'models/User';
 
-export const addQuestionSet = {
+export const setQuestionSets = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
-    subjectId: { type: GraphQLNonNull(GraphQLID) },
+    subjectIds: { type: GraphQLNonNull(GraphQLList(GraphQLID)) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentorId: string; subjectId: string },
+    args: { mentorId: string; subjectIds: string[] },
     context: { user: User }
   ): Promise<boolean> => {
     const mentor = await MentorModel.findOne({ _id: args.mentorId });
@@ -31,18 +33,13 @@ export const addQuestionSet = {
     if (`${context.user._id}` !== `${mentor.user}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    const subject = await SubjectModel.findOne({ _id: args.subjectId });
-    if (!subject) {
-      throw new Error(`no subject found for id '${args.subjectId}'`);
-    }
-    mentor.subjects.push(subject._id);
     const updatedMentor = await MentorModel.findOneAndUpdate(
       {
         _id: mentor._id,
       },
       {
         $set: {
-          subjects: mentor.subjects,
+          subjects: args.subjectIds.map((id) => mongoose.Types.ObjectId(id)),
         },
       },
       {
@@ -50,12 +47,8 @@ export const addQuestionSet = {
         upsert: true,
       }
     );
-    return Boolean(
-      updatedMentor &&
-        updatedMentor.subjects &&
-        updatedMentor.subjects.find((s) => `${s._id}` === args.subjectId)
-    );
+    return Boolean(updatedMentor && updatedMentor.subjects);
   },
 };
 
-export default addQuestionSet;
+export default setQuestionSets;

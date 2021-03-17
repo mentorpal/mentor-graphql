@@ -12,16 +12,18 @@ import {
   GraphQLString,
 } from 'graphql';
 
-import { Question as QuestionModel } from 'models';
+import { Subject as SubjectModel, Topic as TopicModel } from 'models';
 import { Subject } from 'models/Subject';
 import QuestionType, { QuestionGQL } from './question';
+import TopicType from './topic';
 
 export interface SubjectGQL {
-  _id: string;
-  name: string;
-  description: string;
-  isRequired: boolean;
-  questions: QuestionGQL[];
+  _id?: string;
+  name?: string;
+  description?: string;
+  isRequired?: boolean;
+  topicsOrder?: string[];
+  questions?: QuestionGQL[];
 }
 
 export const SubjectType = new GraphQLObjectType({
@@ -33,13 +35,37 @@ export const SubjectType = new GraphQLObjectType({
     isRequired: {
       type: GraphQLBoolean!,
       resolve: async (subject: Subject) => {
-        return Promise.resolve(Boolean(subject.isRequired));
+        return Boolean(subject.isRequired);
+      },
+    },
+    topicsOrder: {
+      type: GraphQLList(TopicType),
+      resolve: async function (subject: Subject) {
+        const topics = await TopicModel.find({
+          _id: { $in: subject.topicsOrder },
+        });
+        topics.sort((a, b) => {
+          return (
+            subject.topicsOrder.indexOf(a._id) -
+            subject.topicsOrder.indexOf(b._id)
+          );
+        });
+        return topics;
+      },
+    },
+    topics: {
+      type: GraphQLList(TopicType),
+      resolve: async function (subject: Subject) {
+        return await SubjectModel.getTopics(subject);
       },
     },
     questions: {
       type: GraphQLList(QuestionType),
-      resolve: async function (subject: Subject) {
-        return QuestionModel.find({ _id: { $in: subject.questions } });
+      args: {
+        topic: { type: GraphQLID },
+      },
+      resolve: async function (subject: Subject, args: { topic: string }) {
+        return await SubjectModel.getQuestions(subject, args.topic);
       },
     },
   }),

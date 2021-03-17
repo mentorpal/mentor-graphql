@@ -85,7 +85,6 @@ describe('updateMentor', () => {
       JSON.stringify({
         _id: '5ffdf41a1ee2c62111111111',
         name: 'Clint Anderson',
-        isBuilt: true,
       })
     );
     const response = await request(app)
@@ -103,11 +102,5 @@ describe('updateMentor', () => {
       'data.me.updateMentor',
       true
     );
-    // expect(response.body.data.me.updateMentor).to.eql({
-    //   _id: '5ffdf41a1ee2c62111111111',
-    //   name: 'Clint Anderson',
-    //   firstName: 'Clint',
-    //   isBuilt: true,
-    // });
   });
 });

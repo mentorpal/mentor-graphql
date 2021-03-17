@@ -8,17 +8,15 @@ import {
   GraphQLString,
   GraphQLObjectType,
   GraphQLList,
-  GraphQLBoolean,
   GraphQLID,
 } from 'graphql';
-import { Answer as AnswerModel, Subject as SubjectModel } from 'models';
-import { Answer, Status } from 'models/Answer';
+import { Mentor as MentorModel } from 'models';
+import { Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
-import { Subject } from 'models/Subject';
-import mongoose from 'mongoose';
 import DateType from './date';
 import AnswerType from './answer';
 import SubjectType from './subject';
+import { QuestionType } from 'models/Question';
 
 export const MentorType = new GraphQLObjectType({
   name: 'Mentor',
@@ -27,54 +25,54 @@ export const MentorType = new GraphQLObjectType({
     name: { type: GraphQLString },
     firstName: { type: GraphQLString },
     title: { type: GraphQLString },
-    isBuilt: { type: GraphQLBoolean },
     lastTrainedAt: { type: DateType },
-    answers: {
-      type: GraphQLList(AnswerType),
-      resolve: async function (parent: {
-        _id: mongoose.Types.ObjectId;
-        subjects: Subject['_id'][];
-      }) {
-        const questionIds = (
-          (await SubjectModel.find({
-            _id: { $in: parent.subjects },
-          })) || []
-        ).reduce((acc: mongoose.Types.ObjectId[], cur) => {
-          return [...acc, ...(cur.questions || [])];
-        }, []);
-        const answers = await AnswerModel.find({
-          mentor: parent._id,
-          question: { $in: questionIds },
-        });
-        const answersByQid = answers.reduce(
-          (acc: Record<string, Answer>, cur) => {
-            acc[`${cur.question}`] = cur;
-            return acc;
-          },
-          {}
-        );
-        const answerResult = questionIds.map((qid) => {
-          return (
-            answersByQid[`${qid}`] || {
-              mentor: parent._id,
-              question: qid,
-              status: Status.INCOMPLETE,
-              transcript: '',
-              video: '',
-            }
-          );
-        });
-        return answerResult;
-      },
-    },
+    mentorType: { type: GraphQLString },
     subjects: {
       type: GraphQLList(SubjectType),
       resolve: async function (mentor: Mentor) {
-        const resolveSubjects = async (id: string) => {
-          return await SubjectModel.findOne({ _id: id });
-        };
-        return Promise.all(
-          mentor.subjects.map((s: string) => resolveSubjects(s))
+        return await MentorModel.getSubjects(mentor);
+      },
+    },
+    topics: {
+      type: GraphQLList(SubjectType),
+      args: {
+        subject: { type: GraphQLID },
+      },
+      resolve: async function (mentor: Mentor, args: { subject: string }) {
+        return await MentorModel.getTopics(mentor, args.subject);
+      },
+    },
+    answers: {
+      type: GraphQLList(AnswerType),
+      args: {
+        subject: { type: GraphQLID },
+        topic: { type: GraphQLID },
+        status: { type: GraphQLString },
+      },
+      resolve: async function (
+        mentor: Mentor,
+        args: { subject: string; topic: string; status: string }
+      ) {
+        return await MentorModel.getAnswers(
+          mentor,
+          args.subject,
+          args.topic,
+          args.status as Status
+        );
+      },
+    },
+    utterances: {
+      type: GraphQLList(AnswerType),
+      args: {
+        status: { type: GraphQLString },
+      },
+      resolve: async function (mentor: Mentor, args: { status: string }) {
+        return await MentorModel.getAnswers(
+          mentor,
+          undefined,
+          undefined,
+          args.status as Status,
+          QuestionType.UTTERANCE
         );
       },
     },

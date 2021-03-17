@@ -13,7 +13,6 @@ export const AnswerType = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLID },
     question: questionField,
-    video: { type: GraphQLString },
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
     recordedAt: { type: DateType },

@@ -17,7 +17,6 @@ export enum Status {
 export interface Answer extends Document {
   mentor: Mentor['_id'];
   question: Question['_id'];
-  video: string;
   transcript: string;
   status: Status;
   recordedAt?: Date;
@@ -26,7 +25,6 @@ export interface Answer extends Document {
 export const AnswerSchema = new Schema({
   mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
   question: { type: mongoose.Types.ObjectId, ref: 'Question' },
-  video: { type: String },
   transcript: { type: String },
   status: {
     type: String,
@@ -37,7 +35,6 @@ export const AnswerSchema = new Schema({
 });
 
 AnswerSchema.index({ question: -1, mentor: -1 }, { unique: true });
-AnswerSchema.index({ mentor: -1 });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AnswerModel extends Model<Answer> {}
