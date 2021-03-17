@@ -4,45 +4,39 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
-import { User as UserSchema } from 'models';
+import { GraphQLObjectType, GraphQLList, GraphQLNonNull } from 'graphql';
+import { Topic as TopicModel } from 'models';
+import { User } from 'models/User';
 import {
-  UserAccessTokenType,
-  UserAccessToken,
-  generateAccessToken,
-  decodeAccessToken,
-} from 'gql/types/user-access-token';
+  TopicCreateInput,
+  TopicCreateInputType,
+  TopicsPayload,
+  TopicsPayloadType,
+} from 'gql/types/topic';
 
-export const login = {
-  type: UserAccessTokenType,
+export const topicsCreate = {
+  type: TopicsPayloadType,
   args: {
-    accessToken: { type: GraphQLNonNull(GraphQLString) },
+    topics: {
+      type: new GraphQLNonNull(
+        new GraphQLList(new GraphQLNonNull(TopicCreateInputType))
+      ),
+    },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { accessToken: string }
-  ): Promise<UserAccessToken> => {
-    try {
-      const decoded = decodeAccessToken(args.accessToken);
-      const userId = decoded.id;
-      const user = await UserSchema.findByIdAndUpdate(
-        userId,
-        {
-          lastLoginAt: new Date(),
-        },
-        {
-          new: true,
-          upsert: false,
-        }
-      );
-      if (!user) {
-        throw new Error('invalid token');
-      }
-      return generateAccessToken(user);
-    } catch (error) {
-      throw new Error(error);
+    args: { topics: TopicCreateInput[] },
+    context: { user: User }
+  ): Promise<TopicsPayload> => {
+    if (!args.topics) {
+      throw new Error('missing required param topic');
     }
+    if (args.topics.length === 0) {
+      throw new Error('input topics must include at least one item');
+    }
+    const topics = await TopicModel.insertMany(args.topics);
+    return { topics };
   },
 };
 
-export default login;
+export default topicsCreate;

@@ -4,28 +4,50 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-
 import mongoose, { Document, Model, Schema } from 'mongoose';
+import { PaginatedResolveResult } from './PaginatedResolveResult';
+import { Topic } from './Topic';
 
-export enum Status {
-  INCOMPLETE = 'Incomplete',
-  COMPLETE = 'Complete',
+const mongoPaging = require('mongo-cursor-pagination');
+mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
+
+export enum QuestionType {
+  UTTERANCE = 'UTTERANCE',
+  QUESTION = 'QUESTION',
 }
 
 export interface Question extends Document {
-  id: string;
   question: string;
+  paraphrases: string[];
+  type: string;
   name: string;
+  topics: Topic['_id'][];
 }
 
 export const QuestionSchema = new Schema({
-  id: { type: String, required: true, unique: true },
   question: { type: String },
+  paraphrases: [{ type: String }],
+  type: {
+    type: String,
+    enum: [QuestionType.UTTERANCE, QuestionType.QUESTION],
+    default: QuestionType.QUESTION,
+  },
   name: { type: String },
+  topics: [{ type: mongoose.Types.ObjectId, ref: 'Topic' }],
 });
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface QuestionModel extends Model<Question> {}
+export interface QuestionModel extends Model<Question> {
+  paginate(
+    query?: any,
+    options?: any,
+    callback?: any
+  ): Promise<PaginatedResolveResult<Question>>;
+}
+
+QuestionSchema.index({ question: -1, _id: -1 });
+QuestionSchema.index({ type: -1, _id: -1 });
+QuestionSchema.index({ name: -1, _id: -1 });
+QuestionSchema.plugin(mongoPaging.mongoosePlugin);
 
 export default mongoose.model<Question, QuestionModel>(
   'Question',

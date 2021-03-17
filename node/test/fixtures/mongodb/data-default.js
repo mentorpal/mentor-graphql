@@ -19,6 +19,11 @@ module.exports = {
       name: 'Dan Davis',
       email: 'dan@davis.com',
     },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ea3'),
+      name: 'Julianne Nordhagen',
+      email: 'julianne@nordhagen.com',
+    },
   ],
 
   mentors: [
@@ -27,39 +32,23 @@ module.exports = {
       name: 'Clinton Anderson',
       firstName: 'Clint',
       title: "Nuclear Electrician's Mate",
-      isBuilt: false,
       subjects: [
         ObjectId('5ffdf41a1ee2c62320b49eb1'),
         ObjectId('5ffdf41a1ee2c62320b49eb2'),
       ],
       user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
     },
-  ],
-
-  answers: [
     {
-      mentor: ObjectId('5ffdf41a1ee2c62111111111'),
-      question: ObjectId('511111111111111111111111'),
-      transcript: '[being still]',
-      video: 'https://idle/url',
-      status: 'Complete',
-      recordedAt: new Date('2020-04-29T21:08:07.453Z'),
-    },
-  ],
-
-  questions: [
-    {
-      _id: ObjectId('511111111111111111111111'),
-      question: "Don't talk and stay still.",
-      name: 'idle',
-    },
-    {
-      _id: ObjectId('511111111111111111111112'),
-      question: 'Who are you and what do you do?',
-    },
-    {
-      _id: ObjectId('511111111111111111111113'),
-      question: 'Is STEM fun?',
+      _id: ObjectId('5ffdf41a1ee2c62111111112'),
+      name: 'Julianne Nordhagen',
+      firstName: 'Julianne',
+      title: 'Pilot',
+      subjects: [
+        ObjectId('5ffdf41a1ee2c62320b49eb1'),
+        ObjectId('5ffdf41a1ee2c62320b49eb2'),
+        ObjectId('5ffdf41a1ee2c62320b49eb3'),
+      ],
+      user: ObjectId('5ffdf41a1ee2c62320b49ea3'),
     },
   ],
 
@@ -76,14 +65,18 @@ module.exports = {
       name: 'Background',
       description:
         'These questions will ask general questions about your background that might be relevant to how people understand your career.',
-      questions: [ObjectId('511111111111111111111112')],
+      questions: [
+        ObjectId('511111111111111111111112'),
+        ObjectId('511111111111111111111113'),
+        ObjectId('511111111111111111111114'),
+      ],
       isRequired: true,
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49eb3'),
       name: 'STEM',
       description: 'These questions will ask about STEM careers.',
-      questions: [ObjectId('511111111111111111111113')],
+      questions: [ObjectId('511111111111111111111115')],
     },
   ],
 
@@ -104,6 +97,62 @@ module.exports = {
       name: 'Advice',
       description:
         'These questions will ask you to give advice to someone who is interested in your career',
+    },
+  ],
+
+  questions: [
+    {
+      _id: ObjectId('511111111111111111111111'),
+      question: "Don't talk and stay still.",
+      topics: [ObjectId('5ffdf41a1ee2c62320b49ec1')],
+      type: 'UTTERANCE',
+      name: 'idle',
+    },
+    {
+      _id: ObjectId('511111111111111111111112'),
+      question: 'Who are you and what do you do?',
+      topics: [ObjectId('5ffdf41a1ee2c62320b49ec2')],
+    },
+    {
+      _id: ObjectId('511111111111111111111113'),
+      question: 'How old are you?',
+      topics: [ObjectId('5ffdf41a1ee2c62320b49ec2')],
+    },
+    {
+      _id: ObjectId('511111111111111111111114'),
+      question: 'Do you like your job?',
+      topics: [ObjectId('5ffdf41a1ee2c62320b49ec3')],
+    },
+    {
+      _id: ObjectId('511111111111111111111115'),
+      question: 'Is STEM fun?',
+      topics: [ObjectId('5ffdf41a1ee2c62320b49ec3')],
+    },
+  ],
+
+  answers: [
+    {
+      _id: ObjectId('511111111111111111111112'),
+      mentor: ObjectId('5ffdf41a1ee2c62111111111'),
+      question: ObjectId('511111111111111111111111'),
+      transcript: '[being still]',
+      video: 'https://idle/url',
+      status: 'COMPLETE',
+      recordedAt: new Date('2020-04-29T21:08:07.453Z'),
+    },
+  ],
+
+  userquestions: [
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ee1'),
+      mentor: ObjectId('5ffdf41a1ee2c62111111111'),
+      question: 'who are you?',
+      feedback: 'NEUTRAL',
+    },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ee2'),
+      question: 'how are you?',
+      feedback: 'BAD',
     },
   ],
 };

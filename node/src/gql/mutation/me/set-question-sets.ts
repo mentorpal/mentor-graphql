@@ -4,27 +4,28 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql';
-import { Mentor as MentorModel, Subject as SubjectModel } from 'models';
+import {
+  GraphQLBoolean,
+  GraphQLList,
+  GraphQLID,
+  GraphQLNonNull,
+  GraphQLObjectType,
+} from 'graphql';
+import mongoose from 'mongoose';
+import { Mentor as MentorModel } from 'models';
 import { User } from 'models/User';
 
-export const addQuestionSet = {
+export const setQuestionSets = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLString },
-    subjectId: { type: GraphQLString },
+    mentorId: { type: GraphQLNonNull(GraphQLID) },
+    subjectIds: { type: GraphQLNonNull(GraphQLList(GraphQLID)) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentorId: string; subjectId: string },
+    args: { mentorId: string; subjectIds: string[] },
     context: { user: User }
   ): Promise<boolean> => {
-    if (!args.mentorId) {
-      throw new Error('missing required param mentorId');
-    }
-    if (!args.subjectId) {
-      throw new Error('missing required param subjectId');
-    }
     const mentor = await MentorModel.findOne({ _id: args.mentorId });
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
@@ -32,18 +33,13 @@ export const addQuestionSet = {
     if (`${context.user._id}` !== `${mentor.user}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    const subject = await SubjectModel.findOne({ _id: args.subjectId });
-    if (!subject) {
-      throw new Error(`no subject found for id '${args.subjectId}'`);
-    }
-    mentor.subjects.push(subject._id);
     const updatedMentor = await MentorModel.findOneAndUpdate(
       {
         _id: mentor._id,
       },
       {
         $set: {
-          subjects: mentor.subjects,
+          subjects: args.subjectIds.map((id) => mongoose.Types.ObjectId(id)),
         },
       },
       {
@@ -51,12 +47,8 @@ export const addQuestionSet = {
         upsert: true,
       }
     );
-    return Boolean(
-      updatedMentor &&
-        updatedMentor.subjects &&
-        updatedMentor.subjects.find((s) => `${s._id}` === args.subjectId)
-    );
+    return Boolean(updatedMentor && updatedMentor.subjects);
   },
 };
 
-export default addQuestionSet;
+export default setQuestionSets;

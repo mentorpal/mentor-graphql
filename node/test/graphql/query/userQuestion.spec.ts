@@ -4,88 +4,55 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-
 import createApp, { appStart, appStop } from 'app';
 import { expect } from 'chai';
 import { Express } from 'express';
+import { describe } from 'mocha';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
-import {
-  GoogleAuthFunc,
-  GoogleResponse,
-  restoreGoogleAuthFunc,
-  overrideGoogleAuthFunc,
-} from 'gql/mutation/login-google';
 
-describe('login with google', () => {
+describe('userQuestion', () => {
   let app: Express;
-  let googleAuthFunc: GoogleAuthFunc = (accessToken: string) => {
-    return Promise.reject('override me');
-  };
-
-  function googleAuthFuncOverride(
-    accessToken: string
-  ): Promise<GoogleResponse> {
-    return googleAuthFunc(accessToken);
-  }
 
   beforeEach(async () => {
-    overrideGoogleAuthFunc(googleAuthFuncOverride);
     await mongoUnit.load(require('test/fixtures/mongodb/data-default.js'));
     app = await createApp();
     await appStart();
   });
 
   afterEach(async () => {
-    restoreGoogleAuthFunc();
     await appStop();
     await mongoUnit.drop();
   });
 
-  it(`returns an error if no accessToken`, async () => {
+  it(`throws an error if invalid id`, async () => {
     const response = await request(app).post('/graphql').send({
-      query: `mutation {
-        loginGoogle {
-          user {
-            name
-            email
+      query: `query {
+          userQuestion(id: "111111111111111111111111") {
+            _id
           }
-          accessToken
-          expirationDate
-        }
-      }`,
-    });
-    expect(response.status).to.equal(400);
-  });
-
-  it(`creates a new user and mentor for new google login`, async () => {
-    googleAuthFunc = (accessToken: string) =>
-      Promise.resolve<GoogleResponse>({
-        id: 'someid',
-        name: 'somename',
-        email: 'x@y.com',
-        given_name: 'somegivenname',
-      });
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
-        loginGoogle(accessToken: "anything") {
-          user {
-            name
-            email
-          }
-          accessToken
-          expirationDate
-        }
-      }`,
+        }`,
     });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
-      'data.loginGoogle.user.name',
-      'somename'
+      'errors[0].message',
+      'userQuestion not found for args "{"id":"111111111111111111111111"}"'
     );
-    expect(response.body).to.have.deep.nested.property(
-      'data.loginGoogle.user.email',
-      'x@y.com'
-    );
+  });
+
+  it('gets a userQuestion by id', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+          userQuestion(id: "5ffdf41a1ee2c62320b49ee1") {
+            _id
+            question
+          }
+      }`,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.userQuestion).to.eql({
+      _id: '5ffdf41a1ee2c62320b49ee1',
+      question: 'who are you?',
+    });
   });
 });

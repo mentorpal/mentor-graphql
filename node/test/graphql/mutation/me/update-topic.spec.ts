@@ -11,7 +11,7 @@ import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 import { getToken } from '../../../helpers';
 
-describe('updateMentor', () => {
+describe('updateTopic', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -29,7 +29,9 @@ describe('updateMentor', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
           me {
-            updateMentor(mentor: "")
+            updateTopic(topic: "") {
+              _id
+            }
           }
         }`,
     });
@@ -40,31 +42,7 @@ describe('updateMentor', () => {
     );
   });
 
-  it(`throws an error if mentor is not the user's`, async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea2');
-    const mentor = encodeURI(
-      JSON.stringify({
-        _id: '5ffdf41a1ee2c62111111111',
-      })
-    );
-    const response = await request(app)
-      .post('/graphql')
-      .set('Authorization', `bearer ${token}`)
-      .send({
-        query: `mutation {
-          me {
-            updateMentor(mentor: "${mentor}")
-          }
-        }`,
-      });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'you do not have permission to update this mentor'
-    );
-  });
-
-  it(`throws an error if no mentor`, async () => {
+  it(`throws an error if no topic`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
@@ -72,19 +50,22 @@ describe('updateMentor', () => {
       .send({
         query: `mutation {
           me {
-            updateMentor
+            updateTopic {
+              _id
+            }
           }
         }`,
       });
     expect(response.status).to.equal(400);
   });
 
-  it('updates mentor', async () => {
+  it('updates topic', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const mentor = encodeURI(
+    const topic = encodeURI(
       JSON.stringify({
-        _id: '5ffdf41a1ee2c62111111111',
-        name: 'Clint Anderson',
+        _id: '5ffdf41a1ee2c62320b49ec1',
+        name: 'Idle',
+        description: '60-second idle clip',
       })
     );
     const response = await request(app)
@@ -93,14 +74,43 @@ describe('updateMentor', () => {
       .send({
         query: `mutation {
           me {
-            updateMentor(mentor: "${mentor}")
+            updateTopic(topic: "${topic}") {
+              description
+            }
           }
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'data.me.updateMentor',
-      true
+    expect(response.body.data.me.updateTopic).to.eql({
+      description: '60-second idle clip',
+    });
+  });
+
+  it('creates a new topic', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const topic = encodeURI(
+      JSON.stringify({
+        name: 'aa',
+        description: 'Aa',
+      })
     );
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            updateTopic(topic: "${topic}") {
+              name
+              description
+            }
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateTopic).to.eql({
+      name: 'aa',
+      description: 'Aa',
+    });
   });
 });

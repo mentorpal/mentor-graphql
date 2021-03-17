@@ -16,6 +16,8 @@ import Topic from './Topic';
 export { default as Topic } from './Topic';
 import User from './User';
 export { default as User } from './User';
+import UserQuestion from './UserQuestion';
+export { default as UserQuestion } from './UserQuestion';
 
 export default {
   Answer,
@@ -24,4 +26,5 @@ export default {
   Subject,
   Topic,
   User,
+  UserQuestion,
 };

@@ -6,8 +6,12 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { GraphQLObjectType } from 'graphql';
 import me from './me';
+import userQuestion from './user-question';
+import userQuestions from './user-questions';
 import mentor from './mentor';
 import mentors from './mentors';
+import question from './question';
+import questions from './questions';
 import subject from './subject';
 import subjects from './subjects';
 import topic from './topic';
@@ -19,9 +23,13 @@ export default new GraphQLObjectType({
     me,
     mentor,
     mentors,
+    question,
+    questions,
     subject,
     subjects,
     topic,
     topics,
+    userQuestion,
+    userQuestions,
   },
 });

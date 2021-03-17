@@ -4,45 +4,40 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
-import { User as UserSchema } from 'models';
+import { GraphQLNonNull, GraphQLObjectType } from 'graphql';
+import { UserQuestion as UserQuestionModel } from 'models';
 import {
-  UserAccessTokenType,
-  UserAccessToken,
-  generateAccessToken,
-  decodeAccessToken,
-} from 'gql/types/user-access-token';
+  UserQuestion,
+  Feedback,
+  ClassifierAnswerType,
+} from 'models/UserQuestion';
+import {
+  UserQuestionCreateInput,
+  UserQuestionCreateInputType,
+  UserQuestionType,
+} from 'gql/types/user-question';
 
-export const login = {
-  type: UserAccessTokenType,
+export const userQuestionCreate = {
+  type: UserQuestionType,
   args: {
-    accessToken: { type: GraphQLNonNull(GraphQLString) },
+    userQuestion: { type: GraphQLNonNull(UserQuestionCreateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { accessToken: string }
-  ): Promise<UserAccessToken> => {
-    try {
-      const decoded = decodeAccessToken(args.accessToken);
-      const userId = decoded.id;
-      const user = await UserSchema.findByIdAndUpdate(
-        userId,
-        {
-          lastLoginAt: new Date(),
-        },
-        {
-          new: true,
-          upsert: false,
-        }
-      );
-      if (!user) {
-        throw new Error('invalid token');
-      }
-      return generateAccessToken(user);
-    } catch (error) {
-      throw new Error(error);
-    }
+    args: { userQuestion: UserQuestionCreateInput }
+  ): Promise<UserQuestion> => {
+    return await UserQuestionModel.create({
+      mentor: args.userQuestion.mentor,
+      question: args.userQuestion.question,
+      confidence: args.userQuestion.confidence,
+      classifierAnswer: args.userQuestion.classifierAnswer,
+      classifierAnswerType:
+        args.userQuestion.classifierAnswerType ||
+        ClassifierAnswerType.CLASSIFIER,
+      graderAnswer: null,
+      feedback: Feedback.NEUTRAL,
+    });
   },
 };
 
-export default login;
+export default userQuestionCreate;

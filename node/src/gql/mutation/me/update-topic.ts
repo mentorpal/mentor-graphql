@@ -4,14 +4,39 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Topic } from 'models';
-import TopicType from 'gql/types/topic';
-import findOne from 'gql/query/find-one';
+import mongoose from 'mongoose';
+import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
+import { Topic as TopicModel } from 'models';
+import { User } from 'models/User';
+import TopicType, { TopicGQL } from 'gql/types/topic';
+import { Topic } from 'models/Topic';
 
-export const topic = findOne({
-  model: Topic,
+export const updateTopic = {
   type: TopicType,
-  typeName: 'topic',
-});
+  args: {
+    topic: { type: GraphQLNonNull(GraphQLString) },
+  },
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { topic: string },
+    context: { user: User }
+  ): Promise<Topic> => {
+    const topicUpdate: TopicGQL = JSON.parse(decodeURI(args.topic));
+    return await TopicModel.findOneAndUpdate(
+      {
+        _id: topicUpdate._id || mongoose.Types.ObjectId(),
+      },
+      {
+        $set: {
+          ...topicUpdate,
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+  },
+};
 
-export default topic;
+export default updateTopic;

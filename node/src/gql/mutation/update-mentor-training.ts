@@ -4,14 +4,30 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Topic } from 'models';
-import TopicType from 'gql/types/topic';
-import findOne from 'gql/query/find-one';
+import { GraphQLObjectType, GraphQLNonNull, GraphQLID } from 'graphql';
+import { MentorType } from 'gql/types/mentor';
+import { Mentor as MentorModel } from 'models';
+import { Mentor } from 'models/Mentor';
 
-export const topic = findOne({
-  model: Topic,
-  type: TopicType,
-  typeName: 'topic',
-});
+export const updateMentorTraining = {
+  type: MentorType,
+  args: {
+    id: { type: GraphQLNonNull(GraphQLID) },
+  },
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { id: string }
+  ): Promise<Mentor> => {
+    return await MentorModel.findByIdAndUpdate(
+      args.id,
+      {
+        lastTrainedAt: new Date(),
+      },
+      {
+        new: true,
+      }
+    );
+  },
+};
 
-export default topic;
+export default updateMentorTraining;
