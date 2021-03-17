@@ -152,7 +152,7 @@ describe('mentor', () => {
     });
   });
 
-  it('mentor/topics try to get topics in subject mentor does not have', async () => {
+  it('mentor/topics fails to get topics in subject mentor does not have', async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
@@ -173,11 +173,10 @@ describe('mentor', () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
-          _id
           name
           answers {
             question {
-              _id
+              question
               topics {
                 name
               }
@@ -191,36 +190,11 @@ describe('mentor', () => {
     });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
-      _id: '5ffdf41a1ee2c62111111111',
       name: 'Clinton Anderson',
       answers: [
         {
           question: {
-            _id: '511111111111111111111112',
-            topics: [
-              {
-                name: 'Background',
-              },
-            ],
-          },
-          transcript: '',
-          status: 'INCOMPLETE',
-        },
-        {
-          question: {
-            _id: '511111111111111111111113',
-            topics: [
-              {
-                name: 'Background',
-              },
-            ],
-          },
-          transcript: '',
-          status: 'INCOMPLETE',
-        },
-        {
-          question: {
-            _id: '511111111111111111111114',
+            question: 'Do you like your job?',
             topics: [
               {
                 name: 'Advice',
@@ -232,7 +206,70 @@ describe('mentor', () => {
         },
         {
           question: {
-            _id: '511111111111111111111111',
+            question: 'How old are you?',
+            topics: [
+              {
+                name: 'Background',
+              },
+            ],
+          },
+          transcript: '',
+          status: 'INCOMPLETE',
+        },
+        {
+          question: {
+            question: 'Who are you and what do you do?',
+            topics: [
+              {
+                name: 'Background',
+              },
+            ],
+          },
+          transcript: '',
+          status: 'INCOMPLETE',
+        },
+        {
+          question: {
+            question: "Don't talk and stay still.",
+            topics: [
+              {
+                name: 'Idle',
+              },
+            ],
+          },
+          transcript: '[being still]',
+          status: 'COMPLETE',
+        },
+      ],
+    });
+  });
+
+  it('mentor/answers gets complete answers for all questions', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111111") {
+          name
+          answers(status: "COMPLETE") {
+            question {
+              question
+              topics {
+                name
+              }
+            }
+            transcript
+            status
+          }
+        }
+      }
+    `,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor).to.eql({
+      name: 'Clinton Anderson',
+      answers: [
+        {
+          question: {
+            question: "Don't talk and stay still.",
             topics: [
               {
                 name: 'Idle',
@@ -252,7 +289,7 @@ describe('mentor', () => {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           answers(subject: "5ffdf41a1ee2c62320b49eb1") {
             question {
-              _id
+              question
               topics {
                 name
               }
@@ -269,7 +306,7 @@ describe('mentor', () => {
       answers: [
         {
           question: {
-            _id: '511111111111111111111111',
+            question: "Don't talk and stay still.",
             topics: [
               {
                 name: 'Idle',
@@ -283,13 +320,13 @@ describe('mentor', () => {
     });
   });
 
-  it('mentor/answers try to get answers for subject mentor does not have, including incomplete', async () => {
+  it('mentor/answers fails to get answers for subject mentor does not have, including incomplete', async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           answers(subject: "5ffdf41a1ee2c62320b49eb3") {
             question {
-              _id
+              question
               topics {
                 name
               }
@@ -313,7 +350,7 @@ describe('mentor', () => {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           answers(topic: "5ffdf41a1ee2c62320b49ec3") {
             question {
-              _id
+              question
               topics {
                 name
               }
@@ -330,7 +367,7 @@ describe('mentor', () => {
       answers: [
         {
           question: {
-            _id: '511111111111111111111114',
+            question: 'Do you like your job?',
             topics: [
               {
                 name: 'Advice',
@@ -339,6 +376,43 @@ describe('mentor', () => {
           },
           transcript: '',
           status: 'INCOMPLETE',
+        },
+      ],
+    });
+  });
+
+  it('mentor/utterances gets all utterances, including incomplete', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111111") {
+          utterances {
+            question {
+              question
+              topics {
+                name
+              }
+            }
+            transcript
+            status
+          }
+        }
+      }
+    `,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor).to.eql({
+      utterances: [
+        {
+          question: {
+            question: "Don't talk and stay still.",
+            topics: [
+              {
+                name: 'Idle',
+              },
+            ],
+          },
+          transcript: '[being still]',
+          status: 'COMPLETE',
         },
       ],
     });

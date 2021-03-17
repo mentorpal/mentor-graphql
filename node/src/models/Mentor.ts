@@ -7,8 +7,8 @@ The full terms of this copyright and license should always be found in the root 
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import { Answer as AnswerModel, Subject as SubjectModel } from 'models';
 import { PaginatedResolveResult } from './PaginatedResolveResult';
-import { Answer } from './Answer';
-import { Question } from './Question';
+import { Answer, Status } from './Answer';
+import { Question, QuestionType } from './Question';
 import { Subject } from './Subject';
 import { User } from './User';
 import { Topic } from './Topic';
@@ -64,16 +64,21 @@ export interface MentorModel extends Model<Mentor> {
   getQuestions(
     mentor: string | Mentor,
     subjectId?: string,
-    topicId?: string
+    topicId?: string,
+    type?: QuestionType
   ): Question[];
   getAnswers(
     mentor: string | Mentor,
     subjectId?: string,
-    topicId?: string
+    topicId?: string,
+    status?: Status,
+    type?: QuestionType
   ): Answer[];
 }
 
-MentorSchema.statics.getSubjects = async function (m: string | Mentor) {
+MentorSchema.statics.getSubjects = async function (
+  m: string | Mentor
+): Promise<Subject[]> {
   const mentor: Mentor =
     typeof m === 'string' ? await this.findOne({ _id: m }) : m;
   return await SubjectModel.find({ _id: { $in: mentor.subjects } }, null, {
@@ -84,7 +89,7 @@ MentorSchema.statics.getSubjects = async function (m: string | Mentor) {
 MentorSchema.statics.getTopics = async function (
   m: string | Mentor,
   subjectId?: string
-) {
+): Promise<Topic[]> {
   const mentor: Mentor =
     typeof m === 'string' ? await this.findOne({ _id: m }) : m;
   const topics: Topic[] = [];
@@ -110,11 +115,12 @@ MentorSchema.statics.getTopics = async function (
 MentorSchema.statics.getQuestions = async function (
   m: string | Mentor,
   subjectId?: string,
-  topicId?: string
-) {
+  topicId?: string,
+  type?: QuestionType
+): Promise<Question[]> {
   const mentor: Mentor =
     typeof m === 'string' ? await this.findOne({ _id: m }) : m;
-  const questions: Question[] = [];
+  let questions: Question[] = [];
   if (subjectId) {
     if (mentor.subjects.includes(subjectId)) {
       questions.push(...(await SubjectModel.getQuestions(subjectId, topicId)));
@@ -131,31 +137,50 @@ MentorSchema.statics.getQuestions = async function (
       questions.push(...(await SubjectModel.getQuestions(s, topicId)));
     }
   }
+  if (type) {
+    questions = questions.filter((q: Question) => q.type === type);
+  }
   return questions;
 };
 
 MentorSchema.statics.getAnswers = async function (
   m: string | Mentor,
   subjectId?: string,
-  topicId?: string
-) {
+  topicId?: string,
+  status?: Status,
+  type?: QuestionType
+): Promise<Answer[]> {
   const mentor: Mentor =
     typeof m === 'string' ? await this.findOne({ _id: m }) : m;
-  const questions: Question[] = await this.getQuestions(
-    mentor,
-    subjectId,
-    topicId
-  );
-  const questionIds = questions.map((q) => q._id);
+  const questions = await this.getQuestions(mentor, subjectId, topicId, type);
+  const questionIds = questions.map((q: Question) => q._id);
   const answers: Answer[] = await AnswerModel.find({
     mentor: mentor._id,
     question: { $in: questionIds },
-  }).sort((a: Answer, b: Answer) => {
+  });
+  answers.sort((a: Answer, b: Answer) => {
     return (
       questionIds.indexOf(a.question._id) - questionIds.indexOf(b.question._id)
     );
   });
-  return answers;
+  const answersByQid = answers.reduce((acc: Record<string, Answer>, cur) => {
+    acc[`${cur.question}`] = cur;
+    return acc;
+  }, {});
+  let answerResult: Answer[] = questionIds.map((qid: string) => {
+    return (
+      answersByQid[`${qid}`] || {
+        mentor: mentor._id,
+        question: qid,
+        transcript: '',
+        status: Status.INCOMPLETE,
+      }
+    );
+  });
+  if (status) {
+    answerResult = answerResult.filter((a: Answer) => a.status === status);
+  }
+  return answerResult;
 };
 
 MentorSchema.index({ name: -1, _id: -1 });

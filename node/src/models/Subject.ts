@@ -77,13 +77,10 @@ SubjectSchema.statics.getQuestions = async function (
   if (topicId) {
     return await QuestionModel.find(
       {
-        $and: [
-          { _id: { $in: subject.questions } },
-          { topics: { $all: [topicId] } },
-        ],
+        $and: [{ _id: { $in: subject.questions } }, { topics: topicId }],
       },
       null,
-      { sort: { question: -1 } }
+      { sort: { question: 1 } }
     );
   }
   return await QuestionModel.find(
@@ -91,7 +88,7 @@ SubjectSchema.statics.getQuestions = async function (
       _id: { $in: subject.questions },
     },
     null,
-    { sort: { question: -1 } }
+    { sort: { question: 1 } }
   );
 };
 

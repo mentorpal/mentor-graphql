@@ -10,12 +10,13 @@ import {
   GraphQLList,
   GraphQLID,
 } from 'graphql';
-import { Answer as AnswerModel, Mentor as MentorModel } from 'models';
-import { Answer, Status } from 'models/Answer';
+import { Mentor as MentorModel } from 'models';
+import { Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
 import DateType from './date';
 import AnswerType from './answer';
 import SubjectType from './subject';
+import { QuestionType } from 'models/Question';
 
 export const MentorType = new GraphQLObjectType({
   name: 'Mentor',
@@ -46,46 +47,33 @@ export const MentorType = new GraphQLObjectType({
       args: {
         subject: { type: GraphQLID },
         topic: { type: GraphQLID },
+        status: { type: GraphQLString },
       },
       resolve: async function (
         mentor: Mentor,
-        args: { subject: string; topic: string }
+        args: { subject: string; topic: string; status: string }
       ) {
-        const questions = await MentorModel.getQuestions(
+        return await MentorModel.getAnswers(
           mentor,
           args.subject,
-          args.topic
+          args.topic,
+          args.status as Status
         );
-        const questionIds = questions.map((q) => q._id);
-        const answers: Answer[] = await AnswerModel.find({
-          mentor: mentor._id,
-          question: { $in: questionIds },
-        });
-        answers.sort((a: Answer, b: Answer) => {
-          return (
-            questionIds.indexOf(a.question._id) -
-            questionIds.indexOf(b.question._id)
-          );
-        });
-        const answersByQid = answers.reduce(
-          (acc: Record<string, Answer>, cur) => {
-            acc[`${cur.question}`] = cur;
-            return acc;
-          },
-          {}
+      },
+    },
+    utterances: {
+      type: GraphQLList(AnswerType),
+      args: {
+        status: { type: GraphQLString },
+      },
+      resolve: async function (mentor: Mentor, args: { status: string }) {
+        return await MentorModel.getAnswers(
+          mentor,
+          undefined,
+          undefined,
+          args.status as Status,
+          QuestionType.UTTERANCE
         );
-        const answerResult = questionIds.map((qid) => {
-          return (
-            answersByQid[`${qid}`] || {
-              mentor: mentor._id,
-              question: qid,
-              status: Status.INCOMPLETE,
-              transcript: '',
-              video: '',
-            }
-          );
-        });
-        return answerResult;
       },
     },
   }),

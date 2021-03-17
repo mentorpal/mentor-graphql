@@ -133,12 +133,11 @@ describe('subject', () => {
     });
   });
 
-  it('has a questions connection', async () => {
+  it('get all questions in subject in alphabetical order', async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
-          subject(id: "5ffdf41a1ee2c62320b49eb1") {
+          subject(id: "5ffdf41a1ee2c62320b49eb2") {
             questions {
-              _id
               question
             }
           }
@@ -147,7 +146,33 @@ describe('subject', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.subject.questions).to.eql([
       {
-        _id: '511111111111111111111111',
+        question: 'Do you like your job?',
+      },
+      {
+        question: 'How old are you?',
+      },
+      {
+        question: 'Who are you and what do you do?',
+      },
+    ]);
+  });
+
+  it.skip('get all questions in subject for topic', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+          subject(id: "5ffdf41a1ee2c62320b49eb2", topic: "5ffdf41a1ee2c62320b49ec2") {
+            questions {
+              question
+            }
+          }
+      }`,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.subject.questions).to.eql([
+      {
+        question: "Don't talk and stay still.",
+      },
+      {
         question: "Don't talk and stay still.",
       },
     ]);
