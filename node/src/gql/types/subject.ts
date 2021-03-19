@@ -14,17 +14,8 @@ import {
 
 import { Subject as SubjectModel, Topic as TopicModel } from 'models';
 import { Subject } from 'models/Subject';
-import QuestionType, { QuestionGQL } from './question';
+import QuestionType from './question';
 import TopicType from './topic';
-
-export interface SubjectGQL {
-  _id?: string;
-  name?: string;
-  description?: string;
-  isRequired?: boolean;
-  topicsOrder?: string[];
-  questions?: QuestionGQL[];
-}
 
 export const SubjectType = new GraphQLObjectType({
   name: 'Subject',

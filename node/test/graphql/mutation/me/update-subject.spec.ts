@@ -29,7 +29,7 @@ describe('updateSubject', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
           me {
-            updateSubject(subject: "") {
+            updateSubject(subject: {}) {
               _id
             }
           }
@@ -61,32 +61,30 @@ describe('updateSubject', () => {
 
   it('updates subject', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const subject = encodeURI(
-      JSON.stringify({
-        _id: '5ffdf41a1ee2c62320b49eb3',
-        name: 'stem',
-        description: 'These questions will ask about STEM careers.',
-        questions: [
-          {
-            _id: '511111111111111111111113',
-            question: 'Is stem fun?',
-            topics: [
-              {
-                name: 'New Topic',
-                description: 'New',
-              },
-            ],
-          },
-        ],
-      })
-    );
+    const subject = JSON.stringify({
+      _id: '5ffdf41a1ee2c62320b49eb3',
+      name: 'stem',
+      description: 'These questions will ask about STEM careers.',
+      questions: [
+        {
+          _id: '511111111111111111111113',
+          question: 'Is stem fun?',
+          topics: [
+            {
+              name: 'New Topic',
+              description: 'New',
+            },
+          ],
+        },
+      ],
+    }).replace(/"([^"]+)":/g, '$1:');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateSubject(subject: "${subject}") {
+            updateSubject(subject: ${subject}) {
               _id
               name
               description
@@ -124,30 +122,28 @@ describe('updateSubject', () => {
 
   it('creates a new subject', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const subject = encodeURI(
-      JSON.stringify({
-        name: '_new',
-        description: 'new subject description',
-        questions: [
-          {
-            question: 'new question',
-            topics: [
-              {
-                name: 'new topic',
-                description: 'new topic description',
-              },
-            ],
-          },
-        ],
-      })
-    );
+    const subject = JSON.stringify({
+      name: '_new',
+      description: 'new subject description',
+      questions: [
+        {
+          question: 'new question',
+          topics: [
+            {
+              name: 'new topic',
+              description: 'new topic description',
+            },
+          ],
+        },
+      ],
+    }).replace(/"([^"]+)":/g, '$1:');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateSubject(subject: "${subject}") {
+            updateSubject(subject: ${subject}) {
               name
               description
               questions {

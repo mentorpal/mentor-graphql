@@ -4,44 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import {
-  GraphQLID,
-  GraphQLObjectType,
-  GraphQLInputObjectType,
-  GraphQLString,
-  GraphQLList,
-} from 'graphql';
-
-export interface Topic {
-  _id: string;
-  name: string;
-  description: string;
-}
-
-// TODO: replace TopicGQL with Topic interface everywhere
-export interface TopicGQL {
-  _id: string;
-  name: string;
-  description: string;
-}
-
-export interface TopicCreateInput {
-  name: string;
-  description: string;
-}
-
-export const TopicCreateInputType = new GraphQLInputObjectType({
-  name: 'TopicCreateInput',
-  description: 'Input for creating a topic',
-  fields: () => ({
-    name: {
-      type: GraphQLString,
-    },
-    description: {
-      type: GraphQLString,
-    },
-  }),
-});
+import { GraphQLID, GraphQLObjectType, GraphQLString } from 'graphql';
 
 export const TopicType = new GraphQLObjectType({
   name: 'Topic',
@@ -49,17 +12,6 @@ export const TopicType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
     description: { type: GraphQLString },
-  }),
-});
-
-export interface TopicsPayload {
-  topics: Topic[];
-}
-
-export const TopicsPayloadType = new GraphQLObjectType({
-  name: 'TopicsPayload',
-  fields: () => ({
-    topics: { type: new GraphQLList(TopicType) },
   }),
 });
 

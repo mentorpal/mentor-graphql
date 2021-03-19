@@ -29,7 +29,7 @@ describe('updateQuestion', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
           me {
-            updateQuestion(question: "") {
+            updateQuestion(question: {}) {
               _id
             }
           }
@@ -61,27 +61,25 @@ describe('updateQuestion', () => {
 
   it('updates question', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const question = encodeURI(
-      JSON.stringify({
-        _id: '511111111111111111111111',
-        question: "Don't talk and stay still.",
-        name: 'idle',
-        topics: [
-          {
-            _id: '5ffdf41a1ee2c62320b49ec1',
-            name: 'Idle',
-            description: '30-second idle clip',
-          },
-        ],
-      })
-    );
+    const question: string = JSON.stringify({
+      _id: '511111111111111111111111',
+      question: "Don't talk and stay still.",
+      name: 'idle',
+      topics: [
+        {
+          _id: '5ffdf41a1ee2c62320b49ec1',
+          name: 'Idle',
+          description: '30-second idle clip',
+        },
+      ],
+    }).replace(/"([^"]+)":/g, '$1:');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateQuestion(question: "${question}") {
+            updateQuestion(question: ${question}) {
               _id
               topics {
                 _id
@@ -103,19 +101,18 @@ describe('updateQuestion', () => {
 
   it('creates a new question', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const question = encodeURI(
-      JSON.stringify({
-        question: 'aa',
-        topics: [],
-      })
-    );
+    const question = JSON.stringify({
+      _id: '',
+      question: 'aa',
+      topics: [],
+    }).replace(/"([^"]+)":/g, '$1:');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateQuestion(question: "${question}") {
+            updateQuestion(question: ${question}) {
               question
             }
           }

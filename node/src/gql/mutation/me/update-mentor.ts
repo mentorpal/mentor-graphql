@@ -9,22 +9,48 @@ import {
   GraphQLObjectType,
   GraphQLBoolean,
   GraphQLNonNull,
+  GraphQLID,
+  GraphQLInputObjectType,
+  GraphQLList,
 } from 'graphql';
 import { Mentor as MentorModel } from 'models';
 import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
 
+export interface MentorUpdateInput {
+  _id: string;
+  name: string;
+  firstName: string;
+  title: string;
+  mentorType: string;
+  defaultSubject: string;
+  subjects: string[];
+}
+
+export const MentorUpdateInputType = new GraphQLInputObjectType({
+  name: 'MentorUpdateInputType',
+  fields: () => ({
+    _id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    firstName: { type: GraphQLString },
+    title: { type: GraphQLString },
+    mentorType: { type: GraphQLString },
+    defaultSubject: { type: GraphQLID },
+    subjects: { type: GraphQLList(GraphQLID) },
+  }),
+});
+
 export const updateMentor = {
   type: GraphQLBoolean,
   args: {
-    mentor: { type: GraphQLNonNull(GraphQLString) },
+    mentor: { type: GraphQLNonNull(MentorUpdateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: string },
+    args: { mentor: MentorUpdateInput },
     context: { user: User }
   ): Promise<boolean> => {
-    const mentorUpdate: Mentor = JSON.parse(decodeURI(args.mentor));
+    const mentorUpdate: MentorUpdateInput = args.mentor;
     const mentor: Mentor = await MentorModel.findOne({ _id: mentorUpdate._id });
     if (mentor && `${context.user._id}` !== `${mentor.user}`) {
       throw new Error('you do not have permission to update this mentor');

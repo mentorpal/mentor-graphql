@@ -48,5 +48,8 @@ describe('updateMentorTraining', () => {
     expect(
       new Date(response.body.data.updateMentorTraining.lastTrainedAt)
     ).to.be.greaterThan(date);
+    expect(
+      new Date(response.body.data.updateMentorTraining.lastTrainedAt)
+    ).to.be.lessThan(new Date(Date.now() + 1000));
   });
 });

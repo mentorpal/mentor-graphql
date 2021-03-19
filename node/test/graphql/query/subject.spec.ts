@@ -82,19 +82,17 @@ describe('subject', () => {
 
   it('get all topics in subject in custom order', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const subject = encodeURI(
-      JSON.stringify({
-        _id: '5ffdf41a1ee2c62320b49eb2',
-        topicsOrder: ['5ffdf41a1ee2c62320b49ec2', '5ffdf41a1ee2c62320b49ec3'],
-      })
-    );
+    const subject = JSON.stringify({
+      _id: '5ffdf41a1ee2c62320b49eb2',
+      topicsOrder: ['5ffdf41a1ee2c62320b49ec2', '5ffdf41a1ee2c62320b49ec3'],
+    }).replace(/"([^"]+)":/g, '$1:');
     await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateSubject(subject: "${subject}") {
+            updateSubject(subject: ${subject}) {
               _id
             }
           }

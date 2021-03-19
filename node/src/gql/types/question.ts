@@ -8,25 +8,16 @@ import { GraphQLString, GraphQLObjectType, GraphQLList } from 'graphql';
 
 import { Topic as TopicModel } from 'models';
 import { Question } from 'models/Question';
-import TopicType, { TopicGQL } from './topic';
-
-export interface QuestionGQL {
-  _id?: string;
-  question?: string;
-  topics?: TopicGQL[];
-  paraphrases?: string[];
-  type?: string;
-  name?: string;
-}
+import TopicType from './topic';
 
 export const QuestionType = new GraphQLObjectType({
   name: 'Question',
   fields: () => ({
     _id: { type: GraphQLString },
     question: { type: GraphQLString },
-    paraphrases: { type: GraphQLList(GraphQLString) },
     type: { type: GraphQLString },
     name: { type: GraphQLString },
+    paraphrases: { type: GraphQLList(GraphQLString) },
     topics: {
       type: GraphQLList(TopicType),
       resolve: async function (question: Question) {

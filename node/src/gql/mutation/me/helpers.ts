@@ -4,37 +4,18 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import { User } from 'models/User';
-import updateMentor from './update-mentor';
-import updateAnswer from './update-answer';
-import updateQuestion from './update-question';
-import updateSubject from './update-subject';
-import updateTopic from './update-topic';
-import topicsCreate from './topics-create';
+import mongoose from 'mongoose';
 
-export const Me: GraphQLObjectType = new GraphQLObjectType({
-  name: 'MeMutation',
-  fields: () => ({
-    updateMentor,
-    updateAnswer,
-    updateQuestion,
-    updateSubject,
-    updateTopic,
-    topicsCreate,
-  }),
-});
+export function isNullOrEmpty(value: string): boolean {
+  return (
+    !value ||
+    value == undefined ||
+    value == '' ||
+    value.length == 0 ||
+    value == ''
+  );
+}
 
-export const me = {
-  type: Me,
-  resolve: (_: any, args: any, context: { user: User }) => {
-    if (!context.user) {
-      throw new Error('Only authenticated users');
-    }
-    return {
-      user: context.user,
-    };
-  },
-};
-
-export default me;
+export function idOrNew(value: string) {
+  return isNullOrEmpty(value) ? `${mongoose.Types.ObjectId()}` : value;
+}

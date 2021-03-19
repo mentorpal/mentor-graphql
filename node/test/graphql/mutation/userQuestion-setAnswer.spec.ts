@@ -50,7 +50,7 @@ describe('userQuestionSetAnswer', () => {
     );
   });
 
-  it(`updates userQuestion and adds paraphrase`, async () => {
+  it(`adds graderAnswer to userQuestion and adds paraphrase to question`, async () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
         userQuestionSetAnswer(id: "5ffdf41a1ee2c62320b49ee1", answer: "511111111111111111111112") {
@@ -79,8 +79,8 @@ describe('userQuestionSetAnswer', () => {
     });
   });
 
-  it(`removes graderAnswer from userQuestion`, async () => {
-    let response = await request(app).post('/graphql').send({
+  it(`removes graderAnswer from userQuestion and removes paraphrase from question`, async () => {
+    await request(app).post('/graphql').send({
       query: `mutation {
         userQuestionSetAnswer(id: "5ffdf41a1ee2c62320b49ee1", answer: "511111111111111111111112") {
           graderAnswer {
@@ -89,25 +89,7 @@ describe('userQuestionSetAnswer', () => {
         }
       }`,
     });
-    expect(response.status).to.equal(200);
-    expect(response.body.data.userQuestionSetAnswer).to.eql({
-      graderAnswer: {
-        _id: '511111111111111111111112',
-      },
-    });
-    let question = await request(app).post('/graphql').send({
-      query: `query {
-        question(id: "511111111111111111111111") {
-          paraphrases
-        }
-      }`,
-    });
-    expect(question.status).to.equal(200);
-    expect(question.body.data.question).to.eql({
-      paraphrases: ['who are you?'],
-    });
-
-    response = await request(app).post('/graphql').send({
+    const response = await request(app).post('/graphql').send({
       query: `mutation {
         userQuestionSetAnswer(id: "5ffdf41a1ee2c62320b49ee1") {
           graderAnswer {
@@ -120,7 +102,7 @@ describe('userQuestionSetAnswer', () => {
     expect(response.body.data.userQuestionSetAnswer).to.eql({
       graderAnswer: null,
     });
-    question = await request(app).post('/graphql').send({
+    const question = await request(app).post('/graphql').send({
       query: `query {
         question(id: "511111111111111111111111") {
           paraphrases

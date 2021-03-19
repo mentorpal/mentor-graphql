@@ -4,27 +4,49 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose from 'mongoose';
-import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
+import {
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLID,
+  GraphQLString,
+  GraphQLInputObjectType,
+} from 'graphql';
 import { Topic as TopicModel } from 'models';
 import { User } from 'models/User';
-import TopicType, { TopicGQL } from 'gql/types/topic';
 import { Topic } from 'models/Topic';
+import TopicType from 'gql/types/topic';
+import { idOrNew } from './helpers';
+
+export interface TopicUpdateInput {
+  _id: string;
+  name: string;
+  description: string;
+}
+
+export const TopicUpdateInputType = new GraphQLInputObjectType({
+  name: 'TopicUpdateInputType',
+  fields: () => ({
+    _id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    description: { type: GraphQLString },
+  }),
+});
 
 export const updateTopic = {
   type: TopicType,
   args: {
-    topic: { type: GraphQLNonNull(GraphQLString) },
+    topic: { type: GraphQLNonNull(TopicUpdateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { topic: string },
+    args: { topic: TopicUpdateInput },
     context: { user: User }
   ): Promise<Topic> => {
-    const topicUpdate: TopicGQL = JSON.parse(decodeURI(args.topic));
+    const topicUpdate: TopicUpdateInput = args.topic;
+    topicUpdate._id = idOrNew(topicUpdate._id);
     return await TopicModel.findOneAndUpdate(
       {
-        _id: topicUpdate._id || mongoose.Types.ObjectId(),
+        _id: topicUpdate._id,
       },
       {
         $set: {

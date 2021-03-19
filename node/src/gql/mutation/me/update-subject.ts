@@ -4,8 +4,15 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose from 'mongoose';
-import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLID,
+  GraphQLInputObjectType,
+  GraphQLList,
+  GraphQLBoolean,
+} from 'graphql';
 import {
   Subject as SubjectModel,
   Topic as TopicModel,
@@ -13,48 +20,55 @@ import {
 } from 'models';
 import { User } from 'models/User';
 import { Subject } from 'models/Subject';
-import { Topic } from 'models/Topic';
-import { Question } from 'models/Question';
-import SubjectType, { SubjectGQL } from 'gql/types/subject';
+import SubjectType from 'gql/types/subject';
+import {
+  QuestionUpdateInput,
+  QuestionUpdateInputType,
+} from './update-question';
+import { idOrNew } from './helpers';
+
+export interface SubjectUpdateInput {
+  _id: string;
+  name: string;
+  description: string;
+  isRequired: boolean;
+  topicsOrder: string[];
+  questions: QuestionUpdateInput[];
+}
+
+export const SubjectUpdateInputType = new GraphQLInputObjectType({
+  name: 'SubjectUpdateInputType',
+  fields: () => ({
+    _id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    description: { type: GraphQLString },
+    isRequired: { type: GraphQLBoolean },
+    topicsOrder: { type: GraphQLList(GraphQLString) },
+    questions: { type: GraphQLList(QuestionUpdateInputType) },
+  }),
+});
 
 export const updateSubject = {
   type: SubjectType,
-  args: {
-    subject: { type: GraphQLNonNull(GraphQLString) },
-  },
+  args: { subject: { type: GraphQLNonNull(SubjectUpdateInputType) } },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { subject: string },
+    args: { subject: SubjectUpdateInput },
     context: { user: User }
   ): Promise<Subject> => {
-    const subjectUpdate: SubjectGQL = JSON.parse(decodeURI(args.subject));
-    if (subjectUpdate.questions) {
-      for (const [i, question] of subjectUpdate.questions.entries()) {
-        for (const [i, topic] of question.topics.entries()) {
-          const t = await TopicModel.findOneAndUpdate(
-            {
-              _id: topic._id || mongoose.Types.ObjectId(),
-            },
-            {
-              $set: {
-                ...topic,
-              },
-            },
-            {
-              new: true,
-              upsert: true,
-            }
-          );
-          question.topics[i] = t;
-        }
-        const q = await QuestionModel.findOneAndUpdate(
+    const subjectUpdate = args.subject;
+    for (const [i, questionUpdate] of (
+      subjectUpdate.questions || []
+    ).entries()) {
+      for (const [i, topicUpdate] of (questionUpdate.topics || []).entries()) {
+        topicUpdate._id = idOrNew(topicUpdate._id);
+        const t = await TopicModel.findOneAndUpdate(
           {
-            _id: question._id || mongoose.Types.ObjectId(),
+            _id: topicUpdate._id,
           },
           {
             $set: {
-              ...question,
-              topics: question.topics.map((t: Topic) => t._id),
+              ...topicUpdate,
             },
           },
           {
@@ -62,17 +76,43 @@ export const updateSubject = {
             upsert: true,
           }
         );
-        subjectUpdate.questions[i] = q;
+        questionUpdate.topics[i] = t;
       }
-      subjectUpdate.questions.map((q: Question) => q._id);
+      const question: any = { ...questionUpdate };
+      if (questionUpdate.topics) {
+        question._id = idOrNew(questionUpdate._id);
+        question.topics = questionUpdate.topics.map((t) => t._id);
+      }
+      const q = await QuestionModel.findOneAndUpdate(
+        {
+          _id: question._id,
+        },
+        {
+          $set: {
+            ...question,
+          },
+        },
+        {
+          new: true,
+          upsert: true,
+        }
+      );
+      subjectUpdate.questions[i] = q;
     }
+
+    const subject: any = { ...subjectUpdate };
+    if (subjectUpdate.questions) {
+      subject._id = idOrNew(subjectUpdate._id);
+      subject.topics = subjectUpdate.questions.map((q) => q._id);
+    }
+
     return await SubjectModel.findOneAndUpdate(
       {
-        _id: subjectUpdate._id || mongoose.Types.ObjectId(),
+        _id: subject._id,
       },
       {
         $set: {
-          ...subjectUpdate,
+          ...subject,
         },
       },
       {

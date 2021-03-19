@@ -9,43 +9,12 @@ import {
   GraphQLObjectType,
   GraphQLID,
   GraphQLFloat,
-  GraphQLInputObjectType,
 } from 'graphql';
 import { Answer as AnswerModel, Mentor as MentorModel } from 'models';
 import { UserQuestion } from 'models/UserQuestion';
 import AnswerType from './answer';
 import DateType from './date';
 import MentorType from './mentor';
-
-export interface UserQuestionCreateInput {
-  question: string;
-  mentor: string;
-  classifierAnswer: string;
-  classifierAnswerType: string;
-  confidence: number;
-}
-
-export const UserQuestionCreateInputType = new GraphQLInputObjectType({
-  name: 'UserQuestionCreateInput',
-  description: 'Input for creating a user question',
-  fields: () => ({
-    question: {
-      type: GraphQLString,
-    },
-    mentor: {
-      type: GraphQLID,
-    },
-    classifierAnswer: {
-      type: GraphQLID,
-    },
-    classifierAnswerType: {
-      type: GraphQLString,
-    },
-    confidence: {
-      type: GraphQLFloat,
-    },
-  }),
-});
 
 export const UserQuestionType = new GraphQLObjectType({
   name: 'UserQuestion',

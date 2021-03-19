@@ -29,7 +29,7 @@ describe('updateTopic', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
           me {
-            updateTopic(topic: "") {
+            updateTopic(topic: {}) {
               _id
             }
           }
@@ -61,20 +61,15 @@ describe('updateTopic', () => {
 
   it('updates topic', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const topic = encodeURI(
-      JSON.stringify({
-        _id: '5ffdf41a1ee2c62320b49ec1',
-        name: 'Idle',
-        description: '60-second idle clip',
-      })
-    );
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateTopic(topic: "${topic}") {
+            updateTopic(topic: {_id: "5ffdf41a1ee2c62320b49ec1", description: "60-second idle clip"}) {
+              _id
+              name
               description
             }
           }
@@ -82,25 +77,21 @@ describe('updateTopic', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateTopic).to.eql({
+      _id: '5ffdf41a1ee2c62320b49ec1',
+      name: 'Idle',
       description: '60-second idle clip',
     });
   });
 
   it('creates a new topic', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const topic = encodeURI(
-      JSON.stringify({
-        name: 'aa',
-        description: 'Aa',
-      })
-    );
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateTopic(topic: "${topic}") {
+            updateTopic(topic: {name: "aa", description: "Aa"}) {
               name
               description
             }

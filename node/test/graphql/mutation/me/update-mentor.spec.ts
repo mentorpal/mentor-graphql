@@ -29,7 +29,7 @@ describe('updateMentor', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
           me {
-            updateMentor(mentor: "")
+            updateMentor(mentor: {})
           }
         }`,
     });
@@ -42,18 +42,13 @@ describe('updateMentor', () => {
 
   it(`throws an error if mentor is not the user's`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea2');
-    const mentor = encodeURI(
-      JSON.stringify({
-        _id: '5ffdf41a1ee2c62111111111',
-      })
-    );
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateMentor(mentor: "${mentor}")
+            updateMentor(mentor: {_id: "5ffdf41a1ee2c62111111111"})
           }
         }`,
       });
@@ -81,19 +76,13 @@ describe('updateMentor', () => {
 
   it('updates mentor', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const mentor = encodeURI(
-      JSON.stringify({
-        _id: '5ffdf41a1ee2c62111111111',
-        name: 'Clint Anderson',
-      })
-    );
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateMentor(mentor: "${mentor}")
+            updateMentor(mentor: {_id: "5ffdf41a1ee2c62111111111", name: "Clint Anderson"})
           }
         }`,
       });
@@ -102,5 +91,55 @@ describe('updateMentor', () => {
       'data.me.updateMentor',
       true
     );
+    const mentor = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              mentor {
+                _id
+                name
+                title
+              }
+            }
+          }`,
+      });
+    expect(mentor.status).to.equal(200);
+    expect(mentor.body.data.me.mentor).to.eql({
+      _id: '5ffdf41a1ee2c62111111111',
+      name: 'Clint Anderson',
+      title: "Nuclear Electrician's Mate",
+    });
+  });
+
+  it("doesn't update data that shouldn't be updated", async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            updateMentor(mentor: {_id: "5ffdf41a1ee2c62111111111", lastTrainedAt: "asdf" })
+          }
+        }`,
+      });
+    expect(response.status).to.equal(400);
+  });
+
+  it("doesn't update weird data", async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            updateMentor(mentor: {_id: "5ffdf41a1ee2c62111111111", defaultSubject: {} })
+          }
+        }`,
+      });
+    expect(response.status).to.equal(400);
   });
 });

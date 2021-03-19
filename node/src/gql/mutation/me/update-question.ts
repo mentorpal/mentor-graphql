@@ -4,53 +4,85 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose from 'mongoose';
-import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLID,
+  GraphQLInputObjectType,
+  GraphQLList,
+} from 'graphql';
 import { Question as QuestionModel, Topic as TopicModel } from 'models';
 import { User } from 'models/User';
 import { Question } from 'models/Question';
-import { Topic } from 'models/Topic';
-import QuestionType, { QuestionGQL } from 'gql/types/question';
+import QuestionType from 'gql/types/question';
+import { TopicUpdateInput, TopicUpdateInputType } from './update-topic';
+import { idOrNew } from './helpers';
+
+export interface QuestionUpdateInput {
+  _id: string;
+  question: string;
+  type: string;
+  name: string;
+  paraphrases: string[];
+  topics: TopicUpdateInput[];
+}
+
+export const QuestionUpdateInputType = new GraphQLInputObjectType({
+  name: 'QuestionUpdateInputType',
+  fields: () => ({
+    _id: { type: GraphQLString },
+    question: { type: GraphQLString },
+    type: { type: GraphQLString },
+    name: { type: GraphQLString },
+    paraphrases: { type: GraphQLList(GraphQLString) },
+    topics: { type: GraphQLList(TopicUpdateInputType) },
+  }),
+});
 
 export const updateQuestion = {
   type: QuestionType,
   args: {
-    question: { type: GraphQLNonNull(GraphQLString) },
+    question: { type: GraphQLNonNull(QuestionUpdateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { question: string },
+    args: { question: QuestionUpdateInput },
     context: { user: User }
   ): Promise<Question> => {
-    const questionUpdate: QuestionGQL = JSON.parse(decodeURI(args.question));
-    if (questionUpdate.topics) {
-      for (const [i, topic] of questionUpdate.topics.entries()) {
-        const t = await TopicModel.findOneAndUpdate(
-          {
-            _id: topic._id || mongoose.Types.ObjectId(),
+    const questionUpdate: QuestionUpdateInput = args.question;
+    for (const [i, topic] of (questionUpdate.topics || []).entries()) {
+      topic._id = idOrNew(topic._id);
+      const t = await TopicModel.findOneAndUpdate(
+        {
+          _id: topic._id,
+        },
+        {
+          $set: {
+            ...topic,
           },
-          {
-            $set: {
-              name: topic.name,
-              description: topic.description,
-            },
-          },
-          {
-            new: true,
-            upsert: true,
-          }
-        );
-        questionUpdate.topics[i] = t;
-      }
-      questionUpdate.topics = questionUpdate.topics.map((t: Topic) => t._id);
+        },
+        {
+          new: true,
+          upsert: true,
+        }
+      );
+      questionUpdate.topics[i] = t;
     }
+
+    const question: any = { ...questionUpdate };
+    if (questionUpdate.topics) {
+      question._id = idOrNew(questionUpdate._id);
+      question.topics = questionUpdate.topics.map((t) => t._id);
+    }
+
     return await QuestionModel.findOneAndUpdate(
       {
-        _id: questionUpdate._id || mongoose.Types.ObjectId(),
+        _id: question._id,
       },
       {
         $set: {
-          ...questionUpdate,
+          ...question,
         },
       },
       {

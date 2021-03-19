@@ -4,18 +4,51 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLNonNull, GraphQLObjectType } from 'graphql';
+import {
+  GraphQLFloat,
+  GraphQLID,
+  GraphQLInputObjectType,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+} from 'graphql';
 import { UserQuestion as UserQuestionModel } from 'models';
 import {
   UserQuestion,
   Feedback,
   ClassifierAnswerType,
 } from 'models/UserQuestion';
-import {
-  UserQuestionCreateInput,
-  UserQuestionCreateInputType,
-  UserQuestionType,
-} from 'gql/types/user-question';
+import { UserQuestionType } from 'gql/types/user-question';
+
+export interface UserQuestionCreateInput {
+  question: string;
+  mentor: string;
+  classifierAnswer: string;
+  classifierAnswerType: string;
+  confidence: number;
+}
+
+export const UserQuestionCreateInputType = new GraphQLInputObjectType({
+  name: 'UserQuestionCreateInput',
+  description: 'Input for creating a user question',
+  fields: () => ({
+    question: {
+      type: GraphQLNonNull(GraphQLString),
+    },
+    mentor: {
+      type: GraphQLNonNull(GraphQLID),
+    },
+    classifierAnswer: {
+      type: GraphQLNonNull(GraphQLID),
+    },
+    classifierAnswerType: {
+      type: GraphQLString,
+    },
+    confidence: {
+      type: GraphQLNonNull(GraphQLFloat),
+    },
+  }),
+});
 
 export const userQuestionCreate = {
   type: UserQuestionType,
@@ -27,13 +60,13 @@ export const userQuestionCreate = {
     args: { userQuestion: UserQuestionCreateInput }
   ): Promise<UserQuestion> => {
     return await UserQuestionModel.create({
-      mentor: args.userQuestion.mentor,
       question: args.userQuestion.question,
-      confidence: args.userQuestion.confidence,
+      mentor: args.userQuestion.mentor,
       classifierAnswer: args.userQuestion.classifierAnswer,
       classifierAnswerType:
         args.userQuestion.classifierAnswerType ||
         ClassifierAnswerType.CLASSIFIER,
+      confidence: args.userQuestion.confidence,
       graderAnswer: null,
       feedback: Feedback.NEUTRAL,
     });
