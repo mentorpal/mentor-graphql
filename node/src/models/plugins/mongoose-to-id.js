@@ -4,8 +4,8 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-const isHex = require('is-hex');
-const mongoose = require('mongoose');
+import isHex from 'is-hex';
+import mongoose from 'mongoose';
 /**
  * Checks if a given object is of type ObjectId.
  * If it isn't, looks for an object id in property _id.

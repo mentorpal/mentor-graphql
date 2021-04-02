@@ -4,26 +4,22 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType, GraphQLList } from 'graphql';
-
-import { Topic as TopicModel } from 'models';
-import { Question } from 'models/Question';
-import TopicType from './topic';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLList,
+  GraphQLID,
+} from 'graphql';
 
 export const QuestionType = new GraphQLObjectType({
   name: 'Question',
   fields: () => ({
-    _id: { type: GraphQLString },
+    _id: { type: GraphQLID },
     question: { type: GraphQLString },
     type: { type: GraphQLString },
     name: { type: GraphQLString },
     paraphrases: { type: GraphQLList(GraphQLString) },
-    topics: {
-      type: GraphQLList(TopicType),
-      resolve: async function (question: Question) {
-        return TopicModel.find({ _id: { $in: question.topics } });
-      },
-    },
+    mentor: { type: GraphQLID },
   }),
 });
 

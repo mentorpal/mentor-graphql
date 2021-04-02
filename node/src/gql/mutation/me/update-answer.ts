@@ -10,53 +10,59 @@ import {
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
+  GraphQLInputObjectType,
 } from 'graphql';
-import mongoose from 'mongoose';
 import {
   Answer as AnswerModel,
   Mentor as MentorModel,
   Question as QuestionModel,
 } from 'models';
-import { Answer } from 'models/Answer';
+import { Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
+
+export interface AnswerUpdateInput {
+  transcript: string;
+  status: Status;
+}
+
+export const AnswerInputType = new GraphQLInputObjectType({
+  name: 'AnswerInputType',
+  fields: () => ({
+    transcript: { type: GraphQLString },
+    status: { type: GraphQLString },
+  }),
+});
 
 export const updateAnswer = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     questionId: { type: GraphQLNonNull(GraphQLID) },
-    answer: { type: GraphQLNonNull(GraphQLString) },
+    answer: { type: GraphQLNonNull(AnswerInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentorId: string; answer: string; questionId: string },
+    args: { mentorId: string; questionId: string; answer: AnswerUpdateInput },
     context: { user: User }
   ): Promise<boolean> => {
-    const mentor: Mentor = await MentorModel.findOne({ _id: args.mentorId });
+    if (!(await QuestionModel.exists({ _id: args.questionId }))) {
+      throw new Error(`no question found for id '${args.questionId}'`);
+    }
+    const mentor: Mentor = await MentorModel.findById(args.mentorId);
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
-    }
-    if (
-      !(await QuestionModel.exists({
-        _id: mongoose.Types.ObjectId(args.questionId),
-      }))
-    ) {
-      throw new Error(`no question found for id '${args.questionId}'`);
     }
     if (`${context.user._id}` !== `${mentor.user}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    const answerUpdate: Answer = JSON.parse(decodeURI(args.answer));
     const answer = await AnswerModel.findOneAndUpdate(
       {
         mentor: mentor._id,
-        question: mongoose.Types.ObjectId(args.questionId),
+        question: args.questionId,
       },
       {
-        $set: {
-          ...answerUpdate,
-        },
+        $set: args.answer,
       },
       {
         upsert: true,

@@ -6,16 +6,39 @@ The full terms of this copyright and license should always be found in the root 
 */
 import mongoose from 'mongoose';
 
-export function isNullOrEmpty(value: string): boolean {
-  return (
-    !value ||
-    value == undefined ||
-    value == '' ||
-    value.length == 0 ||
-    value == ''
-  );
+interface IdAndProps<T> {
+  _id: string;
+  props: Partial<T>;
 }
 
-export function idOrNew(value: string) {
-  return isNullOrEmpty(value) ? `${mongoose.Types.ObjectId()}` : value;
+interface HasId {
+  _id?: string;
+}
+
+export function toUpdateProps<T extends HasId>(
+  update: Partial<T>,
+  idKeyName = '_id'
+): IdAndProps<T> {
+  return {
+    _id: idOrNew(update._id),
+    props: Object.getOwnPropertyNames(update).reduce(
+      (acc: Partial<T>, cur: string) => {
+        if (cur !== idKeyName) {
+          acc[cur as keyof T] = update[cur as keyof T];
+        }
+        return acc;
+      },
+      {}
+    ),
+  };
+}
+
+// check if id is a valid ObjectID:
+//  - if valid, return it
+//  - if invalid, create a valid object id
+export function idOrNew(id: string): string {
+  if (!Boolean(id)) {
+    return `${mongoose.Types.ObjectId()}`;
+  }
+  return id.match(/^[0-9a-fA-F]{24}$/) ? id : `${mongoose.Types.ObjectId()}`;
 }

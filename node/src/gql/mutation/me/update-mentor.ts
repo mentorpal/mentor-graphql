@@ -51,18 +51,14 @@ export const updateMentor = {
     context: { user: User }
   ): Promise<boolean> => {
     const mentorUpdate: MentorUpdateInput = args.mentor;
-    const mentor: Mentor = await MentorModel.findOne({ _id: mentorUpdate._id });
+    const mentor: Mentor = await MentorModel.findById(mentorUpdate._id);
     if (mentor && `${context.user._id}` !== `${mentor.user}`) {
       throw new Error('you do not have permission to update this mentor');
     }
-    const updated = await MentorModel.findOneAndUpdate(
+    const updated = await MentorModel.findByIdAndUpdate(
+      mentorUpdate._id,
       {
-        _id: mentorUpdate._id,
-      },
-      {
-        $set: {
-          ...mentorUpdate,
-        },
+        $set: mentorUpdate,
       },
       {
         new: true,

@@ -11,11 +11,36 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-
-import { Subject as SubjectModel, Topic as TopicModel } from 'models';
+import { Subject as SubjectModel } from 'models';
 import { Subject } from 'models/Subject';
 import QuestionType from './question';
-import TopicType from './topic';
+
+export const CategoryType = new GraphQLObjectType({
+  name: 'Category',
+  fields: {
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    description: { type: GraphQLString },
+  },
+});
+
+export const TopicType = new GraphQLObjectType({
+  name: 'Topic',
+  fields: {
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    description: { type: GraphQLString },
+  },
+});
+
+export const SubjectQuestionType = new GraphQLObjectType({
+  name: 'SubjectQuestion',
+  fields: {
+    category: { type: CategoryType },
+    topics: { type: GraphQLList(TopicType) },
+    question: { type: QuestionType },
+  },
+});
 
 export const SubjectType = new GraphQLObjectType({
   name: 'Subject',
@@ -24,39 +49,28 @@ export const SubjectType = new GraphQLObjectType({
     name: { type: GraphQLString },
     description: { type: GraphQLString },
     isRequired: {
-      type: GraphQLBoolean!,
+      type: GraphQLBoolean,
       resolve: async (subject: Subject) => {
         return Boolean(subject.isRequired);
       },
     },
-    topicsOrder: {
-      type: GraphQLList(TopicType),
-      resolve: async function (subject: Subject) {
-        const topics = await TopicModel.find({
-          _id: { $in: subject.topicsOrder },
-        });
-        topics.sort((a, b) => {
-          return (
-            subject.topicsOrder.indexOf(a._id) -
-            subject.topicsOrder.indexOf(b._id)
-          );
-        });
-        return topics;
-      },
-    },
-    topics: {
-      type: GraphQLList(TopicType),
-      resolve: async function (subject: Subject) {
-        return await SubjectModel.getTopics(subject);
-      },
-    },
+    topics: { type: GraphQLList(TopicType) },
+    categories: { type: GraphQLList(CategoryType) },
     questions: {
-      type: GraphQLList(QuestionType),
+      type: GraphQLList(SubjectQuestionType),
       args: {
         topic: { type: GraphQLID },
+        mentor: { type: GraphQLID },
       },
-      resolve: async function (subject: Subject, args: { topic: string }) {
-        return await SubjectModel.getQuestions(subject, args.topic);
+      resolve: async function (
+        subject: Subject,
+        args: { topic: string; mentor: string }
+      ) {
+        return await SubjectModel.getQuestions(
+          subject,
+          args.topic,
+          args.mentor
+        );
       },
     },
   }),

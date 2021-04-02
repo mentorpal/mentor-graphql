@@ -5,11 +5,13 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose, { Document, Model, Schema } from 'mongoose';
-import { PaginatedResolveResult } from './PaginatedResolveResult';
-import { Topic } from './Topic';
-
-const mongoPaging = require('mongo-cursor-pagination');
-mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
+import { Mentor } from './Mentor';
+import {
+  PaginatedResolveResult,
+  PaginateOptions,
+  PaginateQuery,
+  pluginPagination,
+} from './Paginatation';
 
 export enum QuestionType {
   UTTERANCE = 'UTTERANCE',
@@ -18,36 +20,38 @@ export enum QuestionType {
 
 export interface Question extends Document {
   question: string;
-  paraphrases: string[];
   type: string;
   name: string;
-  topics: Topic['_id'][];
+  paraphrases: string[];
+  mentor: Mentor['_id'];
 }
 
 export const QuestionSchema = new Schema({
   question: { type: String },
-  paraphrases: [{ type: String }],
   type: {
     type: String,
     enum: [QuestionType.UTTERANCE, QuestionType.QUESTION],
     default: QuestionType.QUESTION,
   },
   name: { type: String },
-  topics: [{ type: mongoose.Types.ObjectId, ref: 'Topic' }],
+  paraphrases: [{ type: String }],
+  mentor: {
+    type: Schema.Types.ObjectId,
+    ref: 'Mentor',
+  },
 });
 
 export interface QuestionModel extends Model<Question> {
   paginate(
-    query?: any,
-    options?: any,
-    callback?: any
+    query?: PaginateQuery<Question>,
+    options?: PaginateOptions
   ): Promise<PaginatedResolveResult<Question>>;
 }
 
 QuestionSchema.index({ question: -1, _id: -1 });
 QuestionSchema.index({ type: -1, _id: -1 });
 QuestionSchema.index({ name: -1, _id: -1 });
-QuestionSchema.plugin(mongoPaging.mongoosePlugin);
+pluginPagination(QuestionSchema);
 
 export default mongoose.model<Question, QuestionModel>(
   'Question',

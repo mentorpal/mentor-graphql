@@ -13,27 +13,71 @@ import {
   GraphQLList,
   GraphQLBoolean,
 } from 'graphql';
-import {
-  Subject as SubjectModel,
-  Topic as TopicModel,
-  Question as QuestionModel,
-} from 'models';
+
+import { Subject as SubjectModel, Question as QuestionModel } from 'models';
 import { User } from 'models/User';
-import { Subject } from 'models/Subject';
+import { Question } from 'models/Question';
+import { Subject, SubjectQuestionProps, SubjectUpdate } from 'models/Subject';
 import SubjectType from 'gql/types/subject';
 import {
   QuestionUpdateInput,
   QuestionUpdateInputType,
 } from './update-question';
-import { idOrNew } from './helpers';
+import { idOrNew, toUpdateProps } from './helpers';
+
+export interface CategoryUpdateInput {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export const CategoryInputType = new GraphQLInputObjectType({
+  name: 'CategoryInputType',
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    description: { type: GraphQLString },
+  }),
+});
+
+export interface TopicUpdateInput {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export const TopicInputType = new GraphQLInputObjectType({
+  name: 'TopicInputType',
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    description: { type: GraphQLString },
+  }),
+});
+
+export interface SubjectQuestionUpdateInput {
+  question: QuestionUpdateInput;
+  category?: CategoryUpdateInput;
+  topics?: TopicUpdateInput[];
+}
+
+export const SubjectQuestionInputType = new GraphQLInputObjectType({
+  name: 'SubjectQuestionInputType',
+  fields: () => ({
+    question: { type: QuestionUpdateInputType },
+    category: { type: CategoryInputType },
+    topics: { type: GraphQLList(TopicInputType) },
+  }),
+});
 
 export interface SubjectUpdateInput {
   _id: string;
   name: string;
   description: string;
   isRequired: boolean;
-  topicsOrder: string[];
-  questions: QuestionUpdateInput[];
+  categories: CategoryUpdateInput[];
+  topics: TopicUpdateInput[];
+  questions: SubjectQuestionUpdateInput[];
 }
 
 export const SubjectUpdateInputType = new GraphQLInputObjectType({
@@ -43,10 +87,35 @@ export const SubjectUpdateInputType = new GraphQLInputObjectType({
     name: { type: GraphQLString },
     description: { type: GraphQLString },
     isRequired: { type: GraphQLBoolean },
-    topicsOrder: { type: GraphQLList(GraphQLString) },
-    questions: { type: GraphQLList(QuestionUpdateInputType) },
+    categories: { type: GraphQLList(CategoryInputType) },
+    topics: { type: GraphQLList(TopicInputType) },
+    questions: { type: GraphQLList(SubjectQuestionInputType) },
   }),
 });
+
+async function questionInputToUpdate(
+  input: SubjectQuestionUpdateInput,
+  subjectTopics: string[]
+): Promise<SubjectQuestionProps> {
+  const { _id, props } = toUpdateProps<Question>(input.question);
+  const q = await QuestionModel.findOneAndUpdate(
+    { _id: _id },
+    { $set: props },
+    {
+      new: true,
+      upsert: true,
+    }
+  );
+  return {
+    question: q._id,
+    category: input.category?.id,
+    // don't include topics that are not in the subject
+    topics:
+      input.topics
+        ?.filter((t) => subjectTopics.includes(t.id))
+        .map((t) => t.id) || [],
+  };
+}
 
 export const updateSubject = {
   type: SubjectType,
@@ -56,64 +125,19 @@ export const updateSubject = {
     args: { subject: SubjectUpdateInput },
     context: { user: User }
   ): Promise<Subject> => {
-    const subjectUpdate = args.subject;
-    for (const [i, questionUpdate] of (
-      subjectUpdate.questions || []
-    ).entries()) {
-      for (const [i, topicUpdate] of (questionUpdate.topics || []).entries()) {
-        topicUpdate._id = idOrNew(topicUpdate._id);
-        const t = await TopicModel.findOneAndUpdate(
-          {
-            _id: topicUpdate._id,
-          },
-          {
-            $set: {
-              ...topicUpdate,
-            },
-          },
-          {
-            new: true,
-            upsert: true,
-          }
-        );
-        questionUpdate.topics[i] = t;
-      }
-      const question: any = { ...questionUpdate };
-      if (questionUpdate.topics) {
-        question._id = idOrNew(questionUpdate._id);
-        question.topics = questionUpdate.topics.map((t) => t._id);
-      }
-      const q = await QuestionModel.findOneAndUpdate(
-        {
-          _id: question._id,
-        },
-        {
-          $set: {
-            ...question,
-          },
-        },
-        {
-          new: true,
-          upsert: true,
-        }
-      );
-      subjectUpdate.questions[i] = q;
-    }
-
-    const subject: any = { ...subjectUpdate };
-    if (subjectUpdate.questions) {
-      subject._id = idOrNew(subjectUpdate._id);
-      subject.topics = subjectUpdate.questions.map((q) => q._id);
-    }
-
+    // don't include questions that have no question text
+    const questions = args.subject.questions.filter((q) => q.question.question);
+    const subjectTopics = args.subject.topics.map((t) => t.id);
+    const subjectUpdate: SubjectUpdate = {
+      ...args.subject,
+      questions: await Promise.all(
+        questions.map((qi) => questionInputToUpdate(qi, subjectTopics))
+      ),
+    };
     return await SubjectModel.findOneAndUpdate(
+      { _id: idOrNew(args.subject._id) },
       {
-        _id: subject._id,
-      },
-      {
-        $set: {
-          ...subject,
-        },
+        $set: subjectUpdate,
       },
       {
         new: true,
