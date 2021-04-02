@@ -131,7 +131,7 @@ describe('subject', () => {
     });
   });
 
-  it('get all questions in subject in alphabetical order', async () => {
+  it('get all questions in subject', async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
           subject(id: "5ffdf41a1ee2c62320b49eb2") {
@@ -144,13 +144,13 @@ describe('subject', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.subject.questions).to.eql([
       {
-        question: 'Do you like your job?',
+        question: 'Who are you and what do you do?',
       },
       {
         question: 'How old are you?',
       },
       {
-        question: 'Who are you and what do you do?',
+        question: 'Do you like your job?',
       },
     ]);
   });

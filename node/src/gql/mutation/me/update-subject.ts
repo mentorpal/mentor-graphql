@@ -19,8 +19,8 @@ import {
   Question as QuestionModel,
 } from 'models';
 import { User } from 'models/User';
-import { Subject } from 'models/Subject';
-import SubjectType from 'gql/types/subject';
+import { Subject, SubjectCategory } from 'models/Subject';
+import SubjectType, { SubjectCategoryType } from 'gql/types/subject';
 import {
   QuestionUpdateInput,
   QuestionUpdateInputType,
@@ -32,6 +32,7 @@ export interface SubjectUpdateInput {
   name: string;
   description: string;
   isRequired: boolean;
+  categories: SubjectCategory[];
   topicsOrder: string[];
   questions: QuestionUpdateInput[];
 }
@@ -43,7 +44,16 @@ export const SubjectUpdateInputType = new GraphQLInputObjectType({
     name: { type: GraphQLString },
     description: { type: GraphQLString },
     isRequired: { type: GraphQLBoolean },
+    categories: { type: GraphQLList(SubjectCategoryInputType) },
     topicsOrder: { type: GraphQLList(GraphQLString) },
+    questions: { type: GraphQLList(QuestionUpdateInputType) },
+  }),
+});
+
+export const SubjectCategoryInputType = new GraphQLInputObjectType({
+  name: 'SubjectCategoryInputType',
+  fields: () => ({
+    name: { type: GraphQLString },
     questions: { type: GraphQLList(QuestionUpdateInputType) },
   }),
 });
@@ -104,6 +114,13 @@ export const updateSubject = {
     if (subjectUpdate.questions) {
       subject._id = idOrNew(subjectUpdate._id);
       subject.topics = subjectUpdate.questions.map((q) => q._id);
+    }
+    if (subjectUpdate.categories) {
+      // for now, don't allow new questions to go into a category because its complicated...
+      subject.categories = subjectUpdate.categories.map((c) => ({
+        name: c.name,
+        questions: c.questions.filter((q) => Boolean(q._id)).map((q) => q._id),
+      }));
     }
 
     return await SubjectModel.findOneAndUpdate(

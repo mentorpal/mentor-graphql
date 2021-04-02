@@ -64,7 +64,32 @@ describe('updateSubject', () => {
     const subject = JSON.stringify({
       _id: '5ffdf41a1ee2c62320b49eb3',
       name: 'stem',
-      description: 'These questions will ask about STEM careers.',
+      categories: [
+        {
+          name: 'New category',
+          questions: [
+            {
+              _id: '511111111111111111111113',
+              question: 'Is stem fun?',
+              topics: [
+                {
+                  name: 'New Topic',
+                  description: 'New',
+                },
+              ],
+            },
+            {
+              question: 'new question',
+              topics: [
+                {
+                  _id: '5ffdf41a1ee2c62320b49ec3',
+                  name: 'advice',
+                },
+              ],
+            },
+          ],
+        },
+      ],
       questions: [
         {
           _id: '511111111111111111111113',
@@ -73,6 +98,15 @@ describe('updateSubject', () => {
             {
               name: 'New Topic',
               description: 'New',
+            },
+          ],
+        },
+        {
+          question: 'new question',
+          topics: [
+            {
+              _id: '5ffdf41a1ee2c62320b49ec3',
+              name: 'advice',
             },
           ],
         },
@@ -88,8 +122,18 @@ describe('updateSubject', () => {
               _id
               name
               description
+              categories {
+                name
+                questions {
+                  _id
+                  question
+                  topics {
+                    name
+                    description
+                  }
+                }
+              }
               questions {
-                _id
                 question
                 topics {
                   name
@@ -105,14 +149,40 @@ describe('updateSubject', () => {
       _id: '5ffdf41a1ee2c62320b49eb3',
       name: 'stem',
       description: 'These questions will ask about STEM careers.',
+      categories: [
+        {
+          name: 'New category',
+          questions: [
+            {
+              _id: '511111111111111111111113',
+              question: 'Is stem fun?',
+              topics: [
+                {
+                  name: 'New Topic',
+                  description: 'New',
+                },
+              ],
+            },
+          ],
+        },
+      ],
       questions: [
         {
-          _id: '511111111111111111111113',
           question: 'Is stem fun?',
           topics: [
             {
               name: 'New Topic',
               description: 'New',
+            },
+          ],
+        },
+        {
+          question: 'new question',
+          topics: [
+            {
+              name: 'advice',
+              description:
+                'These questions will ask you to give advice to someone who is interested in your career',
             },
           ],
         },

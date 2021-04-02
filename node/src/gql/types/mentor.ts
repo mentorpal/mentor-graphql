@@ -17,6 +17,8 @@ import DateType from './date';
 import AnswerType from './answer';
 import SubjectType from './subject';
 import { QuestionType } from 'models/Question';
+import TopicType from './topic';
+import MentorSubjectType from './mentor-subject';
 
 export const MentorType = new GraphQLObjectType({
   name: 'Mentor',
@@ -29,13 +31,13 @@ export const MentorType = new GraphQLObjectType({
     mentorType: { type: GraphQLString },
     defaultSubject: { type: SubjectType },
     subjects: {
-      type: GraphQLList(SubjectType),
+      type: GraphQLList(MentorSubjectType),
       resolve: async function (mentor: Mentor) {
         return await MentorModel.getSubjects(mentor);
       },
     },
     topics: {
-      type: GraphQLList(SubjectType),
+      type: GraphQLList(TopicType),
       args: {
         subject: { type: GraphQLID },
       },

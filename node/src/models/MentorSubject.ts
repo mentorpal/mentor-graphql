@@ -5,58 +5,61 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import { Question as QuestionModel, Topic as TopicModel } from 'models';
+import {
+  Subject as SubjectModel,
+  Topic as TopicModel,
+  Question as QuestionModel,
+  MentorSubject,
+} from 'models';
 import { PaginatedResolveResult } from './PaginatedResolveResult';
+import { Mentor } from './Mentor';
 import { Question } from './Question';
+import { Subject } from './Subject';
 import { Topic } from './Topic';
 
 const mongoPaging = require('mongo-cursor-pagination');
 mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
 
-export interface SubjectCategory extends Document {
-  name: string;
-  description: string;
+export interface MentorSubject extends Document {
+  mentor: Mentor['_id'];
+  subject: Subject['_id'];
   questions: Question['_id'][];
 }
 
-const SubjectCategorySchema = new Schema({
-  name: { type: String },
-  description: { type: String },
+export const MentorSubjectSchema = new Schema({
+  mentor: {
+    type: Schema.Types.ObjectId,
+    ref: 'Mentor',
+    required: '{PATH} is required!',
+  },
+  subject: {
+    type: Schema.Types.ObjectId,
+    ref: 'Subject',
+    required: '{PATH} is required!',
+  },
   questions: [{ type: mongoose.Types.ObjectId, ref: 'Question' }],
 });
 
-export interface Subject extends Document {
-  name: string;
-  description: string;
-  isRequired: boolean;
-  categories: SubjectCategory[];
-  questions: Question['_id'][];
-  topicsOrder: Topic['_id'][];
-}
-
-export const SubjectSchema = new Schema({
-  name: { type: String },
-  description: { type: String },
-  isRequired: { type: Boolean },
-  categories: { type: [SubjectCategorySchema] },
-  questions: [{ type: mongoose.Types.ObjectId, ref: 'Question' }],
-  topicsOrder: [{ type: mongoose.Types.ObjectId, ref: 'Topic' }],
-});
-
-export interface SubjectModel extends Model<Subject> {
+export interface MentorSubjectModel extends Model<MentorSubject> {
   paginate(
     query?: any,
     options?: any,
     callback?: any
-  ): Promise<PaginatedResolveResult<Subject>>;
-  getTopics(subject: string | Subject): Topic[];
-  getQuestions(subject: string | Subject, topicId?: string): Question[];
+  ): Promise<PaginatedResolveResult<MentorSubject>>;
+  getTopics(mentorSubject: string | MentorSubject): Topic[];
+  getQuestions(
+    mentorSubject: string | MentorSubject,
+    topicId?: string
+  ): Question[];
 }
 
-SubjectSchema.statics.getTopics = async function (s: string | Subject) {
-  const subject: Subject =
-    typeof s === 'string' ? await this.findOne({ _id: s }) : s;
-  const questions: Question[] = await this.getQuestions(subject);
+MentorSubjectSchema.statics.getTopics = async function (
+  ms: string | MentorSubject
+) {
+  const mentorSubject: MentorSubject =
+    typeof ms === 'string' ? await MentorSubject.findById(ms) : ms;
+  const subject: Subject = await SubjectModel.findById(mentorSubject.subject);
+  const questions: Question[] = await this.getQuestions(mentorSubject);
   const topicIds: string[] = questions.reduce(
     (acc: string[], val: Question) => [...acc, ...val.topics],
     []
@@ -80,23 +83,31 @@ SubjectSchema.statics.getTopics = async function (s: string | Subject) {
   return topics;
 };
 
-SubjectSchema.statics.getQuestions = async function (
-  s: string | Subject,
+MentorSubjectSchema.statics.getQuestions = async function (
+  ms: string | MentorSubject,
   topicId?: string
 ) {
-  const subject = typeof s === 'string' ? await this.findOne({ _id: s }) : s;
+  const mentorSubject: MentorSubject =
+    typeof ms === 'string' ? await MentorSubject.findById(ms) : ms;
+  const subject: Subject = await SubjectModel.findById(mentorSubject.subject);
+  let questions: Question[] = [];
   if (topicId) {
-    return await QuestionModel.find({
-      $and: [{ _id: { $in: subject.questions } }, { topics: topicId }],
+    questions = await QuestionModel.find({
+      $and: [{ _id: { $in: mentorSubject.questions } }, { topics: topicId }],
+    });
+  } else {
+    questions = await QuestionModel.find({
+      _id: { $in: mentorSubject.questions },
     });
   }
-  return await QuestionModel.find({
-    _id: { $in: subject.questions },
-  });
+  questions.push(...(await SubjectModel.getQuestions(subject, topicId)));
+  return questions;
 };
 
-SubjectSchema.index({ name: -1, _id: -1 });
-SubjectSchema.index({ isRequired: -1, _id: -1 });
-SubjectSchema.plugin(mongoPaging.mongoosePlugin);
+MentorSubjectSchema.index({ mentor: -1, subject: -1 }, { unique: true });
+MentorSubjectSchema.plugin(mongoPaging.mongoosePlugin);
 
-export default mongoose.model<Subject, SubjectModel>('Subject', SubjectSchema);
+export default mongoose.model<MentorSubject, MentorSubjectModel>(
+  'MentorSubject',
+  MentorSubjectSchema
+);

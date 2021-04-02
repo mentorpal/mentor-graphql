@@ -5,13 +5,18 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import { Answer as AnswerModel, Subject as SubjectModel } from 'models';
+import {
+  Answer as AnswerModel,
+  Subject as SubjectModel,
+  MentorSubject as MentorSubjectModel,
+} from 'models';
 import { PaginatedResolveResult } from './PaginatedResolveResult';
 import { Answer, Status } from './Answer';
 import { Question, QuestionType } from './Question';
 import { Subject } from './Subject';
 import { User } from './User';
 import { Topic } from './Topic';
+import { MentorSubject } from './MentorSubject';
 
 const mongoPaging = require('mongo-cursor-pagination');
 mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
@@ -63,8 +68,7 @@ export interface MentorModel extends Model<Mentor> {
     options?: any,
     callback?: any
   ): Promise<PaginatedResolveResult<Mentor>>;
-
-  getSubjects(mentor: string | Mentor): Subject[];
+  getSubjects(mentor: string | Mentor): MentorSubject[];
   getTopics(mentor: string | Mentor, subjectId?: string): Topic[];
   getQuestions(
     mentor: string | Mentor,
@@ -83,12 +87,32 @@ export interface MentorModel extends Model<Mentor> {
 
 MentorSchema.statics.getSubjects = async function (
   m: string | Mentor
-): Promise<Subject[]> {
+): Promise<MentorSubject[]> {
   const mentor: Mentor =
     typeof m === 'string' ? await this.findOne({ _id: m }) : m;
-  return await SubjectModel.find({ _id: { $in: mentor.subjects } }, null, {
-    sort: { name: 1 },
+
+  // how do i do this efficiently...? find multiple mentorsubjects or create if they don't exist
+  const mentorSubjects = await MentorSubjectModel.find({
+    mentor: mentor._id,
+    subject: { $in: mentor.subjects },
   });
+  const msSubIds = mentorSubjects.map((ms) => ms.subject);
+  for (const subject of mentor.subjects) {
+    if (!msSubIds.includes(subject)) {
+      mentorSubjects.push(
+        await MentorSubjectModel.create({
+          mentor: mentor._id,
+          subject: subject,
+          questions: [],
+        })
+      );
+    }
+  }
+  return mentorSubjects;
+
+  // return await SubjectModel.find({ _id: { $in: mentor.subjects } }, null, {
+  //   sort: { name: 1 },
+  // });
 };
 
 MentorSchema.statics.getTopics = async function (
@@ -98,16 +122,25 @@ MentorSchema.statics.getTopics = async function (
   const mentor: Mentor =
     typeof m === 'string' ? await this.findOne({ _id: m }) : m;
   const topics: Topic[] = [];
+
   if (subjectId) {
     if (mentor.subjects.includes(subjectId)) {
-      topics.push(...(await SubjectModel.getTopics(subjectId)));
+      const mentorSubject =
+        (await MentorSubjectModel.findOne({
+          mentor: mentor._id,
+          subject: subjectId,
+        })) ||
+        (await MentorSubjectModel.create({
+          mentor: mentor._id,
+          subject: subjectId,
+          questions: [],
+        }));
+      topics.push(...(await MentorSubjectModel.getTopics(mentorSubject)));
     }
   } else {
-    const subjects: Subject[] = await SubjectModel.find({
-      _id: { $in: mentor.subjects },
-    });
-    for (const s of subjects) {
-      topics.push(...(await SubjectModel.getTopics(s)));
+    const mentorSubjects: MentorSubject[] = await this.getSubjects(mentor);
+    for (const ms of mentorSubjects) {
+      topics.push(...(await MentorSubjectModel.getTopics(ms)));
     }
     topics.sort((a, b) => {
       return a.name.localeCompare(b.name);
@@ -128,18 +161,24 @@ MentorSchema.statics.getQuestions = async function (
   let questions: Question[] = [];
   if (subjectId) {
     if (mentor.subjects.includes(subjectId)) {
-      questions.push(...(await SubjectModel.getQuestions(subjectId, topicId)));
+      const mentorSubject =
+        (await MentorSubjectModel.findOne({
+          mentor: mentor._id,
+          subject: subjectId,
+        })) ||
+        (await MentorSubjectModel.create({
+          mentor: mentor._id,
+          subject: subjectId,
+          questions: [],
+        }));
+      questions.push(
+        ...(await MentorSubjectModel.getQuestions(mentorSubject, topicId))
+      );
     }
   } else {
-    const subjects: Subject[] = await SubjectModel.find(
-      {
-        _id: { $in: mentor.subjects },
-      },
-      null,
-      { sort: { name: 1 } }
-    );
-    for (const s of subjects) {
-      questions.push(...(await SubjectModel.getQuestions(s, topicId)));
+    const mentorSubjects: MentorSubject[] = await this.getSubjects(mentor);
+    for (const ms of mentorSubjects) {
+      questions.push(...(await MentorSubjectModel.getQuestions(ms, topicId)));
     }
   }
   if (type) {

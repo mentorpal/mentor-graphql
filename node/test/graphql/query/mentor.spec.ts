@@ -49,7 +49,9 @@ describe('mentor', () => {
             firstName
             title
             subjects {
-              _id
+              subject {
+                _id
+              }
               name
             }
           }
@@ -63,18 +65,22 @@ describe('mentor', () => {
       title: "Nuclear Electrician's Mate",
       subjects: [
         {
-          _id: '5ffdf41a1ee2c62320b49eb2',
-          name: 'Background',
+          subject: {
+            _id: '5ffdf41a1ee2c62320b49eb1',
+          },
+          name: 'Repeat After Me',
         },
         {
-          _id: '5ffdf41a1ee2c62320b49eb1',
-          name: 'Repeat After Me',
+          subject: {
+            _id: '5ffdf41a1ee2c62320b49eb2',
+          },
+          name: 'Background',
         },
       ],
     });
   });
 
-  it('mentor/subjects gets all subjects for mentor in alphabetical order', async () => {
+  it('mentor/subjects gets all subjects for mentor', async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
         mentor(id: "5ffdf41a1ee2c62111111112") {
@@ -89,10 +95,10 @@ describe('mentor', () => {
     expect(response.body.data.mentor).to.eql({
       subjects: [
         {
-          name: 'Background',
+          name: 'Repeat After Me',
         },
         {
-          name: 'Repeat After Me',
+          name: 'Background',
         },
         {
           name: 'STEM',
@@ -194,10 +200,22 @@ describe('mentor', () => {
       answers: [
         {
           question: {
-            question: 'Do you like your job?',
+            question: "Don't talk and stay still.",
             topics: [
               {
-                name: 'Advice',
+                name: 'Idle',
+              },
+            ],
+          },
+          transcript: '[being still]',
+          status: 'COMPLETE',
+        },
+        {
+          question: {
+            question: 'Who are you and what do you do?',
+            topics: [
+              {
+                name: 'Background',
               },
             ],
           },
@@ -218,27 +236,15 @@ describe('mentor', () => {
         },
         {
           question: {
-            question: 'Who are you and what do you do?',
+            question: 'Do you like your job?',
             topics: [
               {
-                name: 'Background',
+                name: 'Advice',
               },
             ],
           },
           transcript: '',
           status: 'INCOMPLETE',
-        },
-        {
-          question: {
-            question: "Don't talk and stay still.",
-            topics: [
-              {
-                name: 'Idle',
-              },
-            ],
-          },
-          transcript: '[being still]',
-          status: 'COMPLETE',
         },
       ],
     });

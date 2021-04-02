@@ -12,46 +12,53 @@ import {
   GraphQLString,
 } from 'graphql';
 import {
-  Subject as SubjectModel,
-  Topic as TopicModel,
-  Question as QuestionModel,
+  MentorSubject as MentorSubjectSchema,
+  Subject as SubjectSchema,
+  Topic as TopicSchema,
 } from 'models';
-import { Subject, SubjectCategory } from 'models/Subject';
+import { MentorSubject } from 'models/MentorSubject';
 import QuestionType from './question';
+import SubjectType, { SubjectCategoryType } from './subject';
 import TopicType from './topic';
 
-export const SubjectCategoryType = new GraphQLObjectType({
-  name: 'SubjectCategory',
-  fields: {
-    name: { type: GraphQLString },
-    description: { type: GraphQLString },
-    questions: {
-      type: GraphQLList(QuestionType),
-      resolve: async function (subjectCategory: SubjectCategory) {
-        return await QuestionModel.find({
-          _id: { $in: subjectCategory.questions },
-        });
-      },
-    },
-  },
-});
-
-export const SubjectType = new GraphQLObjectType({
-  name: 'Subject',
+export const MentorSubjectType = new GraphQLObjectType({
+  name: 'MentorSubject',
   fields: () => ({
     _id: { type: GraphQLID },
-    name: { type: GraphQLString },
-    description: { type: GraphQLString },
+    subject: { type: SubjectType },
+    name: {
+      type: GraphQLString,
+      resolve: async (ms: MentorSubject) => {
+        const subject = await SubjectSchema.findOne({ _id: ms.subject });
+        return subject.name;
+      },
+    },
+    description: {
+      type: GraphQLString,
+      resolve: async (ms: MentorSubject) => {
+        const subject = await SubjectSchema.findOne({ _id: ms.subject });
+        return subject.description;
+      },
+    },
     isRequired: {
       type: GraphQLBoolean,
-      resolve: async (subject: Subject) => {
-        return Boolean(subject.isRequired);
+      resolve: async (ms: MentorSubject) => {
+        const subject = await SubjectSchema.findOne({ _id: ms.subject });
+        return subject.isRequired;
+      },
+    },
+    categories: {
+      type: GraphQLList(SubjectCategoryType),
+      resolve: async (ms: MentorSubject) => {
+        const subject = await SubjectSchema.findOne({ _id: ms.subject });
+        return subject.categories;
       },
     },
     topicsOrder: {
       type: GraphQLList(TopicType),
-      resolve: async function (subject: Subject) {
-        const topics = await TopicModel.find({
+      resolve: async (ms: MentorSubject) => {
+        const subject = await SubjectSchema.findOne({ _id: ms.subject });
+        const topics = await TopicSchema.find({
           _id: { $in: subject.topicsOrder },
         });
         topics.sort((a, b) => {
@@ -65,23 +72,26 @@ export const SubjectType = new GraphQLObjectType({
     },
     topics: {
       type: GraphQLList(TopicType),
-      resolve: async function (subject: Subject) {
-        return await SubjectModel.getTopics(subject);
+      resolve: async function (mentorSubject: MentorSubject) {
+        return await MentorSubjectSchema.getTopics(mentorSubject);
       },
-    },
-    categories: {
-      type: GraphQLList(SubjectCategoryType),
     },
     questions: {
       type: GraphQLList(QuestionType),
       args: {
         topic: { type: GraphQLID },
       },
-      resolve: async function (subject: Subject, args: { topic: string }) {
-        return await SubjectModel.getQuestions(subject, args.topic);
+      resolve: async function (
+        mentorSubject: MentorSubject,
+        args: { topic: string }
+      ) {
+        return await MentorSubjectSchema.getQuestions(
+          mentorSubject,
+          args.topic
+        );
       },
     },
   }),
 });
 
-export default SubjectType;
+export default MentorSubjectType;
