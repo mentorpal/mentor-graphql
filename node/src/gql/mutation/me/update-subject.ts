@@ -35,7 +35,7 @@ export const CategoryInputType = new GraphQLInputObjectType({
   name: 'CategoryInputType',
   fields: () => ({
     id: { type: GraphQLID },
-    name: { type: GraphQLNonNull(GraphQLString) },
+    name: { type: GraphQLString },
     description: { type: GraphQLString },
   }),
 });
@@ -50,7 +50,7 @@ export const TopicInputType = new GraphQLInputObjectType({
   name: 'TopicInputType',
   fields: () => ({
     id: { type: GraphQLID },
-    name: { type: GraphQLNonNull(GraphQLString) },
+    name: { type: GraphQLString },
     description: { type: GraphQLString },
   }),
 });
