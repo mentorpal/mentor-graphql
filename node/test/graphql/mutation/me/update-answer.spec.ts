@@ -130,10 +130,8 @@ describe('updateAnswer', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'data.me.updateAnswer',
-      true
-    );
+    expect(response.body.data.me.updateAnswer).to.eql(true);
+
     const r2 = await request(app).post('/graphql').send({
       query: `query {
           mentor(id: "5ffdf41a1ee2c62111111111") {

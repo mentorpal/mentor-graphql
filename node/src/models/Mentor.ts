@@ -7,16 +7,14 @@ The full terms of this copyright and license should always be found in the root 
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import {
   Answer as AnswerModel,
+  Question as QuestionModel,
   Subject as SubjectModel,
-  MentorSubject as MentorSubjectModel,
 } from 'models';
 import { PaginatedResolveResult } from './PaginatedResolveResult';
 import { Answer, Status } from './Answer';
-import { Question, QuestionType } from './Question';
-import { Subject } from './Subject';
+import { QuestionType } from './Question';
+import { Subject, SubjectQuestion, Topic } from './Subject';
 import { User } from './User';
-import { Topic } from './Topic';
-import { MentorSubject } from './MentorSubject';
 
 const mongoPaging = require('mongo-cursor-pagination');
 mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
@@ -42,10 +40,7 @@ export const MentorSchema = new Schema(
     name: { type: String },
     firstName: { type: String },
     title: { type: String },
-    defaultSubject: {
-      type: Schema.Types.ObjectId,
-      ref: 'Subject',
-    },
+    defaultSubject: { type: Schema.Types.ObjectId, ref: 'Subject' },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
     lastTrainedAt: { type: Date },
     mentorType: {
@@ -68,14 +63,14 @@ export interface MentorModel extends Model<Mentor> {
     options?: any,
     callback?: any
   ): Promise<PaginatedResolveResult<Mentor>>;
-  getSubjects(mentor: string | Mentor): MentorSubject[];
+  getSubjects(mentor: string | Mentor): Subject[];
   getTopics(mentor: string | Mentor, subjectId?: string): Topic[];
   getQuestions(
     mentor: string | Mentor,
     subjectId?: string,
     topicId?: string,
     type?: QuestionType
-  ): Question[];
+  ): SubjectQuestion[];
   getAnswers(
     mentor: string | Mentor,
     subjectId?: string,
@@ -85,36 +80,24 @@ export interface MentorModel extends Model<Mentor> {
   ): Answer[];
 }
 
+// Return subjects in alphabetical order
 MentorSchema.statics.getSubjects = async function (
   m: string | Mentor
-): Promise<MentorSubject[]> {
+): Promise<Subject[]> {
   const mentor: Mentor =
     typeof m === 'string' ? await this.findOne({ _id: m }) : m;
-
-  // how do i do this efficiently...? find multiple mentorsubjects or create if they don't exist
-  const mentorSubjects = await MentorSubjectModel.find({
-    mentor: mentor._id,
-    subject: { $in: mentor.subjects },
-  });
-  const msSubIds = mentorSubjects.map((ms) => ms.subject);
-  for (const subject of mentor.subjects) {
-    if (!msSubIds.includes(subject)) {
-      mentorSubjects.push(
-        await MentorSubjectModel.create({
-          mentor: mentor._id,
-          subject: subject,
-          questions: [],
-        })
-      );
-    }
-  }
-  return mentorSubjects;
-
-  // return await SubjectModel.find({ _id: { $in: mentor.subjects } }, null, {
-  //   sort: { name: 1 },
-  // });
+  return await SubjectModel.find(
+    {
+      _id: { $in: mentor.subjects },
+    },
+    null,
+    { sort: { name: 1 } }
+  );
 };
 
+// Return topics for all subjects or for one subject
+//  - one subject: sorted in subject order
+//  - all subjects: sorted alphabetically
 MentorSchema.statics.getTopics = async function (
   m: string | Mentor,
   subjectId?: string
@@ -122,32 +105,22 @@ MentorSchema.statics.getTopics = async function (
   const mentor: Mentor =
     typeof m === 'string' ? await this.findOne({ _id: m }) : m;
   const topics: Topic[] = [];
-
   if (subjectId) {
     if (mentor.subjects.includes(subjectId)) {
-      const mentorSubject =
-        (await MentorSubjectModel.findOne({
-          mentor: mentor._id,
-          subject: subjectId,
-        })) ||
-        (await MentorSubjectModel.create({
-          mentor: mentor._id,
-          subject: subjectId,
-          questions: [],
-        }));
-      topics.push(...(await MentorSubjectModel.getTopics(mentorSubject)));
+      const subject = await SubjectModel.findOne({ _id: subjectId });
+      topics.push(...subject.topics);
     }
   } else {
-    const mentorSubjects: MentorSubject[] = await this.getSubjects(mentor);
-    for (const ms of mentorSubjects) {
-      topics.push(...(await MentorSubjectModel.getTopics(ms)));
+    const subjects: Subject[] = await this.getSubjects(mentor);
+    for (const s of subjects) {
+      topics.push(...s.topics);
     }
     topics.sort((a, b) => {
       return a.name.localeCompare(b.name);
     });
   }
-  const topicsIds = [...new Set(topics.map((t) => `${t._id}`))];
-  return topicsIds.map((tId) => topics.find((t) => `${t._id}` === tId));
+  const topicsIds = [...new Set(topics.map((t) => `${t.id}`))];
+  return topicsIds.map((tId) => topics.find((t) => `${t.id}` === tId));
 };
 
 MentorSchema.statics.getQuestions = async function (
@@ -155,36 +128,40 @@ MentorSchema.statics.getQuestions = async function (
   subjectId?: string,
   topicId?: string,
   type?: QuestionType
-): Promise<Question[]> {
+): Promise<SubjectQuestion[]> {
   const mentor: Mentor =
     typeof m === 'string' ? await this.findOne({ _id: m }) : m;
-  let questions: Question[] = [];
+  let sQuestions: SubjectQuestion[] = [];
   if (subjectId) {
     if (mentor.subjects.includes(subjectId)) {
-      const mentorSubject =
-        (await MentorSubjectModel.findOne({
-          mentor: mentor._id,
-          subject: subjectId,
-        })) ||
-        (await MentorSubjectModel.create({
-          mentor: mentor._id,
-          subject: subjectId,
-          questions: [],
-        }));
-      questions.push(
-        ...(await MentorSubjectModel.getQuestions(mentorSubject, topicId))
-      );
+      const subject = await SubjectModel.findOne({ _id: subjectId });
+      sQuestions.push(...subject.questions);
     }
   } else {
-    const mentorSubjects: MentorSubject[] = await this.getSubjects(mentor);
-    for (const ms of mentorSubjects) {
-      questions.push(...(await MentorSubjectModel.getQuestions(ms, topicId)));
+    const subjects: Subject[] = await this.getSubjects(mentor);
+    for (const subject of subjects) {
+      sQuestions.push(...subject.questions);
     }
   }
-  if (type) {
-    questions = questions.filter((q: Question) => q.type === type);
+  if (topicId) {
+    sQuestions = sQuestions.filter((sq) => sq.topics.includes(topicId));
   }
-  return questions;
+  const questions = await QuestionModel.find({
+    _id: { $in: sQuestions.map((q) => q.question) },
+  });
+  if (type) {
+    sQuestions = sQuestions.filter((sq) =>
+      questions.find((q) => `${q._id}` === `${sq.question}` && q.type === type)
+    );
+  }
+  sQuestions = sQuestions.filter((sq) =>
+    questions.find(
+      (q) =>
+        `${q._id}` === `${sq.question}` &&
+        (!q.mentor || `${q.mentor}` === `${mentor._id}`)
+    )
+  );
+  return sQuestions;
 };
 
 MentorSchema.statics.getAnswers = async function (
@@ -193,11 +170,16 @@ MentorSchema.statics.getAnswers = async function (
   topicId?: string,
   status?: Status,
   type?: QuestionType
-): Promise<Answer[]> {
+) {
   const mentor: Mentor =
     typeof m === 'string' ? await this.findOne({ _id: m }) : m;
-  const questions = await this.getQuestions(mentor, subjectId, topicId, type);
-  const questionIds = questions.map((q: Question) => q._id);
+  const sQuestions: SubjectQuestion[] = await this.getQuestions(
+    mentor,
+    subjectId,
+    topicId,
+    type
+  );
+  const questionIds = sQuestions.map((sq) => sq.question);
   const answers: Answer[] = await AnswerModel.find({
     mentor: mentor._id,
     question: { $in: questionIds },
@@ -211,7 +193,7 @@ MentorSchema.statics.getAnswers = async function (
     acc[`${cur.question}`] = cur;
     return acc;
   }, {});
-  let answerResult: Answer[] = questionIds.map((qid: string) => {
+  let answerResult = questionIds.map((qid: string) => {
     return (
       answersByQid[`${qid}`] || {
         mentor: mentor._id,

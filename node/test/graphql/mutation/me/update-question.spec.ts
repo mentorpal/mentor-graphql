@@ -65,13 +65,6 @@ describe('updateQuestion', () => {
       _id: '511111111111111111111111',
       question: "Don't talk and stay still.",
       name: 'idle',
-      topics: [
-        {
-          _id: '5ffdf41a1ee2c62320b49ec1',
-          name: 'Idle',
-          description: '30-second idle clip',
-        },
-      ],
     }).replace(/"([^"]+)":/g, '$1:');
     const response = await request(app)
       .post('/graphql')
@@ -81,9 +74,6 @@ describe('updateQuestion', () => {
           me {
             updateQuestion(question: ${question}) {
               _id
-              topics {
-                _id
-              }    
             }
           }
         }`,
@@ -91,11 +81,6 @@ describe('updateQuestion', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateQuestion).to.eql({
       _id: '511111111111111111111111',
-      topics: [
-        {
-          _id: '5ffdf41a1ee2c62320b49ec1',
-        },
-      ],
     });
   });
 
@@ -104,7 +89,6 @@ describe('updateQuestion', () => {
     const question = JSON.stringify({
       _id: '',
       question: 'aa',
-      topics: [],
     }).replace(/"([^"]+)":/g, '$1:');
     const response = await request(app)
       .post('/graphql')

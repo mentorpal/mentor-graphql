@@ -30,7 +30,7 @@ export const updateAnswer = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentorId: string; answer: string; questionId: string },
+    args: { mentorId: string; questionId: string; answer: string },
     context: { user: User }
   ): Promise<boolean> => {
     const mentor: Mentor = await MentorModel.findOne({ _id: args.mentorId });

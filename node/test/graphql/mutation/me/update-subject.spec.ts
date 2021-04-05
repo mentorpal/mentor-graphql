@@ -66,47 +66,44 @@ describe('updateSubject', () => {
       name: 'stem',
       categories: [
         {
+          id: 'newcategory',
           name: 'New category',
-          questions: [
-            {
-              _id: '511111111111111111111113',
-              question: 'Is stem fun?',
-              topics: [
-                {
-                  name: 'New Topic',
-                  description: 'New',
-                },
-              ],
-            },
-            {
-              question: 'new question',
-              topics: [
-                {
-                  _id: '5ffdf41a1ee2c62320b49ec3',
-                  name: 'advice',
-                },
-              ],
-            },
-          ],
+        },
+      ],
+      topics: [
+        {
+          id: '5ffdf41a1ee2c62320b49ec3',
+          name: 'Advice',
+          description: 'updated description?',
+        },
+        {
+          id: 'newtopic',
+          name: 'New topic',
+          description: 'new description',
         },
       ],
       questions: [
         {
-          _id: '511111111111111111111113',
-          question: 'Is stem fun?',
+          question: {
+            _id: '511111111111111111111113',
+          },
+          category: { id: 'newcategory' },
           topics: [
             {
-              name: 'New Topic',
-              description: 'New',
+              id: 'newtopic',
+            },
+            {
+              id: '5ffdf41a1ee2c62320b49ec3',
             },
           ],
         },
         {
-          question: 'new question',
+          question: {
+            question: 'new question',
+          },
           topics: [
             {
-              _id: '5ffdf41a1ee2c62320b49ec3',
-              name: 'advice',
+              id: '5ffdf41a1ee2c62320b49ec3',
             },
           ],
         },
@@ -122,24 +119,29 @@ describe('updateSubject', () => {
               _id
               name
               description
+              isRequired
               categories {
+                id
                 name
-                questions {
-                  _id
-                  question
-                  topics {
-                    name
-                    description
-                  }
-                }
+              }
+              topics {
+                id
+                name
+                description
               }
               questions {
-                question
-                topics {
-                  name
-                  description
+                question {
+                  question
                 }
-              }    
+                category {
+                  id
+                  name
+                }
+                topics {
+                  id
+                  name
+                }
+              }
             }
           }
         }`,
@@ -149,40 +151,52 @@ describe('updateSubject', () => {
       _id: '5ffdf41a1ee2c62320b49eb3',
       name: 'stem',
       description: 'These questions will ask about STEM careers.',
+      isRequired: false,
       categories: [
         {
+          id: 'newcategory',
           name: 'New category',
-          questions: [
-            {
-              _id: '511111111111111111111113',
-              question: 'Is stem fun?',
-              topics: [
-                {
-                  name: 'New Topic',
-                  description: 'New',
-                },
-              ],
-            },
-          ],
+        },
+      ],
+      topics: [
+        {
+          id: '5ffdf41a1ee2c62320b49ec3',
+          name: 'Advice',
+          description: 'updated description?',
+        },
+        {
+          id: 'newtopic',
+          name: 'New topic',
+          description: 'new description',
         },
       ],
       questions: [
         {
-          question: 'Is stem fun?',
+          question: {
+            question: 'How old are you?',
+          },
+          category: {
+            id: 'newcategory',
+            name: 'New category',
+          },
           topics: [
             {
-              name: 'New Topic',
-              description: 'New',
+              id: '5ffdf41a1ee2c62320b49ec3',
+              name: 'Advice',
+            },
+            {
+              id: 'newtopic',
+              name: 'New topic',
             },
           ],
         },
         {
-          question: 'new question',
+          question: { question: 'new question' },
+          category: null,
           topics: [
             {
-              name: 'advice',
-              description:
-                'These questions will ask you to give advice to someone who is interested in your career',
+              id: '5ffdf41a1ee2c62320b49ec3',
+              name: 'Advice',
             },
           ],
         },
@@ -197,11 +211,12 @@ describe('updateSubject', () => {
       description: 'new subject description',
       questions: [
         {
-          question: 'new question',
+          question: {
+            question: 'new question',
+          },
           topics: [
             {
-              name: 'new topic',
-              description: 'new topic description',
+              id: '5ffdf41a1ee2c62320b49ec3',
             },
           ],
         },
@@ -216,11 +231,27 @@ describe('updateSubject', () => {
             updateSubject(subject: ${subject}) {
               name
               description
+              isRequired
+              categories {
+                id
+                name
+              }
+              topics {
+                id
+                name
+                description
+              }
               questions {
-                question
-                topics {
+                question {
+                  question
+                }
+                category {
+                  id
                   name
-                  description
+                }
+                topics {
+                  id
+                  name
                 }
               }
             }
@@ -231,15 +262,14 @@ describe('updateSubject', () => {
     expect(response.body.data.me.updateSubject).to.eql({
       name: '_new',
       description: 'new subject description',
+      isRequired: false,
+      categories: [],
+      topics: [],
       questions: [
         {
-          question: 'new question',
-          topics: [
-            {
-              name: 'new topic',
-              description: 'new topic description',
-            },
-          ],
+          question: { question: 'new question' },
+          category: null,
+          topics: [],
         },
       ],
     });

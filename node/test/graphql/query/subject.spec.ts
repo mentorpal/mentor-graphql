@@ -10,7 +10,6 @@ import { Express } from 'express';
 import { describe } from 'mocha';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
-import { getToken } from '../../helpers';
 
 describe('subject', () => {
   let app: Express;
@@ -59,119 +58,163 @@ describe('subject', () => {
     });
   });
 
-  it('get all topics in subject in alphabetical order', async () => {
+  it('get default categories, topics, and questions in subject', async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
           subject(id: "5ffdf41a1ee2c62320b49eb2") {
+            categories {
+              name
+            }
             topics {
               name
+            }
+            questions {
+              category {
+                name
+              }
+              topics {
+                name
+              }
+              question {
+                question
+              }
             }
           }
       }`,
     });
     expect(response.status).to.equal(200);
-    expect(response.body.data.subject.topics).to.eql([
+    expect(response.body.data.subject.categories).to.eql([
       {
-        name: 'Advice',
+        name: 'Category',
       },
+    ]);
+    expect(response.body.data.subject.topics).to.eql([
       {
         name: 'Background',
       },
+      {
+        name: 'Advice',
+      },
+    ]);
+    expect(response.body.data.subject.questions).to.eql([
+      {
+        question: {
+          question: 'Who are you and what do you do?',
+        },
+        category: null,
+        topics: [
+          {
+            name: 'Background',
+          },
+        ],
+      },
+      {
+        question: {
+          question: 'How old are you?',
+        },
+        category: {
+          name: 'Category',
+        },
+        topics: [
+          {
+            name: 'Background',
+          },
+        ],
+      },
+      {
+        question: {
+          question: 'Do you like your job?',
+        },
+        category: null,
+        topics: [
+          {
+            name: 'Advice',
+          },
+        ],
+      },
     ]);
   });
 
-  it('get all topics in subject in custom order', async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const subject = JSON.stringify({
-      _id: '5ffdf41a1ee2c62320b49eb2',
-      topicsOrder: ['5ffdf41a1ee2c62320b49ec2', '5ffdf41a1ee2c62320b49ec3'],
-    }).replace(/"([^"]+)":/g, '$1:');
-    await request(app)
-      .post('/graphql')
-      .set('Authorization', `bearer ${token}`)
-      .send({
-        query: `mutation {
-          me {
-            updateSubject(subject: ${subject}) {
-              _id
-            }
-          }
-        }`,
-      });
+  it('get mentor specific questions for a mentor', async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
           subject(id: "5ffdf41a1ee2c62320b49eb2") {
-            topicsOrder {
+            categories {
               name
             }
             topics {
               name
             }
-          }
-      }`,
-    });
-    expect(response.status).to.equal(200);
-    expect(response.body.data.subject).to.eql({
-      topicsOrder: [
-        {
-          name: 'Background',
-        },
-        {
-          name: 'Advice',
-        },
-      ],
-      topics: [
-        {
-          name: 'Background',
-        },
-        {
-          name: 'Advice',
-        },
-      ],
-    });
-  });
-
-  it('get all questions in subject', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
-          subject(id: "5ffdf41a1ee2c62320b49eb2") {
-            questions {
-              question
+            questions(mentor: "5ffdf41a1ee2c62111111112") {
+              category {
+                name
+              }
+              topics {
+                name
+              }
+              question {
+                question
+              }
             }
           }
       }`,
     });
     expect(response.status).to.equal(200);
-    expect(response.body.data.subject.questions).to.eql([
+    expect(response.body.data.subject.categories).to.eql([
       {
-        question: 'Who are you and what do you do?',
-      },
-      {
-        question: 'How old are you?',
-      },
-      {
-        question: 'Do you like your job?',
+        name: 'Category',
       },
     ]);
-  });
-
-  it.skip('get all questions in subject for topic', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
-          subject(id: "5ffdf41a1ee2c62320b49eb2", topic: "5ffdf41a1ee2c62320b49ec2") {
-            questions {
-              question
-            }
-          }
-      }`,
-    });
-    expect(response.status).to.equal(200);
-    expect(response.body.data.subject.questions).to.eql([
+    expect(response.body.data.subject.topics).to.eql([
       {
-        question: "Don't talk and stay still.",
+        name: 'Background',
       },
       {
-        question: "Don't talk and stay still.",
+        name: 'Advice',
+      },
+    ]);
+    expect(response.body.data.subject.questions).to.eql([
+      {
+        question: {
+          question: 'Who are you and what do you do?',
+        },
+        category: null,
+        topics: [
+          {
+            name: 'Background',
+          },
+        ],
+      },
+      {
+        question: {
+          question: 'How old are you?',
+        },
+        category: {
+          name: 'Category',
+        },
+        topics: [
+          {
+            name: 'Background',
+          },
+        ],
+      },
+      {
+        question: {
+          question: 'Do you like your job?',
+        },
+        category: null,
+        topics: [
+          {
+            name: 'Advice',
+          },
+        ],
+      },
+      {
+        question: {
+          question: 'Julia?',
+        },
+        category: null,
+        topics: [],
       },
     ]);
   });

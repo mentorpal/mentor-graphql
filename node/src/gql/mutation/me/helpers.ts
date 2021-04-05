@@ -6,16 +6,12 @@ The full terms of this copyright and license should always be found in the root 
 */
 import mongoose from 'mongoose';
 
-export function isNullOrEmpty(value: string): boolean {
-  return (
-    !value ||
-    value == undefined ||
-    value == '' ||
-    value.length == 0 ||
-    value == ''
-  );
-}
-
-export function idOrNew(value: string) {
-  return isNullOrEmpty(value) ? `${mongoose.Types.ObjectId()}` : value;
+// check if id is a valid ObjectID:
+//  - if valid, return it
+//  - if invalid, create a valid object id
+export function idOrNew(id: string) {
+  if (!Boolean(id)) {
+    return `${mongoose.Types.ObjectId()}`;
+  }
+  return id.match(/^[0-9a-fA-F]{24}$/) ? id : `${mongoose.Types.ObjectId()}`;
 }
