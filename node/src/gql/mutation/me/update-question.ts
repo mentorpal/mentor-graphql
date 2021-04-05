@@ -16,7 +16,7 @@ import { Question as QuestionModel } from 'models';
 import { User } from 'models/User';
 import { Question } from 'models/Question';
 import QuestionType from 'gql/types/question';
-import { idOrNew } from './helpers';
+import { toUpdateProps } from './helpers';
 
 export interface QuestionUpdateInput {
   _id: string;
@@ -35,7 +35,7 @@ export const QuestionUpdateInputType = new GraphQLInputObjectType({
     type: { type: GraphQLString },
     name: { type: GraphQLString },
     paraphrases: { type: GraphQLList(GraphQLString) },
-    mentor: { type: GraphQLString },
+    mentor: { type: GraphQLID },
   }),
 });
 
@@ -49,18 +49,10 @@ export const updateQuestion = {
     args: { question: QuestionUpdateInput },
     context: { user: User }
   ): Promise<Question> => {
-    const questionUpdate: QuestionUpdateInput = args.question;
-    questionUpdate._id = idOrNew(questionUpdate._id);
-
+    const { _id, props } = toUpdateProps<Question>(args.question);
     return await QuestionModel.findOneAndUpdate(
-      {
-        _id: questionUpdate._id,
-      },
-      {
-        $set: {
-          ...questionUpdate,
-        },
-      },
+      { _id: _id },
+      { $set: { ...props } },
       {
         new: true,
         upsert: true,

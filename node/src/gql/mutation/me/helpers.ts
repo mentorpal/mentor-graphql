@@ -6,6 +6,29 @@ The full terms of this copyright and license should always be found in the root 
 */
 import mongoose from 'mongoose';
 
+interface IdAndProps<T> {
+  _id: mongoose.Types.ObjectId;
+  props: Partial<T>;
+}
+
+export function toUpdateProps<T>(
+  update: Partial<T>,
+  idKeyName = '_id'
+): IdAndProps<T> {
+  return {
+    _id: idOrNew(update._id),
+    props: Object.getOwnPropertyNames(update).reduce(
+      (acc: Partial<T>, cur: string) => {
+        if (cur !== idKeyName) {
+          acc[cur] = update[cur];
+        }
+        return acc;
+      },
+      {}
+    ),
+  };
+}
+
 // check if id is a valid ObjectID:
 //  - if valid, return it
 //  - if invalid, create a valid object id

@@ -84,8 +84,10 @@ SubjectSchema.statics.getQuestions = async function (
   topicId?: string,
   mentorId?: string
 ) {
-  const subject: Subject =
-    typeof s === 'string' ? await this.findOne({ _id: s }) : s;
+  const subject: Subject = typeof s === 'string' ? await this.findById(s) : s;
+  if (!subject) {
+    throw new Error(`subject ${s} not found`);
+  }
   let sQuestions: SubjectQuestion[] = subject.questions;
   if (topicId) {
     sQuestions = sQuestions.filter((sq) => sq.topics.includes(topicId));

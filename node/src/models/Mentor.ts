@@ -84,8 +84,10 @@ export interface MentorModel extends Model<Mentor> {
 MentorSchema.statics.getSubjects = async function (
   m: string | Mentor
 ): Promise<Subject[]> {
-  const mentor: Mentor =
-    typeof m === 'string' ? await this.findOne({ _id: m }) : m;
+  const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
+  if (!mentor) {
+    throw new Error(`mentor ${m} not found`);
+  }
   return await SubjectModel.find(
     {
       _id: { $in: mentor.subjects },
@@ -102,12 +104,14 @@ MentorSchema.statics.getTopics = async function (
   m: string | Mentor,
   subjectId?: string
 ): Promise<Topic[]> {
-  const mentor: Mentor =
-    typeof m === 'string' ? await this.findOne({ _id: m }) : m;
+  const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
+  if (!mentor) {
+    throw new Error(`mentor ${m} not found`);
+  }
   const topics: Topic[] = [];
   if (subjectId) {
     if (mentor.subjects.includes(subjectId)) {
-      const subject = await SubjectModel.findOne({ _id: subjectId });
+      const subject = await SubjectModel.findById(subjectId);
       topics.push(...subject.topics);
     }
   } else {
@@ -129,12 +133,14 @@ MentorSchema.statics.getQuestions = async function (
   topicId?: string,
   type?: QuestionType
 ): Promise<SubjectQuestion[]> {
-  const mentor: Mentor =
-    typeof m === 'string' ? await this.findOne({ _id: m }) : m;
+  const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
+  if (!mentor) {
+    throw new Error(`mentor ${m} not found`);
+  }
   let sQuestions: SubjectQuestion[] = [];
   if (subjectId) {
     if (mentor.subjects.includes(subjectId)) {
-      const subject = await SubjectModel.findOne({ _id: subjectId });
+      const subject = await SubjectModel.findById(subjectId);
       sQuestions.push(...subject.questions);
     }
   } else {
@@ -171,8 +177,10 @@ MentorSchema.statics.getAnswers = async function (
   status?: Status,
   type?: QuestionType
 ) {
-  const mentor: Mentor =
-    typeof m === 'string' ? await this.findOne({ _id: m }) : m;
+  const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
+  if (!mentor) {
+    throw new Error(`mentor ${m} not found`);
+  }
   const sQuestions: SubjectQuestion[] = await this.getQuestions(
     mentor,
     subjectId,

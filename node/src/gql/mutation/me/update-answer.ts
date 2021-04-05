@@ -33,7 +33,7 @@ export const updateAnswer = {
     args: { mentorId: string; questionId: string; answer: string },
     context: { user: User }
   ): Promise<boolean> => {
-    const mentor: Mentor = await MentorModel.findOne({ _id: args.mentorId });
+    const mentor: Mentor = await MentorModel.findById(args.mentorId);
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
     }

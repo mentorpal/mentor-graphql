@@ -38,7 +38,7 @@ passport.use(
         if (token.expirationDate < new Date()) {
           return done('token expired', null);
         } else {
-          const user = await UserSchema.findOne({ _id: token.id });
+          const user = await UserSchema.findById(token.id);
           if (user) {
             return done(null, user);
           } else {

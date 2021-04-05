@@ -13,15 +13,17 @@ import {
   GraphQLList,
   GraphQLBoolean,
 } from 'graphql';
+
 import { Subject as SubjectModel, Question as QuestionModel } from 'models';
 import { User } from 'models/User';
+import { Question } from 'models/Question';
 import { Subject } from 'models/Subject';
 import SubjectType from 'gql/types/subject';
 import {
   QuestionUpdateInput,
   QuestionUpdateInputType,
 } from './update-question';
-import { idOrNew } from './helpers';
+import { idOrNew, toUpdateProps } from './helpers';
 
 export interface CategoryUpdateInput {
   id: string;
@@ -33,7 +35,7 @@ export const CategoryInputType = new GraphQLInputObjectType({
   name: 'CategoryInputType',
   fields: () => ({
     id: { type: GraphQLID },
-    name: { type: GraphQLString },
+    name: { type: GraphQLNonNull(GraphQLString) },
     description: { type: GraphQLString },
   }),
 });
@@ -48,7 +50,7 @@ export const TopicInputType = new GraphQLInputObjectType({
   name: 'TopicInputType',
   fields: () => ({
     id: { type: GraphQLID },
-    name: { type: GraphQLString },
+    name: { type: GraphQLNonNull(GraphQLString) },
     description: { type: GraphQLString },
   }),
 });
@@ -107,17 +109,10 @@ export const updateSubject = {
     for (const [i, sQuestionUpdate] of (
       subjectUpdate.questions || []
     ).entries()) {
-      const questionUpdate = sQuestionUpdate.question;
-      questionUpdate._id = idOrNew(questionUpdate._id);
+      const { _id, props } = toUpdateProps<Question>(sQuestionUpdate.question);
       const q = await QuestionModel.findOneAndUpdate(
-        {
-          _id: questionUpdate._id,
-        },
-        {
-          $set: {
-            ...questionUpdate,
-          },
-        },
+        { _id: _id },
+        { $set: { ...props } },
         {
           new: true,
           upsert: true,
@@ -129,11 +124,8 @@ export const updateSubject = {
         topics: sQuestionUpdate.topics?.map((t) => t.id) || [],
       };
     }
-
     return await SubjectModel.findOneAndUpdate(
-      {
-        _id: subject._id,
-      },
+      { _id: subject._id },
       {
         $set: {
           ...subject,
