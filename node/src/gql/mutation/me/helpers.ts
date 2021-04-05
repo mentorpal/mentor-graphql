@@ -7,11 +7,15 @@ The full terms of this copyright and license should always be found in the root 
 import mongoose from 'mongoose';
 
 interface IdAndProps<T> {
-  _id: mongoose.Types.ObjectId;
+  _id: string;
   props: Partial<T>;
 }
 
-export function toUpdateProps<T>(
+interface HasId {
+  _id: string;
+}
+
+export function toUpdateProps<T extends HasId>(
   update: Partial<T>,
   idKeyName = '_id'
 ): IdAndProps<T> {
@@ -20,7 +24,7 @@ export function toUpdateProps<T>(
     props: Object.getOwnPropertyNames(update).reduce(
       (acc: Partial<T>, cur: string) => {
         if (cur !== idKeyName) {
-          acc[cur] = update[cur];
+          acc[cur as keyof T] = update[cur as keyof T];
         }
         return acc;
       },
