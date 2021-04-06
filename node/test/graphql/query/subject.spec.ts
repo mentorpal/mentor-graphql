@@ -68,7 +68,7 @@ describe('subject', () => {
             topics {
               name
             }
-            questions {
+            questions(mentor: "") {
               category {
                 name
               }
