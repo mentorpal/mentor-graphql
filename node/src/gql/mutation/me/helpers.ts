@@ -12,7 +12,7 @@ interface IdAndProps<T> {
 }
 
 interface HasId {
-  _id: string;
+  _id?: string;
 }
 
 export function toUpdateProps<T extends HasId>(
