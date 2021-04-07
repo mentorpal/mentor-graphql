@@ -12,10 +12,14 @@ import { Question } from './Question';
 const mongoPaging = require('mongo-cursor-pagination');
 mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
 
-export interface Category extends Document {
+export interface CategoryProps {
   id: string;
   name: string;
   description: string;
+}
+
+export interface Category extends CategoryProps, Document {
+  id: string;
 }
 
 const CategorySchema = new Schema({
@@ -24,10 +28,14 @@ const CategorySchema = new Schema({
   description: { type: String },
 });
 
-export interface Topic extends Document {
+export interface TopicProps {
   id: string;
   name: string;
   description: string;
+}
+
+export interface Topic extends TopicProps, Document {
+  id: string;
 }
 
 const TopicSchema = new Schema({
@@ -36,11 +44,13 @@ const TopicSchema = new Schema({
   description: { type: String },
 });
 
-export interface SubjectQuestion extends Document {
+export interface SubjectQuestionProps {
   question: Question['_id'];
   category: Category['id'];
   topics: Topic['id'][];
 }
+
+export interface SubjectQuestion extends SubjectQuestionProps, Document {}
 
 export const SubjectQuestionSchema = new Schema({
   question: { type: mongoose.Types.ObjectId, ref: 'Question' },
@@ -56,6 +66,17 @@ export interface Subject extends Document {
   topics: Topic[];
   questions: SubjectQuestion[];
 }
+
+export interface SubjectInsert {
+  name: string;
+  description: string;
+  isRequired: boolean;
+  categories: CategoryProps[];
+  topics: TopicProps[];
+  questions: SubjectQuestionProps[];
+}
+
+export type SubjectUpdate = Partial<SubjectInsert>;
 
 export const SubjectSchema = new Schema({
   name: { type: String },

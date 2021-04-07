@@ -17,7 +17,7 @@ import {
 import { Subject as SubjectModel, Question as QuestionModel } from 'models';
 import { User } from 'models/User';
 import { Question } from 'models/Question';
-import { Subject } from 'models/Subject';
+import { Subject, SubjectQuestionProps, SubjectUpdate } from 'models/Subject';
 import SubjectType from 'gql/types/subject';
 import {
   QuestionUpdateInput,
@@ -93,6 +93,25 @@ export const SubjectUpdateInputType = new GraphQLInputObjectType({
   }),
 });
 
+async function questionInputToUpdate(
+  input: SubjectQuestionUpdateInput
+): Promise<SubjectQuestionProps> {
+  const { _id, props } = toUpdateProps<Question>(input.question);
+  const q = await QuestionModel.findOneAndUpdate(
+    { _id: _id },
+    { $set: props },
+    {
+      new: true,
+      upsert: true,
+    }
+  );
+  return {
+    question: q._id,
+    category: input.category?.id,
+    topics: input.topics?.map((t) => t.id) || [],
+  };
+}
+
 export const updateSubject = {
   type: SubjectType,
   args: { subject: { type: GraphQLNonNull(SubjectUpdateInputType) } },
@@ -101,35 +120,16 @@ export const updateSubject = {
     args: { subject: SubjectUpdateInput },
     context: { user: User }
   ): Promise<Subject> => {
-    const subjectUpdate = args.subject;
-    const subject: any = { ...subjectUpdate };
-    subject._id = idOrNew(subjectUpdate._id);
-    subject.questions = subjectUpdate.questions || [];
-
-    for (const [i, sQuestionUpdate] of (
-      subjectUpdate.questions || []
-    ).entries()) {
-      const { _id, props } = toUpdateProps<Question>(sQuestionUpdate.question);
-      const q = await QuestionModel.findOneAndUpdate(
-        { _id: _id },
-        { $set: { ...props } },
-        {
-          new: true,
-          upsert: true,
-        }
-      );
-      subject.questions[i] = {
-        question: q._id,
-        category: sQuestionUpdate.category?.id,
-        topics: sQuestionUpdate.topics?.map((t) => t.id) || [],
-      };
-    }
+    const subjectUpdate: SubjectUpdate = {
+      ...args.subject,
+      questions: await Promise.all(
+        args.subject.questions.map((qi) => questionInputToUpdate(qi))
+      ),
+    };
     return await SubjectModel.findOneAndUpdate(
-      { _id: subject._id },
+      { _id: idOrNew(args.subject._id) },
       {
-        $set: {
-          ...subject,
-        },
+        $set: subjectUpdate,
       },
       {
         new: true,
