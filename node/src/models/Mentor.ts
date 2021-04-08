@@ -30,29 +30,6 @@ export interface Mentor extends Document {
   mentorType: string;
   user: User['_id'];
 }
-
-export const MentorSchema = new Schema(
-  {
-    name: { type: String },
-    firstName: { type: String },
-    title: { type: String },
-    defaultSubject: { type: Schema.Types.ObjectId, ref: 'Subject' },
-    subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
-    lastTrainedAt: { type: Date },
-    mentorType: {
-      type: String,
-      enum: [MentorType.VIDEO, MentorType.CHAT],
-    },
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: '{PATH} is required!',
-      unique: true,
-    },
-  },
-  { timestamps: true, collation: { locale: 'en', strength: 2 } }
-);
-
 export interface MentorModel extends Model<Mentor> {
   paginate(
     query?: any,
@@ -75,6 +52,28 @@ export interface MentorModel extends Model<Mentor> {
     type?: QuestionType
   ): Answer[];
 }
+
+export const MentorSchema = new Schema<Mentor, MentorModel>(
+  {
+    name: { type: String },
+    firstName: { type: String },
+    title: { type: String },
+    defaultSubject: { type: Schema.Types.ObjectId, ref: 'Subject' },
+    subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
+    lastTrainedAt: { type: Date },
+    mentorType: {
+      type: String,
+      enum: [MentorType.VIDEO, MentorType.CHAT],
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: '{PATH} is required!',
+      unique: true,
+    },
+  },
+  { timestamps: true, collation: { locale: 'en', strength: 2 } }
+);
 
 // Return subjects in alphabetical order
 MentorSchema.statics.getSubjects = async function (
