@@ -5,11 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import {
-  Answer as AnswerModel,
-  Question as QuestionModel,
-  Subject as SubjectModel,
-} from 'models';
+import { Answer as AnswerModel, Subject as SubjectModel } from 'models';
 import { PaginatedResolveResult } from './PaginatedResolveResult';
 import { Answer, Status } from './Answer';
 import { QuestionType } from './Question';
@@ -137,36 +133,24 @@ MentorSchema.statics.getQuestions = async function (
   if (!mentor) {
     throw new Error(`mentor ${m} not found`);
   }
-  let sQuestions: SubjectQuestion[] = [];
+  let sQuestions = [];
   if (subjectId) {
     if (mentor.subjects.includes(subjectId)) {
-      const subject = await SubjectModel.findById(subjectId);
-      sQuestions.push(...subject.questions);
+      sQuestions.push(
+        ...(await SubjectModel.getQuestions(subjectId, topicId, mentor._id))
+      );
     }
   } else {
     const subjects: Subject[] = await this.getSubjects(mentor);
     for (const subject of subjects) {
-      sQuestions.push(...subject.questions);
+      sQuestions.push(
+        ...(await SubjectModel.getQuestions(subject, topicId, mentor._id))
+      );
     }
   }
-  if (topicId) {
-    sQuestions = sQuestions.filter((sq) => sq.topics.includes(topicId));
-  }
-  const questions = await QuestionModel.find({
-    _id: { $in: sQuestions.map((q) => q.question) },
-  });
   if (type) {
-    sQuestions = sQuestions.filter((sq) =>
-      questions.find((q) => `${q._id}` === `${sq.question}` && q.type === type)
-    );
+    sQuestions = sQuestions.filter((sq) => sq.question.type === type);
   }
-  sQuestions = sQuestions.filter((sq) =>
-    questions.find(
-      (q) =>
-        `${q._id}` === `${sq.question}` &&
-        (!q.mentor || `${q.mentor}` === `${mentor._id}`)
-    )
-  );
   return sQuestions;
 };
 
@@ -181,13 +165,10 @@ MentorSchema.statics.getAnswers = async function (
   if (!mentor) {
     throw new Error(`mentor ${m} not found`);
   }
-  const sQuestions: SubjectQuestion[] = await this.getQuestions(
-    mentor,
-    subjectId,
-    topicId,
-    type
+  const sQuestions = await this.getQuestions(mentor, subjectId, topicId, type);
+  const questionIds = sQuestions.map(
+    (sq: { question: { _id: string } }) => sq.question._id
   );
-  const questionIds = sQuestions.map((sq) => sq.question);
   const answers: Answer[] = await AnswerModel.find({
     mentor: mentor._id,
     question: { $in: questionIds },

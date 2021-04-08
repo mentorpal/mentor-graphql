@@ -89,12 +89,12 @@ SubjectSchema.statics.getQuestions = async function (
     throw new Error(`subject ${s} not found`);
   }
   let sQuestions: SubjectQuestion[] = subject.questions;
-  const questions = await QuestionModel.find({
-    _id: { $in: sQuestions.map((q) => q.question) },
-  });
   if (topicId) {
     sQuestions = sQuestions.filter((sq) => sq.topics.includes(topicId));
   }
+  const questions = await QuestionModel.find({
+    _id: { $in: sQuestions.map((q) => q.question) },
+  });
   if (mentorId !== undefined) {
     sQuestions = sQuestions.filter((sq) =>
       questions.find(

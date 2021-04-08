@@ -169,6 +169,58 @@ describe('mentor', () => {
     });
   });
 
+  it('mentor/questions gets all questions for mentor', async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111111") {
+          questions {
+            question {
+              question
+            }
+            topics {
+              name
+            }
+            category {
+              name
+            }
+          }
+        }
+      }
+    `,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor.questions).to.eql([
+      {
+        question: {
+          question: 'Who are you and what do you do?',
+        },
+        category: null,
+        topics: [{ name: 'Background' }],
+      },
+      {
+        question: {
+          question: 'How old are you?',
+        },
+        category: { name: 'Category' },
+        topics: [{ name: 'Background' }],
+      },
+      {
+        question: {
+          question: 'Do you like your job?',
+        },
+        category: null,
+        topics: [{ name: 'Advice' }],
+      },
+      {
+        question: {
+          question: "Don't talk and stay still.",
+        },
+        category: null,
+        topics: [{ name: 'Idle' }],
+      },
+    ]);
+  });
+
   it('mentor/answers gets answers for all questions, including incomplete', async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
