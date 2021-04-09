@@ -29,7 +29,7 @@ describe('updateAnswer', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
         me {
-          updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111111112", answer: "{}")
+          updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111111112", answer: {})
         }
       }`,
     });
@@ -42,18 +42,13 @@ describe('updateAnswer', () => {
 
   it(`throws an error if mentor is not the user's`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea2');
-    const question = encodeURI(
-      JSON.stringify({
-        question: '',
-      })
-    );
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111111112" answer: "${question}")
+            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111111112" answer: {})
           }
         }`,
       });
@@ -72,7 +67,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation {
           me {
-            updateAnswer(answer: "") 
+            updateAnswer(answer: {}) 
           }
         }`,
       });
@@ -87,7 +82,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation {
           me {
-            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", answer: "{}")
+            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", answer: {})
           }
         }`,
       });
@@ -112,20 +107,18 @@ describe('updateAnswer', () => {
   it('updates an answer', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const questionId = '511111111111111111111112';
-    const answer = encodeURI(
-      JSON.stringify({
-        transcript:
-          "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-        status: 'Complete',
-      })
-    );
+    const answer: string = JSON.stringify({
+      transcript:
+        "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+      status: 'Complete',
+    }).replace(/"([^"]+)":/g, '$1:');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `mutation {
           me {
-            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "${questionId}", answer: "${answer}")
+            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "${questionId}", answer: ${answer})
           }
         }`,
       });
@@ -162,7 +155,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation {
         me {
-          updateAnswer(mentorId: "5ffdf41a1ee2c62111199999", questionId: "511111111111111111111112", answer: "{}")
+          updateAnswer(mentorId: "5ffdf41a1ee2c62111199999", questionId: "511111111111111111111112", answer: {})
         }
       }`,
       });
@@ -181,7 +174,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation {
         me {
-          updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111999999", answer: "{}")
+          updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111999999", answer: {})
         }
       }`,
       });

@@ -29,7 +29,7 @@ describe('updateQuestion', () => {
     const response = await request(app).post('/graphql').send({
       query: `mutation {
           me {
-            updateQuestion(question: {}) {
+            updateQuestion(question: {question: "hi"}) {
               _id
             }
           }

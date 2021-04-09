@@ -94,7 +94,8 @@ export const SubjectUpdateInputType = new GraphQLInputObjectType({
 });
 
 async function questionInputToUpdate(
-  input: SubjectQuestionUpdateInput
+  input: SubjectQuestionUpdateInput,
+  subjectTopics: string[]
 ): Promise<SubjectQuestionProps> {
   const { _id, props } = toUpdateProps<Question>(input.question);
   const q = await QuestionModel.findOneAndUpdate(
@@ -108,7 +109,11 @@ async function questionInputToUpdate(
   return {
     question: q._id,
     category: input.category?.id,
-    topics: input.topics?.map((t) => t.id) || [],
+    // don't include topics that are not in the subject
+    topics:
+      input.topics
+        ?.filter((t) => subjectTopics.includes(t.id))
+        .map((t) => t.id) || [],
   };
 }
 
@@ -120,10 +125,13 @@ export const updateSubject = {
     args: { subject: SubjectUpdateInput },
     context: { user: User }
   ): Promise<Subject> => {
+    // don't include questions that have no question text
+    const questions = args.subject.questions.filter((q) => q.question.question);
+    const subjectTopics = args.subject.topics.map((t) => t.id);
     const subjectUpdate: SubjectUpdate = {
       ...args.subject,
       questions: await Promise.all(
-        args.subject.questions.map((qi) => questionInputToUpdate(qi))
+        questions.map((qi) => questionInputToUpdate(qi, subjectTopics))
       ),
     };
     return await SubjectModel.findOneAndUpdate(

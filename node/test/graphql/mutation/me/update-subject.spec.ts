@@ -86,6 +86,7 @@ describe('updateSubject', () => {
         {
           question: {
             _id: '511111111111111111111113',
+            question: 'How old are you?',
           },
           category: { id: 'newcategory' },
           topics: [
@@ -209,6 +210,7 @@ describe('updateSubject', () => {
     const subject = JSON.stringify({
       name: '_new',
       description: 'new subject description',
+      topics: [],
       questions: [
         {
           question: {
@@ -216,9 +218,17 @@ describe('updateSubject', () => {
           },
           topics: [
             {
+              // shouldn't add this one (id not in subject topics list)
               id: '5ffdf41a1ee2c62320b49ec3',
             },
           ],
+        },
+        // shouldn't add this one (empty question)
+        {
+          question: {
+            question: '',
+          },
+          topics: [],
         },
       ],
     }).replace(/"([^"]+)":/g, '$1:');
