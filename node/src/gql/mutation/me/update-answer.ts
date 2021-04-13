@@ -62,9 +62,7 @@ export const updateAnswer = {
         question: args.questionId,
       },
       {
-        $set: {
-          ...args.answer,
-        },
+        $set: args.answer,
       },
       {
         upsert: true,

@@ -58,9 +58,7 @@ export const updateMentor = {
     const updated = await MentorModel.findByIdAndUpdate(
       mentorUpdate._id,
       {
-        $set: {
-          ...mentorUpdate,
-        },
+        $set: mentorUpdate,
       },
       {
         new: true,
