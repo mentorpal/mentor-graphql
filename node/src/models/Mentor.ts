@@ -132,25 +132,29 @@ MentorSchema.statics.getQuestions = async function (
   if (!mentor) {
     throw new Error(`mentor ${m} not found`);
   }
-  let sQuestions = [];
-  if (subjectId) {
-    if (mentor.subjects.includes(subjectId)) {
-      sQuestions.push(
-        ...(await SubjectModel.getQuestions(subjectId, topicId, mentor._id))
-      );
-    }
-  } else {
-    const subjects: Subject[] = await this.getSubjects(mentor);
-    for (const subject of subjects) {
-      sQuestions.push(
-        ...(await SubjectModel.getQuestions(subject, topicId, mentor._id))
-      );
-    }
+  const subjectIds = subjectId
+    ? mentor.subjects.includes(subjectId)
+      ? [subjectId]
+      : []
+    : (mentor.subjects as string[]);
+  if (subjectIds.length == 0) {
+    return [];
   }
-  if (type) {
-    sQuestions = sQuestions.filter((sq) => sq.question.type === type);
-  }
-  return sQuestions;
+  const subjects = await SubjectModel.find({ _id: { $in: subjectIds } }, null, {
+    sort: { name: 1 },
+  });
+  // TODO: explore whether can batch all calls below
+  // into a single mongo query?
+  return (
+    await Promise.all(
+      subjects.map((s) =>
+        SubjectModel.getQuestions(s, topicId, mentor._id, type)
+      )
+    )
+  ).reduce((acc: SubjectQuestion[], cur: SubjectQuestion[]) => {
+    acc.push(...cur);
+    return acc;
+  }, [] as SubjectQuestion[]);
 };
 
 MentorSchema.statics.getAnswers = async function (
