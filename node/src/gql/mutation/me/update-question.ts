@@ -52,7 +52,7 @@ export const updateQuestion = {
     const { _id, props } = toUpdateProps<Question>(args.question);
     return await QuestionModel.findOneAndUpdate(
       { _id: _id },
-      { $set: { ...props } },
+      { $set: props },
       {
         new: true,
         upsert: true,
