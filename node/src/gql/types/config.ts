@@ -4,30 +4,25 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import config from './config'
-import me from './me';
-import mentor from './mentor';
-import mentors from './mentors';
-import question from './question';
-import questions from './questions';
-import subject from './subject';
-import subjects from './subjects';
-import userQuestion from './user-question';
-import userQuestions from './user-questions';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLList,
+  GraphQLBoolean,
+} from 'graphql';
 
-export default new GraphQLObjectType({
-  name: 'Query',
-  fields: {
-    config,
-    me,
-    mentor,
-    mentors,
-    question,
-    questions,
-    subject,
-    subjects,
-    userQuestion,
-    userQuestions,
-  },
+export const ConfigType = new GraphQLObjectType({
+  name: 'Config',
+  fields: () => ({
+    cmi5Enabled: { type: GraphQLBoolean },
+    cmi5Endpoint: { type: GraphQLString },
+    cmi5Fetch: { type: GraphQLString },
+    mentorsDefault: { type: GraphQLList(GraphQLString) },
+    styleHeaderLogo: { type: GraphQLString },
+    urlClassifier: { type: GraphQLString },
+    urlGraphql: { type: GraphQLString },
+    urlVideo: { type: GraphQLString },
+  }),
 });
+
+export default ConfigType;

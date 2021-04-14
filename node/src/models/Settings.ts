@@ -4,30 +4,17 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import config from './config'
-import me from './me';
-import mentor from './mentor';
-import mentors from './mentors';
-import question from './question';
-import questions from './questions';
-import subject from './subject';
-import subjects from './subjects';
-import userQuestion from './user-question';
-import userQuestions from './user-questions';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
-export default new GraphQLObjectType({
-  name: 'Query',
-  fields: {
-    config,
-    me,
-    mentor,
-    mentors,
-    question,
-    questions,
-    subject,
-    subjects,
-    userQuestion,
-    userQuestions,
-  },
-});
+export interface Config {
+  cmi5Enabled: boolean;
+  cmi5Endpoint: string;
+  cmi5Fetch: string;
+  mentorsDefault: string[];
+  styleHeaderLogo: string;
+  urlClassifier: string;
+  urlGraphql: string;
+  urlVideo: string;
+}
+
+export interface ConfigDoc extends Config, Document {}
