@@ -185,7 +185,7 @@ MentorSchema.statics.getAnswers = async function (
     acc[`${cur.question}`] = cur;
     return acc;
   }, {});
-  let answerResult = questionIds.map((qid: string) => {
+  const answerResult = questionIds.map((qid: string) => {
     return (
       answersByQid[`${qid}`] || {
         mentor: mentor._id,
@@ -195,10 +195,9 @@ MentorSchema.statics.getAnswers = async function (
       }
     );
   });
-  if (status) {
-    answerResult = answerResult.filter((a: Answer) => a.status === status);
-  }
-  return answerResult;
+  return status
+    ? answerResult.filter((a: Answer) => a.status === status)
+    : answerResult;
 };
 
 MentorSchema.index({ name: -1, _id: -1 });
