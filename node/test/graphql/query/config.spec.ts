@@ -10,6 +10,7 @@ import { Express } from 'express';
 import { describe } from 'mocha';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
+import SettingModel, { Config } from 'models/Setting';
 
 describe('config', () => {
   let app: Express;
@@ -25,7 +26,7 @@ describe('config', () => {
     await mongoUnit.drop();
   });
 
-  it.only(`serves default config when no settings`, async () => {
+  it(`serves default config when no settings`, async () => {
     const response = await request(app).post('/graphql').send({
       query: `query {
           config {
@@ -53,6 +54,40 @@ describe('config', () => {
           urlVideo: '/video',
           styleHeaderLogo: '',
         },
+      },
+    });
+  });
+
+  it(`serves config from Settings`, async () => {
+    const config: Config = {
+      cmi5Enabled: true,
+      cmi5Endpoint: '/xapi',
+      cmi5Fetch: '/auth',
+      mentorsDefault: ['somementor'],
+      urlClassifier: '/classifier/v2',
+      urlGraphql: '/graphql/v2',
+      urlVideo: '/video/v2',
+      styleHeaderLogo: '/a/logo.png',
+    };
+    await SettingModel.saveConfig(config);
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+          config {
+            cmi5Enabled
+            cmi5Endpoint
+            cmi5Fetch
+            mentorsDefault
+            urlClassifier
+            urlGraphql
+            urlVideo
+            styleHeaderLogo
+          }
+        }`,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.eql({
+      data: {
+        config,
       },
     });
   });
