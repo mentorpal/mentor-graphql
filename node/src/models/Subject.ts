@@ -7,7 +7,7 @@ The full terms of this copyright and license should always be found in the root 
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import { Question as QuestionModel } from 'models';
 import { PaginatedResolveResult } from './PaginatedResolveResult';
-import { Question } from './Question';
+import { Question, QuestionType } from './Question';
 
 const mongoPaging = require('mongo-cursor-pagination');
 mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
@@ -96,14 +96,16 @@ export interface SubjectModel extends Model<Subject> {
   getQuestions(
     subject: string | Subject,
     topicId?: string,
-    mentorId?: string
+    mentorId?: string,
+    type?: QuestionType
   ): SubjectQuestion[];
 }
 
 SubjectSchema.statics.getQuestions = async function (
   s: string | Subject,
   topicId?: string,
-  mentorId?: string
+  mentorId?: string,
+  type?: QuestionType
 ) {
   const subject: Subject = typeof s === 'string' ? await this.findById(s) : s;
   if (!subject) {
@@ -114,7 +116,10 @@ SubjectSchema.statics.getQuestions = async function (
     sQuestions = sQuestions.filter((sq) => sq.topics.includes(topicId));
   }
   const questions = await QuestionModel.find({
-    _id: { $in: sQuestions.map((q) => q.question) },
+    ...{
+      _id: { $in: sQuestions.map((q) => q.question) },
+    },
+    ...(type ? { type } : {}),
   });
   if (mentorId !== undefined) {
     sQuestions = sQuestions.filter((sq) =>
