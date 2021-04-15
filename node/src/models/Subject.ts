@@ -5,12 +5,14 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import { Question as QuestionModel } from 'models';
-import { PaginatedResolveResult } from './PaginatedResolveResult';
+import { Question as QuestionModel, Subject } from 'models';
+import {
+  PaginatedResolveResult,
+  PaginateOptions,
+  PaginateQuery,
+  pluginPagination,
+} from './Paginatation';
 import { Question, QuestionType } from './Question';
-
-const mongoPaging = require('mongo-cursor-pagination');
-mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
 
 export interface CategoryProps {
   id: string;
@@ -89,9 +91,8 @@ export const SubjectSchema = new Schema({
 
 export interface SubjectModel extends Model<Subject> {
   paginate(
-    query?: any,
-    options?: any,
-    callback?: any
+    query?: PaginateQuery<Subject>,
+    options?: PaginateOptions
   ): Promise<PaginatedResolveResult<Subject>>;
   getQuestions(
     subject: string | Subject,
@@ -139,6 +140,6 @@ SubjectSchema.statics.getQuestions = async function (
 
 SubjectSchema.index({ name: -1, _id: -1 });
 SubjectSchema.index({ isRequired: -1, _id: -1 });
-SubjectSchema.plugin(mongoPaging.mongoosePlugin);
+pluginPagination(SubjectSchema);
 
 export default mongoose.model<Subject, SubjectModel>('Subject', SubjectSchema);

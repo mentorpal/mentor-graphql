@@ -19,7 +19,7 @@ export interface HasFindById<T> {
 }
 
 export interface HasPaginate<T extends PaginatedResolveResult> {
-  paginate(query?: any, options?: any, callback?: any): Promise<T>;
+  paginate(query?: any, options?: any): Promise<T>;
 }
 
 export type MongooseModel<T> = HasFindOne<T> & HasFindById<T>;

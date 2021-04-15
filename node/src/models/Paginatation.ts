@@ -4,10 +4,32 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
+import { Schema } from 'mongoose';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const mongoPaging = require('mongo-cursor-pagination');
+mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
+
 export interface PaginatedResolveResult<T> {
   results: T[];
   previous: string;
   next: string;
   hasPrevious: boolean;
   hasNext: boolean;
+}
+
+export interface PaginateCallback<T> {
+  (err: Error, doc: T): void;
+}
+
+export interface PaginateOptions {
+  limit?: number;
+}
+
+export type PaginateQuery<T> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [k in keyof T]: any;
+};
+
+export function pluginPagination(s: Schema): void {
+  s.plugin(mongoPaging.mongoosePlugin);
 }
