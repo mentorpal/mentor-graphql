@@ -28,6 +28,7 @@ export default async function mongooseConnect(uri: string): Promise<void> {
   await mongoose.connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   });
   mongoose.set('useCreateIndex', true);
   if (process.env['NODE_ENV'] !== 'test') {

@@ -10,6 +10,7 @@ export interface Config {
   cmi5Enabled: boolean;
   cmi5Endpoint: string;
   cmi5Fetch: string;
+  googleClientId: string;
   mentorsDefault: string[];
   styleHeaderLogo: string;
   urlClassifier: string;
@@ -22,6 +23,7 @@ export const ConfigKeys: ConfigKey[] = [
   'cmi5Enabled',
   'cmi5Endpoint',
   'cmi5Fetch',
+  'googleClientId',
   'mentorsDefault',
   'styleHeaderLogo',
   'urlClassifier',
@@ -35,16 +37,19 @@ export interface Setting {
   value: any;
 }
 
-export const DEFAULT_CONFIG: Config = {
-  cmi5Enabled: false,
-  cmi5Endpoint: '',
-  cmi5Fetch: '',
-  mentorsDefault: [],
-  urlClassifier: '/classifier',
-  urlGraphql: '/graphql',
-  urlVideo: '/video',
-  styleHeaderLogo: '',
-};
+export function getDefaultConfig(): Config {
+  return {
+    cmi5Enabled: false,
+    cmi5Endpoint: '',
+    cmi5Fetch: '',
+    googleClientId: process.env.GOOGLE_CLIENT_ID || '',
+    mentorsDefault: [],
+    urlClassifier: '/classifier',
+    urlGraphql: '/graphql',
+    urlVideo: '/video',
+    styleHeaderLogo: '',
+  };
+}
 
 export interface SettingDoc extends Setting, Document {}
 
@@ -62,7 +67,7 @@ SettingSchema.statics.getConfig = async function (args: {
       (acc as any)[cur.key] = cur.value;
       return acc;
     },
-    args?.defaults || DEFAULT_CONFIG
+    args?.defaults || getDefaultConfig()
   );
 };
 
@@ -86,7 +91,7 @@ SettingSchema.statics.saveConfig = async function (
 
 export interface SettingModel extends Model<SettingDoc> {
   getConfig(args?: { defaults?: Partial<Config> }): Promise<Config>;
-  saveConfig(config: Config): Promise<void>;
+  saveConfig(config: Partial<Config>): Promise<void>;
 }
 
 export default mongoose.model<SettingDoc, SettingModel>(
