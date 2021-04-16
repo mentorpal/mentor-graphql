@@ -6,10 +6,12 @@ The full terms of this copyright and license should always be found in the root 
 */
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import { Mentor } from './Mentor';
-import { PaginatedResolveResult } from './PaginatedResolveResult';
-
-const mongoPaging = require('mongo-cursor-pagination');
-mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
+import {
+  PaginatedResolveResult,
+  PaginateOptions,
+  PaginateQuery,
+  pluginPagination,
+} from './Paginatation';
 
 export enum QuestionType {
   UTTERANCE = 'UTTERANCE',
@@ -41,16 +43,15 @@ export const QuestionSchema = new Schema({
 
 export interface QuestionModel extends Model<Question> {
   paginate(
-    query?: any,
-    options?: any,
-    callback?: any
+    query?: PaginateQuery<Question>,
+    options?: PaginateOptions
   ): Promise<PaginatedResolveResult<Question>>;
 }
 
 QuestionSchema.index({ question: -1, _id: -1 });
 QuestionSchema.index({ type: -1, _id: -1 });
 QuestionSchema.index({ name: -1, _id: -1 });
-QuestionSchema.plugin(mongoPaging.mongoosePlugin);
+pluginPagination(QuestionSchema);
 
 export default mongoose.model<Question, QuestionModel>(
   'Question',

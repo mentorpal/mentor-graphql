@@ -6,14 +6,16 @@ The full terms of this copyright and license should always be found in the root 
 */
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import { Answer as AnswerModel, Subject as SubjectModel } from 'models';
-import { PaginatedResolveResult } from './PaginatedResolveResult';
+import {
+  PaginatedResolveResult,
+  PaginateOptions,
+  PaginateQuery,
+  pluginPagination,
+} from './Paginatation';
 import { Answer, Status } from './Answer';
 import { QuestionType } from './Question';
 import { Subject, SubjectQuestion, Topic } from './Subject';
 import { User } from './User';
-
-const mongoPaging = require('mongo-cursor-pagination');
-mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -32,9 +34,8 @@ export interface Mentor extends Document {
 }
 export interface MentorModel extends Model<Mentor> {
   paginate(
-    query?: any,
-    options?: any,
-    callback?: any
+    query?: PaginateQuery<Mentor>,
+    options?: PaginateOptions
   ): Promise<PaginatedResolveResult<Mentor>>;
   getSubjects(mentor: string | Mentor): Subject[];
   getTopics(mentor: string | Mentor, subjectId?: string): Topic[];
@@ -203,6 +204,6 @@ MentorSchema.statics.getAnswers = async function (
 MentorSchema.index({ name: -1, _id: -1 });
 MentorSchema.index({ firstName: -1, _id: -1 });
 MentorSchema.index({ mentorType: -1, _id: -1 });
-MentorSchema.plugin(mongoPaging.mongoosePlugin);
+pluginPagination(MentorSchema);
 
 export default mongoose.model<Mentor, MentorModel>('Mentor', MentorSchema);

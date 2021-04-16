@@ -5,12 +5,13 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose, { Document, Model, Schema } from 'mongoose';
-import { PaginatedResolveResult } from './PaginatedResolveResult';
+import {
+  PaginateOptions,
+  PaginatedResolveResult,
+  pluginPagination,
+} from './Paginatation';
 import { Mentor } from './Mentor';
 import { Answer } from './Answer';
-
-const mongoPaging = require('mongo-cursor-pagination');
-mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
 
 export enum Feedback {
   GOOD = 'GOOD',
@@ -63,9 +64,9 @@ export const UserQuestionSchema = new Schema(
 
 export interface UserQuestionModel extends Model<UserQuestion> {
   paginate(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     query?: any,
-    options?: any,
-    callback?: any
+    options?: PaginateOptions
   ): Promise<PaginatedResolveResult<UserQuestion>>;
 }
 
@@ -75,7 +76,7 @@ UserQuestionSchema.index({ confidence: -1, _id: -1 });
 UserQuestionSchema.index({ feedback: -1, _id: -1 });
 UserQuestionSchema.index({ classifierAnswer: -1, _id: -1 });
 UserQuestionSchema.index({ graderAnswer: -1, _id: -1 });
-UserQuestionSchema.plugin(mongoPaging.mongoosePlugin);
+pluginPagination(UserQuestionSchema);
 
 export default mongoose.model<UserQuestion, UserQuestionModel>(
   'UserQuestion',

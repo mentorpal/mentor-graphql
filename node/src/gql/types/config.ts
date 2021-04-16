@@ -17,6 +17,7 @@ export const ConfigType = new GraphQLObjectType({
     cmi5Enabled: { type: GraphQLBoolean },
     cmi5Endpoint: { type: GraphQLString },
     cmi5Fetch: { type: GraphQLString },
+    googleClientId: { type: GraphQLString },
     mentorsDefault: { type: GraphQLList(GraphQLString) },
     styleHeaderLogo: { type: GraphQLString },
     urlClassifier: { type: GraphQLString },

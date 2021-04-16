@@ -14,14 +14,21 @@ import SettingModel, { Config } from 'models/Setting';
 
 describe('config', () => {
   let app: Express;
+  let ENV_GOOGLE_CLIENT_ID_RESTORE: string = '';
 
   beforeEach(async () => {
+    ENV_GOOGLE_CLIENT_ID_RESTORE = process.env.GOOGLE_CLIENT_ID;
     await mongoUnit.load(require('test/fixtures/mongodb/data-default.js'));
     app = await createApp();
     await appStart();
   });
 
   afterEach(async () => {
+    if (typeof ENV_GOOGLE_CLIENT_ID_RESTORE === 'string') {
+      process.env.GOOGLE_CLIENT_ID = ENV_GOOGLE_CLIENT_ID_RESTORE || undefined;
+    } else {
+      delete process.env['GOOGLE_CLIENT_ID'];
+    }
     await appStop();
     await mongoUnit.drop();
   });
@@ -33,6 +40,7 @@ describe('config', () => {
             cmi5Enabled
             cmi5Endpoint
             cmi5Fetch
+            googleClientId
             mentorsDefault
             urlClassifier
             urlGraphql
@@ -48,6 +56,7 @@ describe('config', () => {
           cmi5Enabled: false,
           cmi5Endpoint: '',
           cmi5Fetch: '',
+          googleClientId: '',
           mentorsDefault: [],
           urlClassifier: '/classifier',
           urlGraphql: '/graphql',
@@ -58,11 +67,87 @@ describe('config', () => {
     });
   });
 
+  it(`serves default config when no settings`, async () => {
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+          config {
+            cmi5Enabled
+            cmi5Endpoint
+            cmi5Fetch
+            googleClientId
+            mentorsDefault
+            urlClassifier
+            urlGraphql
+            urlVideo
+            styleHeaderLogo
+          }
+        }`,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.eql({
+      data: {
+        config: {
+          cmi5Enabled: false,
+          cmi5Endpoint: '',
+          cmi5Fetch: '',
+          googleClientId: '',
+          mentorsDefault: [],
+          urlClassifier: '/classifier',
+          urlGraphql: '/graphql',
+          urlVideo: '/video',
+          styleHeaderLogo: '',
+        },
+      },
+    });
+  });
+
+  it(`serves googleClientId config from env when no settings`, async () => {
+    process.env.GOOGLE_CLIENT_ID = 'clientIdSetByEnv';
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+          config {
+            googleClientId
+          }
+        }`,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.eql({
+      data: {
+        config: {
+          googleClientId: 'clientIdSetByEnv',
+        },
+      },
+    });
+  });
+
+  it(`serves googleClientId config from settings as an override to env va`, async () => {
+    process.env.GOOGLE_CLIENT_ID = 'clientIdSetByEnv';
+    await SettingModel.saveConfig({
+      googleClientId: 'clientIdSetBySettings',
+    });
+    const response = await request(app).post('/graphql').send({
+      query: `query {
+          config {
+            googleClientId
+          }
+        }`,
+    });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.eql({
+      data: {
+        config: {
+          googleClientId: 'clientIdSetBySettings',
+        },
+      },
+    });
+  });
+
   it(`serves config from Settings`, async () => {
     const config: Config = {
       cmi5Enabled: true,
       cmi5Endpoint: '/xapi',
       cmi5Fetch: '/auth',
+      googleClientId: '',
       mentorsDefault: ['somementor'],
       urlClassifier: '/classifier/v2',
       urlGraphql: '/graphql/v2',
@@ -76,6 +161,7 @@ describe('config', () => {
             cmi5Enabled
             cmi5Endpoint
             cmi5Fetch
+            googleClientId
             mentorsDefault
             urlClassifier
             urlGraphql
