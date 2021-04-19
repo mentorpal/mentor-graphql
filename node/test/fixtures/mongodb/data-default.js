@@ -50,6 +50,13 @@ module.exports = {
       ],
       user: ObjectId('5ffdf41a1ee2c62320b49ea3'),
     },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62111111113'),
+      name: 'Dan Davis',
+      firstName: 'Dan',
+      user: ObjectId('5ffdf41a1ee2c62320b49ea2'),
+      subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
+    },
   ],
 
   subjects: [
@@ -57,6 +64,7 @@ module.exports = {
       _id: ObjectId('5ffdf41a1ee2c62320b49eb1'),
       name: 'Repeat After Me',
       description: "These are miscellaneous phrases you'll be asked to repeat.",
+      isRequired: true,
       categories: [],
       topics: [
         {
@@ -71,13 +79,13 @@ module.exports = {
           topics: [ObjectId('5ffdf41a1ee2c62320b49ec1')],
         },
       ],
-      isRequired: true,
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49eb2'),
       name: 'Background',
       description:
         'These questions will ask general questions about your background that might be relevant to how people understand your career.',
+      isRequired: true,
       categories: [
         {
           id: 'category',
@@ -117,7 +125,6 @@ module.exports = {
           question: ObjectId('511111111111111111111116'),
         },
       ],
-      isRequired: true,
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49eb3'),

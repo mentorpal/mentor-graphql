@@ -5,7 +5,11 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
-import { User as UserSchema } from 'models';
+import {
+  User as UserSchema,
+  Mentor as MentorSchema,
+  Subject as SubjectSchema,
+} from 'models';
 import {
   UserAccessTokenType,
   UserAccessToken,
@@ -38,6 +42,20 @@ export const login = {
       if (!user) {
         throw new Error('invalid token');
       }
+
+      // add any missing required subjects to mentor
+      const requiredSubjects = await SubjectSchema.find({ isRequired: true });
+      await MentorSchema.findOneAndUpdate(
+        {
+          user: user._id,
+        },
+        {
+          $addToSet: {
+            subjects: { $each: requiredSubjects.map((s) => s._id) },
+          },
+        }
+      );
+
       return generateAccessToken(user);
     } catch (error) {
       throw new Error(error);
