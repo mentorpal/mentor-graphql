@@ -115,4 +115,71 @@ describe('login', () => {
       new Date(response.body.data.login.user.lastLoginAt)
     ).to.be.greaterThan(date);
   });
+
+  it(`adds any missing required subjects to mentor after logging in`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2');
+    let mentor = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+          me {
+            mentor {
+              name
+              subjects {
+                name
+              }
+            }
+          }
+        }`,
+      });
+    expect(mentor.status).to.equal(200);
+    expect(mentor.body.data.me.mentor).to.eql({
+      name: 'Dan Davis',
+      subjects: [
+        {
+          name: 'Repeat After Me',
+        },
+      ],
+    });
+
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
+          login(accessToken: "${token}") {
+            accessToken
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+
+    mentor = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${response.body.data.login.accessToken}`)
+      .send({
+        query: `query {
+          me {
+            mentor {
+              name
+              subjects {
+                name
+              }
+            }
+          }
+        }`,
+      });
+    expect(mentor.status).to.equal(200);
+    expect(mentor.body.data.me.mentor).to.eql({
+      name: 'Dan Davis',
+      subjects: [
+        {
+          name: 'Background',
+        },
+        {
+          name: 'Repeat After Me',
+        },
+      ],
+    });
+  });
 });
