@@ -9,6 +9,7 @@ import {
   GraphQLObjectType,
   GraphQLList,
   GraphQLID,
+  GraphQLBoolean,
 } from 'graphql';
 import { Mentor as MentorModel } from 'models';
 import { Status } from 'models/Answer';
@@ -38,24 +39,39 @@ export const MentorType = new GraphQLObjectType({
       type: GraphQLList(TopicType),
       args: {
         subject: { type: GraphQLID },
+        useDefaultSubject: { type: GraphQLBoolean },
       },
-      resolve: async function (mentor: Mentor, args: { subject: string }) {
-        return await MentorModel.getTopics(mentor, args.subject);
+      resolve: async function (
+        mentor: Mentor,
+        args: { subject: string; useDefaultSubject: boolean }
+      ) {
+        return await MentorModel.getTopics(
+          mentor,
+          args.useDefaultSubject,
+          args.subject
+        );
       },
     },
     questions: {
       type: GraphQLList(SubjectQuestionType),
       args: {
+        useDefaultSubject: { type: GraphQLBoolean },
         subject: { type: GraphQLID },
         topic: { type: GraphQLID },
         type: { type: GraphQLString },
       },
       resolve: async function (
         mentor: Mentor,
-        args: { subject: string; topic: string; type: string }
+        args: {
+          useDefaultSubject: boolean;
+          subject: string;
+          topic: string;
+          type: string;
+        }
       ) {
         return await MentorModel.getQuestions(
           mentor,
+          args.useDefaultSubject,
           args.subject,
           args.topic,
           args.type as QuestionType
@@ -65,16 +81,23 @@ export const MentorType = new GraphQLObjectType({
     answers: {
       type: GraphQLList(AnswerType),
       args: {
+        useDefaultSubject: { type: GraphQLBoolean },
         subject: { type: GraphQLID },
         topic: { type: GraphQLID },
         status: { type: GraphQLString },
       },
       resolve: async function (
         mentor: Mentor,
-        args: { subject: string; topic: string; status: string }
+        args: {
+          useDefaultSubject: boolean;
+          subject: string;
+          topic: string;
+          status: string;
+        }
       ) {
         return await MentorModel.getAnswers(
           mentor,
+          args.useDefaultSubject,
           args.subject,
           args.topic,
           args.status as Status
@@ -89,6 +112,7 @@ export const MentorType = new GraphQLObjectType({
       resolve: async function (mentor: Mentor, args: { status: string }) {
         return await MentorModel.getAnswers(
           mentor,
+          false,
           undefined,
           undefined,
           args.status as Status,

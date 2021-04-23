@@ -38,15 +38,21 @@ export interface MentorModel extends Model<Mentor> {
     options?: PaginateOptions
   ): Promise<PaginatedResolveResult<Mentor>>;
   getSubjects(mentor: string | Mentor): Subject[];
-  getTopics(mentor: string | Mentor, subjectId?: string): Topic[];
+  getTopics(
+    mentor: string | Mentor,
+    useDefaultSubject?: boolean,
+    subjectId?: string
+  ): Topic[];
   getQuestions(
     mentor: string | Mentor,
+    useDefaultSubject?: boolean,
     subjectId?: string,
     topicId?: string,
     type?: QuestionType
   ): SubjectQuestion[];
   getAnswers(
     mentor: string | Mentor,
+    useDefaultSubject?: boolean,
     subjectId?: string,
     topicId?: string,
     status?: Status,
@@ -98,6 +104,7 @@ MentorSchema.statics.getSubjects = async function (
 //  - all subjects: sorted alphabetically
 MentorSchema.statics.getTopics = async function (
   m: string | Mentor,
+  defaultSubject?: boolean,
   subjectId?: string
 ): Promise<Topic[]> {
   const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
@@ -105,6 +112,7 @@ MentorSchema.statics.getTopics = async function (
     throw new Error(`mentor ${m} not found`);
   }
   const topics: Topic[] = [];
+  subjectId = defaultSubject ? mentor.defaultSubject : subjectId;
   if (subjectId) {
     if (mentor.subjects.includes(subjectId)) {
       const subject = await SubjectModel.findById(subjectId);
@@ -125,6 +133,7 @@ MentorSchema.statics.getTopics = async function (
 
 MentorSchema.statics.getQuestions = async function (
   m: string | Mentor,
+  defaultSubject?: boolean,
   subjectId?: string,
   topicId?: string,
   type?: QuestionType
@@ -133,6 +142,7 @@ MentorSchema.statics.getQuestions = async function (
   if (!mentor) {
     throw new Error(`mentor ${m} not found`);
   }
+  subjectId = defaultSubject ? mentor.defaultSubject : subjectId;
   const subjectIds = subjectId
     ? mentor.subjects.includes(subjectId)
       ? [subjectId]
@@ -160,6 +170,7 @@ MentorSchema.statics.getQuestions = async function (
 
 MentorSchema.statics.getAnswers = async function (
   m: string | Mentor,
+  defaultSubject?: boolean,
   subjectId?: string,
   topicId?: string,
   status?: Status,
@@ -169,7 +180,13 @@ MentorSchema.statics.getAnswers = async function (
   if (!mentor) {
     throw new Error(`mentor ${m} not found`);
   }
-  const sQuestions = await this.getQuestions(mentor, subjectId, topicId, type);
+  const sQuestions = await this.getQuestions(
+    mentor,
+    defaultSubject,
+    subjectId,
+    topicId,
+    type
+  );
   const questionIds = sQuestions.map(
     (sq: { question: { _id: string } }) => sq.question._id
   );
