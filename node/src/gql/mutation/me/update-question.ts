@@ -8,16 +8,15 @@ import {
   GraphQLString,
   GraphQLObjectType,
   GraphQLNonNull,
-  GraphQLID,
   GraphQLInputObjectType,
   GraphQLList,
+  GraphQLID,
 } from 'graphql';
-import { Question as QuestionModel, Topic as TopicModel } from 'models';
+import { Question as QuestionModel } from 'models';
 import { User } from 'models/User';
 import { Question } from 'models/Question';
 import QuestionType from 'gql/types/question';
-import { TopicUpdateInput, TopicUpdateInputType } from './update-topic';
-import { idOrNew } from './helpers';
+import { toUpdateProps } from './helpers';
 
 export interface QuestionUpdateInput {
   _id: string;
@@ -25,18 +24,18 @@ export interface QuestionUpdateInput {
   type: string;
   name: string;
   paraphrases: string[];
-  topics: TopicUpdateInput[];
+  mentor: string;
 }
 
 export const QuestionUpdateInputType = new GraphQLInputObjectType({
   name: 'QuestionUpdateInputType',
   fields: () => ({
-    _id: { type: GraphQLString },
+    _id: { type: GraphQLID },
     question: { type: GraphQLString },
     type: { type: GraphQLString },
     name: { type: GraphQLString },
     paraphrases: { type: GraphQLList(GraphQLString) },
-    topics: { type: GraphQLList(TopicUpdateInputType) },
+    mentor: { type: GraphQLID },
   }),
 });
 
@@ -50,41 +49,10 @@ export const updateQuestion = {
     args: { question: QuestionUpdateInput },
     context: { user: User }
   ): Promise<Question> => {
-    const questionUpdate: QuestionUpdateInput = args.question;
-    for (const [i, topic] of (questionUpdate.topics || []).entries()) {
-      topic._id = idOrNew(topic._id);
-      const t = await TopicModel.findOneAndUpdate(
-        {
-          _id: topic._id,
-        },
-        {
-          $set: {
-            ...topic,
-          },
-        },
-        {
-          new: true,
-          upsert: true,
-        }
-      );
-      questionUpdate.topics[i] = t;
-    }
-
-    const question: any = { ...questionUpdate };
-    if (questionUpdate.topics) {
-      question._id = idOrNew(questionUpdate._id);
-      question.topics = questionUpdate.topics.map((t) => t._id);
-    }
-
+    const { _id, props } = toUpdateProps<Question>(args.question);
     return await QuestionModel.findOneAndUpdate(
-      {
-        _id: question._id,
-      },
-      {
-        $set: {
-          ...question,
-        },
-      },
+      { _id: _id },
+      { $set: props },
       {
         new: true,
         upsert: true,

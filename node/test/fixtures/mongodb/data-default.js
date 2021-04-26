@@ -57,7 +57,20 @@ module.exports = {
       _id: ObjectId('5ffdf41a1ee2c62320b49eb1'),
       name: 'Repeat After Me',
       description: "These are miscellaneous phrases you'll be asked to repeat.",
-      questions: [ObjectId('511111111111111111111111')],
+      categories: [],
+      topics: [
+        {
+          id: ObjectId('5ffdf41a1ee2c62320b49ec1'),
+          name: 'Idle',
+          description: '30-second idle clip',
+        },
+      ],
+      questions: [
+        {
+          question: ObjectId('511111111111111111111111'),
+          topics: [ObjectId('5ffdf41a1ee2c62320b49ec1')],
+        },
+      ],
       isRequired: true,
     },
     {
@@ -65,10 +78,44 @@ module.exports = {
       name: 'Background',
       description:
         'These questions will ask general questions about your background that might be relevant to how people understand your career.',
+      categories: [
+        {
+          id: 'category',
+          name: 'Category',
+          description: 'A test category',
+        },
+      ],
+      topics: [
+        {
+          id: ObjectId('5ffdf41a1ee2c62320b49ec2'),
+          name: 'Background',
+          description:
+            'These questions will ask general questions about your background, that might be relevant to how people understand your career',
+        },
+        {
+          id: ObjectId('5ffdf41a1ee2c62320b49ec3'),
+          name: 'Advice',
+          description:
+            'These questions will ask you to give advice to someone who is interested in your career',
+        },
+      ],
       questions: [
-        ObjectId('511111111111111111111112'),
-        ObjectId('511111111111111111111113'),
-        ObjectId('511111111111111111111114'),
+        {
+          question: ObjectId('511111111111111111111112'),
+          topics: [ObjectId('5ffdf41a1ee2c62320b49ec2')],
+        },
+        {
+          question: ObjectId('511111111111111111111113'),
+          category: 'category',
+          topics: [ObjectId('5ffdf41a1ee2c62320b49ec2')],
+        },
+        {
+          question: ObjectId('511111111111111111111114'),
+          topics: [ObjectId('5ffdf41a1ee2c62320b49ec3')],
+        },
+        {
+          question: ObjectId('511111111111111111111116'),
+        },
       ],
       isRequired: true,
     },
@@ -76,27 +123,16 @@ module.exports = {
       _id: ObjectId('5ffdf41a1ee2c62320b49eb3'),
       name: 'STEM',
       description: 'These questions will ask about STEM careers.',
+      categories: [],
+      topics: [
+        {
+          id: ObjectId('5ffdf41a1ee2c62320b49ec3'),
+          name: 'Advice',
+          description:
+            'These questions will ask you to give advice to someone who is interested in your career',
+        },
+      ],
       questions: [ObjectId('511111111111111111111115')],
-    },
-  ],
-
-  topics: [
-    {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ec1'),
-      name: 'Idle',
-      description: '30-second idle clip',
-    },
-    {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ec2'),
-      name: 'Background',
-      description:
-        'These questions will ask general questions about your background, that might be relevant to how people understand your career',
-    },
-    {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ec3'),
-      name: 'Advice',
-      description:
-        'These questions will ask you to give advice to someone who is interested in your career',
     },
   ],
 
@@ -104,29 +140,29 @@ module.exports = {
     {
       _id: ObjectId('511111111111111111111111'),
       question: "Don't talk and stay still.",
-      topics: [ObjectId('5ffdf41a1ee2c62320b49ec1')],
       type: 'UTTERANCE',
       name: 'idle',
     },
     {
       _id: ObjectId('511111111111111111111112'),
       question: 'Who are you and what do you do?',
-      topics: [ObjectId('5ffdf41a1ee2c62320b49ec2')],
     },
     {
       _id: ObjectId('511111111111111111111113'),
       question: 'How old are you?',
-      topics: [ObjectId('5ffdf41a1ee2c62320b49ec2')],
     },
     {
       _id: ObjectId('511111111111111111111114'),
       question: 'Do you like your job?',
-      topics: [ObjectId('5ffdf41a1ee2c62320b49ec3')],
     },
     {
       _id: ObjectId('511111111111111111111115'),
       question: 'Is STEM fun?',
-      topics: [ObjectId('5ffdf41a1ee2c62320b49ec3')],
+    },
+    {
+      _id: ObjectId('511111111111111111111116'),
+      question: 'Julia?',
+      mentor: ObjectId('5ffdf41a1ee2c62111111112'),
     },
   ],
 

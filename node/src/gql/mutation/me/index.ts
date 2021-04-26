@@ -10,8 +10,6 @@ import updateMentor from './update-mentor';
 import updateAnswer from './update-answer';
 import updateQuestion from './update-question';
 import updateSubject from './update-subject';
-import updateTopic from './update-topic';
-import topicsCreate from './topics-create';
 
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeMutation',
@@ -20,8 +18,6 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
     updateAnswer,
     updateQuestion,
     updateSubject,
-    updateTopic,
-    topicsCreate,
   }),
 });
 

@@ -4,31 +4,26 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose, { Schema, Document, Model } from 'mongoose';
-import { PaginatedResolveResult } from './PaginatedResolveResult';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLList,
+  GraphQLBoolean,
+} from 'graphql';
 
-const mongoPaging = require('mongo-cursor-pagination');
-mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
-
-export interface Topic extends Document {
-  name: string;
-  description: string;
-}
-
-export const TopicSchema = new Schema({
-  name: { type: String },
-  description: { type: String },
+export const ConfigType = new GraphQLObjectType({
+  name: 'Config',
+  fields: () => ({
+    cmi5Enabled: { type: GraphQLBoolean },
+    cmi5Endpoint: { type: GraphQLString },
+    cmi5Fetch: { type: GraphQLString },
+    googleClientId: { type: GraphQLString },
+    mentorsDefault: { type: GraphQLList(GraphQLString) },
+    styleHeaderLogo: { type: GraphQLString },
+    urlClassifier: { type: GraphQLString },
+    urlGraphql: { type: GraphQLString },
+    urlVideo: { type: GraphQLString },
+  }),
 });
 
-export interface TopicModel extends Model<Topic> {
-  paginate(
-    query?: any,
-    options?: any,
-    callback?: any
-  ): Promise<PaginatedResolveResult<Topic>>;
-}
-
-TopicSchema.index({ name: -1, _id: -1 });
-TopicSchema.plugin(mongoPaging.mongoosePlugin);
-
-export default mongoose.model<Topic, TopicModel>('Topic', TopicSchema);
+export default ConfigType;

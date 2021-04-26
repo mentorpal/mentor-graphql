@@ -27,19 +27,19 @@ export const UserQuestionType = new GraphQLObjectType({
     mentor: {
       type: MentorType,
       resolve: async function (uq: UserQuestion) {
-        return MentorModel.findOne({ _id: uq.mentor });
+        return MentorModel.findById(uq.mentor);
       },
     },
     classifierAnswer: {
       type: AnswerType,
       resolve: async function (uq: UserQuestion) {
-        return AnswerModel.findOne({ _id: uq.classifierAnswer });
+        return AnswerModel.findById(uq.classifierAnswer);
       },
     },
     graderAnswer: {
       type: AnswerType,
       resolve: async function (uq: UserQuestion) {
-        return AnswerModel.findOne({ _id: uq.graderAnswer });
+        return AnswerModel.findById(uq.graderAnswer);
       },
     },
     createdAt: { type: DateType },
