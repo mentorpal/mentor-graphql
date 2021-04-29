@@ -9,6 +9,7 @@ import me from './me';
 import login from './login';
 import loginGoogle from './login-google';
 import updateMentorTraining from './update-mentor-training';
+import uploadAnswer from './upload-answer';
 import userQuestionCreate from './userQuestion-create';
 import userQuestionSetFeedback from './userQuestion-setFeedback';
 import userQuestionSetAnswer from './userQuestion-setAnswer';
@@ -20,6 +21,7 @@ export default new GraphQLObjectType({
     login,
     loginGoogle,
     updateMentorTraining,
+    uploadAnswer,
     userQuestionCreate,
     userQuestionSetFeedback,
     userQuestionSetAnswer,

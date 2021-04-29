@@ -4,6 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
+import DateType from 'gql/types/date';
 import {
   GraphQLString,
   GraphQLObjectType,
@@ -17,34 +18,31 @@ import {
   Mentor as MentorModel,
   Question as QuestionModel,
 } from 'models';
-import { Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
-import { User } from 'models/User';
 
 export interface AnswerUpdateInput {
   transcript: string;
-  status: Status;
+  recordedAt: Date;
 }
 
-export const UpdateAnswerInputType = new GraphQLInputObjectType({
-  name: 'UpdateAnswerInputType',
+export const UploadAnswerInputType = new GraphQLInputObjectType({
+  name: 'UploadAnswerInputType',
   fields: () => ({
     transcript: { type: GraphQLString },
-    status: { type: GraphQLString },
+    recordedAt: { type: GraphQLString },
   }),
 });
 
-export const updateAnswer = {
+export const uploadAnswer = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     questionId: { type: GraphQLNonNull(GraphQLID) },
-    answer: { type: GraphQLNonNull(UpdateAnswerInputType) },
+    answer: { type: GraphQLNonNull(UploadAnswerInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentorId: string; questionId: string; answer: AnswerUpdateInput },
-    context: { user: User }
+    args: { mentorId: string; questionId: string; answer: AnswerUpdateInput }
   ): Promise<boolean> => {
     if (!(await QuestionModel.exists({ _id: args.questionId }))) {
       throw new Error(`no question found for id '${args.questionId}'`);
@@ -53,9 +51,7 @@ export const updateAnswer = {
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
     }
-    if (`${context.user._id}` !== `${mentor.user}`) {
-      throw new Error('you do not have permission to update this mentor');
-    }
+    console.log(args.answer);
     const answer = await AnswerModel.findOneAndUpdate(
       {
         mentor: mentor._id,
@@ -73,4 +69,4 @@ export const updateAnswer = {
   },
 };
 
-export default updateAnswer;
+export default uploadAnswer;
