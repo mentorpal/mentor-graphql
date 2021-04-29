@@ -13,7 +13,6 @@ import {
   GraphQLID,
 } from 'graphql';
 import { Question as QuestionModel } from 'models';
-import { User } from 'models/User';
 import { Question } from 'models/Question';
 import QuestionType from 'gql/types/question';
 import { toUpdateProps } from './helpers';
@@ -46,8 +45,7 @@ export const updateQuestion = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { question: QuestionUpdateInput },
-    context: { user: User }
+    args: { question: QuestionUpdateInput }
   ): Promise<Question> => {
     const { _id, props } = toUpdateProps<Question>(args.question);
     return await QuestionModel.findOneAndUpdate(

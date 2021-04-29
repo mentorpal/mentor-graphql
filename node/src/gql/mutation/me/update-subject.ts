@@ -15,7 +15,6 @@ import {
 } from 'graphql';
 
 import { Subject as SubjectModel, Question as QuestionModel } from 'models';
-import { User } from 'models/User';
 import { Question } from 'models/Question';
 import { Subject, SubjectQuestionProps, SubjectUpdate } from 'models/Subject';
 import SubjectType from 'gql/types/subject';
@@ -122,8 +121,7 @@ export const updateSubject = {
   args: { subject: { type: GraphQLNonNull(SubjectUpdateInputType) } },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { subject: SubjectUpdateInput },
-    context: { user: User }
+    args: { subject: SubjectUpdateInput }
   ): Promise<Subject> => {
     // don't include questions that have no question text
     const questions = args.subject.questions.filter((q) => q.question.question);
