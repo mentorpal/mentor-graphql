@@ -20,10 +20,12 @@ import {
 import { Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
+import requireEnv from 'utils/require-env';
 
 export interface AnswerUpdateInput {
   transcript: string;
   status: Status;
+  recordedAt: Date;
 }
 
 export const UpdateAnswerInputType = new GraphQLInputObjectType({
@@ -31,6 +33,7 @@ export const UpdateAnswerInputType = new GraphQLInputObjectType({
   fields: () => ({
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
+    recordedAt: { type: GraphQLString },
   }),
 });
 
@@ -53,7 +56,10 @@ export const updateAnswer = {
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
     }
-    if (`${context.user._id}` !== `${mentor.user}`) {
+    if (
+      `${context.user._id}` !== `${mentor.user}` &&
+      context.user._id !== requireEnv('API_SECRET')
+    ) {
       throw new Error('you do not have permission to update this mentor');
     }
     const answer = await AnswerModel.findOneAndUpdate(

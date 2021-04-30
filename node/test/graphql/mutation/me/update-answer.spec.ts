@@ -40,7 +40,7 @@ describe('updateAnswer', () => {
     );
   });
 
-  it(`throws an error if mentor is not the user's`, async () => {
+  it(`throws an error if user does not have permission to edit`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea2');
     const response = await request(app)
       .post('/graphql')
@@ -104,7 +104,73 @@ describe('updateAnswer', () => {
     expect(response.status).to.equal(400);
   });
 
-  it('updates an answer', async () => {
+  it(`throws an error if invalid answer`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const questionId = '511111111111111111111112';
+    const answer: string = JSON.stringify({
+      fake: true,
+    }).replace(/"([^"]+)":/g, '$1:');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "${questionId}", answer: ${answer})
+          }
+        }`,
+      });
+    expect(response.status).to.equal(400);
+  });
+
+  it('api user updates an answer ', async () => {
+    const questionId = '511111111111111111111112';
+    const answer: string = JSON.stringify({
+      transcript:
+        "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+      status: 'Complete',
+    }).replace(/"([^"]+)":/g, '$1:');
+    const response = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: `mutation {
+          me {
+            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "${questionId}", answer: ${answer})
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateAnswer).to.eql(true);
+
+    const r2 = await request(app).post('/graphql').send({
+      query: `query {
+          mentor(id: "5ffdf41a1ee2c62111111111") {
+            answers {
+              transcript
+              status
+              recordedAt
+              question {
+                _id
+              }
+            }
+          }
+      }`,
+    });
+    expect(r2.status).to.equal(200);
+    const updatedAnswer = r2.body.data.mentor.answers.find(
+      (a: any) => a.question._id === questionId
+    );
+    expect(updatedAnswer).to.have.property(
+      'transcript',
+      "My name is Clint Anderson and I'm a Nuclear Electrician's Mate"
+    );
+    expect(updatedAnswer).to.have.property('status', 'Complete');
+    expect(updatedAnswer).to.have.property('recordedAt', null);
+  });
+
+  it('mentor updates an answer', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const questionId = '511111111111111111111112';
     const answer: string = JSON.stringify({
@@ -130,6 +196,8 @@ describe('updateAnswer', () => {
           mentor(id: "5ffdf41a1ee2c62111111111") {
             answers {
               transcript
+              status
+              recordedAt
               question {
                 _id
               }
@@ -145,6 +213,8 @@ describe('updateAnswer', () => {
       'transcript',
       "My name is Clint Anderson and I'm a Nuclear Electrician's Mate"
     );
+    expect(updatedAnswer).to.have.property('status', 'Complete');
+    expect(updatedAnswer).to.have.property('recordedAt', null);
   });
 
   it(`throws an error if mentor does not exist`, async () => {
