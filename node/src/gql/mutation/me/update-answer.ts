@@ -4,6 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
+import { API_USER } from 'auth';
 import {
   GraphQLString,
   GraphQLObjectType,
@@ -20,7 +21,6 @@ import {
 import { Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
-import requireEnv from 'utils/require-env';
 
 export interface AnswerUpdateInput {
   transcript: string;
@@ -58,7 +58,7 @@ export const updateAnswer = {
     }
     if (
       `${context.user._id}` !== `${mentor.user}` &&
-      context.user._id !== requireEnv('API_SECRET')
+      context.user._id !== API_USER
     ) {
       throw new Error('you do not have permission to update this mentor');
     }
