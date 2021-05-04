@@ -17,20 +17,19 @@ import {
   Mentor as MentorModel,
   Question as QuestionModel,
 } from 'models';
-import { Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
 
-export interface AnswerUpdateInput {
+export interface ApiAnswerUpdateInput {
   transcript: string;
-  status: Status;
+  recordedAt: Date;
 }
 
-export const UpdateAnswerInputType = new GraphQLInputObjectType({
-  name: 'UpdateAnswerInputType',
+export const ApiUpdateAnswerInputType = new GraphQLInputObjectType({
+  name: 'ApiUpdateAnswerInputType',
   fields: () => ({
     transcript: { type: GraphQLString },
-    status: { type: GraphQLString },
+    recordedAt: { type: GraphQLString },
   }),
 });
 
@@ -39,11 +38,15 @@ export const updateAnswer = {
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     questionId: { type: GraphQLNonNull(GraphQLID) },
-    answer: { type: GraphQLNonNull(UpdateAnswerInputType) },
+    answer: { type: GraphQLNonNull(ApiUpdateAnswerInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentorId: string; questionId: string; answer: AnswerUpdateInput },
+    args: {
+      mentorId: string;
+      questionId: string;
+      answer: ApiAnswerUpdateInput;
+    },
     context: { user: User }
   ): Promise<boolean> => {
     if (!(await QuestionModel.exists({ _id: args.questionId }))) {
@@ -53,7 +56,7 @@ export const updateAnswer = {
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
     }
-    if (`${context.user._id}` !== `${mentor.user}`) {
+    if (!context.user) {
       throw new Error('you do not have permission to update this mentor');
     }
     const answer = await AnswerModel.findOneAndUpdate(

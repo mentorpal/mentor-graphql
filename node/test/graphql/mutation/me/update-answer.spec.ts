@@ -123,7 +123,7 @@ describe('updateAnswer', () => {
     expect(response.status).to.equal(400);
   });
 
-  it('api user updates an answer ', async () => {
+  it('does not accept api key user', async () => {
     const questionId = '511111111111111111111112';
     const answer: string = JSON.stringify({
       transcript:
@@ -142,32 +142,10 @@ describe('updateAnswer', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.updateAnswer).to.eql(true);
-
-    const r2 = await request(app).post('/graphql').send({
-      query: `query {
-          mentor(id: "5ffdf41a1ee2c62111111111") {
-            answers {
-              transcript
-              status
-              recordedAt
-              question {
-                _id
-              }
-            }
-          }
-      }`,
-    });
-    expect(r2.status).to.equal(200);
-    const updatedAnswer = r2.body.data.mentor.answers.find(
-      (a: any) => a.question._id === questionId
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'you do not have permission to update this mentor'
     );
-    expect(updatedAnswer).to.have.property(
-      'transcript',
-      "My name is Clint Anderson and I'm a Nuclear Electrician's Mate"
-    );
-    expect(updatedAnswer).to.have.property('status', 'Complete');
-    expect(updatedAnswer).to.have.property('recordedAt', null);
   });
 
   it('mentor updates an answer', async () => {
