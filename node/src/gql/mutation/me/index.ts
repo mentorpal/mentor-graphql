@@ -6,7 +6,8 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { GraphQLObjectType } from 'graphql';
 import { User } from 'models/User';
-import updateMentor from './update-mentor';
+import updateMentorDetails from './update-mentor-details';
+import updateMentorSubjects from './update-mentor-subjects';
 import updateAnswer from './update-answer';
 import updateQuestion from './update-question';
 import updateSubject from './update-subject';
@@ -14,7 +15,8 @@ import updateSubject from './update-subject';
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeMutation',
   fields: () => ({
-    updateMentor,
+    updateMentorDetails,
+    updateMentorSubjects,
     updateAnswer,
     updateQuestion,
     updateSubject,
@@ -23,7 +25,7 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
 
 export const me = {
   type: Me,
-  resolve: (_: any, args: any, context: { user: User }) => {
+  resolve: (_: any, args: any, context: { user: User }): { user: User } => {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }

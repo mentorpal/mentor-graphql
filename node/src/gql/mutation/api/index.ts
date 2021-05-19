@@ -6,18 +6,18 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { GraphQLObjectType } from 'graphql';
 import { User } from 'models/User';
-import updateAnswer from './update-answer';
+import uploadAnswer from './upload-answer';
 
 export const Api: GraphQLObjectType = new GraphQLObjectType({
   name: 'ApiMutation',
   fields: () => ({
-    updateAnswer,
+    uploadAnswer,
   }),
 });
 
 export const api = {
   type: Api,
-  resolve: (_: any, args: any, context: { user: User }) => {
+  resolve: (_: any, args: any, context: { user: User }): { user: User } => {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }

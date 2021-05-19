@@ -26,13 +26,16 @@ describe('updateAnswer', () => {
   });
 
   it(`throws an error if not logged in`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
         me {
-          updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111111112", answer: {})
+          updateAnswer(questionId: $questionId, answer: $answer)
         }
       }`,
-    });
+        variables: { questionId: '511111111111111111111112', answer: {} },
+      });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
@@ -40,38 +43,24 @@ describe('updateAnswer', () => {
     );
   });
 
-  it(`throws an error if user does not have permission to edit`, async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea2');
+  it(`throws an error if user does not have a mentor`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea4');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation {
+        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111111112" answer: {})
+            updateAnswer(questionId: $questionId, answer: $answer)
           }
         }`,
+        variables: { questionId: '511111111111111111111112', answer: {} },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'you do not have permission to update this mentor'
+      'you do not have a mentor'
     );
-  });
-
-  it(`throws an error if no mentorId`, async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const response = await request(app)
-      .post('/graphql')
-      .set('Authorization', `bearer ${token}`)
-      .send({
-        query: `mutation {
-          me {
-            updateAnswer(answer: {}) 
-          }
-        }`,
-      });
-    expect(response.status).to.equal(400);
   });
 
   it(`throws an error if no questionId`, async () => {
@@ -80,11 +69,12 @@ describe('updateAnswer', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation {
+        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", answer: {})
+            updateAnswer(answer: $answer)
           }
         }`,
+        variables: { answer: {} },
       });
     expect(response.status).to.equal(400);
   });
@@ -95,76 +85,84 @@ describe('updateAnswer', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation {
+        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111111112")
+            updateAnswer(questionId: "511111111111111111111112")
           }
         }`,
+        variables: { questionId: '511111111111111111111112' },
       });
     expect(response.status).to.equal(400);
   });
 
   it(`throws an error if invalid answer`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const questionId = '511111111111111111111112';
-    const answer: string = JSON.stringify({
-      fake: true,
-    }).replace(/"([^"]+)":/g, '$1:');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation {
+        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "${questionId}", answer: ${answer})
+            updateAnswer(questionId: $questionId, answer: $answer)
           }
         }`,
+        variables: {
+          questionId: '511111111111111111111112',
+          answer: {
+            fake: true,
+          },
+        },
       });
-    expect(response.status).to.equal(400);
+    expect(response.status).to.equal(500);
   });
 
   it('does not accept api key user', async () => {
-    const questionId = '511111111111111111111112';
-    const answer: string = JSON.stringify({
-      transcript:
-        "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-      status: 'Complete',
-    }).replace(/"([^"]+)":/g, '$1:');
     const response = await request(app)
       .post('/graphql')
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation {
+        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "${questionId}", answer: ${answer})
+            updateAnswer(questionId: $questionId, answer: $answer)
           }
         }`,
+        variables: {
+          questionId: '511111111111111111111112',
+          answer: {
+            transcript:
+              "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+            status: 'Complete',
+          },
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'you do not have permission to update this mentor'
+      'you do not have a mentor'
     );
   });
 
   it('mentor updates an answer', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const questionId = '511111111111111111111112';
-    const answer: string = JSON.stringify({
-      transcript:
-        "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-      status: 'Complete',
-    }).replace(/"([^"]+)":/g, '$1:');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation {
+        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "${questionId}", answer: ${answer})
+            updateAnswer(questionId: $questionId, answer: $answer)
           }
         }`,
+        variables: {
+          questionId: '511111111111111111111112',
+          answer: {
+            transcript:
+              "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+            status: 'Complete',
+          },
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateAnswer).to.eql(true);
@@ -175,7 +173,6 @@ describe('updateAnswer', () => {
             answers {
               transcript
               status
-              recordedAt
               question {
                 _id
               }
@@ -192,26 +189,6 @@ describe('updateAnswer', () => {
       "My name is Clint Anderson and I'm a Nuclear Electrician's Mate"
     );
     expect(updatedAnswer).to.have.property('status', 'Complete');
-    expect(updatedAnswer).to.have.property('recordedAt', null);
-  });
-
-  it(`throws an error if mentor does not exist`, async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const response = await request(app)
-      .post('/graphql')
-      .set('Authorization', `bearer ${token}`)
-      .send({
-        query: `mutation {
-        me {
-          updateAnswer(mentorId: "5ffdf41a1ee2c62111199999", questionId: "511111111111111111111112", answer: {})
-        }
-      }`,
-      });
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      `no mentor found for id '5ffdf41a1ee2c62111199999'`
-    );
   });
 
   it(`throws an error if question does not exist`, async () => {
@@ -222,7 +199,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation {
         me {
-          updateAnswer(mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111999999", answer: {})
+          updateAnswer(questionId: "511111111111111111999999", answer: {})
         }
       }`,
       });

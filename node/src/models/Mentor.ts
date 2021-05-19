@@ -26,12 +26,14 @@ export interface Mentor extends Document {
   name: string;
   firstName: string;
   title: string;
+  email: string;
   defaultSubject: Subject['_id'];
   subjects: Subject['_id'][];
   lastTrainedAt: Date;
   mentorType: string;
   user: User['_id'];
 }
+
 export interface MentorModel extends Model<Mentor> {
   paginate(
     query?: PaginateQuery<Mentor>,
@@ -59,6 +61,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     name: { type: String },
     firstName: { type: String },
     title: { type: String },
+    email: { type: String },
     defaultSubject: { type: Schema.Types.ObjectId, ref: 'Subject' },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
     lastTrainedAt: { type: Date },

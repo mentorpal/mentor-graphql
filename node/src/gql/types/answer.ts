@@ -4,9 +4,22 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLID, GraphQLString, GraphQLObjectType } from 'graphql';
-import DateType from './date';
+import {
+  GraphQLID,
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLList,
+} from 'graphql';
 import { questionField } from 'gql/query/question';
+
+export const AnswerMediaType = new GraphQLObjectType({
+  name: 'AnswerMedia',
+  fields: {
+    type: { type: GraphQLString },
+    tag: { type: GraphQLString },
+    url: { type: GraphQLString },
+  },
+});
 
 export const AnswerType = new GraphQLObjectType({
   name: 'Answer',
@@ -15,7 +28,7 @@ export const AnswerType = new GraphQLObjectType({
     question: questionField,
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
-    recordedAt: { type: DateType },
+    media: { type: GraphQLList(AnswerMediaType) },
   }),
 });
 

@@ -11,19 +11,22 @@ import {
   GraphQLInputObjectType,
   GraphQLList,
   GraphQLID,
+  GraphQLInt,
 } from 'graphql';
 import { Question as QuestionModel } from 'models';
 import { Question } from 'models/Question';
 import QuestionType from 'gql/types/question';
 import { toUpdateProps } from './helpers';
 
-export interface QuestionUpdateInput {
+export interface UpdateQuestion {
   _id: string;
   question: string;
   type: string;
   name: string;
   paraphrases: string[];
   mentor: string;
+  mentorType: string;
+  minVideoLength: number;
 }
 
 export const QuestionUpdateInputType = new GraphQLInputObjectType({
@@ -35,6 +38,8 @@ export const QuestionUpdateInputType = new GraphQLInputObjectType({
     name: { type: GraphQLString },
     paraphrases: { type: GraphQLList(GraphQLString) },
     mentor: { type: GraphQLID },
+    mentorType: { type: GraphQLString },
+    minVideoLength: { type: GraphQLInt },
   }),
 });
 
@@ -45,7 +50,7 @@ export const updateQuestion = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { question: QuestionUpdateInput }
+    args: { question: UpdateQuestion }
   ): Promise<Question> => {
     const { _id, props } = toUpdateProps<Question>(args.question);
     return await QuestionModel.findOneAndUpdate(

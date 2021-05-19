@@ -9,71 +9,59 @@ import {
   GraphQLObjectType,
   GraphQLBoolean,
   GraphQLNonNull,
-  GraphQLID,
   GraphQLInputObjectType,
 } from 'graphql';
-import {
-  Answer as AnswerModel,
-  Mentor as MentorModel,
-  Question as QuestionModel,
-} from 'models';
+import { Mentor as MentorModel } from 'models';
 import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
 
-export interface ApiAnswerUpdateInput {
-  transcript: string;
-  recordedAt: Date;
+export interface UpdateMentorDetails {
+  name: string;
+  firstName: string;
+  title: string;
+  email: string;
+  mentorType: string;
 }
 
-export const ApiUpdateAnswerInputType = new GraphQLInputObjectType({
-  name: 'ApiUpdateAnswerInputType',
+export const UpdateMentorDetailsType = new GraphQLInputObjectType({
+  name: 'UpdateMentorDetailsType',
   fields: () => ({
-    transcript: { type: GraphQLString },
-    recordedAt: { type: GraphQLString },
+    name: { type: GraphQLString },
+    firstName: { type: GraphQLString },
+    title: { type: GraphQLString },
+    email: { type: GraphQLString },
+    mentorType: { type: GraphQLString },
   }),
 });
 
-export const updateAnswer = {
+export const updateMentorDetails = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
-    questionId: { type: GraphQLNonNull(GraphQLID) },
-    answer: { type: GraphQLNonNull(ApiUpdateAnswerInputType) },
+    mentor: { type: GraphQLNonNull(UpdateMentorDetailsType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: {
-      mentorId: string;
-      questionId: string;
-      answer: ApiAnswerUpdateInput;
-    },
+    args: { mentor: UpdateMentorDetails },
     context: { user: User }
   ): Promise<boolean> => {
-    if (!(await QuestionModel.exists({ _id: args.questionId }))) {
-      throw new Error(`no question found for id '${args.questionId}'`);
-    }
-    const mentor: Mentor = await MentorModel.findById(args.mentorId);
+    const mentor: Mentor = await MentorModel.findOne({
+      user: context.user._id,
+    });
     if (!mentor) {
-      throw new Error(`no mentor found for id '${args.mentorId}'`);
+      throw new Error('you do not have a mentor');
     }
-    if (!context.user) {
-      throw new Error('you do not have permission to update this mentor');
-    }
-    const answer = await AnswerModel.findOneAndUpdate(
+    const updated = await MentorModel.findByIdAndUpdate(
+      mentor._id,
       {
-        mentor: mentor._id,
-        question: args.questionId,
+        $set: args.mentor,
       },
       {
-        $set: args.answer,
-      },
-      {
-        upsert: true,
         new: true,
+        upsert: true,
       }
     );
-    return Boolean(answer);
+    return Boolean(updated);
   },
 };
 
-export default updateAnswer;
+export default updateMentorDetails;

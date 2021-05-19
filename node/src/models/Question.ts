@@ -5,7 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose, { Document, Model, Schema } from 'mongoose';
-import { Mentor } from './Mentor';
+import { Mentor, MentorType } from './Mentor';
 import {
   PaginatedResolveResult,
   PaginateOptions,
@@ -24,6 +24,8 @@ export interface Question extends Document {
   name: string;
   paraphrases: string[];
   mentor: Mentor['_id'];
+  mentorType: string;
+  minVideoLength: number;
 }
 
 export const QuestionSchema = new Schema({
@@ -39,6 +41,11 @@ export const QuestionSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Mentor',
   },
+  mentorType: {
+    type: String,
+    enum: [MentorType.VIDEO, MentorType.CHAT],
+  },
+  minVideoLength: { type: Number },
 });
 
 export interface QuestionModel extends Model<Question> {
