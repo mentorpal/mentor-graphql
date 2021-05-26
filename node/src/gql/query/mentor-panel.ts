@@ -4,29 +4,29 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import createApp, { appStart, appStop } from 'app';
-import { expect } from 'chai';
-import { Express } from 'express';
-import { describe } from 'mocha';
-import mongoUnit from 'mongo-unit';
-import { getToken } from './helpers';
+import {
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLList,
+  GraphQLString,
+} from 'graphql';
 
-describe('accessToken', () => {
-  let app: Express;
+import MentorType from 'gql/types/mentor';
+import { Mentor as MentorModel } from 'models';
+import { Mentor } from 'models/Mentor';
 
-  beforeEach(async () => {
-    await mongoUnit.load(require('test/fixtures/mongodb/data-default.js'));
-    app = await createApp();
-    await appStart();
-  });
+export const mentorPanel = {
+  type: GraphQLNonNull(GraphQLList(MentorType)),
+  args: {
+    mentors: { type: GraphQLNonNull(GraphQLList(GraphQLString)) },
+    subject: { type: GraphQLString },
+  },
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { mentors: string[]; subject: string }
+  ): Promise<Mentor[]> => {
+    return await MentorModel.find({ _id: { $in: args.mentors } });
+  },
+};
 
-  afterEach(async () => {
-    await appStop();
-    await mongoUnit.drop();
-  });
-
-  it(`generates an accessToken for a user`, () => {
-    const token = getToken('5fffcd36ca39fa32f6beb954');
-    expect(token).to.not.eql('');
-  });
-});
+export default mentorPanel;

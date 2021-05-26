@@ -37,6 +37,7 @@ module.exports = {
       name: 'Clinton Anderson',
       firstName: 'Clint',
       title: "Nuclear Electrician's Mate",
+      defaultSubject: '5ffdf41a1ee2c62320b49eb1',
       subjects: [
         ObjectId('5ffdf41a1ee2c62320b49eb1'),
         ObjectId('5ffdf41a1ee2c62320b49eb2'),
@@ -48,6 +49,7 @@ module.exports = {
       name: 'Julianne Nordhagen',
       firstName: 'Julianne',
       title: 'Pilot',
+      defaultSubject: '5ffdf41a1ee2c62320b49eb2',
       subjects: [
         ObjectId('5ffdf41a1ee2c62320b49eb1'),
         ObjectId('5ffdf41a1ee2c62320b49eb2'),
