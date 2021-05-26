@@ -31,14 +31,16 @@ describe('mentor panel', () => {
   });
 
   it('gets a list of mentors in a panel by id', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentorPanel(mentors: ["5ffdf41a1ee2c62111111113", "5ffdf41a1ee2c62111111111"]) {
           _id
           name
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorPanel).to.eql([
       {

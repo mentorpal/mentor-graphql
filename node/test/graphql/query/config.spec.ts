@@ -34,8 +34,10 @@ describe('config', () => {
   });
 
   it(`serves default config when no settings`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           config {
             cmi5Enabled
             cmi5Endpoint
@@ -48,7 +50,7 @@ describe('config', () => {
             styleHeaderLogo
           }
         }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body).to.eql({
       data: {
@@ -68,8 +70,10 @@ describe('config', () => {
   });
 
   it(`serves default config when no settings`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           config {
             cmi5Enabled
             cmi5Endpoint
@@ -82,7 +86,7 @@ describe('config', () => {
             styleHeaderLogo
           }
         }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body).to.eql({
       data: {
@@ -103,13 +107,15 @@ describe('config', () => {
 
   it(`serves googleClientId config from env when no settings`, async () => {
     process.env.GOOGLE_CLIENT_ID = 'clientIdSetByEnv';
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           config {
             googleClientId
           }
         }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body).to.eql({
       data: {
@@ -125,13 +131,15 @@ describe('config', () => {
     await SettingModel.saveConfig({
       googleClientId: 'clientIdSetBySettings',
     });
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           config {
             googleClientId
           }
         }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body).to.eql({
       data: {
@@ -155,8 +163,10 @@ describe('config', () => {
       styleHeaderLogo: '/a/logo.png',
     };
     await SettingModel.saveConfig(config);
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           config {
             cmi5Enabled
             cmi5Endpoint
@@ -169,7 +179,7 @@ describe('config', () => {
             styleHeaderLogo
           }
         }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body).to.eql({
       data: {

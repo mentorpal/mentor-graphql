@@ -53,15 +53,18 @@ export const userQuestionSetAnswer = {
     }
 
     // Add new answer as a paraphrase to question
-    const userQuestion: UserQuestion = await UserQuestionModel.findByIdAndUpdate(
-      args.id,
-      {
-        graderAnswer: args.answer ? mongoose.Types.ObjectId(args.answer) : null,
-      },
-      {
-        new: true,
-      }
-    );
+    const userQuestion: UserQuestion =
+      await UserQuestionModel.findByIdAndUpdate(
+        args.id,
+        {
+          graderAnswer: args.answer
+            ? mongoose.Types.ObjectId(args.answer)
+            : null,
+        },
+        {
+          new: true,
+        }
+      );
     const answer: Answer = await AnswerModel.findById(args.answer);
     if (answer) {
       await QuestionModel.findByIdAndUpdate(answer.question, {

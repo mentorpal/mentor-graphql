@@ -31,8 +31,10 @@ describe('mentors', () => {
   });
 
   it('gets a list of mentors', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentors {
           edges {
             node {
@@ -46,7 +48,7 @@ describe('mentors', () => {
           }
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentors).to.eql({
       edges: [

@@ -25,25 +25,29 @@ describe('updateMentorTraining', () => {
   });
 
   it(`returns an error if no mentor id`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
         updateMentorTraining {
           lastTrainedAt
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(400);
   });
 
   it(`updates lastTrainedAt`, async () => {
     const date = new Date(Date.now() - 1000);
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
           updateMentorTraining(id: "5ffdf41a1ee2c62111111111") {
             lastTrainedAt
           }
         }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(
       new Date(response.body.data.updateMentorTraining.lastTrainedAt)

@@ -167,8 +167,10 @@ describe('updateAnswer', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateAnswer).to.eql(true);
 
-    const r2 = await request(app).post('/graphql').send({
-      query: `query {
+    const r2 = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           mentor(id: "5ffdf41a1ee2c62111111111") {
             answers {
               transcript
@@ -179,7 +181,7 @@ describe('updateAnswer', () => {
             }
           }
       }`,
-    });
+      });
     expect(r2.status).to.equal(200);
     const updatedAnswer = r2.body.data.mentor.answers.find(
       (a: any) => a.question._id === questionId

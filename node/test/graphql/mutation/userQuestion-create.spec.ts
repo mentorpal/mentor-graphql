@@ -25,19 +25,23 @@ describe('userQuestionCreate', () => {
   });
 
   it(`returns an error if no userQuestion`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
         userQuestionCreate {
           _id
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(400);
   });
 
   it(`returns an error if no question`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
         userQuestionCreate(userQuestion: {
           mentor: "5ffdf41a1ee2c62111111111",
           classifierAnswer: "511111111111111111111112",
@@ -46,13 +50,15 @@ describe('userQuestionCreate', () => {
           _id
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(400);
   });
 
   it(`returns an error if no mentor`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
         userQuestionCreate(userQuestion: {
           question: "new",
           classifierAnswer: "511111111111111111111112",
@@ -61,13 +67,15 @@ describe('userQuestionCreate', () => {
           _id
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(400);
   });
 
   it(`returns an error if no classifierAnswer`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
         userQuestionCreate(userQuestion: {
           question: "new",
           mentor: "5ffdf41a1ee2c62111111111",
@@ -76,13 +84,15 @@ describe('userQuestionCreate', () => {
           _id
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(400);
   });
 
   it(`returns an error if no confidence`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
         userQuestionCreate(userQuestion: {
           question: "new",
           mentor: "5ffdf41a1ee2c62111111111",
@@ -91,13 +101,15 @@ describe('userQuestionCreate', () => {
           _id
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(400);
   });
 
   it(`creates userQuestion`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
           userQuestionCreate(userQuestion: {
             question: "new",
             mentor: "5ffdf41a1ee2c62111111111",
@@ -115,7 +127,7 @@ describe('userQuestionCreate', () => {
             confidence
           }
         }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.userQuestionCreate).to.eql({
       question: 'new',
