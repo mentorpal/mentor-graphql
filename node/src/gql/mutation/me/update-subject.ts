@@ -15,14 +15,10 @@ import {
 } from 'graphql';
 
 import { Subject as SubjectModel, Question as QuestionModel } from 'models';
-import { User } from 'models/User';
 import { Question } from 'models/Question';
 import { Subject, SubjectQuestionProps, SubjectUpdate } from 'models/Subject';
 import SubjectType from 'gql/types/subject';
-import {
-  QuestionUpdateInput,
-  QuestionUpdateInputType,
-} from './update-question';
+import { UpdateQuestion, QuestionUpdateInputType } from './update-question';
 import { idOrNew, toUpdateProps } from './helpers';
 
 export interface CategoryUpdateInput {
@@ -56,7 +52,7 @@ export const TopicInputType = new GraphQLInputObjectType({
 });
 
 export interface SubjectQuestionUpdateInput {
-  question: QuestionUpdateInput;
+  question: UpdateQuestion;
   category?: CategoryUpdateInput;
   topics?: TopicUpdateInput[];
 }
@@ -122,8 +118,7 @@ export const updateSubject = {
   args: { subject: { type: GraphQLNonNull(SubjectUpdateInputType) } },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { subject: SubjectUpdateInput },
-    context: { user: User }
+    args: { subject: SubjectUpdateInput }
   ): Promise<Subject> => {
     // don't include questions that have no question text
     const questions = args.subject.questions.filter((q) => q.question.question);

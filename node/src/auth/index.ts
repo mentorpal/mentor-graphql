@@ -10,19 +10,13 @@ import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import { User as UserSchema } from 'models';
 import requireEnv from 'utils/require-env';
 
-export const API_USER = 'api_user';
-
 passport.use(
   new BearerStrategy(function (token, done) {
-    if (token !== requireEnv('API_SECRET')) {
+    const API_SECRET = requireEnv('API_SECRET');
+    if (token !== API_SECRET) {
       return done('invalid api key');
     } else {
-      const api_user = {
-        _id: API_USER,
-        name: API_USER,
-        email: API_USER,
-      };
-      return done(null, api_user);
+      return done(null, {});
     }
   })
 );

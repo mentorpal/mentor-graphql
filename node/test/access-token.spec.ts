@@ -12,7 +12,7 @@ import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 import { getToken } from './helpers';
 
-describe('acessToken', () => {
+describe('accessToken', () => {
   let app: Express;
 
   beforeEach(async () => {

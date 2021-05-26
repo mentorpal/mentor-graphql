@@ -25,7 +25,7 @@ export function findAll<T extends PaginatedResolveResult>(config: {
       const filter = Object.assign({}, args.filter || {}, {
         $or: [{ deleted: false }, { deleted: null }],
       });
-      Object.keys(filter).map((key, i) => {
+      Object.keys(filter).map((key) => {
         if (typeof filter[key] === 'string') {
           try {
             filter[key] = {

@@ -24,6 +24,11 @@ module.exports = {
       name: 'Julianne Nordhagen',
       email: 'julianne@nordhagen.com',
     },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ea4'),
+      name: 'No Mentor',
+      email: 'no@mentor.com',
+    },
   ],
 
   mentors: [
@@ -181,7 +186,6 @@ module.exports = {
       transcript: '[being still]',
       video: 'https://idle/url',
       status: 'COMPLETE',
-      recordedAt: new Date('2020-04-29T21:08:07.453Z'),
     },
   ],
 

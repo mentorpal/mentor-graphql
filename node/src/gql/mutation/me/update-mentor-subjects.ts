@@ -5,70 +5,58 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import {
-  GraphQLString,
   GraphQLObjectType,
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
   GraphQLInputObjectType,
+  GraphQLList,
 } from 'graphql';
-import {
-  Answer as AnswerModel,
-  Mentor as MentorModel,
-  Question as QuestionModel,
-} from 'models';
-import { Status } from 'models/Answer';
+import { Mentor as MentorModel } from 'models';
 import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
 
-export interface AnswerUpdateInput {
-  transcript: string;
-  status: Status;
+export interface UpdateMentorSubjects {
+  defaultSubject: string;
+  subjects: string[];
 }
 
-export const UpdateAnswerInputType = new GraphQLInputObjectType({
-  name: 'UpdateAnswerInputType',
+export const UpdateMentorSubjectsType = new GraphQLInputObjectType({
+  name: 'UpdateMentorSubjectsType',
   fields: () => ({
-    transcript: { type: GraphQLString },
-    status: { type: GraphQLString },
+    defaultSubject: { type: GraphQLID },
+    subjects: { type: GraphQLList(GraphQLID) },
   }),
 });
 
-export const updateAnswer = {
+export const updateMentorSubjects = {
   type: GraphQLBoolean,
   args: {
-    questionId: { type: GraphQLNonNull(GraphQLID) },
-    answer: { type: GraphQLNonNull(UpdateAnswerInputType) },
+    mentor: { type: GraphQLNonNull(UpdateMentorSubjectsType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { questionId: string; answer: AnswerUpdateInput },
+    args: { mentor: UpdateMentorSubjects },
     context: { user: User }
   ): Promise<boolean> => {
-    if (!(await QuestionModel.exists({ _id: args.questionId }))) {
-      throw new Error(`no question found for id '${args.questionId}'`);
-    }
     const mentor: Mentor = await MentorModel.findOne({
       user: context.user._id,
     });
     if (!mentor) {
       throw new Error('you do not have a mentor');
     }
-    const answer = await AnswerModel.findOneAndUpdate(
+    const updated = await MentorModel.findByIdAndUpdate(
+      mentor._id,
       {
-        mentor: mentor._id,
-        question: args.questionId,
+        $set: args.mentor,
       },
       {
-        $set: args.answer,
-      },
-      {
-        upsert: true,
         new: true,
+        upsert: true,
       }
     );
-    return Boolean(answer);
+    return Boolean(updated);
   },
 };
 
-export default updateAnswer;
+export default updateMentorSubjects;

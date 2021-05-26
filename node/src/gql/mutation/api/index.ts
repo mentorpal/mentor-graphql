@@ -6,17 +6,17 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { GraphQLObjectType } from 'graphql';
 import { User } from 'models/User';
-import { mentor } from './mentor';
+import uploadAnswer from './upload-answer';
 
-export const Me: GraphQLObjectType = new GraphQLObjectType({
-  name: 'MeQuery',
-  fields: {
-    mentor,
-  },
+export const Api: GraphQLObjectType = new GraphQLObjectType({
+  name: 'ApiMutation',
+  fields: () => ({
+    uploadAnswer,
+  }),
 });
 
-export const me = {
-  type: Me,
+export const api = {
+  type: Api,
   resolve: (_: any, args: any, context: { user: User }): { user: User } => {
     if (!context.user) {
       throw new Error('Only authenticated users');
@@ -27,4 +27,4 @@ export const me = {
   },
 };
 
-export default me;
+export default api;

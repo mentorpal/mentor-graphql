@@ -14,12 +14,26 @@ export enum Status {
   COMPLETE = 'COMPLETE',
 }
 
+export interface AnswerMediaProps {
+  type: string;
+  tag: string;
+  url: string;
+}
+
+export interface AnswerMedia extends AnswerMediaProps, Document {}
+
+export const AnswerMediaSchema = new Schema({
+  type: { type: String },
+  tag: { type: String },
+  url: { type: String },
+});
+
 export interface Answer extends Document {
   mentor: Mentor['_id'];
   question: Question['_id'];
   transcript: string;
   status: Status;
-  recordedAt?: Date;
+  media: AnswerMedia[];
 }
 
 export const AnswerSchema = new Schema({
@@ -31,7 +45,7 @@ export const AnswerSchema = new Schema({
     enum: [Status.INCOMPLETE, Status.COMPLETE],
     default: Status.INCOMPLETE,
   },
-  recordedAt: { type: Date },
+  media: { type: [AnswerMediaSchema] },
 });
 
 AnswerSchema.index({ question: -1, mentor: -1 }, { unique: true });

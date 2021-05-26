@@ -9,6 +9,7 @@ import {
   GraphQLObjectType,
   GraphQLList,
   GraphQLID,
+  GraphQLInt,
 } from 'graphql';
 
 export const QuestionType = new GraphQLObjectType({
@@ -20,6 +21,8 @@ export const QuestionType = new GraphQLObjectType({
     name: { type: GraphQLString },
     paraphrases: { type: GraphQLList(GraphQLString) },
     mentor: { type: GraphQLID },
+    mentorType: { type: GraphQLString },
+    minVideoLength: { type: GraphQLInt },
   }),
 });
 

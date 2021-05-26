@@ -11,48 +11,59 @@ import {
   GraphQLNonNull,
   GraphQLID,
   GraphQLInputObjectType,
+  GraphQLList,
 } from 'graphql';
 import {
   Answer as AnswerModel,
   Mentor as MentorModel,
   Question as QuestionModel,
 } from 'models';
-import { Status } from 'models/Answer';
+import { AnswerMediaProps, Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
-import { User } from 'models/User';
 
-export interface AnswerUpdateInput {
+export interface UploadAnswer {
   transcript: string;
-  status: Status;
+  media: AnswerMediaProps[];
 }
 
-export const UpdateAnswerInputType = new GraphQLInputObjectType({
-  name: 'UpdateAnswerInputType',
+export const AnswerMediaInputType = new GraphQLInputObjectType({
+  name: 'AnswerMediaInputType',
+  fields: {
+    type: { type: GraphQLString },
+    tag: { type: GraphQLString },
+    url: { type: GraphQLString },
+  },
+});
+
+export const UploadAnswerType = new GraphQLInputObjectType({
+  name: 'UploadAnswerType',
   fields: () => ({
     transcript: { type: GraphQLString },
-    status: { type: GraphQLString },
+    media: { type: GraphQLList(AnswerMediaInputType) },
   }),
 });
 
 export const updateAnswer = {
   type: GraphQLBoolean,
   args: {
+    mentorId: { type: GraphQLNonNull(GraphQLID) },
     questionId: { type: GraphQLNonNull(GraphQLID) },
-    answer: { type: GraphQLNonNull(UpdateAnswerInputType) },
+    answer: { type: GraphQLNonNull(UploadAnswerType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { questionId: string; answer: AnswerUpdateInput },
-    context: { user: User }
+    args: {
+      mentorId: string;
+      questionId: string;
+      answer: UploadAnswer;
+    }
   ): Promise<boolean> => {
     if (!(await QuestionModel.exists({ _id: args.questionId }))) {
       throw new Error(`no question found for id '${args.questionId}'`);
     }
-    const mentor: Mentor = await MentorModel.findOne({
-      user: context.user._id,
-    });
+    const mentor: Mentor = await MentorModel.findById(args.mentorId);
     if (!mentor) {
-      throw new Error('you do not have a mentor');
+      throw new Error(`no mentor found for id '${args.mentorId}'`);
     }
     const answer = await AnswerModel.findOneAndUpdate(
       {
@@ -60,7 +71,10 @@ export const updateAnswer = {
         question: args.questionId,
       },
       {
-        $set: args.answer,
+        $set: {
+          ...args.answer,
+          status: Status.COMPLETE,
+        },
       },
       {
         upsert: true,
