@@ -25,8 +25,10 @@ describe('subjects', () => {
   });
 
   it('gets a list of subjects', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         subjects {
           edges {
             node {
@@ -41,7 +43,7 @@ describe('subjects', () => {
           }
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.subjects).to.eql({
       edges: [
@@ -76,8 +78,10 @@ describe('subjects', () => {
 
   describe('can order list of subjects', () => {
     it('by name in ascending order', async () => {
-      const response = await request(app).post('/graphql').send({
-        query: `query {
+      const response = await request(app)
+        .post('/graphql')
+        .send({
+          query: `query {
           subjects(sortBy: "name", sortAscending: true) {
             edges {
               node {
@@ -91,7 +95,7 @@ describe('subjects', () => {
             }
           }
         }`,
-      });
+        });
       expect(response.status).to.equal(200);
       expect(response.body.data.subjects).to.eql({
         edges: [
@@ -122,8 +126,10 @@ describe('subjects', () => {
     });
 
     it('by name in descending order', async () => {
-      const response = await request(app).post('/graphql').send({
-        query: `query {
+      const response = await request(app)
+        .post('/graphql')
+        .send({
+          query: `query {
           subjects(sortBy: "name", sortAscending: false) {
             edges {
               node {
@@ -137,7 +143,7 @@ describe('subjects', () => {
             }
           }
         }`,
-      });
+        });
       expect(response.status).to.equal(200);
       expect(response.body.data.subjects).to.eql({
         edges: [
@@ -170,8 +176,10 @@ describe('subjects', () => {
 
   describe('can paginate list of subjects', () => {
     it('gets first 2 subjects', async () => {
-      const response = await request(app).post('/graphql').send({
-        query: `query {
+      const response = await request(app)
+        .post('/graphql')
+        .send({
+          query: `query {
           subjects(limit: 2) {
             edges {
               node {
@@ -186,7 +194,7 @@ describe('subjects', () => {
             }
           }
         }`,
-      });
+        });
       expect(response.status).to.equal(200);
       expect(response.body.data.subjects).to.eql({
         edges: [
@@ -211,8 +219,10 @@ describe('subjects', () => {
     });
 
     it('gets next page', async () => {
-      const response = await request(app).post('/graphql').send({
-        query: `query {
+      const response = await request(app)
+        .post('/graphql')
+        .send({
+          query: `query {
           subjects(limit: 2, cursor: "next__eyIkb2lkIjoiNWZmZGY0MWExZWUyYzYyMzIwYjQ5ZWIyIn0") {
             edges {
               node {
@@ -227,7 +237,7 @@ describe('subjects', () => {
             }
           }
         }`,
-      });
+        });
       expect(response.status).to.equal(200);
       expect(response.body.data.subjects).to.eql({
         edges: [
@@ -247,8 +257,10 @@ describe('subjects', () => {
     });
 
     it('gets first 2 subjects', async () => {
-      const response = await request(app).post('/graphql').send({
-        query: `query {
+      const response = await request(app)
+        .post('/graphql')
+        .send({
+          query: `query {
           subjects(limit: 2, cursor: "prev__eyIkb2lkIjoiNWZmZGY0MWExZWUyYzYyMzIwYjQ5ZWIxIn0") {
             edges {
               node {
@@ -263,7 +275,7 @@ describe('subjects', () => {
             }
           }
         }`,
-      });
+        });
       expect(response.status).to.equal(200);
       expect(response.body.data.subjects).to.eql({
         edges: [

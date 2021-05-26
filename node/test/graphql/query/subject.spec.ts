@@ -26,13 +26,15 @@ describe('subject', () => {
   });
 
   it(`throws an error if invalid id`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           subject(id: "111111111111111111111111") {
             _id
           }
         }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
@@ -41,15 +43,17 @@ describe('subject', () => {
   });
 
   it('gets a subject by id', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           subject(id: "5ffdf41a1ee2c62320b49eb1") {
             _id
             name
             description
           }
       }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.subject).to.eql({
       _id: '5ffdf41a1ee2c62320b49eb1',
@@ -59,8 +63,10 @@ describe('subject', () => {
   });
 
   it('get default categories, topics, and questions in subject', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           subject(id: "5ffdf41a1ee2c62320b49eb2") {
             categories {
               name
@@ -81,7 +87,7 @@ describe('subject', () => {
             }
           }
       }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.subject.categories).to.eql([
       {
@@ -136,8 +142,10 @@ describe('subject', () => {
   });
 
   it('get mentor specific questions for a mentor', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           subject(id: "5ffdf41a1ee2c62320b49eb2") {
             categories {
               name
@@ -158,7 +166,7 @@ describe('subject', () => {
             }
           }
       }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.subject.categories).to.eql([
       {

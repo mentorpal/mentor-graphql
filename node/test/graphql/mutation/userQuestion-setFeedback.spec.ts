@@ -25,35 +25,41 @@ describe('userQuestionSetFeedback', () => {
   });
 
   it(`returns an error if no id`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
         userQuestionSetFeedback(feedback: "GOOD") {
           _id
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(400);
   });
 
   it(`returns an error if no feedback`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
         userQuestionSetFeedback(id: "5ffdf41a1ee2c62320b49ee1") {
           _id
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(400);
   });
 
   it(`returns an error if invalid id`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
         userQuestionSetFeedback(id: "111111111111111111111111", feedback: "GOOD") {
           _id
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
@@ -62,13 +68,15 @@ describe('userQuestionSetFeedback', () => {
   });
 
   it(`updates userQuestion`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
         userQuestionSetFeedback(id: "5ffdf41a1ee2c62320b49ee1", feedback: "GOOD") {
           feedback
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.userQuestionSetFeedback).to.eql({
       feedback: 'GOOD',

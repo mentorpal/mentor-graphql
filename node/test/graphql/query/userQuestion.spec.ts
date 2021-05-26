@@ -26,13 +26,15 @@ describe('userQuestion', () => {
   });
 
   it(`throws an error if invalid id`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           userQuestion(id: "111111111111111111111111") {
             _id
           }
         }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
@@ -41,14 +43,16 @@ describe('userQuestion', () => {
   });
 
   it('gets a userQuestion by id', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           userQuestion(id: "5ffdf41a1ee2c62320b49ee1") {
             _id
             question
           }
       }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.userQuestion).to.eql({
       _id: '5ffdf41a1ee2c62320b49ee1',

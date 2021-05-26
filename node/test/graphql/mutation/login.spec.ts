@@ -26,8 +26,10 @@ describe('login', () => {
   });
 
   it(`returns an error if no accessToken`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
         login {
           user {
             _id
@@ -38,7 +40,7 @@ describe('login', () => {
           expirationDate
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(400);
   });
 

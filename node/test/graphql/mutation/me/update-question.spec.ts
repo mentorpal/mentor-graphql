@@ -26,15 +26,17 @@ describe('updateQuestion', () => {
   });
 
   it(`throws an error if not logged in`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
           me {
             updateQuestion(question: {question: "hi"}) {
               _id
             }
           }
         }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',

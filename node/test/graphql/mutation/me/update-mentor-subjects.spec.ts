@@ -134,7 +134,7 @@ describe('updateMentorSubjects', () => {
     });
   });
 
-  it('updates only subjects', async () => {
+  it('removes defaultSubject', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
@@ -145,7 +145,12 @@ describe('updateMentorSubjects', () => {
             updateMentorSubjects(mentor: $mentor)
           }
         }`,
-        variables: { mentor: { subjects: ['5ffdf41a1ee2c62320b49eb3'] } },
+        variables: {
+          mentor: {
+            defaultSubject: null,
+            subjects: ['5ffdf41a1ee2c62320b49eb3'],
+          },
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
@@ -177,6 +182,59 @@ describe('updateMentorSubjects', () => {
       subjects: [
         {
           _id: '5ffdf41a1ee2c62320b49eb3',
+        },
+      ],
+    });
+  });
+
+  it('updates only default subject', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateMentorSubjects($mentor: UpdateMentorSubjectsType!) {
+          me {
+            updateMentorSubjects(mentor: $mentor)
+          }
+        }`,
+        variables: { mentor: { defaultSubject: '5ffdf41a1ee2c62320b49eb2' } },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'data.me.updateMentorSubjects',
+      true
+    );
+    const mentor = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              mentor {
+                _id
+                defaultSubject {
+                  _id
+                }
+                subjects {
+                  _id
+                }
+              }
+            }
+          }`,
+      });
+    expect(mentor.status).to.equal(200);
+    expect(mentor.body.data.me.mentor).to.eql({
+      _id: '5ffdf41a1ee2c62111111111',
+      defaultSubject: {
+        _id: '5ffdf41a1ee2c62320b49eb2',
+      },
+      subjects: [
+        {
+          _id: '5ffdf41a1ee2c62320b49eb2',
+        },
+        {
+          _id: '5ffdf41a1ee2c62320b49eb1',
         },
       ],
     });

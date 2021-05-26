@@ -43,8 +43,10 @@ describe('login with google', () => {
   });
 
   it(`returns an error if no accessToken`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
         loginGoogle {
           user {
             name
@@ -54,7 +56,7 @@ describe('login with google', () => {
           expirationDate
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(400);
   });
 
@@ -66,8 +68,10 @@ describe('login with google', () => {
         email: 'x@y.com',
         given_name: 'somegivenname',
       });
-    const response = await request(app).post('/graphql').send({
-      query: `mutation {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
         loginGoogle(accessToken: "anything") {
           user {
             name
@@ -77,7 +81,7 @@ describe('login with google', () => {
           expirationDate
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'data.loginGoogle.user.name',

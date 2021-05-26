@@ -26,13 +26,15 @@ describe('mentor', () => {
   });
 
   it(`throws an error if invalid id`, async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           mentor(id: "111111111111111111111111") {
             _id
           }
         }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
@@ -41,8 +43,10 @@ describe('mentor', () => {
   });
 
   it('gets a mentor by id', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
           mentor(id: "5ffdf41a1ee2c62111111111") {
             _id
             name
@@ -54,7 +58,7 @@ describe('mentor', () => {
             }
           }
       }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       _id: '5ffdf41a1ee2c62111111111',
@@ -75,8 +79,10 @@ describe('mentor', () => {
   });
 
   it('mentor/subjects gets all subjects for mentor in alphabetical order', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111112") {
           subjects {
             name
@@ -84,7 +90,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       subjects: [
@@ -102,8 +108,10 @@ describe('mentor', () => {
   });
 
   it('mentor/topics gets all topics for mentor in alphabetical order', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111112") {
           topics {
             name
@@ -111,7 +119,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       topics: [
@@ -129,8 +137,10 @@ describe('mentor', () => {
   });
 
   it('mentor/topics gets topics in default subject in subject order', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111112") {
           topics(useDefaultSubject: true) {
             name
@@ -138,7 +148,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       topics: [
@@ -153,8 +163,10 @@ describe('mentor', () => {
   });
 
   it('mentor/topics gets topics in subject in subject order', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111112") {
           topics(subject: "5ffdf41a1ee2c62320b49eb2") {
             name
@@ -162,7 +174,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       topics: [
@@ -177,8 +189,10 @@ describe('mentor', () => {
   });
 
   it('mentor/topics fails to get topics in subject mentor does not have', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           topics(subject: "5ffdf41a1ee2c62320b49eb3") {
             name
@@ -186,7 +200,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       topics: [],
@@ -194,8 +208,10 @@ describe('mentor', () => {
   });
 
   it('mentor/questions gets all questions for mentor', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           questions {
             question {
@@ -211,7 +227,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor.questions).to.eql([
       {
@@ -246,8 +262,10 @@ describe('mentor', () => {
   });
 
   it('mentor/questions gets all questions in default subject for mentor', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           questions(useDefaultSubject: true) {
             question {
@@ -263,7 +281,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor.questions).to.eql([
       {
@@ -277,8 +295,10 @@ describe('mentor', () => {
   });
 
   it('mentor/questions gets all questions in subject for mentor', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           questions(subject: "5ffdf41a1ee2c62320b49eb1") {
             question {
@@ -294,7 +314,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor.questions).to.eql([
       {
@@ -308,8 +328,10 @@ describe('mentor', () => {
   });
 
   it('mentor/questions fails to get questions in subject mentor does not have', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           questions(subject: "5ffdf41a1ee2c62320b49eb3") {
             question {
@@ -325,14 +347,16 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor.questions).to.eql([]);
   });
 
   it('mentor/answers gets answers for all questions', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           name
           answers {
@@ -345,7 +369,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       name: 'Clinton Anderson',
@@ -383,8 +407,10 @@ describe('mentor', () => {
   });
 
   it('mentor/answers gets complete answers for all questions', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           name
           answers(status: "COMPLETE") {
@@ -397,7 +423,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       name: 'Clinton Anderson',
@@ -414,8 +440,10 @@ describe('mentor', () => {
   });
 
   it('mentor/answers gets answers for default subject', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           answers(useDefaultSubject: true) {
             question {
@@ -427,7 +455,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       answers: [
@@ -443,8 +471,10 @@ describe('mentor', () => {
   });
 
   it('mentor/answers gets answers for subject', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           answers(subject: "5ffdf41a1ee2c62320b49eb1") {
             question {
@@ -456,7 +486,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       answers: [
@@ -472,8 +502,10 @@ describe('mentor', () => {
   });
 
   it('mentor/answers fails to get answers for subject mentor does not have, including incomplete', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           answers(subject: "5ffdf41a1ee2c62320b49eb3") {
             question {
@@ -485,7 +517,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       answers: [],
@@ -493,8 +525,10 @@ describe('mentor', () => {
   });
 
   it('mentor/answers gets answers for questions in topic, including incomplete', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           answers(topic: "5ffdf41a1ee2c62320b49ec3") {
             question {
@@ -506,7 +540,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       answers: [
@@ -522,8 +556,10 @@ describe('mentor', () => {
   });
 
   it('mentor/utterances gets all utterances, including incomplete', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           utterances {
             question {
@@ -535,7 +571,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       utterances: [
@@ -551,8 +587,10 @@ describe('mentor', () => {
   });
 
   it('mentor/answers gets mentor specific question for mentor', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         mentor(id: "5ffdf41a1ee2c62111111112") {
           name
           answers {
@@ -563,7 +601,7 @@ describe('mentor', () => {
         }
       }
     `,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       name: 'Julianne Nordhagen',

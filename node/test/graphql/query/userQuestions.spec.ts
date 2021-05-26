@@ -26,8 +26,10 @@ describe('userQuestions', () => {
   });
 
   it('gets a list of userQuestions', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         userQuestions {
           edges {
             node {
@@ -40,7 +42,7 @@ describe('userQuestions', () => {
           }
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.userQuestions).to.eql({
       edges: [
@@ -63,8 +65,10 @@ describe('userQuestions', () => {
   });
 
   it('filters userQuestions by feedback type', async () => {
-    const response = await request(app).post('/graphql').send({
-      query: `query {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
         userQuestions(filter: { feedback: "NEUTRAL" }) {
           edges {
             node {
@@ -78,7 +82,7 @@ describe('userQuestions', () => {
           }
         }
       }`,
-    });
+      });
     expect(response.status).to.equal(200);
     expect(response.body.data.userQuestions).to.eql({
       edges: [
