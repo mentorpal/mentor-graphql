@@ -45,7 +45,7 @@ export const AnswerType = new GraphQLObjectType({
         if (!media) {
           return '';
         }
-        return process.env.STATIC_URL_BASE + media.url;
+        return new URL(media.url, process.env.STATIC_URL_BASE);
       },
     },
   }),

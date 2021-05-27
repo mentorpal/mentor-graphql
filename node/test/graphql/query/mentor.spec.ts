@@ -656,7 +656,7 @@ describe('mentor', () => {
       answers: [
         {
           transcript: '[being still]',
-          videoUrl: process.env.STATIC_URL_BASE + 'web.mp4',
+          videoUrl: `${process.env.STATIC_URL_BASE}/web.mp4`,
         },
       ],
     });
@@ -683,7 +683,7 @@ describe('mentor', () => {
       answers: [
         {
           transcript: '[being still]',
-          videoUrl: process.env.STATIC_URL_BASE + 'mobile.mp4',
+          videoUrl: `${process.env.STATIC_URL_BASE}/mobile.mp4`,
         },
       ],
     });
