@@ -188,6 +188,18 @@ module.exports = {
       transcript: '[being still]',
       video: 'https://idle/url',
       status: 'COMPLETE',
+      media: [
+        {
+          type: 'video',
+          tag: 'web',
+          url: 'web.mp4',
+        },
+        {
+          type: 'video',
+          tag: 'mobile',
+          url: 'mobile.mp4',
+        },
+      ],
     },
   ],
 
