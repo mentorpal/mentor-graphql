@@ -11,6 +11,7 @@ import {
   GraphQLList,
 } from 'graphql';
 import { questionField } from 'gql/query/question';
+import { Answer } from 'models/Answer';
 
 export const AnswerMediaType = new GraphQLObjectType({
   name: 'AnswerMedia',
@@ -29,6 +30,24 @@ export const AnswerType = new GraphQLObjectType({
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
     media: { type: GraphQLList(AnswerMediaType) },
+    videoUrl: {
+      type: GraphQLString,
+      args: {
+        tag: { type: GraphQLString },
+      },
+      resolve: async function (answer: Answer, args: { tag: string }) {
+        if (!answer.media) {
+          return '';
+        }
+        const media = answer.media.find(
+          (m) => m.type === 'video' && m.tag === (args.tag || 'web')
+        );
+        if (!media) {
+          return '';
+        }
+        return new URL(media.url, process.env.STATIC_URL_BASE);
+      },
+    },
   }),
 });
 
