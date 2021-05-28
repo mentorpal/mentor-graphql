@@ -194,7 +194,7 @@ describe('uploadAnswer', () => {
               {
                 type: 'video',
                 tag: 'web',
-                url: 'http://video.mp4',
+                url: `${process.env.STATIC_URL_BASE}/video.mp4`,
               },
             ],
           },
@@ -234,7 +234,7 @@ describe('uploadAnswer', () => {
         {
           type: 'video',
           tag: 'web',
-          url: 'http://video.mp4',
+          url: `${process.env.STATIC_URL_BASE}/video.mp4`,
         },
       ],
       question: {
