@@ -19,10 +19,15 @@ export const ConfigType = new GraphQLObjectType({
     cmi5Fetch: { type: GraphQLString },
     googleClientId: { type: GraphQLString },
     mentorsDefault: { type: GraphQLList(GraphQLString) },
-    styleHeaderLogo: { type: GraphQLString },
     urlClassifier: { type: GraphQLString },
     urlGraphql: { type: GraphQLString },
     urlVideo: { type: GraphQLString },
+    styleHeaderLogo: { type: GraphQLString },
+    styleHeaderColor: { type: GraphQLString },
+    styleHeaderTextColor: { type: GraphQLString },
+    disclaimerTitle: { type: GraphQLString },
+    disclaimerText: { type: GraphQLString },
+    disclaimerDisabled: { type: GraphQLBoolean },
   }),
 });
 
