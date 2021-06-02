@@ -635,7 +635,7 @@ describe('mentor', () => {
     });
   });
 
-  it('gets web videoUrl for a mentor answer', async () => {
+  it('gets media for a mentor answer', async () => {
     const response = await request(app)
       .post('/graphql')
       .send({
@@ -644,7 +644,11 @@ describe('mentor', () => {
           name
           answers(status: "COMPLETE") {
             transcript
-            videoUrl
+            media {
+              type
+              tag
+              url
+            }
           }
         }
       }
@@ -656,34 +660,18 @@ describe('mentor', () => {
       answers: [
         {
           transcript: '[being still]',
-          videoUrl: `${process.env.STATIC_URL_BASE}/web.mp4`,
-        },
-      ],
-    });
-  });
-
-  it('gets mobile videoUrl for a mentor answer', async () => {
-    const response = await request(app)
-      .post('/graphql')
-      .send({
-        query: `query {
-        mentor(id: "5ffdf41a1ee2c62111111111") {
-          name
-          answers(status: "COMPLETE") {
-            transcript
-            videoUrl(tag: "mobile")
-          }
-        }
-      }
-    `,
-      });
-    expect(response.status).to.equal(200);
-    expect(response.body.data.mentor).to.eql({
-      name: 'Clinton Anderson',
-      answers: [
-        {
-          transcript: '[being still]',
-          videoUrl: `${process.env.STATIC_URL_BASE}/mobile.mp4`,
+          media: [
+            {
+              type: 'video',
+              tag: 'web',
+              url: `${process.env.STATIC_URL_BASE}/web.mp4`,
+            },
+            {
+              type: 'video',
+              tag: 'mobile',
+              url: `${process.env.STATIC_URL_BASE}/mobile.mp4`,
+            },
+          ],
         },
       ],
     });

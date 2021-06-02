@@ -10,12 +10,17 @@ export interface Config {
   cmi5Enabled: boolean;
   cmi5Endpoint: string;
   cmi5Fetch: string;
-  googleClientId: string;
-  mentorsDefault: string[];
-  styleHeaderLogo: string;
   urlClassifier: string;
   urlGraphql: string;
   urlVideo: string;
+  googleClientId: string;
+  mentorsDefault: string[];
+  styleHeaderLogo: string;
+  styleHeaderColor: string;
+  styleHeaderTextColor: string;
+  disclaimerTitle: string;
+  disclaimerText: string;
+  disclaimerDisabled: boolean;
 }
 
 type ConfigKey = keyof Config;
@@ -23,12 +28,17 @@ export const ConfigKeys: ConfigKey[] = [
   'cmi5Enabled',
   'cmi5Endpoint',
   'cmi5Fetch',
-  'googleClientId',
-  'mentorsDefault',
-  'styleHeaderLogo',
   'urlClassifier',
   'urlGraphql',
   'urlVideo',
+  'googleClientId',
+  'mentorsDefault',
+  'styleHeaderLogo',
+  'styleHeaderColor',
+  'styleHeaderTextColor',
+  'disclaimerTitle',
+  'disclaimerText',
+  'disclaimerDisabled',
 ];
 
 export interface Setting {
@@ -42,12 +52,17 @@ export function getDefaultConfig(): Config {
     cmi5Enabled: false,
     cmi5Endpoint: '',
     cmi5Fetch: '',
-    googleClientId: process.env.GOOGLE_CLIENT_ID || '',
-    mentorsDefault: [],
     urlClassifier: '/classifier',
     urlGraphql: '/graphql',
     urlVideo: '/video',
+    googleClientId: process.env.GOOGLE_CLIENT_ID || '',
+    mentorsDefault: [],
     styleHeaderLogo: '',
+    styleHeaderColor: '',
+    styleHeaderTextColor: '',
+    disclaimerTitle: '',
+    disclaimerText: '',
+    disclaimerDisabled: true,
   };
 }
 

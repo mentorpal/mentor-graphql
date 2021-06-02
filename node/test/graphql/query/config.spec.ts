@@ -161,6 +161,11 @@ describe('config', () => {
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
       styleHeaderLogo: '/a/logo.png',
+      styleHeaderColor: '',
+      styleHeaderTextColor: '',
+      disclaimerTitle: '',
+      disclaimerText: '',
+      disclaimerDisabled: true,
     };
     await SettingModel.saveConfig(config);
     const response = await request(app)
@@ -177,6 +182,11 @@ describe('config', () => {
             urlGraphql
             urlVideo
             styleHeaderLogo
+            styleHeaderColor
+            styleHeaderTextColor
+            disclaimerTitle
+            disclaimerText
+            disclaimerDisabled
           }
         }`,
       });
