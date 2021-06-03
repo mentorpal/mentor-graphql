@@ -27,6 +27,7 @@ export interface Mentor extends Document {
   firstName: string;
   title: string;
   email: string;
+  allowContact: boolean;
   defaultSubject: Subject['_id'];
   subjects: Subject['_id'][];
   lastTrainedAt: Date;
@@ -68,6 +69,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     firstName: { type: String },
     title: { type: String },
     email: { type: String },
+    allowContact: { type: Boolean },
     defaultSubject: { type: Schema.Types.ObjectId, ref: 'Subject' },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
     lastTrainedAt: { type: Date },

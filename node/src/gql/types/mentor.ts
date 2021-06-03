@@ -27,6 +27,7 @@ export const MentorType = new GraphQLObjectType({
     firstName: { type: GraphQLString },
     title: { type: GraphQLString },
     email: { type: GraphQLString },
+    allowContact: { type: GraphQLBoolean },
     lastTrainedAt: { type: DateType },
     mentorType: { type: GraphQLString },
     defaultSubject: { type: SubjectType },

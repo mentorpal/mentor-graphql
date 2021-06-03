@@ -85,6 +85,7 @@ export const loginGoogle = {
             user: user._id,
             name: googleResponse.name,
             firstName: googleResponse.given_name,
+            email: googleResponse.email,
           },
         },
         {
