@@ -19,7 +19,6 @@ export interface AnswerMediaProps {
   tag: string;
   url: string;
 }
-
 export interface AnswerMedia extends AnswerMediaProps, Document {}
 
 export const AnswerMediaSchema = new Schema({
@@ -34,6 +33,7 @@ export interface Answer extends Document {
   transcript: string;
   status: Status;
   media: AnswerMedia[];
+  uploadStatusUrl: string;
 }
 
 export const AnswerSchema = new Schema({
@@ -46,6 +46,7 @@ export const AnswerSchema = new Schema({
     default: Status.INCOMPLETE,
   },
   media: { type: [AnswerMediaSchema] },
+  uploadStatusUrl: { type: String },
 });
 
 AnswerSchema.index({ question: -1, mentor: -1 }, { unique: true });
