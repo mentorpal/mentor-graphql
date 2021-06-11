@@ -35,7 +35,6 @@ export const AnswerType = new GraphQLObjectType({
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
     media: { type: GraphQLList(AnswerMediaType) },
-    uploadStatusUrl: { type: GraphQLString },
   }),
 });
 

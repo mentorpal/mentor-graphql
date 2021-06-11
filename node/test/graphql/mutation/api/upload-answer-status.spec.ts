@@ -15,8 +15,9 @@ import { expect } from 'chai';
 import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
+import { getToken } from '../../../helpers';
 
-describe('uploadAnswerStatus', () => {
+describe('uploadTaskUpdate', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -34,15 +35,15 @@ describe('uploadAnswerStatus', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `mutation UploadAnswer($mentorId: ID!, $questionId: ID!, $statusUrl: String!) {
-        api {
-          uploadAnswerStatus(mentorId: $mentorId, questionId: $questionId, statusUrl: $statusUrl)
-        }
-      }`,
+        query: `mutation UpdateUploadTask($mentorId: ID!, $questionId: ID!, $status: UploadTaskInputType!) {
+          api {
+            uploadTaskUpdate(mentorId: $mentorId, questionId: $questionId, status: $status)
+          }
+        }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          statusUrl: 'http://status',
+          status: { uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
         },
       });
     expect(response.status).to.equal(200);
@@ -58,15 +59,15 @@ describe('uploadAnswerStatus', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer asdfdsadf`)
       .send({
-        query: `mutation UploadAnswer($mentorId: ID!, $questionId: ID!, $statusUrl: String!) {
+        query: `mutation UpdateUploadTask($mentorId: ID!, $questionId: ID!, $status: UploadTaskInputType!) {
           api {
-            uploadAnswerStatus(mentorId: $mentorId, questionId: $questionId, statusUrl: $statusUrl)
+            uploadTaskUpdate(mentorId: $mentorId, questionId: $questionId, status: $status)
           }
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          statusUrl: 'http://status',
+          status: { uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
         },
       });
     expect(response.status).to.equal(200);
@@ -82,15 +83,15 @@ describe('uploadAnswerStatus', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UploadAnswer($mentorId: ID!, $questionId: ID!, $statusUrl: String!) {
+        query: `mutation UpdateUploadTask($mentorId: ID!, $questionId: ID!, $status: UploadTaskInputType!) {
           api {
-            uploadAnswerStatus(mentorId: $mentorId, questionId: $questionId, statusUrl: $statusUrl, hello: "hi")
+            uploadTaskUpdate(mentorId: $mentorId, questionId: $questionId, status: $status, hello: "hi")
           }
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          statusUrl: 'http://status',
+          status: { uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
         },
       });
     expect(response.status).to.equal(400);
@@ -102,104 +103,165 @@ describe('uploadAnswerStatus', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UploadAnswer($mentorId: ID!, $questionId: ID!, $statusUrl: String!) {
+        query: `mutation UpdateUploadTask($mentorId: ID!, $questionId: ID!, $status: UploadTaskInputType!) {
           api {
-            uploadAnswerStatus(mentorId: $mentorId, questionId: $questionId, statusUrl: $statusUrl)
+            uploadTaskUpdate(mentorId: $mentorId, questionId: $questionId, status: $status)
           }
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          statusUrl: {},
+          status: 'no thanks',
         },
       });
     expect(response.status).to.equal(500);
   });
 
-  it('updates statusUrl', async () => {
-    let update = await request(app)
+  it('updates upload task', async () => {
+    const update = await request(app)
       .post('/graphql')
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UploadAnswer($mentorId: ID!, $questionId: ID!, $statusUrl: String!) {
+        query: `mutation UpdateUploadTask($mentorId: ID!, $questionId: ID!, $status: UploadTaskInputType!) {
           api {
-            uploadAnswerStatus(mentorId: $mentorId, questionId: $questionId, statusUrl: $statusUrl)
+            uploadTaskUpdate(mentorId: $mentorId, questionId: $questionId, status: $status)
           }
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          statusUrl: 'http://status',
+          status: {
+            uploadStatus: 'DONE',
+            transcript: 'My name is Clinton Anderson',
+            media: [{ type: 'video', tag: 'web', url: 'video.mp4' }],
+          },
         },
       });
     expect(update.status).to.equal(200);
-    expect(update.body.data.api.uploadAnswerStatus).to.eql(true);
-    let answer = await request(app)
+    expect(update.body.data.api.uploadTaskUpdate).to.eql(true);
+
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
       .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
       .send({
         query: `query {
-          mentor(id: "5ffdf41a1ee2c62111111111") {
-            answers {
-              uploadStatusUrl
-              question {
-                _id
+            me {
+              uploadTasks {
+                mentor {
+                  _id
+                }
+                question {
+                  _id
+                  question
+                }
+                uploadStatus
+                transcript
+                media {
+                  type
+                  tag
+                  url
+                }
               }
             }
-          }
-      }`,
+          }`,
       });
-    expect(answer.status).to.equal(200);
-    let updatedAnswer = answer.body.data.mentor.answers.find(
-      (a: any) => a.question._id === '511111111111111111111112'
-    );
-    expect(updatedAnswer).to.eql({
-      uploadStatusUrl: 'http://status',
-      question: {
-        _id: '511111111111111111111112',
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.uploadTasks).to.eql([
+      {
+        mentor: {
+          _id: '5ffdf41a1ee2c62111111111',
+        },
+        question: {
+          _id: '511111111111111111111112',
+          question: 'Who are you and what do you do?',
+        },
+        uploadStatus: 'DONE',
+        transcript: 'My name is Clinton Anderson',
+        media: [
+          {
+            type: 'video',
+            tag: 'web',
+            url: 'https://videos.mentorpal.org/video.mp4',
+          },
+        ],
       },
-    });
+    ]);
+  });
 
-    update = await request(app)
+  it('creates upload task', async () => {
+    const update = await request(app)
       .post('/graphql')
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UploadAnswer($mentorId: ID!, $questionId: ID!) {
-        api {
-          uploadAnswerStatus(mentorId: $mentorId, questionId: $questionId)
-        }
-      }`,
+        query: `mutation UpdateUploadTask($mentorId: ID!, $questionId: ID!, $status: UploadTaskInputType!) {
+          api {
+            uploadTaskUpdate(mentorId: $mentorId, questionId: $questionId, status: $status)
+          }
+        }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
-          questionId: '511111111111111111111112',
+          questionId: '511111111111111111111113',
+          status: { uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
         },
       });
     expect(update.status).to.equal(200);
-    expect(update.body.data.api.uploadAnswerStatus).to.eql(true);
-    answer = await request(app)
+    expect(update.body.data.api.uploadTaskUpdate).to.eql(true);
+
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
       .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
       .send({
         query: `query {
-        mentor(id: "5ffdf41a1ee2c62111111111") {
-          answers {
-            uploadStatusUrl
-            question {
-              _id
+            me {
+              uploadTasks {
+                mentor {
+                  _id
+                }
+                question {
+                  _id
+                  question
+                }
+                uploadStatus
+                transcript
+                media {
+                  type
+                  tag
+                  url
+                }
+              }
             }
-          }
-        }
-      }`,
+          }`,
       });
-    expect(answer.status).to.equal(200);
-    updatedAnswer = answer.body.data.mentor.answers.find(
-      (a: any) => a.question._id === '511111111111111111111112'
-    );
-    expect(updatedAnswer).to.eql({
-      uploadStatusUrl: null,
-      question: {
-        _id: '511111111111111111111112',
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.uploadTasks).to.eql([
+      {
+        mentor: {
+          _id: '5ffdf41a1ee2c62111111111',
+        },
+        question: {
+          _id: '511111111111111111111112',
+          question: 'Who are you and what do you do?',
+        },
+        uploadStatus: 'TRANSCRIBE_IN_PROGRESS',
+        transcript: null,
+        media: [],
       },
-    });
+      {
+        mentor: {
+          _id: '5ffdf41a1ee2c62111111111',
+        },
+        question: {
+          _id: '511111111111111111111113',
+          question: 'How old are you?',
+        },
+        uploadStatus: 'TRANSCRIBE_IN_PROGRESS',
+        transcript: null,
+        media: [],
+      },
+    ]);
   });
 });

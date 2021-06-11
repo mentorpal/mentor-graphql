@@ -12,6 +12,8 @@ import Question from './Question';
 export { default as Question } from './Question';
 import Subject from './Subject';
 export { default as Subject } from './Subject';
+import UploadTask from './UploadTask';
+export { default as UploadTask } from './UploadTask';
 import User from './User';
 export { default as User } from './User';
 import UserQuestion from './UserQuestion';
@@ -22,6 +24,7 @@ export default {
   Mentor,
   Question,
   Subject,
+  UploadTask,
   User,
   UserQuestion,
 };

@@ -5,58 +5,46 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import {
-  GraphQLString,
   GraphQLObjectType,
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
 } from 'graphql';
 import {
-  Answer as AnswerModel,
   Mentor as MentorModel,
   Question as QuestionModel,
+  UploadTask as UploadTaskModel,
 } from 'models';
 import { Mentor } from 'models/Mentor';
+import { User } from 'models/User';
 
-export const uploadAnswerStatus = {
+export const uploadTaskDelete = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
     questionId: { type: GraphQLNonNull(GraphQLID) },
-    statusUrl: { type: GraphQLString },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
-      mentorId: string;
       questionId: string;
-      statusUrl: string;
-    }
+    },
+    context: { user: User }
   ): Promise<boolean> => {
     if (!(await QuestionModel.exists({ _id: args.questionId }))) {
       throw new Error(`no question found for id '${args.questionId}'`);
     }
-    const mentor: Mentor = await MentorModel.findById(args.mentorId);
+    const mentor: Mentor = await MentorModel.findOne({
+      user: context.user._id,
+    });
     if (!mentor) {
-      throw new Error(`no mentor found for id '${args.mentorId}'`);
+      throw new Error('you do not have a mentor');
     }
-    const answer = await AnswerModel.findOneAndUpdate(
-      {
-        mentor: mentor._id,
-        question: args.questionId,
-      },
-      {
-        $set: {
-          uploadStatusUrl: args.statusUrl,
-        },
-      },
-      {
-        upsert: true,
-        new: true,
-      }
-    );
-    return Boolean(answer);
+    const task = await UploadTaskModel.deleteOne({
+      mentor: mentor._id,
+      question: args.questionId,
+    });
+    return Boolean(task);
   },
 };
 
-export default uploadAnswerStatus;
+export default uploadTaskDelete;

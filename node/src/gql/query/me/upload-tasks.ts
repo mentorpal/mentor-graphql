@@ -4,37 +4,31 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
+
+import { Types } from 'mongoose';
+import { GraphQLList } from 'graphql';
 import { User } from 'models/User';
-import updateMentorDetails from './update-mentor-details';
-import updateMentorSubjects from './update-mentor-subjects';
-import updateAnswer from './update-answer';
-import updateQuestion from './update-question';
-import updateSubject from './update-subject';
-import uploadTaskDelete from './upload-task-delete';
+import { Mentor as MentorModel } from 'models';
+import { UploadTask as UploadTaskModel } from 'models';
+import { UploadTaskType } from 'gql/types/upload-task';
 
-export const Me: GraphQLObjectType = new GraphQLObjectType({
-  name: 'MeMutation',
-  fields: () => ({
-    updateMentorDetails,
-    updateMentorSubjects,
-    updateAnswer,
-    updateQuestion,
-    updateSubject,
-    uploadTaskDelete,
-  }),
-});
-
-export const me = {
-  type: Me,
-  resolve: (_: any, args: any, context: { user: User }): { user: User } => {
+export const uploadTasks = {
+  type: GraphQLList(UploadTaskType),
+  resolve: async (_: any, args: any, context: { user: User }) => {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
-    return {
-      user: context.user,
-    };
+    const mentor = await MentorModel.findOne({
+      user: Types.ObjectId(`${context.user._id}`),
+    });
+    if (!mentor) {
+      throw new Error('Mentor not found for user');
+    }
+    const tasks = await UploadTaskModel.find({
+      mentor: mentor._id,
+    });
+    return tasks;
   },
 };
 
-export default me;
+export default uploadTasks;

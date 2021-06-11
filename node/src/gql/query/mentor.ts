@@ -15,7 +15,7 @@ export const mentorFindOne = findOne({
   typeName: 'mentor',
 });
 
-export function mentorFieldWithName(field = 'topic') {
+export function mentorFieldWithName(field = 'mentor') {
   return findByParentField(MentorType, Mentor, field);
 }
 
