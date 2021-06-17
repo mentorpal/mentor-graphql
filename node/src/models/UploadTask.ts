@@ -8,48 +8,46 @@ The full terms of this copyright and license should always be found in the root 
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import { Question } from './Question';
 import { Mentor } from './Mentor';
+import { AnswerMedia, AnswerMediaSchema } from './Answer';
 
-export enum Status {
-  INCOMPLETE = 'INCOMPLETE',
-  COMPLETE = 'COMPLETE',
+export enum UploadStatus {
+  NONE = 'NONE',
+  TRANSCRIBE_IN_PROGRESS = 'TRANSCRIBE_IN_PROGRESS',
+  TRANSCRIBE_FAILED = 'TRANSCRIBE_FAILED',
+  UPLOAD_IN_PROGRESS = 'UPLOAD_IN_PROGRESS',
+  UPLOAD_FAILED = 'UPLOAD_FAILED',
+  DONE = 'DONE',
 }
 
-export interface AnswerMediaProps {
-  type: string;
-  tag: string;
-  url: string;
-}
-export interface AnswerMedia extends AnswerMediaProps, Document {}
-
-export const AnswerMediaSchema = new Schema({
-  type: { type: String },
-  tag: { type: String },
-  url: { type: String },
-});
-
-export interface Answer extends Document {
+export interface UploadTask extends Document {
   mentor: Mentor['_id'];
   question: Question['_id'];
+  uploadStatus: UploadStatus;
   transcript: string;
-  status: Status;
   media: AnswerMedia[];
 }
 
-export const AnswerSchema = new Schema({
-  mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
-  question: { type: mongoose.Types.ObjectId, ref: 'Question' },
-  transcript: { type: String },
-  status: {
-    type: String,
-    enum: [Status.INCOMPLETE, Status.COMPLETE],
-    default: Status.INCOMPLETE,
+export const UploadTaskSchema = new Schema(
+  {
+    mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
+    question: { type: mongoose.Types.ObjectId, ref: 'Question' },
+    uploadStatus: {
+      type: String,
+      enum: Object.values(UploadStatus),
+      default: UploadStatus.NONE,
+    },
+    transcript: { type: String },
+    media: { type: [AnswerMediaSchema] },
   },
-  media: { type: [AnswerMediaSchema] },
-});
+  { timestamps: true, collation: { locale: 'en', strength: 2 } }
+);
 
-AnswerSchema.index({ question: -1, mentor: -1 }, { unique: true });
+UploadTaskSchema.index({ question: -1, mentor: -1 }, { unique: true });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface AnswerModel extends Model<Answer> {}
+export interface UploadTaskModel extends Model<UploadTask> {}
 
-export default mongoose.model<Answer, AnswerModel>('Answer', AnswerSchema);
+export default mongoose.model<UploadTask, UploadTaskModel>(
+  'UploadTask',
+  UploadTaskSchema
+);

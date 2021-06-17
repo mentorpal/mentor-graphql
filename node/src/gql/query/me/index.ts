@@ -7,11 +7,13 @@ The full terms of this copyright and license should always be found in the root 
 import { GraphQLObjectType } from 'graphql';
 import { User } from 'models/User';
 import { mentor } from './mentor';
+import { uploadTasks } from './upload-tasks';
 
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeQuery',
   fields: {
     mentor,
+    uploadTasks,
   },
 });
 

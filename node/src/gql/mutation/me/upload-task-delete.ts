@@ -5,65 +5,46 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import {
-  GraphQLString,
   GraphQLObjectType,
   GraphQLBoolean,
   GraphQLNonNull,
-  GraphQLInputObjectType,
+  GraphQLID,
 } from 'graphql';
-import { Mentor as MentorModel } from 'models';
+import {
+  Mentor as MentorModel,
+  Question as QuestionModel,
+  UploadTask as UploadTaskModel,
+} from 'models';
 import { Mentor } from 'models/Mentor';
 import { User } from 'models/User';
 
-export interface UpdateMentorDetails {
-  name: string;
-  firstName: string;
-  title: string;
-  email: string;
-  allowContact: boolean;
-  mentorType: string;
-}
-
-export const UpdateMentorDetailsType = new GraphQLInputObjectType({
-  name: 'UpdateMentorDetailsType',
-  fields: () => ({
-    name: { type: GraphQLString },
-    firstName: { type: GraphQLString },
-    title: { type: GraphQLString },
-    email: { type: GraphQLString },
-    allowContact: { type: GraphQLBoolean },
-    mentorType: { type: GraphQLString },
-  }),
-});
-
-export const updateMentorDetails = {
+export const uploadTaskDelete = {
   type: GraphQLBoolean,
   args: {
-    mentor: { type: GraphQLNonNull(UpdateMentorDetailsType) },
+    questionId: { type: GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: UpdateMentorDetails },
+    args: {
+      questionId: string;
+    },
     context: { user: User }
   ): Promise<boolean> => {
+    if (!(await QuestionModel.exists({ _id: args.questionId }))) {
+      throw new Error(`no question found for id '${args.questionId}'`);
+    }
     const mentor: Mentor = await MentorModel.findOne({
       user: context.user._id,
     });
     if (!mentor) {
       throw new Error('you do not have a mentor');
     }
-    const updated = await MentorModel.findByIdAndUpdate(
-      mentor._id,
-      {
-        $set: args.mentor,
-      },
-      {
-        new: true,
-        upsert: true,
-      }
-    );
-    return Boolean(updated);
+    const task = await UploadTaskModel.deleteOne({
+      mentor: mentor._id,
+      question: args.questionId,
+    });
+    return Boolean(task);
   },
 };
 
-export default updateMentorDetails;
+export default uploadTaskDelete;
