@@ -31,8 +31,12 @@ export const MentorType = new GraphQLObjectType({
     lastTrainedAt: { type: DateType },
     mentorType: { type: GraphQLString },
     defaultSubject: { type: SubjectType },
-    thumbnail: { type: GraphQLString },
-
+    thumbnail: {
+      type: GraphQLString,
+      resolve: function (mentor: Mentor) {
+        return new URL(mentor.thumbnail, process.env.STATIC_URL_BASE);
+      },
+    },
     subjects: {
       type: GraphQLList(SubjectType),
       resolve: async function (mentor: Mentor) {

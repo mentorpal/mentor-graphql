@@ -42,7 +42,7 @@ describe('mentor', () => {
     );
   });
 
-  it.only(`provides the mentor's thumbnail`, async () => {
+  it(`provides the mentor's thumbnail`, async () => {
     const response = await request(app)
       .post('/graphql')
       .send({
@@ -57,7 +57,8 @@ describe('mentor', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       _id: '5ffdf41a1ee2c62111111111',
-      thumbnail: 'https://static.mentorpal.org/mentor/thumbnails/5ffdf41a1ee2c62111111111-20210621T000000.png',
+      thumbnail:
+        'https://static.mentorpal.org/mentor/thumbnails/5ffdf41a1ee2c62111111111-20210621T000000.png',
     });
   });
 
