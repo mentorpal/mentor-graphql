@@ -31,6 +31,7 @@ export const MentorType = new GraphQLObjectType({
     lastTrainedAt: { type: DateType },
     mentorType: { type: GraphQLString },
     defaultSubject: { type: SubjectType },
+    thumbnail: { type: GraphQLString },
 
     subjects: {
       type: GraphQLList(SubjectType),
