@@ -20,6 +20,7 @@ export const UploadTaskType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     mentor: mentorField,
     question: questionField,
+    taskId: { type: GraphQLString },
     uploadStatus: { type: GraphQLString },
     media: { type: GraphQLList(AnswerMediaType) },
     transcript: { type: GraphQLString },

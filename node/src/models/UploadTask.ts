@@ -16,12 +16,15 @@ export enum UploadStatus {
   TRANSCRIBE_FAILED = 'TRANSCRIBE_FAILED',
   UPLOAD_IN_PROGRESS = 'UPLOAD_IN_PROGRESS',
   UPLOAD_FAILED = 'UPLOAD_FAILED',
+  CANCEL_IN_PROGRESS = 'CANCEL_IN_PROGRESS',
+  CANCELLED = 'CANCELLED',
   DONE = 'DONE',
 }
 
 export interface UploadTask extends Document {
   mentor: Mentor['_id'];
   question: Question['_id'];
+  taskId: string;
   uploadStatus: UploadStatus;
   transcript: string;
   media: AnswerMedia[];
@@ -31,6 +34,7 @@ export const UploadTaskSchema = new Schema(
   {
     mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
     question: { type: mongoose.Types.ObjectId, ref: 'Question' },
+    taskId: { type: String },
     uploadStatus: {
       type: String,
       enum: Object.values(UploadStatus),

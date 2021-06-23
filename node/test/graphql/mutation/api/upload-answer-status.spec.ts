@@ -43,7 +43,7 @@ describe('uploadTaskUpdate', () => {
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          status: { uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
+          status: { taskId: 'task_id', uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
         },
       });
     expect(response.status).to.equal(200);
@@ -67,7 +67,7 @@ describe('uploadTaskUpdate', () => {
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          status: { uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
+          status: { taskId: 'task_id', uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
         },
       });
     expect(response.status).to.equal(200);
@@ -91,7 +91,7 @@ describe('uploadTaskUpdate', () => {
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          status: { uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
+          status: { taskId: 'task_id', uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
         },
       });
     expect(response.status).to.equal(400);
@@ -132,6 +132,7 @@ describe('uploadTaskUpdate', () => {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
           status: {
+            taskId: 'task_id',
             uploadStatus: 'DONE',
             transcript: 'My name is Clinton Anderson',
             media: [{ type: 'video', tag: 'web', url: 'video.mp4' }],
@@ -204,7 +205,7 @@ describe('uploadTaskUpdate', () => {
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111113',
-          status: { uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
+          status: { taskId: 'task_id', uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
         },
       });
     expect(update.status).to.equal(200);

@@ -24,6 +24,7 @@ import { UploadStatus } from 'models/UploadTask';
 import { AnswerMediaInputType } from './upload-answer';
 
 export interface UploadTask {
+  taskId: string;
   uploadStatus: UploadStatus;
   transcript: string;
   media: AnswerMediaProps[];
@@ -32,6 +33,7 @@ export interface UploadTask {
 export const UploadTaskInputType = new GraphQLInputObjectType({
   name: 'UploadTaskInputType',
   fields: {
+    taskId: { type: GraphQLNonNull(GraphQLString) },
     uploadStatus: { type: GraphQLNonNull(GraphQLString) },
     transcript: { type: GraphQLString },
     media: { type: GraphQLList(AnswerMediaInputType) },
