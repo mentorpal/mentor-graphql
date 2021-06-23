@@ -183,7 +183,7 @@ describe('uploadTaskUpdate', () => {
           {
             type: 'video',
             tag: 'web',
-            url: 'https://videos.mentorpal.org/video.mp4',
+            url: 'https://static.mentorpal.org/video.mp4',
           },
         ],
       },

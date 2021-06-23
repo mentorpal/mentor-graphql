@@ -4,31 +4,43 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import { User } from 'models/User';
-import mentorThumbnailUpdate from './mentor-thumbnail-update';
-import uploadAnswer from './upload-answer';
-import uploadTaskUpdate from './upload-task-update';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLBoolean,
+  GraphQLNonNull,
+  GraphQLID,
+} from 'graphql';
+import { Mentor as MentorModel } from 'models';
 
-export const Api: GraphQLObjectType = new GraphQLObjectType({
-  name: 'ApiMutation',
-  fields: () => ({
-    mentorThumbnailUpdate,
-    uploadAnswer,
-    uploadTaskUpdate,
-  }),
-});
-
-export const api = {
-  type: Api,
-  resolve: (_: any, args: any, context: { user: User }): { user: User } => {
-    if (!context.user) {
-      throw new Error('Only authenticated users');
+export const mentorThumbnailUpdate = {
+  type: GraphQLBoolean,
+  args: {
+    mentorId: { type: GraphQLNonNull(GraphQLID) },
+    thumbnail: { type: GraphQLNonNull(GraphQLString) },
+  },
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: {
+      mentorId: string;
+      thumbnail: string;
     }
-    return {
-      user: context.user,
-    };
+  ): Promise<boolean> => {
+    if (!(await MentorModel.exists({ _id: args.mentorId }))) {
+      throw new Error(`no mentor found for id '${args.mentorId}'`);
+    }
+    await MentorModel.findOneAndUpdate(
+      {
+        _id: args.mentorId,
+      },
+      {
+        $set: {
+          thumbnail: args.thumbnail,
+        },
+      }
+    );
+    return true;
   },
 };
 
-export default api;
+export default mentorThumbnailUpdate;

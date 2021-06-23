@@ -37,6 +37,8 @@ module.exports = {
       name: 'Clinton Anderson',
       firstName: 'Clint',
       title: "Nuclear Electrician's Mate",
+      thumbnail:
+        'mentor/thumbnails/5ffdf41a1ee2c62111111111-20210621T000000.png',
       defaultSubject: '5ffdf41a1ee2c62320b49eb1',
       subjects: [
         ObjectId('5ffdf41a1ee2c62320b49eb1'),
