@@ -286,4 +286,50 @@ describe('updateSubject', () => {
       ],
     });
   });
+
+  it('can create very large subjects', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const subject = require('test/fixtures/large-subject.json');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateSubject($subject: SubjectUpdateInputType!) {
+          me {
+            updateSubject(subject: $subject) {
+              _id
+              name
+              description
+              isRequired
+              categories {
+                id
+                name
+              }
+              topics {
+                id
+                name
+                description
+              }
+              questions {
+                question {
+                  question
+                }
+                category {
+                  id
+                  name
+                }
+                topics {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        }`,
+        variables: {
+          subject: subject,
+        },
+      });
+    expect(response.status).to.equal(200);
+  });
 });

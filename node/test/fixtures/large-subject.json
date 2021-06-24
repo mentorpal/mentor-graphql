@@ -1,0 +1,3724 @@
+{
+  "_id": "60930672f5ded648ffb65d69",
+  "name": "STEM Careers",
+  "description": "Asking questions about what a STEM Career is like from a STEM mentor",
+  "topics": [
+    {
+      "id": "9faedb55-1556-4112-ba11-e4266f47fa32",
+      "name": "Background",
+      "description": ""
+    },
+    {
+      "id": "68dd37c3-e73b-4ab4-ba61-53e14084d4af",
+      "name": "First Steps",
+      "description": ""
+    },
+    {
+      "id": "a5af3608-bf3c-4ff8-85de-b2a645366304",
+      "name": "Biography",
+      "description": ""
+    },
+    {
+      "id": "e42130bf-a81d-4e35-83f0-62e26ae496a7",
+      "name": "About the Job",
+      "description": ""
+    },
+    {
+      "id": "ee5e8285-76a8-4ff8-9b7d-d0267376c6d9",
+      "name": "Development",
+      "description": ""
+    },
+    {
+      "id": "97103b5d-4dd4-4a24-a557-37dc61e58a86",
+      "name": "Challenges",
+      "description": ""
+    },
+    {
+      "id": "997092c0-4028-4c1f-ad98-cbfaa5853c1e",
+      "name": "Lifestyle",
+      "description": ""
+    },
+    {
+      "id": "10758bcf-8708-4fb4-815a-a13328b5da6d",
+      "name": "Education",
+      "description": ""
+    },
+    {
+      "id": "c8b07416-376c-4ea2-9560-2fad8e66e2fc",
+      "name": "Graduate School",
+      "description": ""
+    },
+    {
+      "id": "35debd9f-476d-43c9-b51c-09c65292ec7f",
+      "name": "Mentoring",
+      "description": ""
+    },
+    {
+      "id": "fc865d73-e47c-4512-bd5b-e9cf589e2f5b",
+      "name": "Advice",
+      "description": ""
+    },
+    {
+      "id": "a3ffed41-e730-40c5-a33f-2959a29ed04c",
+      "name": "Diversity",
+      "description": ""
+    },
+    {
+      "id": "2c17eb69-a620-4479-982d-950c3b8a0b41",
+      "name": "Motivation & Vision",
+      "description": ""
+    },
+    {
+      "id": "46cb53d5-0c53-454c-b6d7-d82851c4e2e7",
+      "name": "For Fun",
+      "description": ""
+    }
+  ],
+  "categories": [
+    {
+      "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+      "name": "Biography",
+      "description": ""
+    },
+    {
+      "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+      "name": "About the Job",
+      "description": ""
+    },
+    {
+      "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+      "name": "Education",
+      "description": ""
+    },
+    {
+      "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+      "name": "Graduate School",
+      "description": ""
+    },
+    {
+      "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+      "name": "Development",
+      "description": ""
+    }
+  ],
+  "questions": [
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd702a7c3c5963",
+        "name": "",
+        "question": "What is your name?",
+        "mentorType": "VIDEO",
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What are you called?",
+          "What do you go by?",
+          "What do people call you?",
+          "What do you like to be called?",
+          "Hi",
+          "Hello",
+          "How should I address you?",
+          "Who are you?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7081773c5964",
+        "name": "",
+        "question": "What year were you born?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "When were you born?",
+          "What is your birth year?",
+          "What is your date of birth?",
+          "Which year were you born?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70415d3c5965",
+        "name": "",
+        "question": "How old are you now?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What is your age?",
+          "How old are you?",
+          "How many years have you been alive?",
+          "how much older are you than me?",
+          "how much younger are you than me?",
+          "What's your age?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70e9753c5966",
+        "name": "",
+        "question": "Where did you grow up?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Where did you spend your childhood?",
+          "Where did you go to elementary school?",
+          "Where did you live as a child?",
+          "Did you grow up around here?",
+          "Where's your hometown?",
+          "Are you from around here?",
+          "Have you been here your whole life?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd705b803c5967",
+        "name": "",
+        "question": "Tell me about your childhood.",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What was your childhood like?",
+          "What was it like growing up for you?",
+          "What were you like as a kid?",
+          "How was your childhood?",
+          "How was it growing up?",
+          "How did your childhood influence you?",
+          "Did you have a difficult childhood?",
+          "How would you describe your childhood?",
+          "Did you enjoy being a kid?",
+          "Did you like yourself as a child?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7007eb3c5968",
+        "name": "",
+        "question": "Tell me about your family growing up.",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What was your family like when you were growing up?",
+          "What kind of relationship did you have with your family?",
+          "What were parents like?",
+          "How was it growing up with your family?",
+          "Did you get along with your family?",
+          "How were you raised?",
+          "Do you have any siblings?",
+          "How was your family at home?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70694b3c5969",
+        "name": "",
+        "question": "When you were a kid, what did you want to be when you grew up?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What was your dream job as a kid?",
+          "Did you dream of doing exactly what you are doing now?",
+          "Did you want to become something else when you were growing up?",
+          "Do you remember what you wanted to be when you were a kid?",
+          "Do you have the same passion as you had when you were younger?",
+          "What did you consider your ideal job as an adult?",
+          "What did you dream of doing when you were young?",
+          "What did you think your ideal job would be when you were growing up?",
+          "Did you hope to have your current job when you were a child?",
+          "What did you dream of becoming when you grew up?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd704ee13c596a",
+        "name": "",
+        "question": "What is your job?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What is your current position now?",
+          "What is your current rank?",
+          "What is your occupation?",
+          "What is your current position in your organization?",
+          "What is your occupation?",
+          "What job do you work in?",
+          "What's your title?",
+          "What is your job called?",
+          "What is your current occupation?",
+          "What career are you pursuing?",
+          "How do you earn your money?",
+          "What is your career?",
+          "How do you earn money?",
+          "What is your job?",
+          "What do you do now?",
+          "What kind of work do you do?",
+          "What line of  work are you in?",
+          "What is your job title?",
+          "What is your profession?",
+          "What is your occupation?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd708c9f3c596b",
+        "name": "",
+        "question": "How long have you been in your job?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How long have you had your career?",
+          "How long have you been working in this line of work?",
+          "When did you start your career?",
+          "When did you start your job?",
+          "How many years of experience do you have in your field?",
+          "How long have you held your position?",
+          "How long have you been in your job?",
+          "How many years of experience do you have?",
+          "When did you start your current job?",
+          "When did you start your current job?",
+          "When did you join your current organization?",
+          "When did you sign up for your current position?",
+          "When did you begin your current career?",
+          "How long did it take you to get to where you are now?",
+          "How long did it take you to get here?",
+          "How many years have you spent getting to this position?",
+          "Has it taken you a long time to hold your current position?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70481f3c596c",
+        "name": "",
+        "question": "When will you retire?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How long until you retire?",
+          "At what age do you think you'll retire?",
+          "What year will you retire?",
+          "When do you plan to retire?",
+          "Have you started planning for retirement?",
+          "Will you retire?",
+          "Are you close to retirement?",
+          "Have you already retired?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd701be53c596d",
+        "name": "",
+        "question": "What are your hobbies?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What do you do for fun?",
+          "What are you interested in for fun?",
+          "What do you do in your spare time?",
+          "What do you like to do for leisure?",
+          "Do you play video games?",
+          "Do you have any hobbies?",
+          "What do you enjoy doing in your free time?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70fe413c596e",
+        "name": "",
+        "question": "What is your educational background?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What college or university degrees did you earn?",
+          "Where did you get your degree?",
+          "Where did you go to school?",
+          "Where did you attend college?",
+          "What degrees do you have?",
+          "What kinds of degrees have you earned?",
+          "Where is your alma mater?",
+          "What are your credentials?",
+          "Where did you study?",
+          "What college did you go to?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7092333c596f",
+        "name": "",
+        "question": "Where has been your favorite place to live? Why?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "did you enjoy living in any particular place?",
+          "what was your favorite place to live?",
+          "where did you love to live?",
+          "where is the best place to live?",
+          "What has been your favorite place to live?",
+          "did you enjoy living in any particular place?",
+          "what area was your favorite to live in?",
+          "Where's the best place you've ever lived?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70edd93c5970",
+        "name": "",
+        "question": "What culture(s) do you most identify with?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What is your cultural identity?",
+          "What's your cultural background?",
+          "Do you have a culture you most identify with?",
+          "Can you tell me about your culture?",
+          "How would you describe your culture(s)?",
+          "What cultures shape your identity?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9695b31-ad12-4fc9-949e-58103659b761",
+        "name": "Biography",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70a04d3c5971",
+        "name": "",
+        "question": "What are your job responsibilities?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What do you do at work?",
+          "What do you do at your job?",
+          "What are you responsible for at work?",
+          "What are your roles at work?",
+          "How would you describe your duties?",
+          "How would you describe your job responsibilities?",
+          "How would you describe your responsibilities at work?",
+          "What are you responsible for at your work?",
+          "What are your primary responsibilities?",
+          "What are you required to do in your job?",
+          "What are your job obligations?",
+          "What kinds of tasks do you have to do on your job?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70604a3c5972",
+        "name": "",
+        "question": "What is a typical day like on the job?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What is a regular day like?",
+          "Describe the work you do on a typical day.",
+          "What do you do on a normal day?",
+          "Is the work the same every day?",
+          "Is every day the same?",
+          "What's your day-to-day?",
+          "Tell me about your everyday life.",
+          "What is an average day like on the job?",
+          "What does an average day at work entail?",
+          "What is an average day like on the job?",
+          "What do you do on a daily basis at work?",
+          "What is a normal day like at work?",
+          "What is a normal day like on the job?",
+          "Tell me about a typical day at your job.",
+          "Can you describe a typical day at your job?",
+          "What do you do on a usual day at work?",
+          "What do you do on a typical day at work?",
+          "Can you give me a day in the life?",
+          "How do you spend your time at work?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7033613c5973",
+        "name": "",
+        "question": "How many hours do you work in a typical week?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What are your hours like?",
+          "What are your work hours?",
+          "How much do you work?",
+          "How many hours do you work?",
+          "Do you have long hours?",
+          "How long was your shift?",
+          "How long are your shifts?",
+          "How many hours do you work per week on average?",
+          "What are your weekly hours?",
+          "How many hours do you put in every week?",
+          "Do you work full-time?",
+          "Do you work a lot of hours?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd703c123c5974",
+        "name": "",
+        "question": "What kind of a physical environment do you work in?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What environments do you work in?",
+          "What are the usual surroundings for your work?",
+          "What is the environment like for your work?",
+          "How are the settings of your work environment?",
+          "Tell me about the space you worked in.",
+          "What were your surroundings like in your work.",
+          "What is your office like?",
+          "Describe the physical setting for your work.",
+          "Do you work in a cubicle?",
+          "Do you work in a lab?",
+          "What is your work space like?",
+          "Where do you spend most of the time while working?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7017343c5975",
+        "name": "",
+        "question": "What kinds of people would I work with in this field?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How different will the people I will be working from one another?",
+          "What kinds of personalities will the people I work with have?",
+          "What are the different types of people will I be working with?",
+          "What kinds of professionals would I work with in this field?",
+          "What characteristics will my coworkers have?",
+          "what kinds of people will I run into in the job?",
+          "What kinds of people would I collaborate with on this job?",
+          "What kinds of people can I expect to meet in the job?",
+          "What different attributes will my coworker have?",
+          "What kinds of people will I find in the job?",
+          "What kinds of co-workers would I interface with in this line of work?",
+          "Can you tell me more about the interpersonal environment in which you work?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd700fd03c5976",
+        "name": "",
+        "question": "Tell me a story that shows what it is really like in your job.",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "tell me a good story that reveals the reality of your job.",
+          "is there some tale that would help me understand your career?",
+          "are there experiences you have had that exemplify your career?",
+          "Tell me about a time that defines your line of work.",
+          "What story describes what your career is like?",
+          "What is a story that really shows what it is like being in your position?",
+          "What experience illustrates what your career is like?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70075c3c5977",
+        "name": "",
+        "question": "How does your personality fit with your career?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What is it about your personality that is particularly suited for this career?",
+          "Are there personality traits that especially fit with this career?",
+          "What kind of a person is especially suited for this career?",
+          "What personal qualities are important in this career?",
+          "What personality traits do you have that make you well-suited for this career?",
+          "What kinds of personality traits helped you in this career?",
+          "Do you have a personality that go well with this career?",
+          "How has your personality helped you in this career?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70963e3c5978",
+        "name": "",
+        "question": "What do you like the most about your job?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What makes you love your job?",
+          "Why do you like what you do?",
+          "Why do you enjoy what you do?",
+          "What is good about your job?",
+          "What do you love about your occupation?",
+          "What do you like about your employer?",
+          "Do you like what you do?",
+          "What is your favorite part about the job?",
+          "Enjoyment you get from your job",
+          "What do you enjoy most about your career?",
+          "What do you love most about your career?",
+          "Overall, do you enjoy your job?",
+          "What do you enjoy most about this field? ",
+          "What do you enjoy the most about your job?",
+          "What are the benefits of pursuing this type of career?",
+          "What are the pros of working in this profession?",
+          "What are the greatest things about working in this profession?",
+          "What are the positives of working in this line of work?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7058073c5979",
+        "name": "",
+        "question": "What do you find the most interesting about your job?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What do you find the most exciting about the job?",
+          "What is most interesting about your career?",
+          "What do you think is the most interesting aspect of your job?",
+          "What part of the job is the most interesting?",
+          "What interests you the most about this job?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd706a183c597a",
+        "name": "",
+        "question": "What is the most rewarding part of your job?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What are the greatest rewards of your job?",
+          "What is the biggest reward of your job?",
+          "What is most rewarding about your job?",
+          "Is your job rewarding in any way?",
+          "What do you find rewarding about your career?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7085043c597b",
+        "name": "",
+        "question": "Why did you choose this career?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Why did you choose this career path?",
+          "Why did you choose the career you did?",
+          "Why did you pursue this field?",
+          "What made you decide to have the career that you have now?",
+          "How did you decide on this career?",
+          "Why didn't you choose another career?",
+          "How did you end up choosing your career?",
+          "When did you realize you wanted to pursue a career in this field?",
+          "How did you choose your career path?",
+          "When did you know that this is what you wanted to do?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70d4af3c597c",
+        "name": "",
+        "question": "How satisfied are you with your job or career?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Are you satisfied with your career?",
+          "Do you feel fulfilled?",
+          "Are you satisfied with what you're doing now?",
+          "Do you find your job satisfying?",
+          "What is your satisfaction with this line of work?",
+          "Are you satisfied with your job?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70af8f3c597d",
+        "name": "",
+        "question": "How happy are you with your job?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Do you like your job?",
+          "How content are you with your work?",
+          "Do you enjoy doing what you do?",
+          "Are you happy with your career?",
+          "do you like what you do?",
+          "Are you where you want to be?",
+          "Are you happy?",
+          "Are you happy with your career?",
+          "Are you happy with your current job?",
+          "Would you say you are happy in your job?",
+          "Are you content at your job?",
+          "How joyful are you at work?",
+          "Are you glad you took your job?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70e2a73c597e",
+        "name": "",
+        "question": "What do you dislike about your job?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What do you like the least about your job?",
+          "What do you like least about your career?",
+          "What is the worst part about your job?",
+          "What do you hate about your job?",
+          "What about your job do you hate?",
+          "Is there anything you hate about your job?",
+          "What do you dislike about your career?",
+          "Is there anything you dislike about your work?",
+          "What are the disadvantages of your job?",
+          "What are the cons of this line of work?",
+          "What are the negatives of pursuing this career?",
+          "Why shouldn't I pursue this line of work?",
+          "What do people dislike about this career?",
+          "What cons or disadvantages should people be prepared to handle or battle in this profession?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70afd33c597f",
+        "name": "",
+        "question": "What is the most difficult part of your job?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What is the most difficult part of your career?",
+          "What has been the most challenging part about your job?",
+          "What is the hardest part about your job?",
+          "What part of the job have you had the toughest time with?",
+          "What is the most challenging part about your job?",
+          "What is the hardest part of your job?",
+          "What is the hardest part of your job?",
+          "What about your job makes you struggle the most?",
+          "What do you consider to be the most difficult tasks in your job?",
+          "Tell me about the toughest task in your work.",
+          "What makes your job difficult?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70135d3c5980",
+        "name": "",
+        "question": "If you could change one thing about your job, what would it be?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What is one thing you would change about your job?",
+          "Can you pick one thing you would change about your job?",
+          "What is one part of you job would change?",
+          "Tell me about one thing in your job you would change.",
+          "What would you change about your job to make it more ideal?",
+          "What is a flaw with your job that you would change?",
+          "What would you fix about your job if you could?",
+          "Is there anything you'd change about your job?",
+          "What is something you would rather have different about your job?",
+          "What do you wish were different about your job?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70364c3c5981",
+        "name": "",
+        "question": "What gets romanticized about your profession that isn't that great in reality?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What do people think is good about your job that really sucks?",
+          "How is your job worse than what people think?",
+          "What kind of things are incorrectly romanticized?",
+          "What do people think is so great about your job that isn't really good?",
+          "What aspects of your job do people see in rose-colored glasses?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7065803c5982",
+        "name": "",
+        "question": "What are some common misconceptions about your line of work?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How are people fooled about what you do for a living?",
+          "Do people get the wrong idea about what you do?",
+          "What are the myths about what you do?",
+          "Do the movies and TV portray your job well?",
+          "Is you work as stressful as it is shown on TV?",
+          "What is misleading about your job?",
+          "What do people misunderstand about your job?",
+          "What are some false misconceptions about your job?",
+          "What do people get wrong about your job?",
+          "What do people not understand about your job?",
+          "What do you wish people would understand better about your job?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70571b3c5983",
+        "name": "",
+        "question": "What is the advancement potential in the field? What is a typical path?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How often do you get promoted in your job?",
+          "How soon do I advance in the field?",
+          "How frequent do advancement work?",
+          "What path do people usually take to advance?",
+          "Are there options in advancing?",
+          "What are the different ladders you have to climb in this career?",
+          "What is the hierarchy of different positions like in this career?",
+          "What are the advancement opportunities like in this field?",
+          "Is there potential for me to rise higher in ranks?",
+          "Is this a dead-end job?",
+          "How far up can you go on the corporate ladder in this job?",
+          "Can you get promoted in this job?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70fe113c5984",
+        "name": "",
+        "question": "How often are you presented with challenging new skills to learn?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "To what extent are you given new skills to develop?",
+          "How common is it to learn new skills?",
+          "Are there a lot of opportunities to develop new abilities?",
+          "How many times do you get to learn new things?",
+          "Is it common to always be challenged to gain a new skill?",
+          "Are you constantly learning new skills?",
+          "How often do you have to develop new skills or abilities?",
+          "Are you challenged often with new things to learn?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd701a043c5985",
+        "name": "",
+        "question": "How much value does your employer place on education and training?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How important is education and training is to your employer?",
+          "Does your employer make sure everyone is well trained and educated?",
+          "Does your employer emphasize training and education?",
+          "How is training and education prioritized?",
+          "what does your employer do for education and training?",
+          "How much does your employer invest in your training and education?",
+          "How important is it to your employer that you get additional training or education?",
+          "How does your employer support your further training and education?",
+          "Does your employer invest in your education and training?",
+          "Are you satisfied with the amount of training or education you have received at work?",
+          "Does your employer offer good training opportunities?",
+          "Do you have opportunities for further training or continuing education?",
+          "Does your employer sponsor your education?",
+          "Does your employer pay for additional coursework?",
+          "What kinds of training opportunities does your employer offer you?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70c41d3c5986",
+        "name": "",
+        "question": "What is the salary like for your job?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Salary?",
+          "How much do you earn annually?",
+          "What is a rough estimate of how much you get paid?",
+          "How much do you get paid?",
+          "What is your annual income?",
+          "How much money do you earn?",
+          "How much money do you make?",
+          "How well does your job pay?",
+          "What is your salary range?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70a7bf3c5987",
+        "name": "",
+        "question": "Can you make a living with your pay?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Can you make a living out of your pay?",
+          "Is your salary enough to make a living?",
+          "Is the pay enough to make a living?",
+          "Do you get paid enough to make a living?",
+          "Can you get by on your salary?",
+          "Can you afford to live off your salary?",
+          "Do you make enough to be able to afford rent?",
+          "Can you afford a house?",
+          "Do you earn enough money to cover living expenses?",
+          "Does your salary cover all of your living expenses?",
+          "Do you need to take out loans?",
+          "Do you earn enough money?",
+          "Does your job pay enough?",
+          "Can you live within your means?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70b91a3c5988",
+        "name": "",
+        "question": "How can I make good money in this field?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How do I make a lot of money?",
+          "How to make money?",
+          "How can I make more money?",
+          "How can I succeed financially in your discipline?",
+          "How do you maximize your salary in your field?",
+          "How can I get the best money with a degree in your major?",
+          "How do you earn the highest salary in this field?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7065293c5989",
+        "name": "",
+        "question": "What skills are the most important to develop in this field?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What skills/strengths do you think are most important?",
+          "What is one important skill that I should learn?",
+          "What new skills do I need to move ahead?",
+          "What skills or strengths do you think are most important?",
+          "What skills do I need in to better my career?",
+          "What skills do I need to succeed?",
+          "What new skills do I need to move ahead?",
+          "Do I need any other skills that will help me in the future?",
+          "What kinds of skills are most important to foster in order to do well in this field?",
+          "What should I be able to do in order to be successful in this career?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70f0003c598a",
+        "name": "",
+        "question": "How hard is it to get into your field?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Is your field competitive to get into?",
+          "How hard is it to get into your specific field?",
+          "How difficult is it to get into your field?",
+          "How selective is your career?",
+          "Do you have a lot of competition when you get into this field?",
+          "Did you have to beat out a lot of competition to get to where you are?",
+          "Do a lot of people fail when trying to get into this career?",
+          "How competitive is this career path?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7025283c598b",
+        "name": "",
+        "question": "What advice do you have for someone entering this field?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What should a person entering the field prioritize?",
+          "What do you recommend someone entering this field should prioritize?",
+          "What are some important things a person new to the field should know? ",
+          "What do you suggest to a person entering the field to prioritize?",
+          "What are some key tips you can give to someone entering the field? ",
+          "What are some essential aspects of the field a new person should focus on?",
+          "What should a person entering the field focus on?",
+          "What should someone prioritize when entering the field?",
+          "What can you recommend to prioritize for a person entering the field?",
+          "What should be the main focus of a person entering the field?",
+          "What does someone entering the field need to know?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd704e203c598c",
+        "name": "",
+        "question": "How much work-related travel do you do in a year?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How much do you travel for business?",
+          "Does your job allow you to travel?",
+          "Do you get to see other countries if you have this career?",
+          "How often do you get to travel for work?",
+          "Did you get tired of traveling?",
+          "Do you want more travelling or less?",
+          "how often do you go to other places for work?",
+          "Do you get to travel a lot for work?",
+          "Does your employer cover travel?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7027f03c598d",
+        "name": "",
+        "question": "Have you had to move or relocate in order to pursue this career path?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How much do you move for professional reasons?",
+          "Did you have to move to another town for your job?",
+          "Is it possible to find a job in the same city?",
+          "Do you have to look for jobs in other cities?",
+          "How many times have you moved for your job?",
+          "Did your job require you to relocate?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd706d053c598e",
+        "name": "",
+        "question": "If I were to pursue this field, to what extent would I be able to switch jobs or careers?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Can you change positions within your field?",
+          "Will I have the choice to pivot careers?",
+          "Is my position set in stone in this field?",
+          "Can I switch jobs or positions?",
+          "Can I switch careers?",
+          "How easily can you change careers in this discipline?",
+          "How do you switch careers?",
+          "Can I switch careers?",
+          "What if I don't like my job?",
+          "What opportunities do you have to change career field?",
+          "Are there opportunities to pursue alternate jobs or careers?",
+          "Is there opportunities to make horizontal shifts in your career?",
+          "Would you have access to a wide range of different jobs in this field?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70c2103c598f",
+        "name": "",
+        "question": "How has your work been affected by the COVID-19 pandemic?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How has your career been affected by COVID?",
+          "Has your job been affected by the coronavirus?",
+          "How has the coronavirus pandemic affected your work?",
+          "Have you had any trouble due to the COVID-19 pandemic?",
+          "Have you had any difficulties related to the COVID-19 pandemic?",
+          "What have you had to change because of COVID?",
+          "Were you impacted by COVID?",
+          "Were you negatively affected by COVID?",
+          "Did your job get threatened due to COVID?",
+          "Was there any impact of corona?",
+          "How did your job change as a result of the coronavirus pandemic?",
+          "How did your work adapt to the pandemic?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "af6e8213-0168-49ac-996b-75d5e4d3c844",
+        "name": "About the Job",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd704ad03c5990",
+        "name": "",
+        "question": "How did you choose your major?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How did you choose what you wanted to study?",
+          "How did you choose your field of study?",
+          "Did anyone help you choose your major?",
+          "How did you decide that you want to pursue this major?",
+          "What made you decide on this major?",
+          "How did you choose your discipline?",
+          "What drew you to this major?",
+          "How did this major begin to interest you?",
+          "How did you get interested in your major?",
+          "What first interested you about your major?",
+          "What got you into this major?",
+          "What drew you to this major?",
+          "What was the deciding factor in choosing this major?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7001013c5991",
+        "name": "",
+        "question": "What other majors did you consider?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Did you consider other majors?",
+          "What other fields did you consider?",
+          "What other majors did you think about?",
+          "Any other majors you considered?",
+          "Was this the only major that you wanted to do?",
+          "Were you always set on your major?",
+          "Did you consider any alternate majors?",
+          "Did you ever think of changing majors?",
+          "Did you ever change majors?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7048113c5992",
+        "name": "",
+        "question": "How did you choose your school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Why did you choose to go to this college or university?",
+          "What made you decide to go to your school?",
+          "What influenced you to choose your school?",
+          "Why didn't you pick another school?",
+          "What made you pick your school over all the others?",
+          "What attracted you to your school?",
+          "What led you to choose this college or university?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd708e8b3c5993",
+        "name": "",
+        "question": "Was your major easy or hard?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Are the classes in your major supposed to be difficult?",
+          "How difficult is it to pursue your major?",
+          "Were the classes in your major easy?",
+          "Were the classes in your major hard?",
+          "How tough is this major?",
+          "Do a lot of majors successfully complete this degree?",
+          "What is the success rate for completing this major?",
+          "Is this major considered difficult?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70c07a3c5994",
+        "name": "",
+        "question": "What are the different sub-specialties or subfields in your discipline?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What are the different areas within your field?",
+          "What are the different areas of specializations in your discipline?",
+          "What are the different subfields in your major?",
+          "Are there any sub-fields in your major?",
+          "What subfields or branches exist within this discipline?",
+          "What are the different subfields or specializations within this major?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7003433c5995",
+        "name": "",
+        "question": "How long does it take to finish your degree?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How long does it take to get your degree?",
+          "How many years does it take to finish your degree?",
+          "How many semesters does it take to finish your degree?",
+          "How long does finishing your degree take?",
+          "How long does it take to graduate with a degree in your discipline?",
+          "How many years does it take to graduate?",
+          "How long does your major take?",
+          "How many units do you have to take in order to graduate with a Bachelor's degree in your field?",
+          "Can you graduate in four years in your discipline?",
+          "How long does it take to earn a Bachelor's?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70aa023c5996",
+        "name": "",
+        "question": "Do you need to be good at math or science in your field?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How much math do you need to know in your field?",
+          "Do you need to be good at STEM in order to pursue your career?",
+          "Does your major have a lot of math classes?",
+          "Does your major have a lot of science classes?",
+          "What if I'm not good at math?",
+          "What if I'm not good at science?",
+          "How much math or science is involved?",
+          "Do you have to take a lot of math or science courses for your major?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd705b953c5997",
+        "name": "",
+        "question": "What kind of jobs can I pursue with your major?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Kinds of jobs?",
+          "What are some career options for this major?",
+          "What jobs are out there for this major?",
+          "What are some career paths I can take with this major?",
+          "What kind of future jobs would be available in this discipline?",
+          "What are the most popular career options for people with your major?",
+          "What job options do I have in this major?",
+          "What jobs are open to me with a degree in your field?",
+          "What careers are possible with this degree?",
+          "What career paths are available for majors in your discipline?",
+          "Which fields can I enter by choosing your major?",
+          "What types of jobs are there in your discipline?",
+          "What are the possible careers you can pursue with your major?",
+          "What kinds of jobs do people with your major hold?",
+          "What kinds of jobs does this major allow you to get?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd700b513c5998",
+        "name": "",
+        "question": "How easy or hard is it to get a job with a degree in your major?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Is it hard getting anywhere with a Bachelor's degree in your major?",
+          "How hard is finding a job in your major?",
+          "Is it difficult to find a job with this degree?",
+          "Are there a lot of job opportunities in your major?",
+          "Are there jobs out there for this field?",
+          "Do a lot of employers hire majors in your field?",
+          "Do employers look for majors in your discipline?",
+          "How is the job outlook for this discipline?",
+          "Do students find employment after graduating with this major?",
+          ""
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7064963c5999",
+        "name": "",
+        "question": "What are the differences in salary based on whether you have a Bachelors, Masters, or Doctorate in your field?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How much money can I earn with different degrees?",
+          "What is the difference in salaries between different degrees?",
+          "What is the average salary that you can earn with Bachelors, Masters, and Doctoral degrees?",
+          "What's the average salary for a bachelor's degree?",
+          "How much money did you make with your Bachelors Degree?",
+          "How much money did you make when you got your Masters?",
+          "How much can I make with this degree? ",
+          "How much money can you make with a doctorate?",
+          "What's the average salary for someone with a master's degree?",
+          "Do you earn more money if you go for a Masters or a doctorate?",
+          "How much more money would I make by going to graduate school?",
+          "Does having a graduate degree increase your salary?",
+          "Do you earn more if you have an advanced degree?",
+          "Does going to grad school in this major increase your salary?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd70a25a3c599a",
+        "name": "",
+        "question": "What was the hardest class you have ever taken?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What was the most difficult course you have taken?",
+          "Which course was hardest to take?",
+          "Was there a class that was particularly difficult?",
+          "Did you ever fail any classes?",
+          "Were there any classes you struggled in?",
+          "What class challenged you the most?",
+          "What was the class you performed the worst in?",
+          "What subject was the hardest for you?",
+          "In what class did you earn the lowest grade?",
+          "Were there any classes that brought down your GPA?",
+          "What subject was the hardest for you to learn or study?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd703fa43c599b",
+        "name": "",
+        "question": "What was the best class you have ever taken?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What has been one of the best courses that you have taken? ",
+          "What is the best class you have ever taken?",
+          "What was your favorite class?",
+          "What class did you enjoy the most as a student?",
+          "What class gave you the best learning experience?",
+          "What class gave you the best training?",
+          "Which class did you like the most?",
+          "What course was the best?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7018133c599c",
+        "name": "",
+        "question": "What was the worst class you have ever taken?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What was your least favorite class?",
+          "What class did you dislike the most?",
+          "What course was the worst?",
+          "What class gave you the worst learning experience?",
+          "What course did you hate the most?",
+          "Were there are any courses that gave you a horrible experience?",
+          "What course would you never want to take again?",
+          "Are there any courses you wish you never had to take?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd702a613c599d",
+        "name": "",
+        "question": "What is a class you wish you had taken (but did not)?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What is a class that you regret not taking?",
+          "Is there a class you regret not taking?",
+          "Is there a class you wish you took?",
+          "Is there a course you wish you could have taken?",
+          "Are there courses you wanted to take but couldn't?",
+          "Are there courses you should have taken but didn't?",
+          "If you could do it all over again, what courses would you take that you didn't take before?",
+          "What class did you miss out on?",
+          "What class would have been helpful to have taken that you missed out on?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7003ed3c599e",
+        "name": "",
+        "question": "How can I do well in your major?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How do I ace classes in your major?",
+          "How can I succeed in this major?",
+          "What do I need in order to do well in this major?",
+          "How can I get good grades in this discipline?",
+          "How do I get good grades in this major?",
+          "What should I do in order to excel in classes within this major?",
+          "How do I get a high major GPA?",
+          "How do I get great grades in this major?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd7016793c599f",
+        "name": "",
+        "question": "What are some common challenges that students face in this discipline?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What do students in this major find especially tough?",
+          "Are there obstacles or challenges that students experience that are specific to this major?",
+          "What are some of the most common challenges that students experience in this major?",
+          "What do students in this major tend to struggle with?",
+          "What do students find the toughest about majoring in this discipline?",
+          "What makes this major especially challenging for students?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd707a213c59a0",
+        "name": "",
+        "question": "What range of GPA is considered good in your discipline?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What GPA should I aim for?",
+          "What GPA should I try to get?",
+          "What GPA range should I try to aim for?",
+          "What range of GPA is necessary?",
+          "What do you consider a good GPA?",
+          "What is a good GPA for me to get?",
+          "How high of a GPA should I try to maintain?",
+          "What GPA would be competitive?",
+          "What range of GPA should I aim for?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd703e673c59a1",
+        "name": "",
+        "question": "What is a thesis?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Can you tell me more about the thesis?",
+          "Do I have to do a thesis?",
+          "What does a thesis include?",
+          "How do I write a thesis?",
+          "Is a thesis required?",
+          "Would you recommend that I write a thesis?",
+          "Is thesis just a long paper?",
+          "Is a thesis worth it?",
+          "Does writing a thesis increase your chances for grad school acceptance or employment?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd703acc3c59a2",
+        "name": "",
+        "question": "What is a minor?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What are minors?",
+          "Are minors required?",
+          "What do you have to do for a minor?",
+          "How does a minor help complement our studies?",
+          "Can you tell me more about minors"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c7b69407dd708c1b3c59a3",
+        "name": "",
+        "question": "Can you give me some study tips?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What environment would be best for me to study in?",
+          "How can I get an A?",
+          "I need some study tips.",
+          "What is the best way to study?",
+          "What can I study to better my test grades?",
+          "How do I study?",
+          "Where should I study?",
+          "What are some ways that I can study efficiently? ",
+          "What are some good study tips?",
+          "How do you study for an exam?",
+          "Can you provide study techniques?",
+          "How can I learn easier?",
+          "How can I learn faster?",
+          "How to take a good notes in class?",
+          "What are your best study habits?",
+          "How can I easily digest the content given to me?",
+          "What were some of the study techniques that you used to help you in classes?",
+          "How do you recommend studying for class?",
+          "What's the most effective study method?",
+          "What are better and more effective ways to study?",
+          "How can I prepare for a final test?",
+          "Can you help me raise my grades?",
+          "How can I raise my GPA by a few points?",
+          "How can I earn better grades?",
+          "What can I do to improve my grades?",
+          "Tips for improving my grades?",
+          "How can I do better in my classes?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "d9660e25-7260-4bf5-babb-6383d41cb66d",
+        "name": "Education",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7043373c5e51",
+        "name": "",
+        "question": "What is graduate school?",
+        "mentorType": "VIDEO",
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What is grad school?",
+          "Can you explain what graduate school is?",
+          "What is the purpose of graduate school?",
+          "What do people mean when they say graduate school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70cba93c5e52",
+        "name": "",
+        "question": "How is graduate school different from college?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What is the difference between graduate school and college?",
+          "How is college different from graduate school?",
+          "What is different about graduate school when compared to college?",
+          "Is graduate school harder or easier than college?",
+          "Is graduate school different from college?",
+          "Is graduate school same thing as college?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7036323c5e53",
+        "name": "",
+        "question": "If you went to graduate school, can you tell me about your experience?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How was the process of earning a graduate degree?",
+          "Did you enjoy graduate school?",
+          "How long were you in grad school?",
+          "Were you ever discouraged in grad school?",
+          "Did you encounter any difficulties while pursuing your graduate degree?",
+          "What was graduate school like for you?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7087613c5e54",
+        "name": "",
+        "question": "What kind of experience did you have prior to applying for graduate school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What career related experiences did you take part in before applying to a graduate program?",
+          "What experience did you seek out before applying for grad school?",
+          "What was on your CV before you applied for graduate programs?",
+          "Are there experiences or internships you sought out before applying for grad school?",
+          "What kind of experience did you enumerate on your grad school application?",
+          "What were your selling points when applying for grad schools?",
+          "What kind of qualifications did you have on your resume when you applied for graduate school?",
+          "What were the most relevant experiences you had as an applicant for grad school?",
+          "How did you prepare for grad school applications?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd701e4d3c5e55",
+        "name": "",
+        "question": "What are the different degrees you can get in graduate school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What type of grad school is there?",
+          "What degrees does graduate school offer?",
+          "What different degrees can you get in graduate school?",
+          "What degrees do they usually offer in graduate school?",
+          "What are graduate degrees?",
+          "What kinds of degrees can you get in grad school?",
+          "What degrees can you earn in grad school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70dc263c5e56",
+        "name": "",
+        "question": "Should I go to graduate school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Should I pursue graduate school?",
+          "Do I need to go to grad school?",
+          "Is grad school worth it?",
+          "Will Master's be beneficial for the long haul?",
+          "Is a PhD needed?",
+          "Is getting a masters degree worth it?",
+          "Do you have to go to graduate school?",
+          "Would you recommend getting a Ph.D.?",
+          "Would you recommend attending grad school?",
+          "Why should you go to grad school?",
+          "Is it necessary to get a graduate degree?",
+          "Do you get an advantage by going to graduate school?",
+          "What are the reasons for going to grad school?",
+          "Is it useful to go to grad school before pursuing your career?",
+          ""
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7071293c5e57",
+        "name": "",
+        "question": "What graduate school degree should I get?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Should I get a doctorate or a Master's?",
+          "What degree should I get after college?",
+          "What is your opinion on Master's versus a Doctorate?",
+          "If you could only choose one, would you choose a Master's or a Doctorate?",
+          "Which is better, master's or a PhD?",
+          "What graduate degree is useful to get?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7016583c5e58",
+        "name": "",
+        "question": "What should I look for in a graduate program?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What should I look for in a master program? ",
+          "What should I look for in a graduate school program?",
+          "What should I look for in a doctoral program?",
+          "Which aspects of a graduate program are considered important?",
+          "What qualities should a grad school have?",
+          "What qualities should a graduate school have?",
+          "What makes a good graduate program?",
+          "What characteristics should I look for in a graduate program?",
+          "What characteristics determine how good a grad program is?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70d9093c5e59",
+        "name": "",
+        "question": "How long is graduate school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How long would it take to finish my masters degree?",
+          "How long is grad school?",
+          "How long are graduate school programs?",
+          "How long does it usually take to graduate from graduate school?",
+          "How many years does grad school take?",
+          "How many years does it take to get a master's or a doctorate?",
+          "How long do people spend in grad school?",
+          "How quickly can you finish a graduate degree?",
+          "How long does it take to graduate from grad school?",
+          "How long does it take to earn a PhD?",
+          "How long does it take to earn a Master's degree?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70133e3c5e5a",
+        "name": "",
+        "question": "What kind of preparation do I need to go to graduate school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What classes do I need for grad school?",
+          "What are the requirements for grad school?",
+          "How should I prepare for graduate school?",
+          "What do I need to prepare for graduate school?",
+          "What should I do in order to qualify for graduate school?",
+          "How do I prepare to apply for grad school?",
+          "What should I do to get ready to apply for graduate school?",
+          "What should I do to get ready for grad school?",
+          "What kinds of things should I have on my CV before applying for grad school?",
+          "What kinds of activities should I pursue in order to get ready for grad school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7034ba3c5e5b",
+        "name": "",
+        "question": "How should I choose graduate schools to apply for?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What graduate school programs should I apply for?",
+          "Can I apply to graduate schools out of state?",
+          "Which graduate programs would you recommend that I apply for?",
+          "What graduate programs are good to apply for?",
+          "How should I choose which graduate program to apply for?",
+          "Where should I apply for grad school?",
+          "How do I search for grad schools?",
+          "How do I find grad schools to apply for?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd703e143c5e5c",
+        "name": "",
+        "question": "How competitive is it to get into graduate school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How difficult is it to get into graduate school?",
+          "How hard is it to get accepted into graduate school?",
+          "How competitive is graduate school?",
+          "Is graduate school's admission or entrance requirement relatively high?",
+          "Are graduate schools usually competitive to get into?",
+          "How many people get into graduate school each year?",
+          "How easy is to get admitted into graduate school?",
+          "How hard is it to gain admission into graduate school?",
+          "What percentage of students get into grad school?",
+          "How selective is grad school?",
+          "Is it harder to get into grad school than college?",
+          "Is grad school more competitive than college?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70efb73c5e5d",
+        "name": "",
+        "question": "How can I improve my chances of getting into graduate school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How do I gain an advantage to pursue grad school? ",
+          "What steps should I take to make sure I get into a good grad school?",
+          "How do I make myself competitive for grad school?",
+          "What can I do now to make myself competitive for grad school?",
+          "How do I make my grad school application stronger?",
+          "How do I make myself a stronger applicant for grad school?",
+          "What should I add to my CV to make me competitive for grad school?",
+          "What activities should I pursue to make myself more competitive for grad school?",
+          "What can I do to become more competitive for graduate school?",
+          "How can I make my application more competitive for graduate school?",
+          "What would boost my grad school application to make it more competitive?",
+          "How could I strengthen my grad school application?",
+          "What are some ways to make my profile stand out for graduate school?",
+          "What would make me competitive for grad school?",
+          "How can I ensure that I'm competitive for graduate school?",
+          "How do I become a competitive applicant for grad school?",
+          "How can I put together a competitive application for grad school?",
+          "What would make me a good candidate for grad school?",
+          "What kinds of experiences should I have on my CV in order to be a good applicant for grad school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70202f3c5e5e",
+        "name": "",
+        "question": "How would I know that I picked the right graduate program?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How do I know that I chose the right graduate program for me?",
+          "How will I know whether or not I picked the right graduate program?",
+          "How would I know if the graduate program is suitable for me?",
+          "What would tell me that I chose the right grad school?",
+          "How should I ensure that I chose the right graduate program for me?",
+          "How did you know that you chose the right PhD program?",
+          "How did you know that you chose the right master's program?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd705dcc3c5e5f",
+        "name": "",
+        "question": "What should I do if I do not get into a graduate program that I want?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What happens if I do not get into the program I want?",
+          "Should I do another semester or year if I do not get into the program I want?",
+          "What do I do if I do not get into my dream graduate program?",
+          "What is the best thing to do if I don't get into the grad program that I want?",
+          "What would you advise me to do if I don't get into the graduate program I want?",
+          "Should I take a gap year if I don't get into my top choices for grad school?",
+          "What if I don't get into my top choices for grad school?",
+          "What do I do if I get rejected from graduate school?",
+          "Should I give up if graduate programs reject me?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7005aa3c5e60",
+        "name": "",
+        "question": "If I don't get into a graduate program I want, should I reapply to that program another time?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Should I try another program if I do not get into my desired graduate program?",
+          "Should I reapply to the same graduate schools next year if I get rejected this year?",
+          "Can I apply for the same grad schools twice?",
+          "Should I apply for different grad programs next year if I don't get in this year?",
+          "Is it better to apply for different graduate programs next cycle if I don't get into grad school this year?",
+          "How likely is it that I could get into a grad program if it rejected me once already?",
+          "Does it make sense to apply to the same graduate program again if I get rejected?",
+          "Should I avoid applying for the same graduate program twice?",
+          "Can you get into a graduate program that rejected you before?",
+          "Does it make sense to re-apply to the same graduate program if you really like it?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd703b4e3c5e61",
+        "name": "",
+        "question": "How much does it cost to attend graduate school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How much money is it to attend grad school?",
+          "How much money does graduate school cost?",
+          "What is the average price of graduate school?",
+          "How much money do I need to graduate from graduate school?",
+          "How much is tuition for grad school?",
+          "What is the cost of attending graduate school?",
+          "How much do tuition and fees cost for grad school?",
+          "How much money do I need to save up in order to be able to afford grad school?",
+          "Do you need to be rich in order to attend graduate school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd706beb3c5e62",
+        "name": "",
+        "question": "How much in loans do students take out in order to attend graduate school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How much in loans do students usually take out for grad school?",
+          "How much debt do graduate students usually have?",
+          "Are loans a common thing for students in graduate programs?",
+          "What is the average amount of loans taken out by a graduate student?",
+          "Do you have to take on a lot of loans to go to grad school?",
+          "How much debt do students incur order to attend grad school?",
+          "How much money would I need to borrow in order to go to grad school?",
+          "Do you have to take out a lot of loans in order to pay for grad school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7018873c5e63",
+        "name": "",
+        "question": "What GPA do you need to get into graduate school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What's the average GPA for a student going to grad school?",
+          "What GPA is expected of graduate students?",
+          "What is the average GPA for a graduate school applicant?",
+          "What is the GPA requirements for graduate schools?",
+          "How high of a GPA do you need in order to get into grad school?",
+          "What is a good enough GPA to get into grad school?",
+          "What kind of GPA do I need to aim for in order to apply for grad school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70a8973c5e64",
+        "name": "",
+        "question": "Could I still get into grad school if my GPA is low?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Will I get into graduate school, even if my GPA is not the best?",
+          "I don't have the highest GPA but have a lot of experience in my field. What do I do?",
+          "What can I do to improve my chances of getting into graduate school if my GPA is low?",
+          "Would I still be able to get into grad school if my GPA is low?",
+          "What could I do to raise my GPA if it is not high enough for grad school?",
+          "Should I take more courses to raise my GPA if it is too low for grad school?",
+          "What options do I have for making up a low GPA when I apply for graduate programs?",
+          "What can I do to compensate for a low GPA when applying for grad school?",
+          "What should I do if my GPA is not the highest?",
+          "What can I do to improve my GPA if my grades aren't that great?",
+          "Should I take easier classes to raise my GPA?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7069863c5e65",
+        "name": "",
+        "question": "Should I take a gap year before going to graduate school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Is taking a gap year beneficial or a myth?",
+          "Should I take a break after undergrad?",
+          "Is a gap year expected for graduate students?",
+          "What is your opinion on taking a gap year before going to graduate school?",
+          "Is it necessary to take a gap year before going to grad school?",
+          "Would it make you more competitive for grad school if you take a gap year?",
+          "Do grad schools like it when you take a gap year?",
+          "Would taking a gap year help or hurt your chances of getting into grad school?",
+          "Is a gap year helpful?",
+          "Should you go straight to a grad school after graduation?",
+          "Do you lose steam and become less likely to go to grad school if you take a gap year?",
+          "Do most students go to grad school immediately after graduation?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd707f353c5e66",
+        "name": "",
+        "question": "What kinds of things do you do in grad school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What is graduate school like?",
+          "What is the transition to graduate school like?",
+          "What is going to graduate school like?",
+          "What do grad students do?",
+          "Day in the life of a graduate student",
+          "What are the main responsibilities of a grad student?",
+          "What is it like to go to graduate school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd709f5b3c5e67",
+        "name": "",
+        "question": "What standardized exam do I need to take for grad school admissions, and how can I do well on it?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Is the GRE difficult?",
+          "How do I do well on the GRE?",
+          "What is the GRE?",
+          "How could I prepare for GRE test?",
+          "Does the GRE really matter?",
+          "Do I need to take the GRE?",
+          "How much should I study for the GRE?",
+          "Should I pay for GRE prep courses?",
+          "How do I prepare for LSAT?",
+          "How do I prepare for MCAT?",
+          "What test do I need to take for grad school?",
+          "Do you have to take the SAT in order to get into grad school?",
+          "What is the equivalent of the SAT or ACT you need to take for grad school?",
+          "Do you need to take the LSAT, MCAT, or GRE?",
+          "What entrance exam do I need to complete in order to get into grad school?",
+          "What standardized exam is required for getting into grad school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd703e743c5e68",
+        "name": "",
+        "question": "What is a good score on the standardized exam I need to take for grad school admissions (e.g., GRE)?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What is the average GRE score of graduate students?",
+          "What do graduate programs expect for a GRE score?",
+          "What GRE score is good?",
+          "What GRE score should I aim for in order to get into grad school?",
+          "What GRE scores are considered good or competitive?",
+          "Is there a cutoff for GRE scores?",
+          "What range of GRE scores are good?",
+          "How high of a GRE score do I need?",
+          "What GRE score should I aim for?",
+          "What is a good score for the LSAT or the MCAT?",
+          "How well do you have to score on the entrance exam?",
+          "What is a good score on the exam I have to take for grad school applications?",
+          "How high of a score do I need on the entrance exam before getting into grad school?",
+          "What is the lowest score I could get on the standardized or entrance exam and still get into grad school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70330e3c5e69",
+        "name": "",
+        "question": "How should I choose writers for my letters of recommendation?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Where should I get my letters of recommendation?",
+          "Who should I ask to write my letters of recommendation?",
+          "How should I choose people to write my letters of recommendation?",
+          "What should I look for when choosing writers for my letters of recommendation?",
+          "Who are the best people to write my letters of recommendation for grad school?",
+          "How do I find recommendation letter writers?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7040f73c5e6a",
+        "name": "",
+        "question": "Does graduate school prestige matter for future job prospects?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Does the prestige of my graduate school matter?",
+          "Does graduate school prestige play a role in future job prospects?",
+          "Does graduate school prestige matter?",
+          "Does it matter if you attend well-known graduate schools?",
+          "Does the name of your graduate school matter in future job prospects?",
+          "Is it to your advance to go to a prestigious graduate school?",
+          "Should you choose graduate school based on prestige?",
+          "How much does it help your career to have gone to a prestigious graduate school?",
+          "Do graduates from prestigious universities have an easier time finding jobs?",
+          "Should you go to a brand-name university for grad school?",
+          "Is it important to go to a top-ranked grad school?",
+          "Do you have to go to a well-known university for grad school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70a6553c5e6b",
+        "name": "",
+        "question": "Should I take on loans or work during graduate school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Is working while in graduate school a smart idea?",
+          "Should I work or take on loans during graduate school?",
+          "Are taking on loans better than working during graduate school?",
+          "Is working while in graduate school worth it, or should I take on loans?",
+          "How difficult is it to work while in graduate school?",
+          "Can you work while in graduate school?",
+          "How hard is working while in graduate school?",
+          "Is it possible to work while in graduate school?",
+          "Can you hold jobs while you are going to grad school?",
+          "Can you work part-time when going to graduate school?",
+          "Can you work full-time when going to graduate school?",
+          "Are you allowed to work outside of the university when you are going to grad school?",
+          "Can you hold jobs while attending grad school?",
+          "Is it better to hold jobs or take out loans to pay for grad school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70fb0f3c5e6c",
+        "name": "",
+        "question": "How do you pay for graduate education?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How do you finance graduate education?",
+          "How can I pay for graduate education?",
+          "What are the different options for paying for a graduate education?",
+          "What are different ways you can finance your graduate education?",
+          "Are there options besides loans and work that helps you pay for grad school?",
+          "What different sources of money are there for grad school?",
+          "What are the different ways you can pay for your graduate education?",
+          "How do you fund your grad school?",
+          "How do I pay for tuition at graduate school?",
+          "How can I pay for graduate education?",
+          "How do I fund my graduate education?",
+          "What options do I have regarding paying for my graduate school tuition?",
+          "How can I afford to go to graduate school?",
+          "What are different ways to finance graduate education?",
+          "What are my options for paying for graduate school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7002273c5e6d",
+        "name": "",
+        "question": "How do you find funding or scholarships for graduate school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What grad school scholarships should I apply for?",
+          "How do I find graduate school funding?",
+          "How do I find scholarships for graduate school?",
+          "Where can I look for funding or scholarships for graduate school?",
+          "How can I find out more about scholarships for grad school?",
+          "Is there a database you can use to search for scholarships for grad school?",
+          "How do I get paid to go to graduate school?",
+          "How can I get graduate schools to pay me?",
+          "Can I get paid to go to graduate school?",
+          "Is it true that you get paid to go to graduate school?",
+          "Which graduate programs pay you to go to school?",
+          "What kinds of graduate programs are fully funded?",
+          "How do I find schools that pay you to go to school?",
+          "Tell me more about graduate school that pays for your education."
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "737736ee-c20d-46ad-afb7-f70177e96c88",
+        "name": "Graduate School",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70455e3c5e6e",
+        "name": "",
+        "question": "What inspired you to pursue this career?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What experiences have you had that inspired you to get into this career?",
+          "What inspired you to go into the field that you're in? ",
+          "How did you get inspired to pursue this field?",
+          "Where did you get the inspiration to get into your field?",
+          "Did anything inspire you to get into your field?",
+          "What inspired you to take on your current job?",
+          "What prompted you to seek out this career?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70dbbf3c5e6f",
+        "name": "",
+        "question": "How did you know you wanted to pursue this type of work?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How did you know you wanted to do this for the rest of your life?",
+          "How did you know this is what you want to do in life?",
+          "How did you know you were interested in this line of work?",
+          "How did you know what you wanted to do?",
+          "How did you decide that this is what you wanted to do?",
+          "What let you know that you chose the right career?",
+          "How did you know you chose the right career path?",
+          "How did you confirm that this is what you wanted to do?",
+          "What let you know that this was the right path for you?",
+          "What made you realize that this is the right career for you?",
+          "What let you know that this kind of work is what you want to do?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7050aa3c5e70",
+        "name": "",
+        "question": "How did you get started in your career?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What were the first steps you took in your career?",
+          "What got you started in your career?",
+          "How did your career begin?",
+          "What did you do to launch your career?",
+          "What were the earliest years like in your career?",
+          "How did you get started in your field?",
+          "How did you enter this profession?",
+          "What was the beginning of your career like?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7050083c5e71",
+        "name": "",
+        "question": "What surprised you the most when you entered the field?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What most surprised you when entering the field?",
+          "What about the field surprised you the most?",
+          "When you entered the field, what surprised you the most?",
+          "Were you surprised by anything when you got into field?",
+          "What did you find the most surprising about the field?",
+          "Is there anything you found especially surprising about this field?",
+          "What caught you off guard when you entered this field?",
+          "What took you by surprise when you entered the field?",
+          "What did you not see coming when you entered the field?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70539c3c5e72",
+        "name": "",
+        "question": "What do you do now that is different from what you thought you would be doing?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Is there something you are doing that is different from what you expected?",
+          "Did your job description fit what you are doing?",
+          "Are you doing anything different from what you originally expected?",
+          "Did your recruiter tell you something that was not true?",
+          "Did you know you'd be doing this kind of work?",
+          "How is your work different from what you expected?",
+          "Did the job meet your expectations?",
+          "What was unexpected about your job?",
+          "Are your duties different from what you expected or were promised?",
+          "How did your job responsibilities differ from your expectations?",
+          "In what ways did your actual work depart from what you had expected?",
+          "Are you doing something different from what you expected to be doing?",
+          "What did you get wrong about what you would be doing on this job?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70377f3c5e73",
+        "name": "",
+        "question": "How did you get to where you are now?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How did you get here?",
+          "How did you get to the top? ",
+          "How did you become successful?",
+          "How did you get to where you are now?",
+          "What did it take to get to where you are today?",
+          "How did you land your current role?",
+          "How did you get to where you are today?",
+          "What was your process or history that got you into the position you are in?",
+          "How did you do it?",
+          "How did you get where you are today",
+          "How did you get to where you are now?",
+          "How did you get to this position? ",
+          "What was your career trajectory like?",
+          "What was your journey like, to get to where you are now?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7067fe3c5e74",
+        "name": "",
+        "question": "Did you ever think about changing your career?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How often do you rethink your career decision?",
+          "Do you ever feel like this career isn't right for you?",
+          "Have you ever had doubts about your career?",
+          "Did you ever consider a different career?",
+          "Did you ever want to jump ship?",
+          "Have you ever thought about changing careers?",
+          "Were you always sure about your career path?",
+          "Did you ever question whether you chose the right career path?",
+          "Did you ever question your career choice?",
+          "Did you ever have doubts that you were on the correct path?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7006233c5e75",
+        "name": "",
+        "question": "What were some of your fears entering college and your career?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Did you have any fears when entering college?",
+          "What fears did you have when entering college and your career?",
+          "What fears did you have when you were starting your career?",
+          "Did you have any anxiety while entering college or starting your career?",
+          "What kinds of things scared you when you were starting out?",
+          "What worries did you have about starting college?",
+          "What worries or fears did you have when starting your career?",
+          "Were there things you were afraid of about starting college?",
+          "Were there things you were scared of when starting out your career?",
+          "What were you intimidated by when starting college?",
+          "What kinds of things made you nervous about starting your career?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7064443c5e76",
+        "name": "",
+        "question": "What were you like as a student?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How were you in school?",
+          "Were you a good student?",
+          "Were you good at studying?",
+          "Did you do well in school? ",
+          "What were your grades like in school?",
+          "Did you get along with your teachers?",
+          "What type of student were you?",
+          "Tell me about your time as a student.",
+          "Were you a straight-A student?",
+          "Did you study hard in school?",
+          "Were you a strong student?",
+          "How studious were you as a student?",
+          "Can you describe yourself as a student?",
+          "If I saw you in school, what would I have seen?",
+          "Describe yourself as a student.",
+          "Were you studious?",
+          "Were you a nerd in school?",
+          "What kind of student were you?",
+          "How were you in school?",
+          "Were you a good student?",
+          "Were you good at studying?",
+          "Did you do well in school? ",
+          "What were your grades like in school?",
+          "What kind of activities were you part of in school?",
+          "What type of student are you?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd709c143c5e77",
+        "name": "",
+        "question": "What was your college experience like?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Was your college experience hard?",
+          "How'd your college experience go?",
+          "How did college treat you?",
+          "What was your experience like in college?",
+          "Tell me about your college experience.",
+          "How was life in college?",
+          "What were your college years like?",
+          "What was college like for you?",
+          "Did you enjoy college?",
+          "What were you like during college?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70e0f73c5e78",
+        "name": "",
+        "question": "Did you work while you were in school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Did you work during college? ",
+          "Did you work while you were in school?",
+          "Did you work while you completed your degree?",
+          "Did you have any jobs while you went to school?",
+          "Did you have to work to pay for school?",
+          "Did you work while in graduate school?",
+          "Did you work during college?",
+          "How many jobs did you work while going to school?",
+          "Were you employed while you were going to school?",
+          "Did you have to hold any jobs while going to school?",
+          "How did you make money when you were a student?",
+          "Did you do any work-study during college?",
+          "Did you have to work in order to put yourself through school?",
+          "Did you ever have to balance work and school?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7085fa3c5e79",
+        "name": "",
+        "question": "Did you participate in any extracurriculars at college or university?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What were your extracurriculars?",
+          "What extracurriculars did you participate in?",
+          "Did you have any extracurriculars?",
+          "What kinds of extracurricular activities were you involved in?",
+          "Did you participate in any student organizations?",
+          "Did you participate in any clubs when you were in school?",
+          "Did you have any time to pursue extracurriculars when you were going to school?",
+          "How many extracurriculars were you involved in?",
+          "Were you a part of any student clubs as a student?",
+          "Did you pursue any extracurricular activities during college?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7015fd3c5e7a",
+        "name": "",
+        "question": "What was the most difficult part of your training?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What was the hardest part of training for you?",
+          "In what part of training did you have the hardest time in?",
+          "Where in training did almost want to make you quit?",
+          "What part of training gave you the biggest roadblock",
+          "What was biggest difficulty you had in your training?",
+          "what was the most intense part of your training?",
+          "Tell me about the hardest part of your training.",
+          "What was the most rigorous part of your training?",
+          "What was the most challenging part of your training you had to overcome?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7082473c5e7b",
+        "name": "",
+        "question": "What did you do during your training that contributed the most to your success?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What part of training helped you the most?",
+          "What aspect of your training contributed the most to your success?",
+          "What training experience contributed to your success today?",
+          "What was the most valuable thing you did during your training?",
+          "What was the most helpful part of your training?",
+          "Is there anything you did during school that helped you to become successful?",
+          "Were there any training experiences that were especially helpful to your career?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7075583c5e7c",
+        "name": "",
+        "question": "What do you wish you had known while you were in school?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Is there anything you wish you had known while you were in school?",
+          "What do you wish you knew while you were in school?",
+          "Is there something you wish you knew while you were in school?",
+          "What is something you wish you knew earlier in school?",
+          "What did you not know during school that would have been helpful to know?",
+          "What information would have been helpful to have while you were in school?",
+          "Are there things you know now that you wish you had known during school?",
+          "Is there anything you wish someone had told you while you were a student?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd709c5d3c5e7d",
+        "name": "",
+        "question": "What skills do you wish you had mastered before entering your profession?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What type of skills did you wish to have known entering the field?",
+          "What set of skills would have wanted to master before entering your profession?",
+          "What are skills you wish you acquired before you entered you position?",
+          "what type of skills did you wish you were  good at before entering your field?",
+          "What are some skills you hoped you knew before entering your career?",
+          "Before getting into your career, what skills did you hope you had?",
+          "What kind of skills would you have wanted before entering the field?",
+          "What kinds of skills or expertise would have been helpful to you starting out?",
+          "What kinds of skills would have been helpful to you in starting your career?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7054e33c5e7e",
+        "name": "",
+        "question": "What is one question you wish you had asked earlier in your career?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "Tell me a single question you wished you had asked in the beginning.",
+          "What is one question you hoped to have asked early in your career?",
+          "What one question would have been helpful to ask earlier?",
+          "Can you think of a single you should ask earlier?",
+          "What one question would you have asked earlier that would have made things easier?",
+          "If you can go back and ask one question earlier in your career, what would it be?",
+          "Is there a question you hoped to have asked early on in your profession?",
+          "Knowing what you know now, what kind of question would you have asked at the beginning of your career?",
+          "What is one question you wish you had asked earlier?",
+          "What is one question you never asked?",
+          "What did you never ask but wish you had?",
+          "One question you wish you had asked before?",
+          "Is there something you wish you had asked earlier?",
+          "What is something you would have wanted to ask about earlier than when you did?",
+          "What did you never ask about early in your career but should have?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd700c4b3c5e7f",
+        "name": "",
+        "question": "What was your job search like after graduation?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How long did it take to find a job after graduation?",
+          "What was the job market like when you were looking?",
+          "How quickly did you get a job after graduation?",
+          "How was your job search?",
+          "How did you find your job?",
+          "What was it like to look for a job after graduation?",
+          "Did it take you a long time to find a job after graduation?",
+          "Tell me about your experience on the job market.",
+          "How difficult was it for you to get a job after graduation?",
+          "Did you have any jobs lined up by the time you graduated?",
+          "Did your degree help you find a job?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7033223c5e80",
+        "name": "",
+        "question": "What mistakes have you made?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What are some mistakes you have made?",
+          "Tell me about a mistake you've made.",
+          "Have you made any mistakes?",
+          "Have you had any oopsies?",
+          "Is there anything you have done that you consider a mistake?",
+          "What have you done that you wish you didn't?",
+          "Are there things you've done that you know better not to do now?",
+          "Have you done things that you shouldn't have?",
+          "What would you not do again, in hindsight?",
+          ""
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7072313c5e81",
+        "name": "",
+        "question": "What would you do differently, if you had a chance to do things over again?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What would you have done differently?",
+          "If you had to do it all over again, would you still pursue this career?",
+          "If given the chance, what would you do differently?",
+          "What would you do differently if you could do college over again?",
+          "What's one thing you would have done differently?",
+          "If you could change any step you took, which?",
+          "Is there anything you wish you had done or done differently if you were 25 again?",
+          "What would you have done different?",
+          "What are things you would do differently?",
+          "What would you do differently in your life? ",
+          "Would you do anything differently if given the opportunity?",
+          "Do you have any regrets?",
+          "What do you regret not doing? ",
+          "Were there any regrets that you had?",
+          "What is one thing you regret not doing?",
+          "What do you wish you'd done differently?",
+          "Is there anything you wish you could change about your past?",
+          "Are there things you haven't done in the past that you wish you had?",
+          ""
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd700e1d3c5e82",
+        "name": "",
+        "question": "What is your biggest accomplishment?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What accomplishment are you most proud of?",
+          "What do you think is your biggest accomplishment?",
+          "What is your most memorable accomplishment?",
+          "Which experience or achievement do you think was your biggest success in the field or in your life?",
+          "What is your crowning achievement?",
+          "What makes you the most proud of yourself?",
+          "What would you give yourself an award for?",
+          ""
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70f7cb3c5e83",
+        "name": "",
+        "question": "What was your worst experience in this field?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What was your worst experience in the field?",
+          "What was the most horrible experience you have had in this field?",
+          "Did you have any experiences where you felt it left a negative impact on you?",
+          "What was the worst experience you've had in your field?",
+          "What would you say was the rock bottom in your career?",
+          "What has been the most negative or unpleasant experience you have had in this field?",
+          ""
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd707d633c5e84",
+        "name": "",
+        "question": "What was your best experience in this field?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What has been the highlight of working in this field?",
+          "What's been the best part of being in this field?",
+          "What is the best memory you have from your career?",
+          "What has been your favorite memory or experience from this job?",
+          "What is the selling point of your career?",
+          "What was the best experience you've had in this career?",
+          "What happened on the best day of your career?",
+          "What is the highlight of your career?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7073ef3c5e85",
+        "name": "",
+        "question": "How have your priorities changed over the course of your career?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How have your priorities changed throughout your career?",
+          "How were your priorities like in the beginning of your career versus now?",
+          "How is your main focus different from the beginning of your career?",
+          "As your career progressed, how did your priorities change?",
+          "How did your priorities shift in your career?",
+          "How did you adjust your priorities as your career progressed?",
+          "What changed in your focus throughout your career?",
+          "Did you experience a change of priorities over the course of your career?",
+          "How have your priorities shifted over time?",
+          "Have your priorities remained largely the same throughout your career?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7058623c5e86",
+        "name": "",
+        "question": "How has your view of this line of work changed over time?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How have your thoughts about your work changed or evolved throughout your career?",
+          "How is your view of your line of work different from the beginning?",
+          "How did your view of your profession change overtime?",
+          "How has your perspective about your job changed over time?",
+          "How have your perspectives about this field evolved over time?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70d54f3c5e87",
+        "name": "",
+        "question": "What are some honors, awards, or recognition that you've gotten?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How were you awarded in your career?",
+          "What were you recognized for?",
+          "What are some awards you received?",
+          "Did you receive any medals?",
+          "What decorations did you receive in your career?",
+          "What accomplishments were you recognized for?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70240b3c5e88",
+        "name": "",
+        "question": "What organizations have been the most helpful to you in your career?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What organizations are important to your work?",
+          "Do you have a professional society?",
+          "Should I join any professional groups?",
+          "Which organization helped you the most?",
+          "What organization did you benefit from the most?",
+          "Which organization gave you the most help?",
+          "Are there any professional organizations that have been especially helpful to you?",
+          "What has been the most helpful organization to join?",
+          "What have been some key organizations that have supported you in your career?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd704c473c5e89",
+        "name": "",
+        "question": "How have you continued to improve your skills during your career?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "How do you keep expanding your skills during your career?",
+          "what do you do to keep improving in your profession?",
+          "How does your career affect improving your skills?",
+          "What skills do you improve in your career?",
+          "How did your career help you improve your skills?",
+          "What have you done to hone your skills in your profession?",
+          "What do you do to make sure that you are growing and developing your skills throughout your career?",
+          ""
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd70fd043c5e8a",
+        "name": "",
+        "question": "How much of a leadership role do you play?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "When did you start leading?",
+          "How did you do in your first major leadership role?",
+          "When did you start supervising others?",
+          "At what point did you start leading others?",
+          "When did you become the boss?",
+          "Describe your first major leadership role.",
+          "How much of a leader are you?",
+          "Do you supervise or manage a lot of people?",
+          "To what extent do you oversee others' work?",
+          "How high up are you on the corporate ladder?",
+          "Have you sought out leadership positions or roles?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    },
+    {
+      "topics": [],
+      "question": {
+        "_id": "60c8c3b607dd7021fe3c5e8b",
+        "name": "",
+        "question": "Where do you see yourself in 5 years? 10?",
+        "mentorType": null,
+        "type": "QUESTION",
+        "mentor": null,
+        "paraphrases": [
+          "What do you see yourself doing in the next decade?",
+          "What are the next steps in your career?",
+          "Where are you going to go now?",
+          "Where is your future going?",
+          "what will you do after this stage of your career?",
+          "Where do expect you will be doing in the near future?",
+          "Where do you think your career will be in the future?",
+          "Where do you see yourself in 10 years?",
+          "Where do you see yourself going in the future?",
+          "Where do you see yourself in 5 years?",
+          "What will you be doing in 5 years or 10 years?",
+          "What do you predict your career will be like in five or ten years?",
+          "What does the next decade hold for you?",
+          "What do you want to accomplish in the next several years?"
+        ],
+        "minVideoLength": null
+      },
+      "category": {
+        "id": "486de73b-3344-4bf7-91e2-85cf3facae3f",
+        "name": "Development",
+        "description": ""
+      }
+    }
+  ]
+}

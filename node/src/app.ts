@@ -4,7 +4,6 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import bodyParser from 'body-parser';
 import cors from 'cors';
 import express, { Request, Response, NextFunction, Express } from 'express';
 import mongoose from 'mongoose';
@@ -28,8 +27,9 @@ export async function createApp(): Promise<Express> {
     app.use(morgan('dev'));
   }
   app.use(cors());
+  app.use(express.json({ limit: '1mb' }));
+  app.use(express.urlencoded({ limit: '1mb' }));
   app.use('/graphql', gqlMiddleware);
-  app.use(bodyParser.json());
   app.use(express.static(path.join(__dirname, 'public')));
   app.use(function (
     err: any,
