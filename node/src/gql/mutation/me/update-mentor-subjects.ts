@@ -14,11 +14,12 @@ import {
 } from 'graphql';
 import { Mentor as MentorModel } from 'models';
 import { Mentor } from 'models/Mentor';
+import { Subject } from 'models/Subject';
 import { User } from 'models/User';
 
 export interface UpdateMentorSubjects {
-  defaultSubject: string;
-  subjects: string[];
+  defaultSubject: Subject['_id'];
+  subjects: Subject['_id'][];
 }
 
 export const UpdateMentorSubjectsType = new GraphQLInputObjectType({
