@@ -17,7 +17,7 @@ export const refreshToken = {
   args: {},
   resolve: async (
     _root: GraphQLObjectType,
-    args: {},
+    args: any,
     context: any
   ): Promise<UserAccessToken> => {
     try {
