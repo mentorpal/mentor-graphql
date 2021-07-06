@@ -29,5 +29,5 @@ export default {
   UploadTask,
   User,
   UserQuestion,
-  RefreshToken
+  RefreshToken,
 };

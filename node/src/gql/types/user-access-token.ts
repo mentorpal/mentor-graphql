@@ -38,31 +38,31 @@ export async function getRefreshedToken(token: string) {
 
   // generate new jwt
   const jwtToken = generateJwtToken(user);
-  return {jwtToken,newRefreshToken, user};
+  return { jwtToken, newRefreshToken, user };
   // return basic details and tokens
-  // return { 
+  // return {
   //     ...basicDetails(user),
   //     jwtToken,
   //     refreshToken: newRefreshToken.token
   // };
 }
 
-async function getRefreshToken(token:string) {
-  const refreshToken = await RefreshTokenSchema.findOne({ token }).populate('user');
+async function getRefreshToken(token: string) {
+  const refreshToken = await RefreshTokenSchema.findOne({ token }).populate(
+    'user'
+  );
   if (!refreshToken || !refreshToken.isActive) throw 'invalid token';
   return refreshToken;
 }
 
-export function setTokenCookie(res:Response, token: string)
-{
-    // create http only cookie with refresh token that expires in 7 days
-    const cookieOptions = {
-        httpOnly: true,
-        expires: new Date(Date.now() + 7*24*60*60*1000)
-    };
-    res.cookie('refreshToken', token, cookieOptions);
+export function setTokenCookie(res: Response, token: string) {
+  // create http only cookie with refresh token that expires in 7 days
+  const cookieOptions = {
+    httpOnly: true,
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  };
+  res.cookie('refreshToken', token, cookieOptions);
 }
-
 
 function randomTokenString() {
   return randomBytes(40).toString('hex');
@@ -71,9 +71,9 @@ function randomTokenString() {
 export function generateRefreshToken(user: User) {
   // create a refresh token that expires in 7 days
   return new RefreshTokenSchema({
-      user: user.id,
-      token: randomTokenString(),
-      expires: new Date(Date.now() + 7*24*60*60*1000),
+    user: user.id,
+    token: randomTokenString(),
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   }).save();
   // caller needs to call save to save
 }
@@ -91,7 +91,7 @@ export function generateJwtToken(user: User) {
     user,
     accessToken,
     expirationDate,
-};
+  };
 }
 
 export function generateAccessToken(user: User): UserAccessToken {

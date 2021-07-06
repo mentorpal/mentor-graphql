@@ -9,7 +9,7 @@ import {
   getRefreshedToken,
   setTokenCookie,
   UserAccessToken,
-  UserAccessTokenType
+  UserAccessTokenType,
 } from 'gql/types/user-access-token';
 
 export const refreshToken = {
@@ -19,17 +19,19 @@ export const refreshToken = {
     _root: GraphQLObjectType,
     args: {},
     context: any
-  ) : Promise<UserAccessToken> => {
+  ): Promise<UserAccessToken> => {
     try {
-      console.log("context.req.cookies:",context.req.cookies);
+      console.log('context.req.cookies:', context.req.cookies);
       const token = context.req.cookies.refreshToken;
-      const { jwtToken,newRefreshToken, user } = await getRefreshedToken(token);
-      console.log("jwtToken:",jwtToken,newRefreshToken, user);
+      const { jwtToken, newRefreshToken, user } = await getRefreshedToken(
+        token
+      );
+      console.log('jwtToken:', jwtToken, newRefreshToken, user);
       setTokenCookie(context.res, newRefreshToken.token);
       return jwtToken;
     } catch (error) {
       throw new Error(error);
-     // throw JSON.stringify({error:error,cookies:context.req.cookies});
+      // throw JSON.stringify({error:error,cookies:context.req.cookies});
     }
   },
 };

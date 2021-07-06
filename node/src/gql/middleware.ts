@@ -23,7 +23,7 @@ export default graphqlHTTP((req: Request, res: Response) => {
         context: {
           user: user || null,
           res: res,
-          req: req
+          req: req,
         },
       });
     };

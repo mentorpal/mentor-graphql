@@ -101,8 +101,12 @@ describe('login', () => {
   it(`returns user and updates token (using cookies to get auth token)`, async () => {
     const date = new Date(Date.now() + 3000);
     const tokenToStoreInCookie = getToken('5ffdf41a1ee2c62320b49ea1', 300);
-    const storedCookie = mockSetCookie('auth_token_cookie', tokenToStoreInCookie, 7);
-    const token = mockGetCookie(storedCookie,'auth_token_cookie');
+    const storedCookie = mockSetCookie(
+      'auth_token_cookie',
+      tokenToStoreInCookie,
+      7
+    );
+    const token = mockGetCookie(storedCookie, 'auth_token_cookie');
     const response = await request(app)
       .post('/graphql')
       .send({
@@ -124,7 +128,7 @@ describe('login', () => {
       name: 'Clinton Anderson',
       email: 'clint@anderson.com',
     });
-    // update mock token 
+    // update mock token
     mockSetCookie('auth_token_cookie', response.body.data.login.accessToken, 7);
     expect(response.body.data.login.accessToken).to.not.eql(token);
     expect(new Date(response.body.data.login.expirationDate)).to.be.greaterThan(
