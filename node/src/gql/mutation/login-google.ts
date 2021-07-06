@@ -12,7 +12,7 @@ import {
   UserAccessToken,
   generateJwtToken,
   setTokenCookie,
-  generateRefreshToken
+  generateRefreshToken,
 } from 'gql/types/user-access-token';
 
 export interface GoogleResponse {

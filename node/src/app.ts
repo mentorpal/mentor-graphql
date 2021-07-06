@@ -30,9 +30,9 @@ export async function createApp(): Promise<Express> {
   //app.use(cors());
   const corsOptions = {
     credentials: true,
-    origin: ["http://local.mentorpal.org:8000","http://localhost:8000"]
-    }
-    app.use(cors(corsOptions)); 
+    origin: ['http://local.mentorpal.org:8000', 'http://localhost:8000'],
+  };
+  app.use(cors(corsOptions));
   // app.use(cors({ credentials: true, origin: "http://local.mentorpal.org:8000" }));
   app.use(express.json({ limit: '1mb' }));
   app.use(cookieParser());
