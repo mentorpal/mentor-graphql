@@ -22,6 +22,8 @@ export default graphqlHTTP((req: Request, res: Response) => {
         graphiql: true,
         context: {
           user: user || null,
+          res: res,
+          req: req
         },
       });
     };

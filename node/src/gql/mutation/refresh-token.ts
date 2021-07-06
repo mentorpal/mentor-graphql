@@ -4,28 +4,34 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import api from './api';
-import me from './me';
-import login from './login';
-import loginGoogle from './login-google';
-import refreshToken from './refresh-token';
-import updateMentorTraining from './update-mentor-training';
-import userQuestionCreate from './userQuestion-create';
-import userQuestionSetFeedback from './userQuestion-setFeedback';
-import userQuestionSetAnswer from './userQuestion-setAnswer';
+import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
+import {
+  getRefreshedToken,
+  setTokenCookie,
+  UserAccessToken,
+  UserAccessTokenType
+} from 'gql/types/user-access-token';
 
-export default new GraphQLObjectType({
-  name: 'Mutation',
-  fields: {
-    api,
-    me,
-    login,
-    loginGoogle,
-    refreshToken,
-    updateMentorTraining,
-    userQuestionCreate,
-    userQuestionSetFeedback,
-    userQuestionSetAnswer,
+export const refreshToken = {
+  type: UserAccessTokenType,
+  args: {},
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: {},
+    context: any
+  ) : Promise<UserAccessToken> => {
+    try {
+      console.log("context.req.cookies:",context.req.cookies);
+      const token = context.req.cookies.refreshToken;
+      const { jwtToken,newRefreshToken, user } = await getRefreshedToken(token);
+      console.log("jwtToken:",jwtToken,newRefreshToken, user);
+      setTokenCookie(context.res, newRefreshToken.token);
+      return jwtToken;
+    } catch (error) {
+      throw new Error(error);
+     // throw JSON.stringify({error:error,cookies:context.req.cookies});
+    }
   },
-});
+};
+
+export default refreshToken;

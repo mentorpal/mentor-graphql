@@ -23,6 +23,27 @@ export function accessTokenDuration(): number {
     : 60 * 60 * 24 * 90;
 }
 
+export function mockSetCookie(name:string,value:string,days:number) {
+  let expires = "";
+  if (days) {
+    const date = new Date();
+      date.setTime(date.getTime() + (days*24*60*60*1000));
+      expires = "; expires=" + date.toUTCString();
+  }
+  const result = name + "=" + (value || "")  + expires + "; path=/";
+  return result;
+}
+export function mockGetCookie(cookieInfo:string,name:string) {
+  const nameEQ = name + "=";
+  const ca = cookieInfo.split(';');
+  for(let i=0;i < ca.length;i++) {
+      let c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
+}
+
 export function getToken(userId: string, expiresIn?: number): string {
   if (!expiresIn) {
     expiresIn = accessTokenDuration();

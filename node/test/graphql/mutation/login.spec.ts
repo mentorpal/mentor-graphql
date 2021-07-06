@@ -9,7 +9,7 @@ import { expect } from 'chai';
 import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
-import { getToken } from '../../helpers';
+import { getToken, mockSetCookie, mockGetCookie } from '../../helpers';
 
 describe('login', () => {
   let app: Express;
@@ -98,6 +98,40 @@ describe('login', () => {
     );
   });
 
+  it(`returns user and updates token (using cookies to get auth token)`, async () => {
+    const date = new Date(Date.now() + 3000);
+    const tokenToStoreInCookie = getToken('5ffdf41a1ee2c62320b49ea1', 300);
+    const storedCookie = mockSetCookie('auth_token_cookie', tokenToStoreInCookie, 7);
+    const token = mockGetCookie(storedCookie,'auth_token_cookie');
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
+          login(accessToken: "${token}") {
+            user {
+              _id
+              name
+              email
+            }
+            accessToken
+            expirationDate
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.login.user).to.eql({
+      _id: '5ffdf41a1ee2c62320b49ea1',
+      name: 'Clinton Anderson',
+      email: 'clint@anderson.com',
+    });
+    // update mock token 
+    mockSetCookie('auth_token_cookie', response.body.data.login.accessToken, 7);
+    expect(response.body.data.login.accessToken).to.not.eql(token);
+    expect(new Date(response.body.data.login.expirationDate)).to.be.greaterThan(
+      date
+    );
+  });
+
   it(`updates lastLoginAt`, async () => {
     const date = new Date(Date.now() - 1000);
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
@@ -116,6 +150,22 @@ describe('login', () => {
     expect(
       new Date(response.body.data.login.user.lastLoginAt)
     ).to.be.greaterThan(date);
+  });
+  it(`updates refreshToken`, async () => {
+    const date = new Date(Date.now() - 1000);
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
+          login(accessToken: "${token}") {
+            accessToken
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.login.accessToken).to.be.not.empty;
+    expect(response.body.data.login.accessToken).to.be.not.equal(token);
   });
 
   it(`adds any missing required subjects to mentor after logging in`, async () => {
