@@ -11,9 +11,8 @@ import { Request, Response } from 'express';
 import { User } from 'models/User';
 import { getRefreshedToken } from 'gql/types/user-access-token';
 
-const extensions = ({
-  context,
-}:any) => { // eslint-disable-line  @typescript-eslint/no-explicit-any
+const extensions = ({ context }: any) => {
+  // eslint-disable-line  @typescript-eslint/no-explicit-any
   return {
     newToken: context.newToken ? context.newToken : '',
   };
@@ -23,19 +22,19 @@ function isApiReq(req: Request): boolean {
   return Boolean(req.headers['mentor-graphql-req']);
 }
 
-async function refreshToken(req: Request,next:any) { // eslint-disable-line  @typescript-eslint/no-explicit-any
-  try{
-      const token = req.cookies.refreshToken;
-      const { jwtToken, user } = await getRefreshedToken(token);
-      if(user) {
-        next(user,jwtToken);
-      } else {
-        next(null);
-      }
-    } catch (err) {
+async function refreshToken(req: Request, next: any) {
+  // eslint-disable-line  @typescript-eslint/no-explicit-any
+  try {
+    const token = req.cookies.refreshToken;
+    const { jwtToken, user } = await getRefreshedToken(token);
+    if (user) {
+      next(user, jwtToken);
+    } else {
       next(null);
     }
-      
+  } catch (err) {
+    next(null);
+  }
 }
 
 export default graphqlHTTP((req: Request, res: Response) => {
@@ -48,7 +47,7 @@ export default graphqlHTTP((req: Request, res: Response) => {
           user: user || null,
           newToken: newToken || '',
           res: res,
-          req: req
+          req: req,
         },
         extensions,
       });
@@ -59,8 +58,8 @@ export default graphqlHTTP((req: Request, res: Response) => {
      */
     const authType = isApiReq(req) ? 'bearer' : 'jwt';
     passport.authenticate(authType, { session: false }, (err, user) => {
-      if(err=='token expired'||user===false) {
-        refreshToken(req,next);
+      if (err == 'token expired' || user === false) {
+        refreshToken(req, next);
       } else {
         next(user);
       }

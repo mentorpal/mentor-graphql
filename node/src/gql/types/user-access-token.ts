@@ -26,7 +26,7 @@ export function accessTokenDuration(): number {
 }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-export async function getRefreshedToken(token: string):Promise<any> {
+export async function getRefreshedToken(token: string): Promise<any> {
   const refreshToken = await getRefreshToken(token);
   const { user } = refreshToken;
 
@@ -39,7 +39,7 @@ export async function getRefreshedToken(token: string):Promise<any> {
   return { jwtToken, user };
 }
 
-export async function revokeToken(token:string):Promise<void> {
+export async function revokeToken(token: string): Promise<void> {
   const refreshToken = await getRefreshToken(token);
 
   // revoke token and save
@@ -56,10 +56,11 @@ async function getRefreshToken(token: string) {
 }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-export function setTokenCookie(res: Response, token: string):any {
+export function setTokenCookie(res: Response, token: string): any {
   // create http only cookie with refresh token that expires in 90 days
   const validDays = process.env['ACCESS_TOKEN_VALIDITY_DAYS']
-    ? parseInt(process.env['ACCESS_TOKEN_VALIDITY_DAYS']) : 90;
+    ? parseInt(process.env['ACCESS_TOKEN_VALIDITY_DAYS'])
+    : 90;
   const cookieOptions = {
     httpOnly: true,
     expires: new Date(Date.now() + validDays * 24 * 60 * 60 * 1000),
@@ -72,10 +73,11 @@ function randomTokenString() {
 }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-export function generateRefreshToken(user: User):any {
+export function generateRefreshToken(user: User): any {
   // create a refresh token that expires in 90 days
   const validDays = process.env['ACCESS_TOKEN_VALIDITY_DAYS']
-    ? parseInt(process.env['ACCESS_TOKEN_VALIDITY_DAYS']) : 90;
+    ? parseInt(process.env['ACCESS_TOKEN_VALIDITY_DAYS'])
+    : 90;
   return new RefreshTokenSchema({
     user: user.id,
     token: randomTokenString(),
@@ -84,7 +86,7 @@ export function generateRefreshToken(user: User):any {
 }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-export function generateJwtToken(user: User):any {
+export function generateJwtToken(user: User): any {
   // generates short lived (15 min) access tokens
   const expiresIn = 15 * 60; // 15 minute expiry
   const expirationDate = new Date(Date.now() + expiresIn * 1000);

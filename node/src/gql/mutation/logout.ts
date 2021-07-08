@@ -5,9 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLObjectType } from 'graphql';
-import {
-  revokeToken,UserAccessTokenType
-} from 'gql/types/user-access-token';
+import { revokeToken, UserAccessTokenType } from 'gql/types/user-access-token';
 
 export const logout = {
   type: UserAccessTokenType,
@@ -15,15 +13,15 @@ export const logout = {
   resolve: async (
     _root: GraphQLObjectType,
     context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
-  ) : Promise<void> => {
+  ): Promise<void> => {
     try {
       const token = context.req.cookies.refreshToken;
       await revokeToken(token);
       const cookieOptions = {
         httpOnly: true,
-        expires: new Date(Date.now())
-    };
-    context.res.cookie('refreshToken', Date.now(), cookieOptions);
+        expires: new Date(Date.now()),
+      };
+      context.res.cookie('refreshToken', Date.now(), cookieOptions);
     } catch (error) {
       throw new Error(error);
     }

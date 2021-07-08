@@ -16,7 +16,7 @@ export const mentorFindOne = findOne({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function mentorFieldWithName(field = 'mentor'):any {
+export function mentorFieldWithName(field = 'mentor'): any {
   return findByParentField(MentorType, Mentor, field);
 }
 

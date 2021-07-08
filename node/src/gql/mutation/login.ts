@@ -24,10 +24,10 @@ export const login = {
   resolve: async (
     _root: GraphQLObjectType,
     args: { accessToken: string },
-    context: any, // eslint-disable-line  @typescript-eslint/no-explicit-any
+    context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
   ): Promise<UserAccessToken> => {
     try {
-      if(!context.user) {
+      if (!context.user) {
         throw new Error('invalid user');
       }
       const userId = context.user._id;

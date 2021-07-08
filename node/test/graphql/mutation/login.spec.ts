@@ -68,7 +68,6 @@ describe('login', () => {
     );
   });
 
-
   it(`returns user and updates token`, async () => {
     const date = new Date(Date.now() + 3000);
     const token = getToken('5ffdf41a1ee2c62320b49ea1', 300);
@@ -232,6 +231,5 @@ describe('login', () => {
         }`,
       });
     expect(mentor.status).to.equal(200);
- 
   });
 });

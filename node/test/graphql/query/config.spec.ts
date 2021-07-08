@@ -66,9 +66,9 @@ describe('config', () => {
           styleHeaderLogo: '',
         },
       },
-      "extensions": {
-       "newToken": ""
-        }
+      extensions: {
+        newToken: '',
+      },
     });
   });
 
@@ -105,9 +105,9 @@ describe('config', () => {
           styleHeaderLogo: '',
         },
       },
-      "extensions": {
-       "newToken": ""
-        }
+      extensions: {
+        newToken: '',
+      },
     });
   });
 
@@ -129,9 +129,9 @@ describe('config', () => {
           googleClientId: 'clientIdSetByEnv',
         },
       },
-      "extensions": {
-       "newToken": ""
-        }
+      extensions: {
+        newToken: '',
+      },
     });
   });
 
@@ -156,9 +156,9 @@ describe('config', () => {
           googleClientId: 'clientIdSetBySettings',
         },
       },
-      "extensions": {
-        "newToken": ""
-         }
+      extensions: {
+        newToken: '',
+      },
     });
   });
 
@@ -207,9 +207,9 @@ describe('config', () => {
       data: {
         config,
       },
-      "extensions": {
-       "newToken": ""
-        }
+      extensions: {
+        newToken: '',
+      },
     });
   });
 });
