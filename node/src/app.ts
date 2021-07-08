@@ -27,20 +27,18 @@ export async function createApp(): Promise<Express> {
   if (process.env['NODE_ENV'] !== 'test') {
     app.use(morgan('dev'));
   }
-  //app.use(cors());
   const corsOptions = {
     credentials: true,
     origin: ['http://local.mentorpal.org:8000', 'http://localhost:8000'],
   };
   app.use(cors(corsOptions));
-  // app.use(cors({ credentials: true, origin: "http://local.mentorpal.org:8000" }));
   app.use(express.json({ limit: '1mb' }));
   app.use(cookieParser());
   app.use(express.urlencoded({ limit: '1mb' }));
   app.use('/graphql', gqlMiddleware);
   app.use(express.static(path.join(__dirname, 'public')));
   app.use(function (
-    err: any,
+    err: any, // eslint-disable-line @typescript-eslint/no-explicit-any
     req: Request,
     res: Response,
     next: NextFunction // eslint-disable-line @typescript-eslint/no-unused-vars

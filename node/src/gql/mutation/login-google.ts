@@ -54,7 +54,7 @@ export const loginGoogle = {
   resolve: async (
     _root: GraphQLObjectType,
     args: { accessToken: string },
-    context: any
+    context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
   ): Promise<UserAccessToken> => {
     try {
       const googleResponse = await authGoogle(args.accessToken);
@@ -95,7 +95,6 @@ export const loginGoogle = {
           upsert: true,
         }
       );
-      // return generateAccessToken(user);
       // authentication successful so generate jwt and refresh tokens
       const jwtToken = await generateJwtToken(user);
       const refreshToken = await generateRefreshToken(user);

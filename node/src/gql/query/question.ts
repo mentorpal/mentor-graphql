@@ -15,7 +15,8 @@ export const questionFindOne = findOne({
   typeName: 'question',
 });
 
-export function questionFieldWithName(field = 'question') {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function questionFieldWithName(field = 'question'):any {
   return findByParentField(QuestionType, QuestionModel, field);
 }
 

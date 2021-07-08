@@ -25,26 +25,26 @@ export function accessTokenDuration(): number {
     : 60 * 60 * 24 * 90;
 }
 
-export async function getRefreshedToken(token: string) {
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+export async function getRefreshedToken(token: string):Promise<any> {
   const refreshToken = await getRefreshToken(token);
   const { user } = refreshToken;
 
   // replace old refresh token with a new one and save
   const newRefreshToken = await generateRefreshToken(user);
-  refreshToken.revoked = new Date(Date.now());
-  refreshToken.replacedByToken = newRefreshToken.token;
-  await refreshToken.save();
   await newRefreshToken.save();
 
   // generate new jwt
   const jwtToken = generateJwtToken(user);
-  return { jwtToken, newRefreshToken, user };
-  // return basic details and tokens
-  // return {
-  //     ...basicDetails(user),
-  //     jwtToken,
-  //     refreshToken: newRefreshToken.token
-  // };
+  return { jwtToken, user };
+}
+
+export async function revokeToken(token:string):Promise<void> {
+  const refreshToken = await getRefreshToken(token);
+
+  // revoke token and save
+  refreshToken.revoked = new Date(Date.now());
+  await refreshToken.save();
 }
 
 async function getRefreshToken(token: string) {
@@ -55,11 +55,14 @@ async function getRefreshToken(token: string) {
   return refreshToken;
 }
 
-export function setTokenCookie(res: Response, token: string) {
-  // create http only cookie with refresh token that expires in 7 days
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+export function setTokenCookie(res: Response, token: string):any {
+  // create http only cookie with refresh token that expires in 90 days
+  const validDays = process.env['ACCESS_TOKEN_VALIDITY_DAYS']
+    ? parseInt(process.env['ACCESS_TOKEN_VALIDITY_DAYS']) : 90;
   const cookieOptions = {
     httpOnly: true,
-    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    expires: new Date(Date.now() + validDays * 24 * 60 * 60 * 1000),
   };
   res.cookie('refreshToken', token, cookieOptions);
 }
@@ -68,17 +71,20 @@ function randomTokenString() {
   return randomBytes(40).toString('hex');
 }
 
-export function generateRefreshToken(user: User) {
-  // create a refresh token that expires in 7 days
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+export function generateRefreshToken(user: User):any {
+  // create a refresh token that expires in 90 days
+  const validDays = process.env['ACCESS_TOKEN_VALIDITY_DAYS']
+    ? parseInt(process.env['ACCESS_TOKEN_VALIDITY_DAYS']) : 90;
   return new RefreshTokenSchema({
     user: user.id,
     token: randomTokenString(),
-    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    expires: new Date(Date.now() + validDays * 24 * 60 * 60 * 1000),
   }).save();
-  // caller needs to call save to save
 }
 
-export function generateJwtToken(user: User) {
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+export function generateJwtToken(user: User):any {
   // generates short lived (15 min) access tokens
   const expiresIn = 15 * 60; // 15 minute expiry
   const expirationDate = new Date(Date.now() + expiresIn * 1000);

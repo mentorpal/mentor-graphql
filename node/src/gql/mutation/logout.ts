@@ -4,36 +4,30 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
+import { GraphQLObjectType } from 'graphql';
 import {
-  getRefreshedToken,
-  setTokenCookie,
-  UserAccessToken,
-  UserAccessTokenType,
+  revokeToken,UserAccessTokenType
 } from 'gql/types/user-access-token';
 
-export const refreshToken = {
+export const logout = {
   type: UserAccessTokenType,
   args: {},
   resolve: async (
     _root: GraphQLObjectType,
-    args: any,
-    context: any
-  ): Promise<UserAccessToken> => {
+    context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
+  ) : Promise<void> => {
     try {
-      console.log('context.req.cookies:', context.req.cookies);
       const token = context.req.cookies.refreshToken;
-      const { jwtToken, newRefreshToken, user } = await getRefreshedToken(
-        token
-      );
-      console.log('jwtToken:', jwtToken, newRefreshToken, user);
-      setTokenCookie(context.res, newRefreshToken.token);
-      return jwtToken;
+      await revokeToken(token);
+      const cookieOptions = {
+        httpOnly: true,
+        expires: new Date(Date.now())
+    };
+    context.res.cookie('refreshToken', Date.now(), cookieOptions);
     } catch (error) {
       throw new Error(error);
-      // throw JSON.stringify({error:error,cookies:context.req.cookies});
     }
   },
 };
 
-export default refreshToken;
+export default logout;
