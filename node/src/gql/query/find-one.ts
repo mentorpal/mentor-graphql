@@ -31,6 +31,7 @@ export function findOne<T>(config: {
   disableAutoIdArg?: boolean;
   disableExceptionOnNotFound?: boolean;
 }): any {
+  // eslint-disable-line  @typescript-eslint/no-explicit-any
   const {
     argsConfig,
     disableAutoIdArg,
@@ -40,6 +41,7 @@ export function findOne<T>(config: {
     typeName,
   } = config;
   const argsConfEffective: any = {
+    // eslint-disable-line  @typescript-eslint/no-explicit-any
     ...(disableAutoIdArg
       ? {}
       : {

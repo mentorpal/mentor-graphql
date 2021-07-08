@@ -13,6 +13,7 @@ import { MentorType } from 'gql/types/mentor';
 export const mentor = {
   type: MentorType,
   resolve: async (_: any, args: any, context: { user: User }) => {
+    // eslint-disable-line  @typescript-eslint/no-explicit-any
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
