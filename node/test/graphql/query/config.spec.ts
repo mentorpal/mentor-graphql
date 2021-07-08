@@ -66,6 +66,9 @@ describe('config', () => {
           styleHeaderLogo: '',
         },
       },
+      "extensions": {
+       "newToken": ""
+        }
     });
   });
 
@@ -102,6 +105,9 @@ describe('config', () => {
           styleHeaderLogo: '',
         },
       },
+      "extensions": {
+       "newToken": ""
+        }
     });
   });
 
@@ -123,6 +129,9 @@ describe('config', () => {
           googleClientId: 'clientIdSetByEnv',
         },
       },
+      "extensions": {
+       "newToken": ""
+        }
     });
   });
 
@@ -147,6 +156,9 @@ describe('config', () => {
           googleClientId: 'clientIdSetBySettings',
         },
       },
+      "extensions": {
+        "newToken": ""
+         }
     });
   });
 
@@ -195,6 +207,9 @@ describe('config', () => {
       data: {
         config,
       },
+      "extensions": {
+       "newToken": ""
+        }
     });
   });
 });

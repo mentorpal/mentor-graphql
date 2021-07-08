@@ -27,6 +27,9 @@ export const login = {
     context: any, // eslint-disable-line  @typescript-eslint/no-explicit-any
   ): Promise<UserAccessToken> => {
     try {
+      if(!context.user) {
+        throw new Error('invalid user');
+      }
       const userId = context.user._id;
       const user = await UserSchema.findByIdAndUpdate(
         userId,
