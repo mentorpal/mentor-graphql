@@ -112,17 +112,20 @@ describe('login', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation {
-          login(accessToken: "${token}") {
-            user {
-              _id
-              name
-              email
+        query: `
+          mutation Login($accessToken: String!) {
+            login(accessToken: $accessToken) {
+              user {
+                _id
+                name
+                email
+              }
+              accessToken
+              expirationDate
             }
-            accessToken
-            expirationDate
           }
-        }`,
+        `,
+        variables: { accessToken: token },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.login.user).to.eql({
@@ -165,11 +168,14 @@ describe('login', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation {
-          login(accessToken: "${token}") {
-            accessToken
+        query: `
+          mutation Login($accessToken: String!) {
+            login(accessToken: $accessToken) {
+              accessToken
+            }
           }
-        }`,
+        `,
+        variables: { accessToken: token },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.login.accessToken).to.be.not.empty;
