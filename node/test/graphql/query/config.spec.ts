@@ -66,6 +66,9 @@ describe('config', () => {
           styleHeaderLogo: '',
         },
       },
+      extensions: {
+        newToken: '',
+      },
     });
   });
 
@@ -102,6 +105,9 @@ describe('config', () => {
           styleHeaderLogo: '',
         },
       },
+      extensions: {
+        newToken: '',
+      },
     });
   });
 
@@ -122,6 +128,9 @@ describe('config', () => {
         config: {
           googleClientId: 'clientIdSetByEnv',
         },
+      },
+      extensions: {
+        newToken: '',
       },
     });
   });
@@ -146,6 +155,9 @@ describe('config', () => {
         config: {
           googleClientId: 'clientIdSetBySettings',
         },
+      },
+      extensions: {
+        newToken: '',
       },
     });
   });
@@ -194,6 +206,9 @@ describe('config', () => {
     expect(response.body).to.eql({
       data: {
         config,
+      },
+      extensions: {
+        newToken: '',
       },
     });
   });

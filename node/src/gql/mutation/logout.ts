@@ -4,22 +4,28 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Mentor } from 'models';
-import { MentorType } from 'gql/types/mentor';
-import findOne from 'gql/query/find-one';
-import findByParentField from 'gql/query/find-by-parent-field';
+import { GraphQLObjectType } from 'graphql';
+import { revokeToken, UserAccessTokenType } from 'gql/types/user-access-token';
 
-export const mentorFindOne = findOne({
-  model: Mentor,
-  type: MentorType,
-  typeName: 'mentor',
-});
+export const logout = {
+  type: UserAccessTokenType,
+  args: {},
+  resolve: async (
+    _root: GraphQLObjectType,
+    context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
+  ): Promise<void> => {
+    try {
+      const token = context.req.cookies.refreshToken;
+      await revokeToken(token);
+      const cookieOptions = {
+        httpOnly: true,
+        expires: new Date(Date.now()),
+      };
+      context.res.cookie('refreshToken', Date.now(), cookieOptions);
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+};
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function mentorFieldWithName(field = 'mentor'): any {
-  return findByParentField(MentorType, Mentor, field);
-}
-
-export const mentorField = mentorFieldWithName();
-
-export default mentorFindOne;
+export default logout;

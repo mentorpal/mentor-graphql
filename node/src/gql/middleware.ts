@@ -9,20 +9,47 @@ import { graphqlHTTP } from 'express-graphql';
 import schema from './schema';
 import { Request, Response } from 'express';
 import { User } from 'models/User';
+import { getRefreshedToken } from 'gql/types/user-access-token';
+
+const extensions = ({ context }: any) => {
+  // eslint-disable-line  @typescript-eslint/no-explicit-any
+  return {
+    newToken: context.newToken ? context.newToken : '',
+  };
+};
 
 function isApiReq(req: Request): boolean {
   return Boolean(req.headers['mentor-graphql-req']);
 }
 
+async function refreshToken(req: Request, next: any) {
+  // eslint-disable-line  @typescript-eslint/no-explicit-any
+  try {
+    const token = req.cookies.refreshToken;
+    const { jwtToken, user } = await getRefreshedToken(token);
+    if (user) {
+      next(user, jwtToken);
+    } else {
+      next(null);
+    }
+  } catch (err) {
+    next(null);
+  }
+}
+
 export default graphqlHTTP((req: Request, res: Response) => {
   return new Promise((resolve) => {
-    const next = (user: User) => {
+    const next = (user: User, newToken = '') => {
       resolve({
         schema,
         graphiql: true,
         context: {
           user: user || null,
+          newToken: newToken || '',
+          res: res,
+          req: req,
         },
+        extensions,
       });
     };
     /**
@@ -31,7 +58,11 @@ export default graphqlHTTP((req: Request, res: Response) => {
      */
     const authType = isApiReq(req) ? 'bearer' : 'jwt';
     passport.authenticate(authType, { session: false }, (err, user) => {
-      next(user);
+      if (err == 'token expired' || user === false) {
+        refreshToken(req, next);
+      } else {
+        next(user);
+      }
     })(req, res, next);
   });
 });

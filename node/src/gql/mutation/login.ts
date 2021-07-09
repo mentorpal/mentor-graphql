@@ -14,7 +14,6 @@ import {
   UserAccessTokenType,
   UserAccessToken,
   generateAccessToken,
-  decodeAccessToken,
 } from 'gql/types/user-access-token';
 
 export const login = {
@@ -24,11 +23,14 @@ export const login = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { accessToken: string }
+    args: { accessToken: string },
+    context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
   ): Promise<UserAccessToken> => {
     try {
-      const decoded = decodeAccessToken(args.accessToken);
-      const userId = decoded.id;
+      if (!context.user) {
+        throw new Error('invalid user');
+      }
+      const userId = context.user._id;
       const user = await UserSchema.findByIdAndUpdate(
         userId,
         {
