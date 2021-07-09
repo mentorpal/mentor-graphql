@@ -138,6 +138,15 @@ describe('subject', () => {
           },
         ],
       },
+      {
+        question: {
+          question: 'What is Aaron like?',
+        },
+        category: {
+          name: 'Category',
+        },
+        topics: [],
+      },
     ]);
   });
 
@@ -222,6 +231,15 @@ describe('subject', () => {
           question: 'Julia?',
         },
         category: null,
+        topics: [],
+      },
+      {
+        question: {
+          question: 'What is Aaron like?',
+        },
+        category: {
+          name: 'Category',
+        },
         topics: [],
       },
     ]);

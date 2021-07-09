@@ -273,6 +273,15 @@ describe('mentor', () => {
       },
       {
         question: {
+          question: 'What is Aaron like?',
+        },
+        category: {
+          name: 'Category',
+        },
+        topics: [],
+      },
+      {
+        question: {
           question: "Don't talk and stay still.",
         },
         category: null,
@@ -417,6 +426,13 @@ describe('mentor', () => {
         },
         {
           question: {
+            question: 'What is Aaron like?',
+          },
+          status: 'COMPLETE',
+          transcript: 'Test Transcript',
+        },
+        {
+          question: {
             question: "Don't talk and stay still.",
           },
           transcript: '[being still]',
@@ -448,6 +464,13 @@ describe('mentor', () => {
     expect(response.body.data.mentor).to.eql({
       name: 'Clinton Anderson',
       answers: [
+        {
+          question: {
+            question: 'What is Aaron like?',
+          },
+          status: 'COMPLETE',
+          transcript: 'Test Transcript',
+        },
         {
           question: {
             question: "Don't talk and stay still.",
@@ -648,6 +671,11 @@ describe('mentor', () => {
         },
         {
           question: {
+            question: 'What is Aaron like?',
+          },
+        },
+        {
+          question: {
             question: "Don't talk and stay still.",
           },
         },
@@ -678,6 +706,21 @@ describe('mentor', () => {
     expect(response.body.data.mentor).to.eql({
       name: 'Clinton Anderson',
       answers: [
+        {
+          transcript: 'Test Transcript',
+          media: [
+            {
+              type: 'video',
+              tag: 'web',
+              url: `${process.env.STATIC_URL_BASE}/web.mp4`,
+            },
+            {
+              type: 'video',
+              tag: 'mobile',
+              url: `${process.env.STATIC_URL_BASE}/mobile.mp4`,
+            },
+          ],
+        },
         {
           transcript: '[being still]',
           media: [

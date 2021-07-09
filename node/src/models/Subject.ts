@@ -98,7 +98,8 @@ export interface SubjectModel extends Model<Subject> {
     subject: string | Subject,
     topicId?: string,
     mentorId?: string,
-    type?: QuestionType
+    type?: QuestionType,
+    categoryID?: string
   ): SubjectQuestion[];
 }
 
@@ -106,7 +107,8 @@ SubjectSchema.statics.getQuestions = async function (
   s: string | Subject,
   topicId?: string,
   mentorId?: string,
-  type?: QuestionType
+  type?: QuestionType,
+  categoryID?: string
 ) {
   const subject: Subject = typeof s === 'string' ? await this.findById(s) : s;
   if (!subject) {
@@ -115,6 +117,9 @@ SubjectSchema.statics.getQuestions = async function (
   let sQuestions: SubjectQuestion[] = subject.questions;
   if (topicId) {
     sQuestions = sQuestions.filter((sq) => sq.topics.includes(topicId));
+  }
+  if (categoryID) {
+    sQuestions = sQuestions.filter((sq) => sq.category == categoryID);
   }
   const questions = await QuestionModel.find({
     ...{

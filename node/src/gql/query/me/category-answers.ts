@@ -4,31 +4,46 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import { User } from 'models/User';
-import { mentor } from './mentor';
-import { uploadTasks } from './upload-tasks';
-import { categoryAnswers } from './category-answers';
 
-export const Me: GraphQLObjectType = new GraphQLObjectType({
-  name: 'MeQuery',
+import { Types } from 'mongoose';
+import { User } from 'models/User';
+import { Mentor as MentorModel } from 'models';
+import { GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { Status } from 'models/Answer';
+
+const response = new GraphQLObjectType({
+  name: 'response',
   fields: {
-    mentor,
-    uploadTasks,
-    categoryAnswers,
+    answerText: { type: GraphQLString },
+    questionText: { type: GraphQLString },
   },
 });
 
-export const me = {
-  type: Me,
-  resolve: (_: any, args: any, context: { user: User }): { user: User } => {
+export const categoryAnswers = {
+  type: GraphQLList(response),
+  args: {
+    categoryID: { type: GraphQLString },
+  },
+  resolve: async (_: any, args: any, context: { user: User }) => {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
-    return {
-      user: context.user,
-    };
+    const mentor = await MentorModel.findOne({
+      user: Types.ObjectId(`${context.user._id}`),
+    });
+    const answers = await MentorModel.getAnswers(
+      mentor,
+      null,
+      null,
+      null,
+      Status.COMPLETE,
+      null,
+      args.categoryID
+    );
+    return answers.map((a) => {
+      return { questionText: a.question, answerText: a.transcript };
+    });
   },
 };
 
-export default me;
+export default categoryAnswers;

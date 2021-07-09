@@ -52,7 +52,8 @@ export interface MentorModel extends Model<Mentor> {
     useDefaultSubject?: boolean,
     subjectId?: string,
     topicId?: string,
-    type?: QuestionType
+    type?: QuestionType,
+    categoryID?: string
   ): SubjectQuestion[];
   getAnswers(
     mentor: string | Mentor,
@@ -60,7 +61,8 @@ export interface MentorModel extends Model<Mentor> {
     subjectId?: string,
     topicId?: string,
     status?: Status,
-    type?: QuestionType
+    type?: QuestionType,
+    categoryID?: string
   ): Answer[];
 }
 
@@ -143,7 +145,8 @@ MentorSchema.statics.getQuestions = async function (
   defaultSubject?: boolean,
   subjectId?: string,
   topicId?: string,
-  type?: QuestionType
+  type?: QuestionType,
+  categoryID?: string
 ): Promise<SubjectQuestion[]> {
   const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
   if (!mentor) {
@@ -166,7 +169,7 @@ MentorSchema.statics.getQuestions = async function (
   return (
     await Promise.all(
       subjects.map((s) =>
-        SubjectModel.getQuestions(s, topicId, mentor._id, type)
+        SubjectModel.getQuestions(s, topicId, mentor._id, type, categoryID)
       )
     )
   ).reduce((acc: SubjectQuestion[], cur: SubjectQuestion[]) => {
@@ -181,7 +184,8 @@ MentorSchema.statics.getAnswers = async function (
   subjectId?: string,
   topicId?: string,
   status?: Status,
-  type?: QuestionType
+  type?: QuestionType,
+  categoryID?: string
 ) {
   const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
   if (!mentor) {
@@ -192,7 +196,8 @@ MentorSchema.statics.getAnswers = async function (
     defaultSubject,
     subjectId,
     topicId,
-    type
+    type,
+    categoryID
   );
   const questionIds = sQuestions.map(
     (sq: { question: { _id: string } }) => sq.question._id

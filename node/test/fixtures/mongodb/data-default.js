@@ -133,6 +133,10 @@ module.exports = {
         {
           question: ObjectId('511111111111111111111116'),
         },
+        {
+          question: ObjectId('511111111111111111111117'),
+          category: 'category',
+        },
       ],
     },
     {
@@ -180,6 +184,10 @@ module.exports = {
       question: 'Julia?',
       mentor: ObjectId('5ffdf41a1ee2c62111111112'),
     },
+    {
+      _id: ObjectId('511111111111111111111117'),
+      question: 'What is Aaron like?',
+    },
   ],
 
   answers: [
@@ -189,6 +197,26 @@ module.exports = {
       question: ObjectId('511111111111111111111111'),
       transcript: '[being still]',
       video: 'https://idle/url',
+      status: 'COMPLETE',
+      media: [
+        {
+          type: 'video',
+          tag: 'web',
+          url: 'web.mp4',
+        },
+        {
+          type: 'video',
+          tag: 'mobile',
+          url: 'mobile.mp4',
+        },
+      ],
+    },
+    {
+      _id: ObjectId('511111111111111111111113'),
+      mentor: ObjectId('5ffdf41a1ee2c62111111111'),
+      question: ObjectId('511111111111111111111117'),
+      transcript: 'Test Transcript',
+      video: 'https://test/url',
       status: 'COMPLETE',
       media: [
         {
