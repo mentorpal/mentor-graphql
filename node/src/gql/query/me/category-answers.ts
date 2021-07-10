@@ -22,7 +22,7 @@ const response = new GraphQLObjectType({
 export const categoryAnswers = {
   type: GraphQLList(response),
   args: {
-    categoryID: { type: GraphQLString },
+    category: { type: GraphQLString },
   },
   resolve: async (_: any, args: any, context: { user: User }) => {
     if (!context.user) {
@@ -38,10 +38,23 @@ export const categoryAnswers = {
       null,
       Status.COMPLETE,
       null,
-      args.categoryID
+      args.category
+    );
+    const questions = await MentorModel.getQuestions(
+      mentor,
+      null,
+      null,
+      null,
+      null,
+      args.category
     );
     return answers.map((a) => {
-      return { questionText: a.question, answerText: a.transcript };
+      return {
+        questionText: questions.find(
+          (q) => JSON.stringify(q.question._id) == JSON.stringify(a.question)
+        )?.question.question,
+        answerText: a.transcript,
+      };
     });
   },
 };

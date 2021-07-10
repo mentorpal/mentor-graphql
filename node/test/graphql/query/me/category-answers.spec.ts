@@ -25,14 +25,13 @@ describe('query me/categoryAnswers', () => {
     await mongoUnit.drop();
   });
 
-  //test category is 'category' and id is '5ffdf41a1ee2c62320b49ea1'
   it(`throws an error if not logged in`, async () => {
     const response = await request(app)
       .post('/graphql')
       .send({
         query: `query {
           me {
-            categoryAnswers(categoryID :"category") {
+            categoryAnswers(category :"category") {
               answerText
               questionText
             }
@@ -54,7 +53,7 @@ describe('query me/categoryAnswers', () => {
       .send({
         query: `query {
             me {
-              categoryAnswers(categoryID :"category") {
+              categoryAnswers(category :"category") {
                 answerText
                 questionText
               }
@@ -65,7 +64,7 @@ describe('query me/categoryAnswers', () => {
     expect(response.body.data.me.categoryAnswers).to.eql([
       {
         answerText: 'Test Transcript',
-        questionText: '511111111111111111111117',
+        questionText: 'What is Aaron like?',
       },
     ]);
   });
