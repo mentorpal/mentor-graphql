@@ -29,14 +29,18 @@ describe('query me/categoryAnswers', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `query {
+        query: `
+        query CategoryAnswers($category: String!){
           me {
-            categoryAnswers(category :"category") {
+            categoryAnswers(category: $category) {
               answerText
               questionText
             }
           }
         }`,
+        variables: {
+          category: 'category',
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
@@ -51,14 +55,18 @@ describe('query me/categoryAnswers', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `query {
-            me {
-              categoryAnswers(category :"category") {
-                answerText
-                questionText
-              }
+        query: `
+        query CategoryAnswers($category: String!){
+          me {
+            categoryAnswers(category: $category) {
+              answerText
+              questionText
             }
-          }`,
+          }
+        }`,
+        variables: {
+          category: 'category',
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.categoryAnswers).to.eql([

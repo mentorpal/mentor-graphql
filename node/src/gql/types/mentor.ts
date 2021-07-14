@@ -53,11 +53,11 @@ export const MentorType = new GraphQLObjectType({
         mentor: Mentor,
         args: { subject: string; useDefaultSubject: boolean }
       ) {
-        return await MentorModel.getTopics(
-          mentor,
-          args.useDefaultSubject,
-          args.subject
-        );
+        return await MentorModel.getTopics({
+          mentor: mentor,
+          defaultSubject: args.useDefaultSubject,
+          subjectId: args.subject,
+        });
       },
     },
     questions: {
@@ -77,13 +77,13 @@ export const MentorType = new GraphQLObjectType({
           type: string;
         }
       ) {
-        return await MentorModel.getQuestions(
-          mentor,
-          args.useDefaultSubject,
-          args.subject,
-          args.topic,
-          args.type as QuestionType
-        );
+        return await MentorModel.getQuestions({
+          mentor: mentor,
+          defaultSubject: args.useDefaultSubject,
+          subjectId: args.subject,
+          topicId: args.topic,
+          type: args.type as QuestionType,
+        });
       },
     },
     answers: {
@@ -103,13 +103,13 @@ export const MentorType = new GraphQLObjectType({
           status: string;
         }
       ) {
-        return await MentorModel.getAnswers(
-          mentor,
-          args.useDefaultSubject,
-          args.subject,
-          args.topic,
-          args.status as Status
-        );
+        return await MentorModel.getAnswers({
+          mentor: mentor,
+          defaultSubject: args.useDefaultSubject,
+          subjectId: args.subject,
+          topicId: args.topic,
+          status: args.status as Status,
+        });
       },
     },
     utterances: {
@@ -118,14 +118,12 @@ export const MentorType = new GraphQLObjectType({
         status: { type: GraphQLString },
       },
       resolve: async function (mentor: Mentor, args: { status: string }) {
-        return await MentorModel.getAnswers(
-          mentor,
-          false,
-          undefined,
-          undefined,
-          args.status as Status,
-          QuestionType.UTTERANCE
-        );
+        return await MentorModel.getAnswers({
+          mentor: mentor,
+          defaultSubject: false,
+          status: args.status as Status,
+          type: QuestionType.UTTERANCE,
+        });
       },
     },
   }),

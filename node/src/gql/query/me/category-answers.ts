@@ -24,30 +24,26 @@ export const categoryAnswers = {
   args: {
     category: { type: GraphQLString },
   },
-  resolve: async (_: any, args: any, context: { user: User }) => {
+  resolve: async (
+    _: GraphQLObjectType,
+    args: { category: string },
+    context: { user: User }
+  ) => {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
     const mentor = await MentorModel.findOne({
       user: Types.ObjectId(`${context.user._id}`),
     });
-    const answers = await MentorModel.getAnswers(
-      mentor,
-      null,
-      null,
-      null,
-      Status.COMPLETE,
-      null,
-      args.category
-    );
-    const questions = await MentorModel.getQuestions(
-      mentor,
-      null,
-      null,
-      null,
-      null,
-      args.category
-    );
+    const answers = await MentorModel.getAnswers({
+      mentor: mentor,
+      status: Status.COMPLETE,
+      categoryId: args.category,
+    });
+    const questions = await MentorModel.getQuestions({
+      mentor: mentor,
+      categoryId: args.category,
+    });
     return answers.map((a) => {
       return {
         questionText: questions.find(

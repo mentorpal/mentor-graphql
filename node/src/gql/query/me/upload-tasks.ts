@@ -6,15 +6,20 @@ The full terms of this copyright and license should always be found in the root 
 */
 
 import { Types } from 'mongoose';
-import { GraphQLList } from 'graphql';
+import { GraphQLList, GraphQLObjectType } from 'graphql';
 import { User } from 'models/User';
 import { Mentor as MentorModel } from 'models';
 import { UploadTask as UploadTaskModel } from 'models';
+import { UploadTask } from 'models/UploadTask';
 import { UploadTaskType } from 'gql/types/upload-task';
 
 export const uploadTasks = {
   type: GraphQLList(UploadTaskType),
-  resolve: async (_: any, args: any, context: { user: User }) => {
+  resolve: async (
+    _: GraphQLObjectType,
+    args: any,
+    context: { user: User }
+  ): Promise<UploadTask[]> => {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
