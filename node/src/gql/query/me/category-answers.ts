@@ -6,34 +6,53 @@ The full terms of this copyright and license should always be found in the root 
 */
 
 import { Types } from 'mongoose';
-import { GraphQLList, GraphQLObjectType } from 'graphql';
 import { User } from 'models/User';
 import { Mentor as MentorModel } from 'models';
-import { UploadTask as UploadTaskModel } from 'models';
-import { UploadTask } from 'models/UploadTask';
-import { UploadTaskType } from 'gql/types/upload-task';
+import { GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { Status } from 'models/Answer';
 
-export const uploadTasks = {
-  type: GraphQLList(UploadTaskType),
+const response = new GraphQLObjectType({
+  name: 'response',
+  fields: {
+    answerText: { type: GraphQLString },
+    questionText: { type: GraphQLString },
+  },
+});
+
+export const categoryAnswers = {
+  type: GraphQLList(response),
+  args: {
+    category: { type: GraphQLString },
+  },
   resolve: async (
     _: GraphQLObjectType,
-    args: any,
+    args: { category: string },
     context: { user: User }
-  ): Promise<UploadTask[]> => {
+  ) => {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
     const mentor = await MentorModel.findOne({
       user: Types.ObjectId(`${context.user._id}`),
     });
-    if (!mentor) {
-      throw new Error('Mentor not found for user');
-    }
-    const tasks = await UploadTaskModel.find({
-      mentor: mentor._id,
+    const answers = await MentorModel.getAnswers({
+      mentor: mentor,
+      status: Status.COMPLETE,
+      categoryId: args.category,
     });
-    return tasks;
+    const questions = await MentorModel.getQuestions({
+      mentor: mentor,
+      categoryId: args.category,
+    });
+    return answers.map((a) => {
+      return {
+        questionText: questions.find(
+          (q) => JSON.stringify(q.question._id) == JSON.stringify(a.question)
+        )?.question.question,
+        answerText: a.transcript,
+      };
+    });
   },
 };
 
-export default uploadTasks;
+export default categoryAnswers;

@@ -8,12 +8,14 @@ import { GraphQLObjectType } from 'graphql';
 import { User } from 'models/User';
 import { mentor } from './mentor';
 import { uploadTasks } from './upload-tasks';
+import { categoryAnswers } from './category-answers';
 
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeQuery',
   fields: {
     mentor,
     uploadTasks,
+    categoryAnswers,
   },
 });
 
