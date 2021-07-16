@@ -35,9 +35,9 @@ export const MentorType = new GraphQLObjectType({
     thumbnail: {
       type: GraphQLString,
       resolve: function (mentor: Mentor) {
-        if (mentor.thumbnail)
-          return new URL(mentor.thumbnail, process.env.STATIC_URL_BASE);
-        else return '';
+        return mentor.thumbnail
+          ? new URL(mentor.thumbnail, process.env.STATIC_URL_BASE)
+          : '';
       },
     },
     subjects: {

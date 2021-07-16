@@ -143,7 +143,7 @@ describe('updateAnswer', () => {
     );
   });
 
-  it('mentor updates an answer and dirties mentor', async () => {
+  it('mentor updates an answer and makes mentor dirty.', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const questionId = '511111111111111111111112';
     const response = await request(app)
