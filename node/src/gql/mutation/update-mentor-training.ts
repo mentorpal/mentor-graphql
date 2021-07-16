@@ -22,6 +22,7 @@ export const updateMentorTraining = {
       args.id,
       {
         lastTrainedAt: new Date(),
+        isDirty: false,
       },
       {
         new: true,

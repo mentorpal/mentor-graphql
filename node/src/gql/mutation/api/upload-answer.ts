@@ -61,7 +61,16 @@ export const updateAnswer = {
     if (!(await QuestionModel.exists({ _id: args.questionId }))) {
       throw new Error(`no question found for id '${args.questionId}'`);
     }
-    const mentor: Mentor = await MentorModel.findById(args.mentorId);
+    const mentor: Mentor = await MentorModel.findOneAndUpdate(
+      {
+        _id: args.mentorId,
+      },
+      {
+        $set: {
+          isDirty: true,
+        },
+      }
+    );
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
     }

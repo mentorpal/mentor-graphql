@@ -32,6 +32,7 @@ export interface Mentor extends Document {
   defaultSubject: Subject['_id'];
   subjects: Subject['_id'][];
   lastTrainedAt: Date;
+  isDirty: boolean;
   mentorType: string;
   user: User['_id'];
 }
@@ -75,6 +76,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     defaultSubject: { type: Schema.Types.ObjectId, ref: 'Subject' },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
     lastTrainedAt: { type: Date },
+    isDirty: { type: Boolean, default: true },
     mentorType: {
       type: String,
       enum: [MentorType.VIDEO, MentorType.CHAT],

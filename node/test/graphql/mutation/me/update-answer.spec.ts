@@ -143,7 +143,7 @@ describe('updateAnswer', () => {
     );
   });
 
-  it('mentor updates an answer', async () => {
+  it('mentor updates an answer and dirties mentor', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const questionId = '511111111111111111111112';
     const response = await request(app)
@@ -172,6 +172,7 @@ describe('updateAnswer', () => {
       .send({
         query: `query {
           mentor(id: "5ffdf41a1ee2c62111111111") {
+            isDirty
             answers {
               transcript
               status
@@ -183,6 +184,7 @@ describe('updateAnswer', () => {
       }`,
       });
     expect(r2.status).to.equal(200);
+    expect(r2.body.data.mentor.isDirty).to.eql(true);
     const updatedAnswer = r2.body.data.mentor.answers.find(
       (a: any) => a.question._id === questionId
     );
