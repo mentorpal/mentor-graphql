@@ -37,7 +37,7 @@ describe('updateMentorTraining', () => {
     expect(response.status).to.equal(400);
   });
 
-  it(`updates lastTrainedAt`, async () => {
+  it(`updates lastTrainedAt and isDirty`, async () => {
     const date = new Date(Date.now() - 1000);
     const response = await request(app)
       .post('/graphql')
@@ -45,6 +45,7 @@ describe('updateMentorTraining', () => {
         query: `mutation {
           updateMentorTraining(id: "5ffdf41a1ee2c62111111111") {
             lastTrainedAt
+            isDirty
           }
         }`,
       });
@@ -55,5 +56,6 @@ describe('updateMentorTraining', () => {
     expect(
       new Date(response.body.data.updateMentorTraining.lastTrainedAt)
     ).to.be.lessThan(new Date(Date.now() + 1000));
+    expect(response.body.data.updateMentorTraining.isDirty).to.equal(false);
   });
 });

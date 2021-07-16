@@ -29,12 +29,15 @@ export const MentorType = new GraphQLObjectType({
     email: { type: GraphQLString },
     allowContact: { type: GraphQLBoolean },
     lastTrainedAt: { type: DateType },
+    isDirty: { type: GraphQLBoolean },
     mentorType: { type: GraphQLString },
     defaultSubject: { type: SubjectType },
     thumbnail: {
       type: GraphQLString,
       resolve: function (mentor: Mentor) {
-        return new URL(mentor.thumbnail, process.env.STATIC_URL_BASE);
+        return mentor.thumbnail
+          ? new URL(mentor.thumbnail, process.env.STATIC_URL_BASE)
+          : '';
       },
     },
     subjects: {
