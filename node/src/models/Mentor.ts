@@ -5,6 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose, { Schema, Document, Model } from 'mongoose';
+import { MentorExportJson } from 'gql/query/export-mentor';
 import { Answer as AnswerModel, Subject as SubjectModel } from 'models';
 import {
   PaginatedResolveResult,
@@ -16,6 +17,7 @@ import { Answer, Status } from './Answer';
 import { QuestionType } from './Question';
 import { Subject, SubjectQuestion, Topic } from './Subject';
 import { User } from './User';
+import { MentorImportJson } from 'gql/mutation/me/import-mentor';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -75,6 +77,8 @@ export interface MentorModel extends Model<Mentor> {
     type,
     categoryId,
   }: GetMentorDataParams): Answer[];
+  export(mentor: string): Promise<MentorExportJson>;
+  import(mentor: string, json: MentorImportJson): Promise<Mentor>;
 }
 
 export const MentorSchema = new Schema<Mentor, MentorModel>(
@@ -102,6 +106,61 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
+
+MentorSchema.statics.export = async function (
+  m: string | Mentor
+): Promise<MentorExportJson> {
+  const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
+  if (!mentor) {
+    throw new Error('mentor not found');
+  }
+  const subjects = await this.getSubjects(mentor);
+  const questions = await this.getQuestions({ mentor });
+  const answers = await this.getAnswers({ mentor });
+  return {
+    _id: mentor._id,
+    subjects,
+    questions,
+    answers,
+  };
+};
+
+MentorSchema.statics.import = async function (
+  m: string | Mentor,
+  json: MentorImportJson
+): Promise<Mentor> {
+  const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
+  if (!mentor) {
+    throw new Error('mentor not found');
+  }
+  for (const s of json.subjects) {
+    await SubjectModel.updateOrCreate(s);
+  }
+  for (const a of json.answers) {
+    await AnswerModel.findOneAndUpdate(
+      {
+        mentor: mentor._id,
+        question: a.question._id,
+      },
+      {
+        $set: {
+          transcript: a.transcript,
+          status: a.status,
+          media: a.media,
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+  }
+  return await this.findByIdAndUpdate(mentor._id, {
+    $set: {
+      subjects: json.subjects.map((s) => s._id as Subject['_id']),
+    },
+  });
+};
 
 // Return subjects in alphabetical order
 MentorSchema.statics.getSubjects = async function (

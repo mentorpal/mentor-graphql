@@ -6,6 +6,7 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { GraphQLObjectType } from 'graphql';
 import { User } from 'models/User';
+import importMentor from './import-mentor';
 import updateMentorDetails from './update-mentor-details';
 import updateMentorSubjects from './update-mentor-subjects';
 import updateAnswer from './update-answer';
@@ -17,6 +18,7 @@ import updateUserPermissions from './update-user-permissions';
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeMutation',
   fields: () => ({
+    importMentor,
     updateMentorDetails,
     updateMentorSubjects,
     updateAnswer,

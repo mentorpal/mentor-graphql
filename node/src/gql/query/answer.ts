@@ -4,40 +4,26 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import answer from './answer';
-import config from './config';
-import exportMentor from './export-mentor';
-import health from './health';
-import me from './me';
-import mentor from './mentor';
-import mentors from './mentors';
-import mentorPanel from './mentor-panel';
-import question from './question';
-import questions from './questions';
-import subject from './subject';
-import subjects from './subjects';
-import userQuestion from './user-question';
-import userQuestions from './user-questions';
-import users from './users';
+import { GraphQLObjectType, GraphQLNonNull, GraphQLID } from 'graphql';
+import { Answer as AnswerModel } from 'models';
+import { Answer } from 'models/Answer';
+import AnswerType from 'gql/types/answer';
 
-export default new GraphQLObjectType({
-  name: 'Query',
-  fields: {
-    answer,
-    config,
-    exportMentor,
-    health,
-    me,
-    mentor,
-    mentors,
-    mentorPanel,
-    question,
-    questions,
-    subject,
-    subjects,
-    userQuestion,
-    userQuestions,
-    users,
+export const answer = {
+  type: AnswerType,
+  args: {
+    mentor: { type: GraphQLNonNull(GraphQLID) },
+    question: { type: GraphQLNonNull(GraphQLID) },
   },
-});
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { mentor: string; question: string }
+  ): Promise<Answer> => {
+    return await AnswerModel.findOne({
+      mentor: args.mentor,
+      question: args.question,
+    });
+  },
+};
+
+export default answer;
