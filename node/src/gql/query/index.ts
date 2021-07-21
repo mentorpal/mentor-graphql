@@ -9,6 +9,7 @@ import config from './config';
 import me from './me';
 import mentor from './mentor';
 import mentors from './mentors';
+import findMentorByUserId from './mentor-find-by-user';
 import mentorPanel from './mentor-panel';
 import question from './question';
 import questions from './questions';
@@ -16,6 +17,7 @@ import subject from './subject';
 import subjects from './subjects';
 import userQuestion from './user-question';
 import userQuestions from './user-questions';
+import fetchUsers from './fetch-users';
 import health from './health';
 
 export default new GraphQLObjectType({
@@ -24,6 +26,7 @@ export default new GraphQLObjectType({
     config,
     me,
     mentor,
+    findMentorByUserId,
     mentors,
     mentorPanel,
     question,
@@ -32,6 +35,7 @@ export default new GraphQLObjectType({
     subjects,
     userQuestion,
     userQuestions,
+    fetchUsers,
     health,
   },
 });

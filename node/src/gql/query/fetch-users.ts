@@ -4,18 +4,13 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType, GraphQLID } from 'graphql';
-import { DateType } from './date';
+import { User as UserModel } from 'models';
+import { UserType } from 'gql/types/user';
+import findAll from './find-all';
 
-export const UserType = new GraphQLObjectType({
-  name: 'User',
-  fields: () => ({
-    _id: { type: GraphQLID },
-    name: { type: GraphQLString },
-    email: { type: GraphQLString },
-    userRole: { type: GraphQLString },
-    lastLoginAt: { type: DateType },
-  }),
+export const fetchUsers = findAll({
+  nodeType: UserType,
+  model: UserModel,
 });
 
-export default UserType;
+export default fetchUsers;
