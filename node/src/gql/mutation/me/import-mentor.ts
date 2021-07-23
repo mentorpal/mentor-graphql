@@ -21,18 +21,16 @@ import { AnswerMedia, Status } from 'models/Answer';
 import { AnswerMediaInputType } from '../api/upload-answer';
 
 export interface MentorImportJson {
-  _id: string;
   subjects: SubjectImportJson[];
-  questions: SubjectQuestionImportJson[];
+  questions: QuestionImportJson[];
   answers: AnswerImportJson[];
 }
 
 export const MentorImportJsonType = new GraphQLInputObjectType({
   name: 'MentorImportJsonType',
   fields: () => ({
-    _id: { type: GraphQLID },
     subjects: { type: GraphQLList(SubjectImportJsonType) },
-    questions: { type: GraphQLList(SubjectQuestionImportJsonType) },
+    questions: { type: GraphQLList(QuestionImportJsonType) },
     answers: { type: GraphQLList(AnswerImportJsonType) },
   }),
 });
@@ -131,7 +129,6 @@ export const QuestionImportJsonType = new GraphQLInputObjectType({
 });
 
 export interface AnswerImportJson {
-  _id: string;
   question: QuestionImportJson;
   transcript: string;
   status: Status;
@@ -141,7 +138,6 @@ export interface AnswerImportJson {
 export const AnswerImportJsonType = new GraphQLInputObjectType({
   name: 'AnswerImportJsonType',
   fields: () => ({
-    _id: { type: GraphQLID },
     question: { type: GraphQLNonNull(QuestionImportJsonType) },
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },

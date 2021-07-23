@@ -304,6 +304,41 @@ describe('import mentor', () => {
           ],
         },
         {
+          _id: '5ffdf41a1ee2c62320b49eb1',
+          name: 'Repeat After Me',
+          description:
+            "These are miscellaneous phrases you'll be asked to repeat.",
+          isRequired: true,
+          topics: [
+            {
+              id: '5ffdf41a1ee2c62320b49ec1',
+              name: 'Idle',
+              description: '30-second idle clip',
+            },
+          ],
+          categories: [],
+          questions: [
+            {
+              question: {
+                _id: '511111111111111111111111',
+                question: "Don't talk and stay still.",
+                type: 'UTTERANCE',
+                name: 'idle',
+                paraphrases: [],
+                mentor: null,
+                mentorType: null,
+                minVideoLength: null,
+              },
+              category: null,
+              topics: [
+                {
+                  id: '5ffdf41a1ee2c62320b49ec1',
+                },
+              ],
+            },
+          ],
+        },
+        {
           _id: '5ffdf41a1ee2c62320b49eb2',
           name: 'Background',
           description:
@@ -437,8 +472,8 @@ describe('import mentor', () => {
           transcript: 'Test Transcript',
           status: 'COMPLETE',
           question: {
-            _id: '511111111111111111111117',
-            question: 'What is Aaron like?',
+            _id: '511111111111111111111111',
+            question: "Don't talk and stay still.",
           },
           media: [],
         },
