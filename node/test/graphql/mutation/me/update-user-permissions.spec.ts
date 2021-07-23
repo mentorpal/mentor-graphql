@@ -37,13 +37,16 @@ describe('updateUserPermissions', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation {
+        query: `mutation UpdateUserPermissions($permissionLevel: String!){
           me {
-            updateUserPermissions(permissionLevel: "") {
+            updateUserPermissions(permissionLevel: $permissionLevel) {
               name
             }  
           }
         }`,
+        variables: {
+          permissionLevel: '',
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
@@ -58,13 +61,16 @@ describe('updateUserPermissions', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation {
+        query: `mutation UpdateUserPermissions($userId: String!) {
           me {
-            updateUserPermissions(userId: "5ffdf41a1ee2c62320b49ea3") {
+            updateUserPermissions(userId: $userId) {
               name
             }  
           }
         }`,
+        variables: {
+          userId: '5ffdf41a1ee2c62320b49ea3',
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
@@ -77,13 +83,17 @@ describe('updateUserPermissions', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `mutation {
+        query: `mutation updateUserPermissions($userId: String!, $permissionLevel: String!){
           me {
-            updateUserPermissions(userId: "5ffdf41a1ee2c62320b49ea3", permissionLevel: "USER") {
+            updateUserPermissions(userId:$userId, permissionLevel: $permissionLevel) {
               name
             }  
           }
         }`,
+        variables: {
+          userId: '5ffdf41a1ee2c62320b49ea3',
+          permissionLevel: 'USER',
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
@@ -98,18 +108,22 @@ describe('updateUserPermissions', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation {
+        query: `mutation updateUserPermissions($userId: String!, $permissionLevel: String!){
           me {
-            updateUserPermissions(userId: "5ffdf41a1ee2c62320b49ea3", permissionLevel: "USER") {
+            updateUserPermissions(userId: $userId, permissionLevel: $permissionLevel) {
               name
             }  
           }
         }`,
+        variables: {
+          userId: '5ffdf41a1ee2c62320b49ea3',
+          permissionLevel: 'USER',
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'must be an admin to edit user permissions'
+      'must be an admin or content manager to edit user permissions'
     );
   });
 
@@ -119,18 +133,22 @@ describe('updateUserPermissions', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation {
+        query: `mutation UpdateUserPermissions($userId: String!, $permissionLevel: String!){
           me {
-            updateUserPermissions(userId: "5ffdf41a1ee2c62320b49ea3", permissionLevel: "ADMIN") {
+            updateUserPermissions(userId: $userId, permissionLevel: $permissionLevel) {
               name
             }  
           }
         }`,
+        variables: {
+          userId: '5ffdf41a1ee2c62320b49ea3',
+          permissionLevel: 'ADMIN',
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'must be an admin to edit user permissions'
+      'must be an admin or content manager to edit user permissions'
     );
   });
 
@@ -140,18 +158,22 @@ describe('updateUserPermissions', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation {
+        query: `mutation UpdateUserPermissions($userId: String!, $permissionLevel: String!){
           me {
-            updateUserPermissions(userId: "5ffdf41a1ee2c62320b49ea1", permissionLevel: "USER") {
+            updateUserPermissions(userId: $userId, permissionLevel: $permissionLevel) {
               name
             }  
           }
         }`,
+        variables: {
+          userId: '5ffdf41a1ee2c62320b49ea1',
+          permissionLevel: 'USER',
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'must be an admin to edit user permissions'
+      'must be an admin or content manager to edit user permissions'
     );
   });
 
@@ -161,13 +183,17 @@ describe('updateUserPermissions', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation {
+        query: `mutation UpdateUserPermissions($userId: String!, $permissionLevel: String!){
           me {
-            updateUserPermissions(userId: "5f0cfea3395d762ca65405d4", permissionLevel: "USER") {
+            updateUserPermissions(userId: $userId, permissionLevel: $permissionLevel) {
               name
             }  
           }
         }`,
+        variables: {
+          userId: '5f0cfea3395d762ca65405d4',
+          permissionLevel: 'USER',
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
@@ -311,6 +337,20 @@ describe('updateUserPermissions', () => {
       user: '5ffdf41a1ee2c62320b49ea1',
       userToEdit: '5ffdf41a1ee2c62320b49ea3',
       userRole: 'ADMIN',
+      userToEditRole: 'USER',
+      permissionLevel: 'CONTENT_MANAGER',
+    },
+    {
+      user: '5ffdf41a1ee2c62320b49ea4',
+      userToEdit: '5ffdf41a1ee2c62320b49ea4',
+      userRole: 'CONTENT_MANAGER',
+      userToEditRole: 'CONTENT_MANAGER',
+      permissionLevel: 'USER',
+    },
+    {
+      user: '5ffdf41a1ee2c62320b49ea4',
+      userToEdit: '5ffdf41a1ee2c62320b49ea3',
+      userRole: 'CONTENT_MANAGER',
       userToEditRole: 'USER',
       permissionLevel: 'CONTENT_MANAGER',
     },

@@ -24,7 +24,7 @@ describe('query fetchUsers', () => {
     await mongoUnit.drop();
   });
 
-  it(`returns mentor for given user id`, async () => {
+  it(`returns all users`, async () => {
     const response = await request(app)
       .post('/graphql')
       .send({
@@ -35,12 +35,18 @@ describe('query fetchUsers', () => {
               node {
                 _id
                 name
+                email
                 userRole
+                defaultMentor{
+                  _id
+                }
               }
             }
             pageInfo {
-              hasNextPage
+              startCursor
               endCursor
+              hasPreviousPage
+              hasNextPage
             }
           }
         }`,

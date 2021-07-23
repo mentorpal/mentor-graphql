@@ -35,8 +35,13 @@ export const updateUserPermissions = {
         `permissionLevel must be "${UserRole.USER}", "${UserRole.CONTENT_MANAGER}", or "${UserRole.ADMIN}"`
       );
     }
-    if (context.user.userRole !== UserRole.ADMIN) {
-      throw new Error('must be an admin to edit user permissions');
+    if (
+      context.user.userRole !== UserRole.ADMIN &&
+      context.user.userRole !== UserRole.CONTENT_MANAGER
+    ) {
+      throw new Error(
+        'must be an admin or content manager to edit user permissions'
+      );
     }
     if (
       args.permissionLevel === UserRole.ADMIN &&
