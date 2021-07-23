@@ -6,7 +6,11 @@ The full terms of this copyright and license should always be found in the root 
 */
 import mongoose, { Schema, Document, Model } from 'mongoose';
 import { MentorExportJson } from 'gql/query/export-mentor';
-import { Answer as AnswerModel, Subject as SubjectModel } from 'models';
+import {
+  Answer as AnswerModel,
+  Subject as SubjectModel,
+  Question as QuestionModel,
+} from 'models';
 import {
   PaginatedResolveResult,
   PaginateOptions,
@@ -114,11 +118,23 @@ MentorSchema.statics.export = async function (
   if (!mentor) {
     throw new Error('mentor not found');
   }
-  const subjects = await this.getSubjects(mentor);
-  const questions = await this.getQuestions({ mentor });
-  const answers = await this.getAnswers({ mentor });
+  const subjects = await SubjectModel.find({
+    _id: { $in: mentor.subjects },
+  });
+  const sQuestions: SubjectQuestion[] = subjects.reduce(
+    (accumulator, subject) => {
+      return accumulator.concat(subject.questions);
+    },
+    []
+  );
+  const questions = await QuestionModel.find({
+    _id: { $in: sQuestions.map((q) => q.question) },
+  });
+  const answers: Answer[] = await AnswerModel.find({
+    mentor: mentor._id,
+    question: { $in: questions },
+  });
   return {
-    _id: mentor._id,
     subjects,
     questions,
     answers,

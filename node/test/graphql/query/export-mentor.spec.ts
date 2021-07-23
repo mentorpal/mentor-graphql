@@ -31,7 +31,9 @@ describe('export mentor', () => {
       .send({
         query: `query ExportMentor($mentor: ID!) {
           exportMentor(mentor: $mentor) {
-            _id
+            subjects {
+              _id
+            }
           }
         }`,
         variables: { mentor: '5ffdf41a1ee2c62320b49ea1' },
@@ -49,7 +51,9 @@ describe('export mentor', () => {
       .send({
         query: `query ExportMentor($mentor: ID!) {
           exportMentor(mentor: $mentor) {
-            _id
+            subjects {
+              _id
+            }
           }
         }`,
         variables: { mentor: '5ffdf41a1ee2c62320b49ea1' },
@@ -67,7 +71,6 @@ describe('export mentor', () => {
       .send({
         query: `query ExportMentor($mentor: ID!) {
           exportMentor(mentor: $mentor) {
-            _id
             subjects {
               _id
               name
@@ -103,7 +106,6 @@ describe('export mentor', () => {
               }
             }
             answers {
-              _id
               transcript
               status
               question {
@@ -122,8 +124,42 @@ describe('export mentor', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.exportMentor).to.eql({
-      _id: '5ffdf41a1ee2c62111111111',
       subjects: [
+        {
+          _id: '5ffdf41a1ee2c62320b49eb1',
+          name: 'Repeat After Me',
+          description:
+            "These are miscellaneous phrases you'll be asked to repeat.",
+          isRequired: true,
+          topics: [
+            {
+              id: '5ffdf41a1ee2c62320b49ec1',
+              name: 'Idle',
+              description: '30-second idle clip',
+            },
+          ],
+          categories: [],
+          questions: [
+            {
+              question: {
+                _id: '511111111111111111111111',
+                question: "Don't talk and stay still.",
+                type: 'UTTERANCE',
+                name: 'idle',
+                paraphrases: [],
+                mentor: null,
+                mentorType: null,
+                minVideoLength: null,
+              },
+              category: null,
+              topics: [
+                {
+                  id: '5ffdf41a1ee2c62320b49ec1',
+                },
+              ],
+            },
+          ],
+        },
         {
           _id: '5ffdf41a1ee2c62320b49eb2',
           name: 'Background',
@@ -240,80 +276,14 @@ describe('export mentor', () => {
             },
           ],
         },
-        {
-          _id: '5ffdf41a1ee2c62320b49eb1',
-          name: 'Repeat After Me',
-          description:
-            "These are miscellaneous phrases you'll be asked to repeat.",
-          isRequired: true,
-          topics: [
-            {
-              id: '5ffdf41a1ee2c62320b49ec1',
-              name: 'Idle',
-              description: '30-second idle clip',
-            },
-          ],
-          categories: [],
-          questions: [
-            {
-              question: {
-                _id: '511111111111111111111111',
-                question: "Don't talk and stay still.",
-                type: 'UTTERANCE',
-                name: 'idle',
-                paraphrases: [],
-                mentor: null,
-                mentorType: null,
-                minVideoLength: null,
-              },
-              category: null,
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec1',
-                },
-              ],
-            },
-          ],
-        },
       ],
       answers: [
         {
-          _id: null,
-          transcript: '',
-          status: 'INCOMPLETE',
-          question: {
-            _id: '511111111111111111111112',
-            question: 'Who are you and what do you do?',
-          },
-          media: null,
-        },
-        {
-          _id: null,
-          transcript: '',
-          status: 'INCOMPLETE',
-          question: {
-            _id: '511111111111111111111113',
-            question: 'How old are you?',
-          },
-          media: null,
-        },
-        {
-          _id: null,
-          transcript: '',
-          status: 'INCOMPLETE',
-          question: {
-            _id: '511111111111111111111114',
-            question: 'Do you like your job?',
-          },
-          media: null,
-        },
-        {
-          _id: '511111111111111111111113',
-          transcript: 'Test Transcript',
+          transcript: '[being still]',
           status: 'COMPLETE',
           question: {
-            _id: '511111111111111111111117',
-            question: 'What is Aaron like?',
+            _id: '511111111111111111111111',
+            question: "Don't talk and stay still.",
           },
           media: [
             {
@@ -329,12 +299,11 @@ describe('export mentor', () => {
           ],
         },
         {
-          _id: '511111111111111111111112',
-          transcript: '[being still]',
+          transcript: 'Test Transcript',
           status: 'COMPLETE',
           question: {
-            _id: '511111111111111111111111',
-            question: "Don't talk and stay still.",
+            _id: '511111111111111111111117',
+            question: 'What is Aaron like?',
           },
           media: [
             {

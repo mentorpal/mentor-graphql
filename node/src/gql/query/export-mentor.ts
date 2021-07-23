@@ -11,24 +11,24 @@ import {
   GraphQLObjectType,
 } from 'graphql';
 import AnswerType from 'gql/types/answer';
-import SubjectType, { SubjectQuestionType } from 'gql/types/subject';
+import SubjectType from 'gql/types/subject';
+import QuestionType from 'gql/types/question';
 import { Mentor as MentorModel } from 'models';
 import { Answer } from 'models/Answer';
-import { Subject, SubjectQuestion } from 'models/Subject';
+import { Subject } from 'models/Subject';
+import { Question } from 'models/Question';
 
 export interface MentorExportJson {
-  _id: string;
   subjects: Subject[];
-  questions: SubjectQuestion[];
+  questions: Question[];
   answers: Answer[];
 }
 
 export const MentorExportJsonType = new GraphQLObjectType({
   name: 'MentorExportJsonType',
   fields: () => ({
-    _id: { type: GraphQLID },
     subjects: { type: GraphQLList(SubjectType) },
-    questions: { type: GraphQLList(SubjectQuestionType) },
+    questions: { type: GraphQLList(QuestionType) },
     answers: { type: GraphQLList(AnswerType) },
   }),
 });
