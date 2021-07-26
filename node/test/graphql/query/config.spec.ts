@@ -172,7 +172,7 @@ describe('config', () => {
       urlClassifier: '/classifier/v2',
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
-      idleTipsVideoUrl: 'https://youtu.be/xSu1BhuFt8A',
+      urlVideoIdleTips: 'https://youtu.be/xSu1BhuFt8A',
       styleHeaderLogo: '/a/logo.png',
       styleHeaderColor: '',
       styleHeaderTextColor: '',
@@ -190,7 +190,7 @@ describe('config', () => {
             cmi5Endpoint
             cmi5Fetch
             googleClientId
-            idleTipsVideoUrl
+            urlVideoIdleTips
             mentorsDefault
             urlClassifier
             urlGraphql
