@@ -10,7 +10,7 @@ import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 
-describe('query fetchUsers', () => {
+describe('query users', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -29,8 +29,8 @@ describe('query fetchUsers', () => {
       .post('/graphql')
       .send({
         query: `
-        query FetchUsers($filter: Object!, $limit: Int!, $cursor: String!, $sortBy: String!, $sortAscending: Boolean!){
-          fetchUsers (filter: $filter, limit: $limit,cursor: $cursor,sortBy: $sortBy,sortAscending: $sortAscending){
+        query Users($filter: Object!, $limit: Int!, $cursor: String!, $sortBy: String!, $sortAscending: Boolean!){
+          users (filter: $filter, limit: $limit,cursor: $cursor,sortBy: $sortBy,sortAscending: $sortAscending){
             edges {
               node {
                 _id

@@ -8,9 +8,9 @@ import { User as UserModel } from 'models';
 import { UserType } from 'gql/types/user';
 import findAll from './find-all';
 
-export const fetchUsers = findAll({
+export const users = findAll({
   nodeType: UserType,
   model: UserModel,
 });
 
-export default fetchUsers;
+export default users;
