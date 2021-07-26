@@ -16,6 +16,7 @@ import subject from './subject';
 import subjects from './subjects';
 import userQuestion from './user-question';
 import userQuestions from './user-questions';
+import users from './users';
 import health from './health';
 
 export default new GraphQLObjectType({
@@ -32,6 +33,7 @@ export default new GraphQLObjectType({
     subjects,
     userQuestion,
     userQuestions,
+    users,
     health,
   },
 });

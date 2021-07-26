@@ -12,6 +12,7 @@ import updateAnswer from './update-answer';
 import updateQuestion from './update-question';
 import updateSubject from './update-subject';
 import uploadTaskDelete from './upload-task-delete';
+import updateUserPermissions from './update-user-permissions';
 
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeMutation',
@@ -22,6 +23,7 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
     updateQuestion,
     updateSubject,
     uploadTaskDelete,
+    updateUserPermissions,
   }),
 });
 
