@@ -13,21 +13,25 @@ module.exports = {
       _id: ObjectId('5ffdf41a1ee2c62320b49ea1'),
       name: 'Clinton Anderson',
       email: 'clint@anderson.com',
+      userRole: 'ADMIN',
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49ea2'),
       name: 'Dan Davis',
       email: 'dan@davis.com',
+      userRole: 'USER',
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49ea3'),
       name: 'Julianne Nordhagen',
       email: 'julianne@nordhagen.com',
+      userRole: 'USER',
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49ea4'),
       name: 'No Mentor',
       email: 'no@mentor.com',
+      userRole: 'CONTENT_MANAGER',
     },
   ],
 

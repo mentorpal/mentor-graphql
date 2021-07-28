@@ -12,10 +12,17 @@ import {
   pluginPagination,
 } from './Paginatation';
 
+export const UserRole = {
+  USER: 'USER',
+  CONTENT_MANAGER: 'CONTENT_MANAGER',
+  ADMIN: 'ADMIN',
+};
+
 export interface User extends Document {
   googleId: string;
   name: string;
   email: string;
+  userRole: string;
   lastLoginAt: Date;
 }
 
@@ -24,6 +31,11 @@ export const UserSchema = new Schema(
     googleId: { type: String },
     name: { type: String },
     email: { type: String },
+    userRole: {
+      type: String,
+      enum: [UserRole.USER, UserRole.CONTENT_MANAGER, UserRole.ADMIN],
+      default: UserRole.USER,
+    },
     lastLoginAt: { type: Date },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
@@ -39,6 +51,7 @@ export interface UserModel extends Model<User> {
 UserSchema.index({ name: -1, _id: -1 });
 UserSchema.index({ email: -1, _id: -1 });
 UserSchema.index({ lastLoginAt: -1, _id: -1 });
+UserSchema.index({ userRole: -1, _id: -1 });
 pluginPagination(UserSchema);
 
 export default mongoose.model<User, UserModel>('User', UserSchema);
