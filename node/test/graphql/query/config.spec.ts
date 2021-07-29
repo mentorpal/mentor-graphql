@@ -52,7 +52,7 @@ describe('config', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.config).to.eql({
+    expect(response.body.data?.config).to.eql({
       cmi5Enabled: false,
       cmi5Endpoint: '',
       cmi5Fetch: '',
@@ -84,7 +84,7 @@ describe('config', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.config).to.eql({
+    expect(response.body.data?.config).to.eql({
       cmi5Enabled: false,
       cmi5Endpoint: '',
       cmi5Fetch: '',
@@ -109,7 +109,7 @@ describe('config', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.config).to.eql({
+    expect(response.body.data?.config).to.eql({
       googleClientId: 'clientIdSetByEnv',
     });
   });
@@ -129,7 +129,7 @@ describe('config', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.config).to.eql({
+    expect(response.body.data?.config).to.eql({
       googleClientId: 'clientIdSetBySettings',
     });
   });

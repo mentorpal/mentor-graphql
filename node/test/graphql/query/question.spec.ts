@@ -42,7 +42,7 @@ describe('question', () => {
         },
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.question).to.eql({
+    expect(response.body.data?.question).to.eql({
       _id: '511111111111111111111111',
       question: "Don't talk and stay still.",
       type: 'UTTERANCE',
