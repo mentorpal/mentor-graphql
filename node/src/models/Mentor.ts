@@ -5,7 +5,6 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import { MentorExportJson } from 'gql/query/export-mentor';
 import {
   Answer as AnswerModel,
   Subject as SubjectModel,
@@ -21,7 +20,9 @@ import { Answer, Status } from './Answer';
 import { QuestionType } from './Question';
 import { Subject, SubjectQuestion, Topic } from './Subject';
 import { User } from './User';
-import { MentorImportJson } from 'gql/mutation/me/import-mentor';
+import { MentorExportJson } from 'gql/query/mentor-export';
+import { MentorImportJson } from 'gql/mutation/me/mentor-import';
+import { idOrNew } from 'gql/mutation/me/helpers';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -127,9 +128,12 @@ MentorSchema.statics.export = async function (
     },
     []
   );
-  const questions = await QuestionModel.find({
+  let questions = await QuestionModel.find({
     _id: { $in: sQuestions.map((q) => q.question) },
   });
+  questions = questions.filter(
+    (q) => !q.mentor || `${q.mentor}` === `${mentor._id}`
+  );
   const answers: Answer[] = await AnswerModel.find({
     mentor: mentor._id,
     question: { $in: questions },
@@ -149,8 +153,55 @@ MentorSchema.statics.import = async function (
   if (!mentor) {
     throw new Error('mentor not found');
   }
+  // TODO: currently, if one fails all the subsequent calls fail
+  // need to have a list of promises, but still need to create questions before anything else
+  for (const q of json.questions) {
+    const updatedQuestion = await QuestionModel.updateOrCreate(q);
+    if (`${updatedQuestion._id}` !== `${q._id}`) {
+      for (const subject of json.subjects) {
+        const subjectQuestion = subject.questions.find(
+          (sq) => `${sq.question._id}` === `${q._id}`
+        );
+        if (subjectQuestion) {
+          subjectQuestion.question._id = updatedQuestion._id;
+        }
+      }
+      const answer = json.answers.find(
+        (a) => `${a.question._id}` === `${q._id}`
+      );
+      if (answer) {
+        answer.question._id = updatedQuestion._id;
+      }
+    }
+  }
   for (const s of json.subjects) {
-    await SubjectModel.updateOrCreate(s);
+    const updatedSubject = await SubjectModel.findOneAndUpdate(
+      { _id: idOrNew(s._id) },
+      {
+        $set: {
+          name: s.name,
+          description: s.description,
+          isRequired: s.isRequired,
+          categories: s.categories,
+          topics: s.topics,
+          questions: s.questions.map((sq) => ({
+            question: sq.question._id,
+            category: sq.category?.id,
+            topics: sq.topics?.map((t) => t.id),
+          })),
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+    if (`${updatedSubject._id}` !== `${s._id}`) {
+      const subject = json.subjects.find((js) => `${js._id}` === `${s._id}`);
+      if (subject) {
+        subject._id = updatedSubject._id;
+      }
+    }
   }
   for (const a of json.answers) {
     await AnswerModel.findOneAndUpdate(
@@ -162,7 +213,6 @@ MentorSchema.statics.import = async function (
         $set: {
           transcript: a.transcript,
           status: a.status,
-          media: a.media,
         },
       },
       {

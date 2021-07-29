@@ -30,7 +30,7 @@ describe('export mentor', () => {
       .post('/graphql')
       .send({
         query: `query ExportMentor($mentor: ID!) {
-          exportMentor(mentor: $mentor) {
+          mentorExport(mentor: $mentor) {
             subjects {
               _id
             }
@@ -50,7 +50,7 @@ describe('export mentor', () => {
       .post('/graphql')
       .send({
         query: `query ExportMentor($mentor: ID!) {
-          exportMentor(mentor: $mentor) {
+          mentorExport(mentor: $mentor) {
             subjects {
               _id
             }
@@ -70,7 +70,7 @@ describe('export mentor', () => {
       .post('/graphql')
       .send({
         query: `query ExportMentor($mentor: ID!) {
-          exportMentor(mentor: $mentor) {
+          mentorExport(mentor: $mentor) {
             subjects {
               _id
               name
@@ -123,7 +123,7 @@ describe('export mentor', () => {
         variables: { mentor: '5ffdf41a1ee2c62111111111' },
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.exportMentor).to.eql({
+    expect(response.body.data.mentorExport).to.eql({
       subjects: [
         {
           _id: '5ffdf41a1ee2c62320b49eb1',

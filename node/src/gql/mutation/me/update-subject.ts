@@ -18,7 +18,10 @@ import { Subject as SubjectModel, Question as QuestionModel } from 'models';
 import { Question } from 'models/Question';
 import { Subject, SubjectQuestionProps } from 'models/Subject';
 import SubjectType from 'gql/types/subject';
-import { UpdateQuestion, QuestionUpdateInputType } from './update-question';
+import {
+  QuestionUpdateInput,
+  QuestionUpdateInputType,
+} from './update-question';
 import { toUpdateProps } from './helpers';
 
 export interface CategoryUpdateInput {
@@ -52,7 +55,7 @@ export const TopicInputType = new GraphQLInputObjectType({
 });
 
 export interface SubjectQuestionUpdateInput {
-  question: UpdateQuestion;
+  question: QuestionUpdateInput;
   category?: CategoryUpdateInput;
   topics?: TopicUpdateInput[];
 }

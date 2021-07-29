@@ -7,12 +7,13 @@ The full terms of this copyright and license should always be found in the root 
 import { GraphQLObjectType } from 'graphql';
 import answer from './answer';
 import config from './config';
-import exportMentor from './export-mentor';
 import health from './health';
 import me from './me';
 import mentor from './mentor';
 import mentors from './mentors';
 import mentorPanel from './mentor-panel';
+import mentorExport from './mentor-export';
+import mentorImportPreview from './mentor-import-preview';
 import question from './question';
 import questions from './questions';
 import subject from './subject';
@@ -26,12 +27,13 @@ export default new GraphQLObjectType({
   fields: {
     answer,
     config,
-    exportMentor,
     health,
     me,
     mentor,
     mentors,
     mentorPanel,
+    mentorExport,
+    mentorImportPreview,
     question,
     questions,
     subject,

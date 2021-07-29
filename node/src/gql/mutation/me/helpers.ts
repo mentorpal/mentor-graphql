@@ -42,3 +42,7 @@ export function idOrNew(id: string): string {
   }
   return id.match(/^[0-9a-fA-F]{24}$/) ? id : `${mongoose.Types.ObjectId()}`;
 }
+
+export function isId(id: string): boolean {
+  return Boolean(id.match(/^[0-9a-fA-F]{24}$/));
+}

@@ -16,9 +16,8 @@ import {
 import { Question as QuestionModel } from 'models';
 import { Question } from 'models/Question';
 import QuestionType from 'gql/types/question';
-import { toUpdateProps } from './helpers';
 
-export interface UpdateQuestion {
+export interface QuestionUpdateInput {
   _id: string;
   question: string;
   type: string;
@@ -50,17 +49,9 @@ export const updateQuestion = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { question: UpdateQuestion }
+    args: { question: QuestionUpdateInput }
   ): Promise<Question> => {
-    const { _id, props } = toUpdateProps<Question>(args.question);
-    return await QuestionModel.findOneAndUpdate(
-      { _id: _id },
-      { $set: props },
-      {
-        new: true,
-        upsert: true,
-      }
-    );
+    return await QuestionModel.updateOrCreate(args.question);
   },
 };
 
