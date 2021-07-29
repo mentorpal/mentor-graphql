@@ -13,6 +13,7 @@ export interface Config {
   urlClassifier: string;
   urlGraphql: string;
   urlVideo: string;
+  urlVideoIdleTips: string;
   googleClientId: string;
   mentorsDefault: string[];
   styleHeaderLogo: string;
@@ -31,6 +32,7 @@ export const ConfigKeys: ConfigKey[] = [
   'urlClassifier',
   'urlGraphql',
   'urlVideo',
+  'urlVideoIdleTips',
   'googleClientId',
   'mentorsDefault',
   'styleHeaderLogo',
@@ -55,6 +57,7 @@ export function getDefaultConfig(): Config {
     urlClassifier: '/classifier',
     urlGraphql: '/graphql',
     urlVideo: '/video',
+    urlVideoIdleTips: 'https://youtu.be/xSu1BhuFt8A',
     googleClientId: process.env.GOOGLE_CLIENT_ID || '',
     mentorsDefault: [],
     styleHeaderLogo: '',

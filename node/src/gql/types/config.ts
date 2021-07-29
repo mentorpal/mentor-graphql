@@ -22,6 +22,7 @@ export const ConfigType = new GraphQLObjectType({
     urlClassifier: { type: GraphQLString },
     urlGraphql: { type: GraphQLString },
     urlVideo: { type: GraphQLString },
+    urlVideoIdleTips: { type: GraphQLString },
     styleHeaderLogo: { type: GraphQLString },
     styleHeaderColor: { type: GraphQLString },
     styleHeaderTextColor: { type: GraphQLString },
