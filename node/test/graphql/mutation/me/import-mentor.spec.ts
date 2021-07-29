@@ -211,22 +211,7 @@ describe('import mentor', () => {
         {
           transcript: '[being still]',
           status: 'COMPLETE',
-          question: {
-            _id: '511111111111111111111111',
-            question: "Don't talk and stay still.",
-          },
-          media: [
-            {
-              tag: 'web',
-              type: 'video',
-              url: 'https://static.mentorpal.org/web.mp4',
-            },
-            {
-              tag: 'mobile',
-              type: 'video',
-              url: 'https://static.mentorpal.org/mobile.mp4',
-            },
-          ],
+          question: { _id: '511111111111111111111111' },
         },
         {
           transcript: 'Test Transcript',
@@ -319,22 +304,9 @@ describe('import mentor', () => {
           categories: [],
           questions: [
             {
-              question: {
-                _id: '511111111111111111111111',
-                question: "Don't talk and stay still.",
-                type: 'UTTERANCE',
-                name: 'idle',
-                paraphrases: [],
-                mentor: null,
-                mentorType: null,
-                minVideoLength: null,
-              },
+              question: { _id: '511111111111111111111111' },
               category: null,
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec1',
-                },
-              ],
+              topics: [{ id: '5ffdf41a1ee2c62320b49ec1' }],
             },
           ],
         },
@@ -464,7 +436,6 @@ describe('import mentor', () => {
           status: 'COMPLETE',
           question: {
             _id: '511111111111111111111111',
-            question: "Don't talk and stay still.",
           },
           media: [],
         },
@@ -491,6 +462,12 @@ describe('import mentor', () => {
             {
               question: { _id: '511111111111111111111111' },
             },
+          ],
+        },
+        {
+          _id: 'newsubject',
+          name: 'New Subject',
+          questions: [
             {
               question: { _id: 'newquestion' },
             },
@@ -526,6 +503,97 @@ describe('import mentor', () => {
           transcript: 'new answer',
           question: { _id: 'newquestion' },
           status: 'COMPLETE',
+        },
+      ],
+    };
+    const token = getToken('5ffdf41a1ee2c62320b49ea4');
+    let response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!) {
+          me {
+            mentorImport(mentor: $mentor, json: $json) {
+              _id
+            }  
+          }
+        }`,
+        variables: { mentor: '5ffdf41a1ee2c62111111113', json: json },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.mentorImport).to.eql({
+      _id: '5ffdf41a1ee2c62111111113',
+    });
+    // check that data was imported correctly
+    response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query ExportMentor($mentor: ID!) {
+          mentorExport(mentor: $mentor) {
+            subjects {
+              name
+            }
+            questions {
+              question
+            }
+            answers {
+              transcript
+              question {
+                question
+              }
+            }
+          }
+        }`,
+        variables: { mentor: '5ffdf41a1ee2c62111111113' },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentorExport).to.eql({
+      subjects: [
+        {
+          name: 'Repeat After Me',
+        },
+        {
+          name: 'New Subject',
+        },
+      ],
+      questions: [
+        {
+          question: "Don't talk and stay still.",
+        },
+        {
+          question: 'new question',
+        },
+      ],
+      answers: [
+        {
+          transcript: '[being still]',
+          question: {
+            question: "Don't talk and stay still.",
+          },
+        },
+        {
+          transcript: 'new answer',
+          question: { question: 'new question' },
+        },
+      ],
+      questions: [
+        {
+          _id: '511111111111111111111111',
+          question: "Don't talk and stay still.",
+        },
+        {
+          _id: 'newquestion',
+          question: 'new question',
+        },
+      ],
+      answers: [
+        {
+          transcript: '[being still]',
+          question: { _id: '511111111111111111111111' },
+        },
+        {
+          transcript: 'new answer',
+          question: { _id: 'newquestion' },
         },
       ],
     };

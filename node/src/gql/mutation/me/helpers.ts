@@ -46,3 +46,7 @@ export function idOrNew(id: string): string {
 export function isId(id: string): boolean {
   return Boolean(id.match(/^[0-9a-fA-F]{24}$/));
 }
+
+export function isId(id: string): boolean {
+  return Boolean(id.match(/^[0-9a-fA-F]{24}$/));
+}
