@@ -52,23 +52,16 @@ describe('config', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body).to.eql({
-      data: {
-        config: {
-          cmi5Enabled: false,
-          cmi5Endpoint: '',
-          cmi5Fetch: '',
-          googleClientId: '',
-          mentorsDefault: [],
-          urlClassifier: '/classifier',
-          urlGraphql: '/graphql',
-          urlVideo: '/video',
-          styleHeaderLogo: '',
-        },
-      },
-      extensions: {
-        newToken: '',
-      },
+    expect(response.body.data.config).to.eql({
+      cmi5Enabled: false,
+      cmi5Endpoint: '',
+      cmi5Fetch: '',
+      googleClientId: '',
+      mentorsDefault: [],
+      urlClassifier: '/classifier',
+      urlGraphql: '/graphql',
+      urlVideo: '/video',
+      styleHeaderLogo: '',
     });
   });
 
@@ -91,23 +84,16 @@ describe('config', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body).to.eql({
-      data: {
-        config: {
-          cmi5Enabled: false,
-          cmi5Endpoint: '',
-          cmi5Fetch: '',
-          googleClientId: '',
-          mentorsDefault: [],
-          urlClassifier: '/classifier',
-          urlGraphql: '/graphql',
-          urlVideo: '/video',
-          styleHeaderLogo: '',
-        },
-      },
-      extensions: {
-        newToken: '',
-      },
+    expect(response.body.data.config).to.eql({
+      cmi5Enabled: false,
+      cmi5Endpoint: '',
+      cmi5Fetch: '',
+      googleClientId: '',
+      mentorsDefault: [],
+      urlClassifier: '/classifier',
+      urlGraphql: '/graphql',
+      urlVideo: '/video',
+      styleHeaderLogo: '',
     });
   });
 
@@ -123,15 +109,8 @@ describe('config', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body).to.eql({
-      data: {
-        config: {
-          googleClientId: 'clientIdSetByEnv',
-        },
-      },
-      extensions: {
-        newToken: '',
-      },
+    expect(response.body.data.config).to.eql({
+      googleClientId: 'clientIdSetByEnv',
     });
   });
 
@@ -150,15 +129,8 @@ describe('config', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body).to.eql({
-      data: {
-        config: {
-          googleClientId: 'clientIdSetBySettings',
-        },
-      },
-      extensions: {
-        newToken: '',
-      },
+    expect(response.body.data.config).to.eql({
+      googleClientId: 'clientIdSetBySettings',
     });
   });
 
@@ -172,7 +144,7 @@ describe('config', () => {
       urlClassifier: '/classifier/v2',
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
-      urlVideoIdleTips: 'https://youtu.be/xSu1BhuFt8A',
+      urlVideoIdleTips: 'https://some/custom/url',
       styleHeaderLogo: '/a/logo.png',
       styleHeaderColor: '',
       styleHeaderTextColor: '',
@@ -205,13 +177,8 @@ describe('config', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body).to.eql({
-      data: {
-        config,
-      },
-      extensions: {
-        newToken: '',
-      },
+    expect(response.body.data).to.eql({
+      config,
     });
   });
 });
