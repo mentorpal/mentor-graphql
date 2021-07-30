@@ -33,10 +33,13 @@ describe('import mentor preview', () => {
           name: 'Repeat After Me',
           questions: [
             {
-              question: { _id: '511111111111111111111111' },
+              question: {
+                _id: '511111111111111111111111',
+                question: "Don't talk and stay still.",
+              },
             },
             {
-              question: { _id: 'newquestion' },
+              question: { _id: 'newquestion', question: 'new question' },
             },
           ],
         },
@@ -45,7 +48,7 @@ describe('import mentor preview', () => {
           name: 'New Subject',
           questions: [
             {
-              question: { _id: 'newquestion' },
+              question: { _id: 'newquestion', question: 'new question' },
             },
           ],
         },
@@ -63,11 +66,14 @@ describe('import mentor preview', () => {
       answers: [
         {
           transcript: '[being still]',
-          question: { _id: '511111111111111111111111' },
+          question: {
+            _id: '511111111111111111111111',
+            question: "Don't talk and stay still.",
+          },
         },
         {
           transcript: 'new answer',
-          question: { _id: 'newquestion' },
+          question: { _id: 'newquestion', question: 'new question' },
         },
       ],
     };
@@ -205,7 +211,9 @@ describe('import mentor preview', () => {
         {
           importData: {
             transcript: 'new answer',
-            question: null,
+            question: {
+              question: 'new question',
+            },
           },
           curData: null,
           editType: 'CREATED',
