@@ -5,7 +5,11 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import { Answer as AnswerModel, Subject as SubjectModel } from 'models';
+import {
+  Answer as AnswerModel,
+  Subject as SubjectModel,
+  Question as QuestionModel,
+} from 'models';
 import {
   PaginatedResolveResult,
   PaginateOptions,
@@ -16,6 +20,9 @@ import { Answer, Status } from './Answer';
 import { QuestionType } from './Question';
 import { Subject, SubjectQuestion, Topic } from './Subject';
 import { User } from './User';
+import { MentorExportJson } from 'gql/query/mentor-export';
+import { MentorImportJson } from 'gql/mutation/me/mentor-import';
+import { idOrNew } from 'gql/mutation/me/helpers';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -75,6 +82,8 @@ export interface MentorModel extends Model<Mentor> {
     type,
     categoryId,
   }: GetMentorDataParams): Answer[];
+  export(mentor: string): Promise<MentorExportJson>;
+  import(mentor: string, json: MentorImportJson): Promise<Mentor>;
 }
 
 export const MentorSchema = new Schema<Mentor, MentorModel>(
@@ -102,6 +111,124 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
+
+MentorSchema.statics.export = async function (
+  m: string | Mentor
+): Promise<MentorExportJson> {
+  const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
+  if (!mentor) {
+    throw new Error('mentor not found');
+  }
+  const subjects = await SubjectModel.find({
+    _id: { $in: mentor.subjects },
+  });
+  const sQuestions: SubjectQuestion[] = subjects.reduce(
+    (accumulator, subject) => {
+      return accumulator.concat(subject.questions);
+    },
+    []
+  );
+  const questions = await QuestionModel.find({
+    _id: { $in: sQuestions.map((q) => q.question) },
+    $or: [
+      { mentor: mentor._id },
+      { mentor: { $exists: false } },
+      { mentor: null }, // not sure if we need an explicit null check?
+    ],
+  });
+  const answers: Answer[] = await AnswerModel.find({
+    mentor: mentor._id,
+    question: { $in: questions.map((q) => q._id) },
+  });
+  return {
+    subjects,
+    questions,
+    answers,
+  };
+};
+
+MentorSchema.statics.import = async function (
+  m: string | Mentor,
+  json: MentorImportJson
+): Promise<Mentor> {
+  const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
+  if (!mentor) {
+    throw new Error('mentor not found');
+  }
+  // TODO: currently, if one fails all the subsequent calls fail
+  // need to have a list of promises, but still need to create questions before anything else
+  for (const q of json.questions) {
+    const updatedQuestion = await QuestionModel.updateOrCreate(q);
+    if (`${updatedQuestion._id}` !== `${q._id}`) {
+      for (const subject of json.subjects) {
+        const subjectQuestion = subject.questions.find(
+          (sq) => `${sq.question._id}` === `${q._id}`
+        );
+        if (subjectQuestion) {
+          subjectQuestion.question._id = updatedQuestion._id;
+        }
+      }
+      const answer = json.answers.find(
+        (a) => `${a.question._id}` === `${q._id}`
+      );
+      if (answer) {
+        answer.question._id = updatedQuestion._id;
+      }
+    }
+  }
+  for (const s of json.subjects) {
+    const updatedSubject = await SubjectModel.findOneAndUpdate(
+      { _id: idOrNew(s._id) },
+      {
+        $set: {
+          name: s.name,
+          description: s.description,
+          isRequired: s.isRequired,
+          categories: s.categories,
+          topics: s.topics,
+          questions: s.questions.map((sq) => ({
+            question: sq.question._id,
+            category: sq.category?.id,
+            topics: sq.topics?.map((t) => t.id),
+          })),
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+    if (`${updatedSubject._id}` !== `${s._id}`) {
+      const subject = json.subjects.find((js) => `${js._id}` === `${s._id}`);
+      if (subject) {
+        subject._id = updatedSubject._id;
+      }
+    }
+  }
+  for (const a of json.answers) {
+    await AnswerModel.findOneAndUpdate(
+      {
+        mentor: mentor._id,
+        question: a.question._id,
+      },
+      {
+        $set: {
+          transcript: a.transcript,
+          status: a.status,
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+  }
+  return await this.findByIdAndUpdate(mentor._id, {
+    $set: {
+      subjects: json.subjects.map((s) => s._id as Subject['_id']),
+    },
+  });
+};
 
 // Return subjects in alphabetical order
 MentorSchema.statics.getSubjects = async function (

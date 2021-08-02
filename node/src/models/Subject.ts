@@ -13,6 +13,11 @@ import {
   pluginPagination,
 } from './Paginatation';
 import { Question, QuestionType } from './Question';
+import {
+  questionInputToUpdate,
+  SubjectUpdateInput,
+} from 'gql/mutation/me/subject-update';
+import { idOrNew } from 'gql/mutation/me/helpers';
 
 export interface CategoryProps {
   id: string;
@@ -101,6 +106,7 @@ export interface SubjectModel extends Model<Subject> {
     type?: QuestionType,
     categoryID?: string
   ): SubjectQuestion[];
+  updateOrCreate(subject: SubjectUpdateInput): Promise<Subject>;
 }
 
 SubjectSchema.statics.getQuestions = async function (
@@ -141,6 +147,30 @@ SubjectSchema.statics.getQuestions = async function (
     category: subject.categories.find((c) => c.id === sq.category),
     topics: subject.topics.filter((t) => sq.topics.includes(t.id)),
   }));
+};
+
+SubjectSchema.statics.updateOrCreate = async function (
+  subject: SubjectUpdateInput
+) {
+  // don't include questions that have no question text
+  const questions = subject.questions.filter((q) => q.question.question);
+  const subjectTopics = subject.topics.map((t) => t.id);
+  const subjectUpdate: SubjectUpdate = {
+    ...subject,
+    questions: await Promise.all(
+      questions.map((qi) => questionInputToUpdate(qi, subjectTopics))
+    ),
+  };
+  return await this.findOneAndUpdate(
+    { _id: idOrNew(subject._id) },
+    {
+      $set: subjectUpdate,
+    },
+    {
+      new: true,
+      upsert: true,
+    }
+  );
 };
 
 SubjectSchema.index({ name: -1, _id: -1 });

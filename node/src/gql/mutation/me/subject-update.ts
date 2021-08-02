@@ -16,10 +16,13 @@ import {
 
 import { Subject as SubjectModel, Question as QuestionModel } from 'models';
 import { Question } from 'models/Question';
-import { Subject, SubjectQuestionProps, SubjectUpdate } from 'models/Subject';
+import { Subject, SubjectQuestionProps } from 'models/Subject';
 import SubjectType from 'gql/types/subject';
-import { UpdateQuestion, QuestionUpdateInputType } from './update-question';
-import { idOrNew, toUpdateProps } from './helpers';
+import {
+  QuestionUpdateInput,
+  QuestionUpdateInputType,
+} from './question-update';
+import { toUpdateProps } from './helpers';
 
 export interface CategoryUpdateInput {
   id: string;
@@ -52,7 +55,7 @@ export const TopicInputType = new GraphQLInputObjectType({
 });
 
 export interface SubjectQuestionUpdateInput {
-  question: UpdateQuestion;
+  question: QuestionUpdateInput;
   category?: CategoryUpdateInput;
   topics?: TopicUpdateInput[];
 }
@@ -89,7 +92,7 @@ export const SubjectUpdateInputType = new GraphQLInputObjectType({
   }),
 });
 
-async function questionInputToUpdate(
+export async function questionInputToUpdate(
   input: SubjectQuestionUpdateInput,
   subjectTopics: string[]
 ): Promise<SubjectQuestionProps> {
@@ -113,33 +116,15 @@ async function questionInputToUpdate(
   };
 }
 
-export const updateSubject = {
+export const subjectUpdate = {
   type: SubjectType,
   args: { subject: { type: GraphQLNonNull(SubjectUpdateInputType) } },
   resolve: async (
     _root: GraphQLObjectType,
     args: { subject: SubjectUpdateInput }
   ): Promise<Subject> => {
-    // don't include questions that have no question text
-    const questions = args.subject.questions.filter((q) => q.question.question);
-    const subjectTopics = args.subject.topics.map((t) => t.id);
-    const subjectUpdate: SubjectUpdate = {
-      ...args.subject,
-      questions: await Promise.all(
-        questions.map((qi) => questionInputToUpdate(qi, subjectTopics))
-      ),
-    };
-    return await SubjectModel.findOneAndUpdate(
-      { _id: idOrNew(args.subject._id) },
-      {
-        $set: subjectUpdate,
-      },
-      {
-        new: true,
-        upsert: true,
-      }
-    );
+    return await SubjectModel.updateOrCreate(args.subject);
   },
 };
 
-export default updateSubject;
+export default subjectUpdate;

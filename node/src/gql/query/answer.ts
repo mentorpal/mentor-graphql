@@ -4,45 +4,26 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose from 'mongoose';
+import { GraphQLObjectType, GraphQLNonNull, GraphQLID } from 'graphql';
+import { Answer as AnswerModel } from 'models';
+import { Answer } from 'models/Answer';
+import AnswerType from 'gql/types/answer';
 
-interface IdAndProps<T> {
-  _id: string;
-  props: Partial<T>;
-}
+export const answer = {
+  type: AnswerType,
+  args: {
+    mentor: { type: GraphQLNonNull(GraphQLID) },
+    question: { type: GraphQLNonNull(GraphQLID) },
+  },
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { mentor: string; question: string }
+  ): Promise<Answer> => {
+    return await AnswerModel.findOne({
+      mentor: args.mentor,
+      question: args.question,
+    });
+  },
+};
 
-interface HasId {
-  _id?: string;
-}
-
-export function toUpdateProps<T extends HasId>(
-  update: Partial<T>,
-  idKeyName = '_id'
-): IdAndProps<T> {
-  return {
-    _id: idOrNew(update._id),
-    props: Object.getOwnPropertyNames(update).reduce(
-      (acc: Partial<T>, cur: string) => {
-        if (cur !== idKeyName) {
-          acc[cur as keyof T] = update[cur as keyof T];
-        }
-        return acc;
-      },
-      {}
-    ),
-  };
-}
-
-// check if id is a valid ObjectID:
-//  - if valid, return it
-//  - if invalid, create a valid object id
-export function idOrNew(id: string): string {
-  if (!Boolean(id)) {
-    return `${mongoose.Types.ObjectId()}`;
-  }
-  return isId(id) ? id : `${mongoose.Types.ObjectId()}`;
-}
-
-export function isId(id: string): boolean {
-  return Boolean(id.match(/^[0-9a-fA-F]{24}$/));
-}
+export default answer;

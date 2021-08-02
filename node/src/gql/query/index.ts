@@ -5,11 +5,15 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLObjectType } from 'graphql';
+import answer from './answer';
 import config from './config';
+import health from './health';
 import me from './me';
 import mentor from './mentor';
 import mentors from './mentors';
 import mentorPanel from './mentor-panel';
+import mentorExport from './mentor-export';
+import mentorImportPreview from './mentor-import-preview';
 import question from './question';
 import questions from './questions';
 import subject from './subject';
@@ -17,16 +21,19 @@ import subjects from './subjects';
 import userQuestion from './user-question';
 import userQuestions from './user-questions';
 import users from './users';
-import health from './health';
 
 export default new GraphQLObjectType({
   name: 'Query',
   fields: {
+    answer,
     config,
+    health,
     me,
     mentor,
     mentors,
     mentorPanel,
+    mentorExport,
+    mentorImportPreview,
     question,
     questions,
     subject,
@@ -34,6 +41,5 @@ export default new GraphQLObjectType({
     userQuestion,
     userQuestions,
     users,
-    health,
   },
 });
