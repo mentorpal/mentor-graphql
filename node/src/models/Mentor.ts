@@ -128,15 +128,23 @@ MentorSchema.statics.export = async function (
     },
     []
   );
-  let questions = await QuestionModel.find({
+  const questions = await QuestionModel.find({
     _id: { $in: sQuestions.map((q) => q.question) },
+    $or: [
+      { mentor: mentor._id },
+      { mentor: { $exists: false } },
+      { mentor: null }, // not sure if we need an explicit null check?
+    ],
   });
-  questions = questions.filter(
-    (q) => !q.mentor || `${q.mentor}` === `${mentor._id}`
-  );
+  // let questions = await QuestionModel.find({
+  //   _id: { $in: sQuestions.map((q) => q.question) },
+  // });
+  // questions = questions.filter(
+  //   (q) => !q.mentor || `${q.mentor}` === `${mentor._id}`
+  // );
   const answers: Answer[] = await AnswerModel.find({
     mentor: mentor._id,
-    question: { $in: questions },
+    question: { $in: questions.map((q) => q._id) },
   });
   return {
     subjects,

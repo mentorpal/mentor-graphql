@@ -66,6 +66,7 @@ describe('import mentor preview', () => {
       answers: [
         {
           transcript: '[being still]',
+          status: 'COMPLETE',
           question: {
             _id: '511111111111111111111111',
             question: "Don't talk and stay still.",
@@ -73,6 +74,7 @@ describe('import mentor preview', () => {
         },
         {
           transcript: 'new answer',
+          status: 'COMPLETE',
           question: { _id: 'newquestion', question: 'new question' },
         },
       ],

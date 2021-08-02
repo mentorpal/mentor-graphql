@@ -16,6 +16,12 @@ import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 
+const answerMutation = `mutation UploadAnswer($mentorId: ID!, $questionId: ID!, $answer: UploadAnswerType!) {
+  api {
+    uploadAnswer(mentorId: $mentorId, questionId: $questionId, answer: $answer)
+  }
+}`;
+
 describe('uploadAnswer', () => {
   let app: Express;
 
@@ -34,11 +40,7 @@ describe('uploadAnswer', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `mutation UploadAnswer($mentorId: ID!, $questionId: ID!, $answer: UploadAnswerType!) {
-        api {
-          uploadAnswer(mentorId: $mentorId, questionId: $questionId, answer: $answer)
-        }
-      }`,
+        query: answerMutation,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
@@ -58,11 +60,7 @@ describe('uploadAnswer', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer asdfdsadf`)
       .send({
-        query: `mutation UploadAnswer($mentorId: ID!, $questionId: ID!, $answer: UploadAnswerType!) {
-          api {
-            uploadAnswer(mentorId: $mentorId, questionId: $questionId, answer: $answer)
-          }
-        }`,
+        query: answerMutation,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
@@ -102,11 +100,7 @@ describe('uploadAnswer', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UploadAnswer($mentorId: ID!, $questionId: ID!, $answer: UploadAnswerType!) {
-          api {
-            uploadAnswer(mentorId: $mentorId, questionId: $questionId, answer: $answer)
-          }
-        }`,
+        query: answerMutation,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
@@ -122,11 +116,7 @@ describe('uploadAnswer', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UploadAnswer($mentorId: ID!, $questionId: ID!, $answer: UploadAnswerType!) {
-          api {
-            uploadAnswer(mentorId: $mentorId, questionId: $questionId, answer: $answer)
-          }
-        }`,
+        query: answerMutation,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
@@ -179,11 +169,7 @@ describe('uploadAnswer', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UploadAnswer($mentorId: ID!, $questionId: ID!, $answer: UploadAnswerType!) {
-          api {
-            uploadAnswer(mentorId: $mentorId, questionId: $questionId, answer: $answer)
-          }
-        }`,
+        query: answerMutation,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',

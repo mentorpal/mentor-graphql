@@ -16,7 +16,7 @@ import { Question, QuestionType } from './Question';
 import {
   questionInputToUpdate,
   SubjectUpdateInput,
-} from 'gql/mutation/me/update-subject';
+} from 'gql/mutation/me/subject-update';
 import { idOrNew } from 'gql/mutation/me/helpers';
 
 export interface CategoryProps {

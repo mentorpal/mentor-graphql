@@ -11,6 +11,70 @@ import { describe } from 'mocha';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 
+const exportMentorQueryStub = `query ExportMentor($mentor: ID!) {
+  mentorExport(mentor: $mentor) {
+    subjects {
+      _id
+    }
+  }
+}`;
+
+export const exportMentorQuery = `query ExportMentor($mentor: ID!) {
+  mentorExport(mentor: $mentor) {
+    subjects {
+      _id
+      name
+      description
+      isRequired
+      topics {
+        id
+        name
+        description
+      }
+      categories {
+        id
+        name
+        description
+      }
+      questions {
+        question {
+          _id
+          question
+        }
+        category {
+          id
+        }
+        topics {
+          id
+        }
+      }
+    }
+    questions {
+      _id
+      question
+      type
+      name
+      paraphrases
+      mentor
+      mentorType
+      minVideoLength
+    }
+    answers {
+      transcript
+      status
+      question {
+        _id
+        question
+      }
+      media {
+        tag
+        type
+        url
+      }
+    }
+  }
+}`;
+
 describe('export mentor', () => {
   let app: Express;
 
@@ -29,13 +93,7 @@ describe('export mentor', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `query ExportMentor($mentor: ID!) {
-          mentorExport(mentor: $mentor) {
-            subjects {
-              _id
-            }
-          }
-        }`,
+        query: exportMentorQueryStub,
         variables: { mentor: '5ffdf41a1ee2c62320b49ea1' },
       });
     expect(response.status).to.equal(200);
@@ -49,13 +107,7 @@ describe('export mentor', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `query ExportMentor($mentor: ID!) {
-          mentorExport(mentor: $mentor) {
-            subjects {
-              _id
-            }
-          }
-        }`,
+        query: exportMentorQueryStub,
         variables: { mentor: '5ffdf41a1ee2c62320b49ea1' },
       });
     expect(response.status).to.equal(200);
@@ -69,57 +121,7 @@ describe('export mentor', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `query ExportMentor($mentor: ID!) {
-          mentorExport(mentor: $mentor) {
-            subjects {
-              _id
-              name
-              description
-              isRequired
-              topics {
-                id
-                name
-                description
-              }
-              categories {
-                id
-                name
-                description
-              }
-              questions {
-                question {
-                  _id
-                  question
-                  type
-                  name
-                  paraphrases
-                  mentor
-                  mentorType
-                  minVideoLength
-                }
-                category {
-                  id
-                }
-                topics {
-                  id
-                }
-              }
-            }
-            answers {
-              transcript
-              status
-              question {
-                _id
-                question
-              }
-              media {
-                tag
-                type
-                url
-              }
-            }
-          }
-        }`,
+        query: exportMentorQuery,
         variables: { mentor: '5ffdf41a1ee2c62111111111' },
       });
     expect(response.status).to.equal(200);
@@ -144,19 +146,9 @@ describe('export mentor', () => {
               question: {
                 _id: '511111111111111111111111',
                 question: "Don't talk and stay still.",
-                type: 'UTTERANCE',
-                name: 'idle',
-                paraphrases: [],
-                mentor: null,
-                mentorType: null,
-                minVideoLength: null,
               },
               category: null,
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec1',
-                },
-              ],
+              topics: [{ id: '5ffdf41a1ee2c62320b49ec1' }],
             },
           ],
         },
@@ -192,69 +184,28 @@ describe('export mentor', () => {
               question: {
                 _id: '511111111111111111111112',
                 question: 'Who are you and what do you do?',
-                type: 'QUESTION',
-                name: null,
-                paraphrases: [],
-                mentor: null,
-                mentorType: null,
-                minVideoLength: null,
               },
               category: null,
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec2',
-                },
-              ],
+              topics: [{ id: '5ffdf41a1ee2c62320b49ec2' }],
             },
             {
               question: {
                 _id: '511111111111111111111113',
                 question: 'How old are you?',
-                type: 'QUESTION',
-                name: null,
-                paraphrases: [],
-                mentor: null,
-                mentorType: null,
-                minVideoLength: null,
               },
-              category: {
-                id: 'category',
-              },
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec2',
-                },
-              ],
+              category: { id: 'category' },
+              topics: [{ id: '5ffdf41a1ee2c62320b49ec2' }],
             },
             {
               question: {
                 _id: '511111111111111111111114',
                 question: 'Do you like your job?',
-                type: 'QUESTION',
-                name: null,
-                paraphrases: [],
-                mentor: null,
-                mentorType: null,
-                minVideoLength: null,
               },
               category: null,
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec3',
-                },
-              ],
+              topics: [{ id: '5ffdf41a1ee2c62320b49ec3' }],
             },
             {
-              question: {
-                _id: '511111111111111111111116',
-                question: 'Julia?',
-                type: 'QUESTION',
-                name: null,
-                paraphrases: [],
-                mentor: '5ffdf41a1ee2c62111111112',
-                mentorType: null,
-                minVideoLength: null,
-              },
+              question: { _id: '511111111111111111111116', question: 'Julia?' },
               category: null,
               topics: [],
             },
@@ -262,19 +213,63 @@ describe('export mentor', () => {
               question: {
                 _id: '511111111111111111111117',
                 question: 'What is Aaron like?',
-                type: 'QUESTION',
-                name: null,
-                paraphrases: [],
-                mentor: null,
-                mentorType: null,
-                minVideoLength: null,
               },
-              category: {
-                id: 'category',
-              },
+              category: { id: 'category' },
               topics: [],
             },
           ],
+        },
+      ],
+      questions: [
+        {
+          _id: '511111111111111111111111',
+          question: "Don't talk and stay still.",
+          type: 'UTTERANCE',
+          name: 'idle',
+          paraphrases: [],
+          mentor: null,
+          mentorType: null,
+          minVideoLength: null,
+        },
+        {
+          _id: '511111111111111111111112',
+          question: 'Who are you and what do you do?',
+          type: 'QUESTION',
+          name: null,
+          paraphrases: [],
+          mentor: null,
+          mentorType: null,
+          minVideoLength: null,
+        },
+        {
+          _id: '511111111111111111111113',
+          question: 'How old are you?',
+          type: 'QUESTION',
+          name: null,
+          paraphrases: [],
+          mentor: null,
+          mentorType: null,
+          minVideoLength: null,
+        },
+        {
+          _id: '511111111111111111111114',
+          question: 'Do you like your job?',
+          type: 'QUESTION',
+          name: null,
+          paraphrases: [],
+          mentor: null,
+          mentorType: null,
+          minVideoLength: null,
+        },
+        {
+          _id: '511111111111111111111117',
+          question: 'What is Aaron like?',
+          type: 'QUESTION',
+          name: null,
+          paraphrases: [],
+          mentor: null,
+          mentorType: null,
+          minVideoLength: null,
         },
       ],
       answers: [

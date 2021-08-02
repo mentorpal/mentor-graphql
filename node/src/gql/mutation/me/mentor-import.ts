@@ -15,12 +15,13 @@ import {
 import { MentorType } from 'gql/types/mentor';
 import { Mentor as MentorModel } from 'models';
 import { Mentor } from 'models/Mentor';
-import { Status } from 'models/Answer';
-import { SubjectUpdateInput, SubjectUpdateInputType } from './update-subject';
+import { AnswerMediaProps, Status } from 'models/Answer';
+import { SubjectUpdateInput, SubjectUpdateInputType } from './subject-update';
 import {
   QuestionUpdateInput,
   QuestionUpdateInputType,
-} from './update-question';
+} from './question-update';
+import { AnswerMediaInputType } from '../api/upload-answer';
 
 export interface MentorImportJson {
   subjects: SubjectUpdateInput[];
@@ -41,14 +42,16 @@ export interface AnswerUpdateInput {
   question: QuestionUpdateInput;
   transcript: string;
   status: Status;
+  media: AnswerMediaProps[];
 }
 
 export const AnswerUpdateInputType = new GraphQLInputObjectType({
   name: 'AnswerUpdateInputType',
   fields: () => ({
     question: { type: GraphQLNonNull(QuestionUpdateInputType) },
-    transcript: { type: GraphQLString },
-    status: { type: GraphQLString },
+    transcript: { type: GraphQLNonNull(GraphQLString) },
+    status: { type: GraphQLNonNull(GraphQLString) },
+    media: { type: GraphQLList(AnswerMediaInputType) },
   }),
 });
 
@@ -62,11 +65,7 @@ export const importMentor = {
     _root: GraphQLObjectType,
     args: { mentor: string; json: MentorImportJson }
   ): Promise<Mentor> => {
-    try {
-      return await MentorModel.import(args.mentor, args.json);
-    } catch (err) {
-      throw err;
-    }
+    return await MentorModel.import(args.mentor, args.json);
   },
 };
 

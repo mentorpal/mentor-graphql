@@ -42,11 +42,7 @@ export const exportMentor = {
     _root: GraphQLObjectType,
     args: { mentor: string }
   ): Promise<MentorExportJson> => {
-    try {
-      return await MentorModel.export(args.mentor);
-    } catch (err) {
-      throw err;
-    }
+    return await MentorModel.export(args.mentor);
   },
 };
 

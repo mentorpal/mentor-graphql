@@ -21,7 +21,7 @@ import SubjectType from 'gql/types/subject';
 import {
   QuestionUpdateInput,
   QuestionUpdateInputType,
-} from './update-question';
+} from './question-update';
 import { toUpdateProps } from './helpers';
 
 export interface CategoryUpdateInput {
@@ -116,7 +116,7 @@ export async function questionInputToUpdate(
   };
 }
 
-export const updateSubject = {
+export const subjectUpdate = {
   type: SubjectType,
   args: { subject: { type: GraphQLNonNull(SubjectUpdateInputType) } },
   resolve: async (
@@ -127,4 +127,4 @@ export const updateSubject = {
   },
 };
 
-export default updateSubject;
+export default subjectUpdate;

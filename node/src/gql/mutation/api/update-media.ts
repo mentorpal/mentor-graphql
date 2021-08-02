@@ -22,7 +22,7 @@ export const UploadMediaType = new GraphQLInputObjectType({
   }),
 });
 
-export const updateMedia = {
+export const mediaUpdate = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
@@ -66,4 +66,4 @@ export const updateMedia = {
   },
 };
 
-export default updateMedia;
+export default mediaUpdate;
