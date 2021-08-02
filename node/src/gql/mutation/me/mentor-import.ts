@@ -5,6 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import {
+  GraphQLBoolean,
   GraphQLID,
   GraphQLInputObjectType,
   GraphQLList,
@@ -21,9 +22,9 @@ import {
   QuestionUpdateInput,
   QuestionUpdateInputType,
 } from './question-update';
-import { AnswerMediaInputType } from '../api/upload-answer';
 
 export interface MentorImportJson {
+  _id: string;
   subjects: SubjectUpdateInput[];
   questions: QuestionUpdateInput[];
   answers: AnswerUpdateInput[];
@@ -32,6 +33,7 @@ export interface MentorImportJson {
 export const MentorImportJsonType = new GraphQLInputObjectType({
   name: 'MentorImportJsonType',
   fields: () => ({
+    _id: { type: GraphQLID },
     subjects: { type: GraphQLList(SubjectUpdateInputType) },
     questions: { type: GraphQLList(QuestionUpdateInputType) },
     answers: { type: GraphQLList(AnswerUpdateInputType) },
@@ -42,6 +44,7 @@ export interface AnswerUpdateInput {
   question: QuestionUpdateInput;
   transcript: string;
   status: Status;
+  hasUntransferredMedia: boolean;
   media: AnswerMediaProps[];
 }
 
@@ -51,8 +54,19 @@ export const AnswerUpdateInputType = new GraphQLInputObjectType({
     question: { type: GraphQLNonNull(QuestionUpdateInputType) },
     transcript: { type: GraphQLNonNull(GraphQLString) },
     status: { type: GraphQLNonNull(GraphQLString) },
-    media: { type: GraphQLList(AnswerMediaInputType) },
+    hasUntransferredMedia: { type: GraphQLBoolean },
+    media: { type: GraphQLList(AnswerMediaUpdateInputType) },
   }),
+});
+
+export const AnswerMediaUpdateInputType = new GraphQLInputObjectType({
+  name: 'AnswerMediaUpdateInputType',
+  fields: {
+    type: { type: GraphQLString },
+    tag: { type: GraphQLString },
+    url: { type: GraphQLString },
+    needsTransfer: { type: GraphQLBoolean },
+  },
 });
 
 export const importMentor = {

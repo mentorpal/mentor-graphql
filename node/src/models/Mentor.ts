@@ -120,16 +120,20 @@ MentorSchema.statics.export = async function (
   if (!mentor) {
     throw new Error('mentor not found');
   }
-  const subjects = await SubjectModel.find({
-    _id: { $in: mentor.subjects },
-  });
+  const subjects = await SubjectModel.find(
+    {
+      _id: { $in: mentor.subjects },
+    },
+    null,
+    { sort: { name: 1 } }
+  );
   const sQuestions: SubjectQuestion[] = subjects.reduce(
     (accumulator, subject) => {
       return accumulator.concat(subject.questions);
     },
     []
   );
-  let questions = await QuestionModel.find({
+  const questions = await QuestionModel.find({
     _id: { $in: sQuestions.map((q) => q.question) },
     $or: [
       { mentor: mentor._id },
@@ -137,14 +141,12 @@ MentorSchema.statics.export = async function (
       { mentor: null }, // not sure if we need an explicit null check?
     ],
   });
-  questions = questions.filter(
-    (q) => !q.mentor || `${q.mentor}` === `${mentor._id}`
-  );
   const answers: Answer[] = await AnswerModel.find({
     mentor: mentor._id,
     question: { $in: questions.map((q) => q._id) },
   });
   return {
+    _id: mentor._id,
     subjects,
     questions,
     answers,
@@ -209,7 +211,14 @@ MentorSchema.statics.import = async function (
       }
     }
   }
-  for (const a of json.answers) {
+  for (const a of json.answers || []) {
+    for (const m of a.media || []) {
+      const urlWithoutBase = m.url.substring(m.url.indexOf('videos/'));
+      const mentorId = urlWithoutBase.split('/')[1];
+      m.needsTransfer = `${mentor._id}` !== `${mentorId}`;
+      m.url = m.needsTransfer ? m.url : urlWithoutBase;
+      a.hasUntransferredMedia = a.hasUntransferredMedia || m.needsTransfer;
+    }
     await AnswerModel.findOneAndUpdate(
       {
         mentor: mentor._id,
@@ -219,6 +228,8 @@ MentorSchema.statics.import = async function (
         $set: {
           transcript: a.transcript,
           status: a.status,
+          media: a.media,
+          hasUntransferredMedia: a.hasUntransferredMedia,
         },
       },
       {

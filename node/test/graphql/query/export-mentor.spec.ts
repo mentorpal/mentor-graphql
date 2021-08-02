@@ -21,6 +21,7 @@ const exportMentorQueryStub = `query ExportMentor($mentor: ID!) {
 
 export const exportMentorQuery = `query ExportMentor($mentor: ID!) {
   mentorExport(mentor: $mentor) {
+    _id
     subjects {
       _id
       name
@@ -66,10 +67,12 @@ export const exportMentorQuery = `query ExportMentor($mentor: ID!) {
         _id
         question
       }
+      hasUntransferredMedia
       media {
         tag
         type
         url
+        needsTransfer
       }
     }
   }
@@ -126,32 +129,8 @@ describe('export mentor', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorExport).to.eql({
+      _id: '5ffdf41a1ee2c62111111111',
       subjects: [
-        {
-          _id: '5ffdf41a1ee2c62320b49eb1',
-          name: 'Repeat After Me',
-          description:
-            "These are miscellaneous phrases you'll be asked to repeat.",
-          isRequired: true,
-          topics: [
-            {
-              id: '5ffdf41a1ee2c62320b49ec1',
-              name: 'Idle',
-              description: '30-second idle clip',
-            },
-          ],
-          categories: [],
-          questions: [
-            {
-              question: {
-                _id: '511111111111111111111111',
-                question: "Don't talk and stay still.",
-              },
-              category: null,
-              topics: [{ id: '5ffdf41a1ee2c62320b49ec1' }],
-            },
-          ],
-        },
         {
           _id: '5ffdf41a1ee2c62320b49eb2',
           name: 'Background',
@@ -219,6 +198,31 @@ describe('export mentor', () => {
             },
           ],
         },
+        {
+          _id: '5ffdf41a1ee2c62320b49eb1',
+          name: 'Repeat After Me',
+          description:
+            "These are miscellaneous phrases you'll be asked to repeat.",
+          isRequired: true,
+          topics: [
+            {
+              id: '5ffdf41a1ee2c62320b49ec1',
+              name: 'Idle',
+              description: '30-second idle clip',
+            },
+          ],
+          categories: [],
+          questions: [
+            {
+              question: {
+                _id: '511111111111111111111111',
+                question: "Don't talk and stay still.",
+              },
+              category: null,
+              topics: [{ id: '5ffdf41a1ee2c62320b49ec1' }],
+            },
+          ],
+        },
       ],
       questions: [
         {
@@ -280,16 +284,19 @@ describe('export mentor', () => {
             _id: '511111111111111111111111',
             question: "Don't talk and stay still.",
           },
+          hasUntransferredMedia: false,
           media: [
             {
               tag: 'web',
               type: 'video',
-              url: 'https://static.mentorpal.org/web.mp4',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+              needsTransfer: false,
             },
             {
               tag: 'mobile',
               type: 'video',
-              url: 'https://static.mentorpal.org/mobile.mp4',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+              needsTransfer: false,
             },
           ],
         },
@@ -300,16 +307,19 @@ describe('export mentor', () => {
             _id: '511111111111111111111117',
             question: 'What is Aaron like?',
           },
+          hasUntransferredMedia: false,
           media: [
             {
               tag: 'web',
               type: 'video',
-              url: 'https://static.mentorpal.org/web.mp4',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
+              needsTransfer: false,
             },
             {
               tag: 'mobile',
               type: 'video',
-              url: 'https://static.mentorpal.org/mobile.mp4',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
+              needsTransfer: false,
             },
           ],
         },

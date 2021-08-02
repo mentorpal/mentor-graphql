@@ -5,9 +5,9 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import {
+  GraphQLBoolean,
   GraphQLString,
   GraphQLObjectType,
-  GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
   GraphQLInputObjectType,
@@ -32,6 +32,7 @@ export const AnswerMediaInputType = new GraphQLInputObjectType({
     type: { type: GraphQLString },
     tag: { type: GraphQLString },
     url: { type: GraphQLString },
+    needsTransfer: { type: GraphQLBoolean },
   },
 });
 
