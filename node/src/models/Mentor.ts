@@ -136,12 +136,6 @@ MentorSchema.statics.export = async function (
       { mentor: null }, // not sure if we need an explicit null check?
     ],
   });
-  // let questions = await QuestionModel.find({
-  //   _id: { $in: sQuestions.map((q) => q.question) },
-  // });
-  // questions = questions.filter(
-  //   (q) => !q.mentor || `${q.mentor}` === `${mentor._id}`
-  // );
   const answers: Answer[] = await AnswerModel.find({
     mentor: mentor._id,
     question: { $in: questions.map((q) => q._id) },
