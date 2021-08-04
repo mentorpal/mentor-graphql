@@ -101,6 +101,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     mentorType: {
       type: String,
       enum: [MentorType.VIDEO, MentorType.CHAT],
+      default: MentorType.VIDEO,
     },
     user: {
       type: Schema.Types.ObjectId,
