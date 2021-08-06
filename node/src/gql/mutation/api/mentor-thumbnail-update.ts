@@ -14,7 +14,7 @@ import {
 import { Mentor as MentorModel } from 'models';
 
 export const mentorThumbnailUpdate = {
-  type: GraphQLBoolean,
+  type: GraphQLString,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     thumbnail: { type: GraphQLNonNull(GraphQLString) },
@@ -25,7 +25,7 @@ export const mentorThumbnailUpdate = {
       mentorId: string;
       thumbnail: string;
     }
-  ): Promise<boolean> => {
+  ): Promise<string> => {
     if (!(await MentorModel.exists({ _id: args.mentorId }))) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
     }
@@ -39,7 +39,7 @@ export const mentorThumbnailUpdate = {
         },
       }
     );
-    return true;
+    return args.thumbnail;
   },
 };
 

@@ -116,7 +116,7 @@ describe('uploadAnswer', () => {
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'data.api.mentorThumbnailUpdate',
-      true
+      'mentor/thumbnails/updated.png'
     );
     await expectMentorThumbnail(
       mentor,
