@@ -30,7 +30,7 @@ export interface UploadTask extends Document {
   media: AnswerMedia[];
 }
 
-export const UploadTaskSchema = new Schema(
+export const UploadTaskSchema = new Schema<UploadTask, UploadTaskModel>(
   {
     mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
     question: { type: mongoose.Types.ObjectId, ref: 'Question' },

@@ -26,7 +26,7 @@ export interface User extends Document {
   lastLoginAt: Date;
 }
 
-export const UserSchema = new Schema(
+export const UserSchema = new Schema<User, UserModel>(
   {
     googleId: { type: String },
     name: { type: String },

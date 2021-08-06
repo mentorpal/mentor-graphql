@@ -35,7 +35,7 @@ export interface Answer extends Document {
   media: AnswerMedia[];
 }
 
-export const AnswerSchema = new Schema({
+export const AnswerSchema = new Schema<Answer, AnswerModel>({
   mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
   question: { type: mongoose.Types.ObjectId, ref: 'Question' },
   transcript: { type: String },
