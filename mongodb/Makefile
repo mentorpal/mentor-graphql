@@ -28,7 +28,7 @@ mongo-dump-uri: check-mongo-uri
 			--rm \
 			--volume $(MONGO_DUMP_ROOT):/dump \
 		$(MONGO_DOCKER_IMAGE) mongodump \
-			--out="dump/dump-$(MONGO_DB)-$(shell date '+%Y%d%mT%H%M%S')" \
+			--out="dump/dump-$(MONGO_DB)-$(shell date '+%Y%m%dT%H%M%S')" \
 			--uri="$(MONGO_URI)"
 
 
