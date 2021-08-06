@@ -7,7 +7,6 @@ The full terms of this copyright and license should always be found in the root 
 import {
   GraphQLString,
   GraphQLObjectType,
-  GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
 } from 'graphql';
