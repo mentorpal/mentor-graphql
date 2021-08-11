@@ -36,7 +36,7 @@ export interface UserQuestion extends Document {
   graderAnswer: Answer['_id'];
 }
 
-export const UserQuestionSchema = new Schema(
+export const UserQuestionSchema = new Schema<UserQuestion, UserQuestionModel>(
   {
     mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
     question: { type: String },

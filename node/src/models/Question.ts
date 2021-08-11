@@ -30,7 +30,7 @@ export interface Question extends Document {
   minVideoLength: number;
 }
 
-export const QuestionSchema = new Schema({
+export const QuestionSchema = new Schema<Question, QuestionModel>({
   question: { type: String },
   type: {
     type: String,

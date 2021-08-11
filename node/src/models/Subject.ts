@@ -85,7 +85,7 @@ export interface SubjectInsert {
 
 export type SubjectUpdate = Partial<SubjectInsert>;
 
-export const SubjectSchema = new Schema({
+export const SubjectSchema = new Schema<Subject, SubjectModel>({
   name: { type: String },
   description: { type: String },
   isRequired: { type: Boolean },

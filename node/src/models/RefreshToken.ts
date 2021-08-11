@@ -20,7 +20,7 @@ export interface RefreshToken extends Document {
   isActive: boolean;
 }
 
-export const RefreshTokenSchema = new Schema({
+export const RefreshTokenSchema = new Schema<RefreshToken, RefreshTokenModel>({
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   token: { type: String },
   expires: { type: Date },
