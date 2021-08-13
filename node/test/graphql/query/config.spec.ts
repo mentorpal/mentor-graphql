@@ -145,6 +145,7 @@ describe('config', () => {
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
       urlVideoIdleTips: 'https://some/custom/url',
+      videoRecorderMaxLength: 300,
       styleHeaderLogo: '/a/logo.png',
       styleHeaderColor: '',
       styleHeaderTextColor: '',
@@ -163,6 +164,7 @@ describe('config', () => {
             cmi5Fetch
             googleClientId
             urlVideoIdleTips
+            videoRecorderMaxLength
             mentorsDefault
             urlClassifier
             urlGraphql
