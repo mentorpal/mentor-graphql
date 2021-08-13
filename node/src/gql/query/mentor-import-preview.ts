@@ -20,7 +20,7 @@ import {
 } from 'models';
 import { Subject } from 'models/Subject';
 import { Question } from 'models/Question';
-import { Answer } from 'models/Answer';
+import { Answer, mediaNeedsTransfer } from 'models/Answer';
 import {
   AnswerUpdateInput,
   MentorImportJson,
@@ -45,7 +45,7 @@ interface ImportPreview<T, U> {
   editType: EditType;
 }
 interface MentorImportPreview {
-  _id: string;
+  id: string;
   subjects: ImportPreview<SubjectUpdateInput, Subject>[];
   questions: ImportPreview<QuestionUpdateInput, Question>[];
   answers: ImportPreview<AnswerUpdateInput, Answer>[];
@@ -54,7 +54,7 @@ interface MentorImportPreview {
 export const MentorImportPreviewType = new GraphQLObjectType({
   name: 'MentorImportPreviewType',
   fields: () => ({
-    _id: { type: GraphQLString },
+    id: { type: GraphQLString },
     subjects: { type: GraphQLList(SubjectImportPreviewType) },
     questions: { type: GraphQLList(QuestionImportPreviewType) },
     answers: { type: GraphQLList(AnswerImportPreviewType) },
@@ -84,6 +84,7 @@ export const AnswerImportPreviewType = new GraphQLObjectType({
     editType: { type: GraphQLString },
   }),
 });
+
 export const SubjectPreviewType = new GraphQLObjectType({
   name: 'SubjectPreview',
   fields: () => ({
@@ -214,9 +215,7 @@ export const mentorImportPreview = {
         (a) => `${a.question}` === `${answerImport.question._id}`
       );
       for (const m of answerImport.media || []) {
-        const urlWithoutBase = m.url.substring(m.url.indexOf('videos/'));
-        const mentorId = urlWithoutBase.split('/')[1];
-        m.needsTransfer = `${exportJson._id}` !== `${mentorId}`;
+        m.needsTransfer = mediaNeedsTransfer(m);
         answerImport.hasUntransferredMedia =
           answerImport.hasUntransferredMedia || m.needsTransfer;
       }
@@ -245,7 +244,7 @@ export const mentorImportPreview = {
       }))
     );
     return {
-      _id: exportJson._id,
+      id: exportJson.id,
       subjects: subjectChanges,
       questions: questionChanges,
       answers: answerChanges,

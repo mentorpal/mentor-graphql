@@ -7,7 +7,7 @@ The full terms of this copyright and license should always be found in the root 
 import { GraphQLObjectType } from 'graphql';
 import { User } from 'models/User';
 import mentorThumbnailUpdate from './mentor-thumbnail-update';
-import updateMedia from './update-media';
+import mediaUpdate from './media-update';
 import uploadAnswer from './upload-answer';
 import uploadTaskUpdate from './upload-task-update';
 
@@ -15,7 +15,7 @@ export const Api: GraphQLObjectType = new GraphQLObjectType({
   name: 'ApiMutation',
   fields: () => ({
     mentorThumbnailUpdate,
-    updateMedia,
+    mediaUpdate,
     uploadAnswer,
     uploadTaskUpdate,
   }),

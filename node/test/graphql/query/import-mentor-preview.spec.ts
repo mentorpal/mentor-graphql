@@ -27,7 +27,7 @@ describe('import mentor preview', () => {
 
   it(`view changes made if imported`, async () => {
     const json = {
-      _id: '5ffdf41a1ee2c62111111111',
+      id: '5ffdf41a1ee2c62111111111',
       subjects: [
         {
           _id: '5ffdf41a1ee2c62320b49eb1',
@@ -81,7 +81,7 @@ describe('import mentor preview', () => {
             {
               type: 'video',
               tag: 'mobile',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+              url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
             },
           ],
         },
@@ -97,7 +97,7 @@ describe('import mentor preview', () => {
       .send({
         query: `query ImportMentorPreview($mentor: ID!, $json: MentorImportJsonType!) {
           mentorImportPreview(mentor: $mentor, json: $json) {
-            _id
+            id
             subjects {
               importData {
                 name
@@ -144,7 +144,7 @@ describe('import mentor preview', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorImportPreview).to.eql({
-      _id: '5ffdf41a1ee2c62111111111',
+      id: '5ffdf41a1ee2c62111111111',
       subjects: [
         {
           importData: { name: 'Repeat After Me' },
@@ -199,7 +199,7 @@ describe('import mentor preview', () => {
           importData: {
             transcript: '[being still]',
             question: { question: "Don't talk and stay still." },
-            hasUntransferredMedia: false,
+            hasUntransferredMedia: true,
             media: [
               {
                 type: 'video',
@@ -210,8 +210,8 @@ describe('import mentor preview', () => {
               {
                 type: 'video',
                 tag: 'mobile',
-                url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-                needsTransfer: false,
+                url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+                needsTransfer: true,
               },
             ],
           },

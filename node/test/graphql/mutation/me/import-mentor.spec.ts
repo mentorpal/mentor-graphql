@@ -61,7 +61,7 @@ describe('import mentor', () => {
     expect(response.status).to.equal(200);
     const mentorJson = response.body.data.mentorExport;
     expect(mentorJson).to.eql({
-      _id: '5ffdf41a1ee2c62111111111',
+      id: '5ffdf41a1ee2c62111111111',
       subjects: [
         {
           _id: '5ffdf41a1ee2c62320b49eb2',
@@ -266,7 +266,7 @@ describe('import mentor', () => {
           me {
             mentorImport(mentor: $mentor, json: $json) {
               _id
-            }  
+            }
           }
         }`,
         variables: { mentor: '5ffdf41a1ee2c62111111113', json: mentorJson },
@@ -284,7 +284,7 @@ describe('import mentor', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorExport).to.eql({
-      _id: '5ffdf41a1ee2c62111111113',
+      id: '5ffdf41a1ee2c62111111113',
       subjects: [
         {
           _id: '5ffdf41a1ee2c62320b49eb2',
@@ -439,19 +439,19 @@ describe('import mentor', () => {
             _id: '511111111111111111111111',
             question: "Don't talk and stay still.",
           },
-          hasUntransferredMedia: true,
+          hasUntransferredMedia: false,
           media: [
             {
               tag: 'web',
               type: 'video',
               url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-              needsTransfer: true,
+              needsTransfer: false,
             },
             {
               tag: 'mobile',
               type: 'video',
               url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-              needsTransfer: true,
+              needsTransfer: false,
             },
           ],
         },
@@ -462,19 +462,19 @@ describe('import mentor', () => {
             _id: '511111111111111111111117',
             question: 'What is Aaron like?',
           },
-          hasUntransferredMedia: true,
+          hasUntransferredMedia: false,
           media: [
             {
               tag: 'web',
               type: 'video',
               url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
-              needsTransfer: true,
+              needsTransfer: false,
             },
             {
               tag: 'mobile',
               type: 'video',
               url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
-              needsTransfer: true,
+              needsTransfer: false,
             },
           ],
         },
@@ -484,7 +484,7 @@ describe('import mentor', () => {
 
   it(`creates new question and subject when importing`, async () => {
     const json = {
-      _id: '5ffdf41a1ee2c62111111111',
+      id: '5ffdf41a1ee2c62111111111',
       subjects: [
         {
           _id: '5ffdf41a1ee2c62320b49eb1',

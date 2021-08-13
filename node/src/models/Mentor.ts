@@ -16,7 +16,7 @@ import {
   PaginateQuery,
   pluginPagination,
 } from './Paginatation';
-import { Answer, Status } from './Answer';
+import { Answer, mediaNeedsTransfer, Status } from './Answer';
 import { QuestionType } from './Question';
 import { Subject, SubjectQuestion, Topic } from './Subject';
 import { User } from './User';
@@ -146,7 +146,7 @@ MentorSchema.statics.export = async function (
     question: { $in: questions.map((q) => q._id) },
   });
   return {
-    _id: mentor._id,
+    id: mentor._id,
     subjects,
     questions,
     answers,
@@ -213,10 +213,10 @@ MentorSchema.statics.import = async function (
   }
   for (const a of json.answers || []) {
     for (const m of a.media || []) {
-      const urlWithoutBase = m.url.substring(m.url.indexOf('videos/'));
-      const mentorId = urlWithoutBase.split('/')[1];
-      m.needsTransfer = `${mentor._id}` !== `${mentorId}`;
-      m.url = m.needsTransfer ? m.url : urlWithoutBase;
+      m.needsTransfer = mediaNeedsTransfer(m);
+      m.url = m.needsTransfer
+        ? m.url
+        : m.url.substring(m.url.indexOf('videos/'));
       a.hasUntransferredMedia = a.hasUntransferredMedia || m.needsTransfer;
     }
     await AnswerModel.findOneAndUpdate(

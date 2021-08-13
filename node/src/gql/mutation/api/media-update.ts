@@ -45,8 +45,7 @@ export const mediaUpdate = {
     } else {
       media[idx] = args.media;
     }
-    const hasUntransferredMedia =
-      media.find((m) => m.needsTransfer) !== undefined;
+    const hasUntransferredMedia = media.some((m) => m.needsTransfer);
     answer = await AnswerModel.findByIdAndUpdate(
       answer._id,
       {

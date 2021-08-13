@@ -21,7 +21,7 @@ const exportMentorQueryStub = `query ExportMentor($mentor: ID!) {
 
 export const exportMentorQuery = `query ExportMentor($mentor: ID!) {
   mentorExport(mentor: $mentor) {
-    _id
+    id
     subjects {
       _id
       name
@@ -129,7 +129,7 @@ describe('export mentor', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorExport).to.eql({
-      _id: '5ffdf41a1ee2c62111111111',
+      id: '5ffdf41a1ee2c62111111111',
       subjects: [
         {
           _id: '5ffdf41a1ee2c62320b49eb2',
