@@ -228,4 +228,178 @@ describe('uploadAnswer', () => {
       },
     });
   });
+
+  it('sets needsTransfer to false for any relative media path', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: answerMutation,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111112',
+          answer: {
+            transcript:
+              "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+            media: [
+              {
+                type: 'video',
+                tag: 'web',
+                url: `video.mp4`,
+              },
+            ],
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.api.uploadAnswer).to.eql(true);
+    const answer = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query Answer($mentor: ID!, $question: ID!) {
+          answer(mentor: $mentor, question: $question) {
+            hasUntransferredMedia
+            media {
+              type
+              tag
+              url
+              needsTransfer
+            }
+          }
+        }`,
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111111',
+          question: '511111111111111111111112',
+        },
+      });
+    expect(answer.status).to.equal(200);
+    expect(answer.body.data.answer).to.eql({
+      hasUntransferredMedia: false,
+      media: [
+        {
+          type: 'video',
+          tag: 'web',
+          url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+          needsTransfer: false,
+        },
+      ],
+    });
+  });
+
+  it('sets needsTransfer to true for any absolute media url that is not the current-site static domain', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: answerMutation,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111112',
+          answer: {
+            transcript:
+              "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+            media: [
+              {
+                type: 'video',
+                tag: 'web',
+                url: `https://different.mentorpal.org/video.mp4`,
+              },
+            ],
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.api.uploadAnswer).to.eql(true);
+    const answer = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query Answer($mentor: ID!, $question: ID!) {
+      answer(mentor: $mentor, question: $question) {
+        hasUntransferredMedia
+        media {
+          type
+          tag
+          url
+          needsTransfer
+        }
+      }
+    }`,
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111111',
+          question: '511111111111111111111112',
+        },
+      });
+    expect(answer.status).to.equal(200);
+    expect(answer.body.data.answer).to.eql({
+      hasUntransferredMedia: true,
+      media: [
+        {
+          type: 'video',
+          tag: 'web',
+          url: `https://different.mentorpal.org/video.mp4`,
+          needsTransfer: true,
+        },
+      ],
+    });
+  });
+
+  it('parses absolute urls for the current site domain and makes them relative', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: answerMutation,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111112',
+          answer: {
+            transcript:
+              "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+            media: [
+              {
+                type: 'video',
+                tag: 'web',
+                url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+              },
+            ],
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.api.uploadAnswer).to.eql(true);
+    const answer = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query Answer($mentor: ID!, $question: ID!) {
+        answer(mentor: $mentor, question: $question) {
+          hasUntransferredMedia
+          media {
+            type
+            tag
+            url
+            needsTransfer
+          }
+        }
+      }`,
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111111',
+          question: '511111111111111111111112',
+        },
+      });
+    expect(answer.status).to.equal(200);
+    expect(answer.body.data.answer).to.eql({
+      hasUntransferredMedia: false,
+      media: [
+        {
+          type: 'video',
+          tag: 'web',
+          url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+          needsTransfer: false,
+        },
+      ],
+    });
+  });
 });

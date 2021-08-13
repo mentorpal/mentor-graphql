@@ -14,7 +14,7 @@ export function isSiteStaticUrl(url: string): boolean {
 }
 
 export function mediaNeedsTransfer(url: string): boolean {
-  return !isSiteStaticUrl(url);
+  return url.startsWith('http') && !isSiteStaticUrl(url);
 }
 
 export function toRelativeUrl(url: string): string {

@@ -20,6 +20,7 @@ import {
 } from 'models';
 import { AnswerMediaProps, Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
+import { mediaNeedsTransfer } from 'utils/static-urls';
 
 export interface UploadAnswer {
   transcript: string;
@@ -44,7 +45,7 @@ export const UploadAnswerType = new GraphQLInputObjectType({
   }),
 });
 
-export const updateAnswer = {
+export const answerUpload = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
@@ -75,6 +76,11 @@ export const updateAnswer = {
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
     }
+    let hasUntransferredMedia = false;
+    for (const m of args.answer.media || []) {
+      m.needsTransfer = mediaNeedsTransfer(m.url);
+      hasUntransferredMedia ||= m.needsTransfer;
+    }
     const answer = await AnswerModel.findOneAndUpdate(
       {
         mentor: mentor._id,
@@ -83,6 +89,7 @@ export const updateAnswer = {
       {
         $set: {
           ...args.answer,
+          hasUntransferredMedia,
           status: Status.COMPLETE,
         },
       },
@@ -95,4 +102,4 @@ export const updateAnswer = {
   },
 };
 
-export default updateAnswer;
+export default answerUpload;
