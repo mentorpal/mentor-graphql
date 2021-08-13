@@ -5,9 +5,9 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import {
+  GraphQLBoolean,
   GraphQLString,
   GraphQLObjectType,
-  GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
   GraphQLInputObjectType,
@@ -20,6 +20,7 @@ import {
 } from 'models';
 import { AnswerMediaProps, Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
+import { mediaNeedsTransfer } from 'utils/static-urls';
 
 export interface UploadAnswer {
   transcript: string;
@@ -32,6 +33,7 @@ export const AnswerMediaInputType = new GraphQLInputObjectType({
     type: { type: GraphQLString },
     tag: { type: GraphQLString },
     url: { type: GraphQLString },
+    needsTransfer: { type: GraphQLBoolean },
   },
 });
 
@@ -43,7 +45,7 @@ export const UploadAnswerType = new GraphQLInputObjectType({
   }),
 });
 
-export const updateAnswer = {
+export const answerUpload = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
@@ -74,6 +76,11 @@ export const updateAnswer = {
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
     }
+    let hasUntransferredMedia = false;
+    for (const m of args.answer.media || []) {
+      m.needsTransfer = mediaNeedsTransfer(m.url);
+      hasUntransferredMedia ||= m.needsTransfer;
+    }
     const answer = await AnswerModel.findOneAndUpdate(
       {
         mentor: mentor._id,
@@ -82,6 +89,7 @@ export const updateAnswer = {
       {
         $set: {
           ...args.answer,
+          hasUntransferredMedia,
           status: Status.COMPLETE,
         },
       },
@@ -94,4 +102,4 @@ export const updateAnswer = {
   },
 };
 
-export default updateAnswer;
+export default answerUpload;

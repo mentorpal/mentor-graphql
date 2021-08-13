@@ -61,32 +61,8 @@ describe('import mentor', () => {
     expect(response.status).to.equal(200);
     const mentorJson = response.body.data.mentorExport;
     expect(mentorJson).to.eql({
+      id: '5ffdf41a1ee2c62111111111',
       subjects: [
-        {
-          _id: '5ffdf41a1ee2c62320b49eb1',
-          name: 'Repeat After Me',
-          description:
-            "These are miscellaneous phrases you'll be asked to repeat.",
-          isRequired: true,
-          topics: [
-            {
-              id: '5ffdf41a1ee2c62320b49ec1',
-              name: 'Idle',
-              description: '30-second idle clip',
-            },
-          ],
-          categories: [],
-          questions: [
-            {
-              question: {
-                _id: '511111111111111111111111',
-                question: "Don't talk and stay still.",
-              },
-              category: null,
-              topics: [{ id: '5ffdf41a1ee2c62320b49ec1' }],
-            },
-          ],
-        },
         {
           _id: '5ffdf41a1ee2c62320b49eb2',
           name: 'Background',
@@ -154,6 +130,31 @@ describe('import mentor', () => {
             },
           ],
         },
+        {
+          _id: '5ffdf41a1ee2c62320b49eb1',
+          name: 'Repeat After Me',
+          description:
+            "These are miscellaneous phrases you'll be asked to repeat.",
+          isRequired: true,
+          topics: [
+            {
+              id: '5ffdf41a1ee2c62320b49ec1',
+              name: 'Idle',
+              description: '30-second idle clip',
+            },
+          ],
+          categories: [],
+          questions: [
+            {
+              question: {
+                _id: '511111111111111111111111',
+                question: "Don't talk and stay still.",
+              },
+              category: null,
+              topics: [{ id: '5ffdf41a1ee2c62320b49ec1' }],
+            },
+          ],
+        },
       ],
       questions: [
         {
@@ -215,16 +216,19 @@ describe('import mentor', () => {
             _id: '511111111111111111111111',
             question: "Don't talk and stay still.",
           },
+          hasUntransferredMedia: false,
           media: [
             {
               tag: 'web',
               type: 'video',
-              url: 'https://static.mentorpal.org/web.mp4',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+              needsTransfer: false,
             },
             {
               tag: 'mobile',
               type: 'video',
-              url: 'https://static.mentorpal.org/mobile.mp4',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+              needsTransfer: false,
             },
           ],
         },
@@ -235,16 +239,19 @@ describe('import mentor', () => {
             _id: '511111111111111111111117',
             question: 'What is Aaron like?',
           },
+          hasUntransferredMedia: false,
           media: [
             {
               tag: 'web',
               type: 'video',
-              url: 'https://static.mentorpal.org/web.mp4',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
+              needsTransfer: false,
             },
             {
               tag: 'mobile',
               type: 'video',
-              url: 'https://static.mentorpal.org/mobile.mp4',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
+              needsTransfer: false,
             },
           ],
         },
@@ -259,7 +266,7 @@ describe('import mentor', () => {
           me {
             mentorImport(mentor: $mentor, json: $json) {
               _id
-            }  
+            }
           }
         }`,
         variables: { mentor: '5ffdf41a1ee2c62111111113', json: mentorJson },
@@ -277,32 +284,8 @@ describe('import mentor', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorExport).to.eql({
+      id: '5ffdf41a1ee2c62111111113',
       subjects: [
-        {
-          _id: '5ffdf41a1ee2c62320b49eb1',
-          name: 'Repeat After Me',
-          description:
-            "These are miscellaneous phrases you'll be asked to repeat.",
-          isRequired: true,
-          topics: [
-            {
-              id: '5ffdf41a1ee2c62320b49ec1',
-              name: 'Idle',
-              description: '30-second idle clip',
-            },
-          ],
-          categories: [],
-          questions: [
-            {
-              question: {
-                _id: '511111111111111111111111',
-                question: "Don't talk and stay still.",
-              },
-              category: null,
-              topics: [{ id: '5ffdf41a1ee2c62320b49ec1' }],
-            },
-          ],
-        },
         {
           _id: '5ffdf41a1ee2c62320b49eb2',
           name: 'Background',
@@ -370,6 +353,31 @@ describe('import mentor', () => {
             },
           ],
         },
+        {
+          _id: '5ffdf41a1ee2c62320b49eb1',
+          name: 'Repeat After Me',
+          description:
+            "These are miscellaneous phrases you'll be asked to repeat.",
+          isRequired: true,
+          topics: [
+            {
+              id: '5ffdf41a1ee2c62320b49ec1',
+              name: 'Idle',
+              description: '30-second idle clip',
+            },
+          ],
+          categories: [],
+          questions: [
+            {
+              question: {
+                _id: '511111111111111111111111',
+                question: "Don't talk and stay still.",
+              },
+              category: null,
+              topics: [{ id: '5ffdf41a1ee2c62320b49ec1' }],
+            },
+          ],
+        },
       ],
       questions: [
         {
@@ -431,7 +439,21 @@ describe('import mentor', () => {
             _id: '511111111111111111111111',
             question: "Don't talk and stay still.",
           },
-          media: [],
+          hasUntransferredMedia: false,
+          media: [
+            {
+              tag: 'web',
+              type: 'video',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+              needsTransfer: false,
+            },
+            {
+              tag: 'mobile',
+              type: 'video',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+              needsTransfer: false,
+            },
+          ],
         },
         {
           transcript: 'Test Transcript',
@@ -440,7 +462,21 @@ describe('import mentor', () => {
             _id: '511111111111111111111117',
             question: 'What is Aaron like?',
           },
-          media: [],
+          hasUntransferredMedia: false,
+          media: [
+            {
+              tag: 'web',
+              type: 'video',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
+              needsTransfer: false,
+            },
+            {
+              tag: 'mobile',
+              type: 'video',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
+              needsTransfer: false,
+            },
+          ],
         },
       ],
     });
@@ -448,6 +484,7 @@ describe('import mentor', () => {
 
   it(`creates new question and subject when importing`, async () => {
     const json = {
+      id: '5ffdf41a1ee2c62111111111',
       subjects: [
         {
           _id: '5ffdf41a1ee2c62320b49eb1',
@@ -456,6 +493,12 @@ describe('import mentor', () => {
             {
               question: { _id: '511111111111111111111111' },
             },
+          ],
+        },
+        {
+          _id: 'newsubject',
+          name: 'New Subject',
+          questions: [
             {
               question: { _id: 'newquestion' },
             },
@@ -486,11 +529,24 @@ describe('import mentor', () => {
           transcript: '[being still]',
           question: { _id: '511111111111111111111111' },
           status: 'COMPLETE',
+          media: [
+            {
+              type: 'video',
+              tag: 'web',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+            },
+            {
+              type: 'video',
+              tag: 'mobile',
+              url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+            },
+          ],
         },
         {
           transcript: 'new answer',
           question: { _id: 'newquestion' },
           status: 'COMPLETE',
+          media: [],
         },
       ],
     };
@@ -529,6 +585,11 @@ describe('import mentor', () => {
               question {
                 question
               }
+              hasUntransferredMedia
+              media {
+                url
+                needsTransfer
+              }
             }
           }
         }`,
@@ -537,31 +598,35 @@ describe('import mentor', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorExport).to.eql({
       subjects: [
-        {
-          name: 'Repeat After Me',
-        },
-        {
-          name: 'New Subject',
-        },
+        { name: 'New Subject' },
+        { name: 'New Subject' },
+        { name: 'Repeat After Me' },
       ],
       questions: [
-        {
-          question: "Don't talk and stay still.",
-        },
-        {
-          question: 'new question',
-        },
+        { question: "Don't talk and stay still." },
+        { question: 'new question' },
       ],
       answers: [
         {
           transcript: '[being still]',
-          question: {
-            question: "Don't talk and stay still.",
-          },
+          question: { question: "Don't talk and stay still." },
+          hasUntransferredMedia: true,
+          media: [
+            {
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+              needsTransfer: false,
+            },
+            {
+              url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+              needsTransfer: true,
+            },
+          ],
         },
         {
           transcript: 'new answer',
           question: { question: 'new question' },
+          hasUntransferredMedia: false,
+          media: [],
         },
       ],
     });

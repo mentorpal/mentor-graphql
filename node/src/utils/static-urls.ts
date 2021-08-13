@@ -4,33 +4,27 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import { User } from 'models/User';
-import mentorThumbnailUpdate from './mentor-thumbnail-update';
-import mediaUpdate from './media-update';
-import uploadAnswer from './upload-answer';
-import uploadTaskUpdate from './upload-task-update';
 
-export const Api: GraphQLObjectType = new GraphQLObjectType({
-  name: 'ApiMutation',
-  fields: () => ({
-    mentorThumbnailUpdate,
-    mediaUpdate,
-    uploadAnswer,
-    uploadTaskUpdate,
-  }),
-});
+export function getSiteStaticUrlBase(): string {
+  return process.env.STATIC_URL_BASE || '';
+}
 
-export const api = {
-  type: Api,
-  resolve: (_: any, args: any, context: { user: User }): { user: User } => {
-    if (!context.user) {
-      throw new Error('Only authenticated users');
-    }
-    return {
-      user: context.user,
-    };
-  },
-};
+export function isSiteStaticUrl(url: string): boolean {
+  return url && url.startsWith(getSiteStaticUrlBase());
+}
 
-export default api;
+export function mediaNeedsTransfer(url: string): boolean {
+  return url.startsWith('http') && !isSiteStaticUrl(url);
+}
+
+export function toRelativeUrl(url: string): string {
+  return isSiteStaticUrl(url)
+    ? url.substring(getSiteStaticUrlBase().length + 1)
+    : url;
+}
+
+export function toAbsoluteUrl(url: string): string {
+  return isSiteStaticUrl(url)
+    ? url
+    : new URL(url, getSiteStaticUrlBase()).toString();
+}

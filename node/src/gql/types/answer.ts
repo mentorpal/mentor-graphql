@@ -9,19 +9,22 @@ import {
   GraphQLString,
   GraphQLObjectType,
   GraphQLList,
+  GraphQLBoolean,
 } from 'graphql';
 import { questionField } from 'gql/query/question';
 import { AnswerMedia } from 'models/Answer';
+import { toAbsoluteUrl } from 'utils/static-urls';
 
 export const AnswerMediaType = new GraphQLObjectType({
   name: 'AnswerMedia',
   fields: {
     type: { type: GraphQLString },
     tag: { type: GraphQLString },
+    needsTransfer: { type: GraphQLBoolean },
     url: {
       type: GraphQLString,
       resolve: function (media: AnswerMedia) {
-        return new URL(media.url, process.env.STATIC_URL_BASE);
+        return toAbsoluteUrl(media.url);
       },
     },
   },
@@ -34,6 +37,7 @@ export const AnswerType = new GraphQLObjectType({
     question: questionField,
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
+    hasUntransferredMedia: { type: GraphQLBoolean },
     media: { type: GraphQLList(AnswerMediaType) },
   }),
 });

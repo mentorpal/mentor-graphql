@@ -19,6 +19,7 @@ import { Subject } from 'models/Subject';
 import { Question } from 'models/Question';
 
 export interface MentorExportJson {
+  id: string;
   subjects: Subject[];
   questions: Question[];
   answers: Answer[];
@@ -27,6 +28,7 @@ export interface MentorExportJson {
 export const MentorExportJsonType = new GraphQLObjectType({
   name: 'MentorExportJsonType',
   fields: () => ({
+    id: { type: GraphQLID },
     subjects: { type: GraphQLList(SubjectType) },
     questions: { type: GraphQLList(QuestionType) },
     answers: { type: GraphQLList(AnswerType) },
