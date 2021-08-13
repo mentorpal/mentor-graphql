@@ -57,8 +57,3 @@ AnswerSchema.index({ question: -1, mentor: -1 }, { unique: true });
 export interface AnswerModel extends Model<Answer> {}
 
 export default mongoose.model<Answer, AnswerModel>('Answer', AnswerSchema);
-
-export function mediaNeedsTransfer(media: AnswerMediaProps): boolean {
-  const urlBase = media.url.substring(0, media.url.indexOf('/videos/'));
-  return urlBase !== process.env.STATIC_URL_BASE;
-}

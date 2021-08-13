@@ -16,13 +16,14 @@ import {
   PaginateQuery,
   pluginPagination,
 } from './Paginatation';
-import { Answer, mediaNeedsTransfer, Status } from './Answer';
+import { Answer, Status } from './Answer';
 import { QuestionType } from './Question';
 import { Subject, SubjectQuestion, Topic } from './Subject';
 import { User } from './User';
 import { MentorExportJson } from 'gql/query/mentor-export';
 import { MentorImportJson } from 'gql/mutation/me/mentor-import';
 import { idOrNew } from 'gql/mutation/me/helpers';
+import { mediaNeedsTransfer, toRelativeUrl } from 'utils/static-urls';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -212,11 +213,10 @@ MentorSchema.statics.import = async function (
     }
   }
   for (const a of json.answers || []) {
+    a.hasUntransferredMedia = false;
     for (const m of a.media || []) {
-      m.needsTransfer = mediaNeedsTransfer(m);
-      m.url = m.needsTransfer
-        ? m.url
-        : m.url.substring(m.url.indexOf('videos/'));
+      m.needsTransfer = mediaNeedsTransfer(m.url);
+      m.url = toRelativeUrl(m.url);
       a.hasUntransferredMedia = a.hasUntransferredMedia || m.needsTransfer;
     }
     await AnswerModel.findOneAndUpdate(

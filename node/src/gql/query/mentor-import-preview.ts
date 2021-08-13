@@ -20,7 +20,7 @@ import {
 } from 'models';
 import { Subject } from 'models/Subject';
 import { Question } from 'models/Question';
-import { Answer, mediaNeedsTransfer } from 'models/Answer';
+import { Answer } from 'models/Answer';
 import {
   AnswerUpdateInput,
   MentorImportJson,
@@ -32,6 +32,7 @@ import AnswerType from 'gql/types/answer';
 import { SubjectUpdateInput } from 'gql/mutation/me/subject-update';
 import { QuestionUpdateInput } from 'gql/mutation/me/question-update';
 import { isId } from 'gql/mutation/me/helpers';
+import { mediaNeedsTransfer } from 'utils/static-urls';
 
 enum EditType {
   NONE = 'NONE',
@@ -215,7 +216,7 @@ export const mentorImportPreview = {
         (a) => `${a.question}` === `${answerImport.question._id}`
       );
       for (const m of answerImport.media || []) {
-        m.needsTransfer = mediaNeedsTransfer(m);
+        m.needsTransfer = mediaNeedsTransfer(m.url);
         answerImport.hasUntransferredMedia =
           answerImport.hasUntransferredMedia || m.needsTransfer;
       }

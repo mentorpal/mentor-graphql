@@ -13,6 +13,7 @@ import {
 } from 'graphql';
 import { questionField } from 'gql/query/question';
 import { AnswerMedia } from 'models/Answer';
+import { toAbsoluteUrl } from 'utils/static-urls';
 
 export const AnswerMediaType = new GraphQLObjectType({
   name: 'AnswerMedia',
@@ -23,10 +24,7 @@ export const AnswerMediaType = new GraphQLObjectType({
     url: {
       type: GraphQLString,
       resolve: function (media: AnswerMedia) {
-        if (media.needsTransfer || media.url.startsWith('http')) {
-          return media.url;
-        }
-        return new URL(media.url, process.env.STATIC_URL_BASE);
+        return toAbsoluteUrl(media.url);
       },
     },
   },

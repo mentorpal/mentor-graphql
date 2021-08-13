@@ -529,11 +529,24 @@ describe('import mentor', () => {
           transcript: '[being still]',
           question: { _id: '511111111111111111111111' },
           status: 'COMPLETE',
+          media: [
+            {
+              type: 'video',
+              tag: 'web',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+            },
+            {
+              type: 'video',
+              tag: 'mobile',
+              url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+            },
+          ],
         },
         {
           transcript: 'new answer',
           question: { _id: 'newquestion' },
           status: 'COMPLETE',
+          media: [],
         },
       ],
     };
@@ -572,6 +585,11 @@ describe('import mentor', () => {
               question {
                 question
               }
+              hasUntransferredMedia
+              media {
+                url
+                needsTransfer
+              }
             }
           }
         }`,
@@ -592,8 +610,24 @@ describe('import mentor', () => {
         {
           transcript: '[being still]',
           question: { question: "Don't talk and stay still." },
+          hasUntransferredMedia: true,
+          media: [
+            {
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+              needsTransfer: false,
+            },
+            {
+              url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+              needsTransfer: true,
+            },
+          ],
         },
-        { transcript: 'new answer', question: { question: 'new question' } },
+        {
+          transcript: 'new answer',
+          question: { question: 'new question' },
+          hasUntransferredMedia: false,
+          media: [],
+        },
       ],
     });
   });
