@@ -18,6 +18,7 @@ import DateType from './date';
 import AnswerType from './answer';
 import SubjectType, { SubjectQuestionType, TopicType } from './subject';
 import { QuestionType } from 'models/Question';
+import { toAbsoluteUrl } from 'utils/static-urls';
 
 export const MentorType = new GraphQLObjectType({
   name: 'Mentor',
@@ -35,9 +36,7 @@ export const MentorType = new GraphQLObjectType({
     thumbnail: {
       type: GraphQLString,
       resolve: function (mentor: Mentor) {
-        return mentor.thumbnail
-          ? new URL(mentor.thumbnail, process.env.STATIC_URL_BASE)
-          : '';
+        return mentor.thumbnail ? toAbsoluteUrl(mentor.thumbnail) : '';
       },
     },
     subjects: {

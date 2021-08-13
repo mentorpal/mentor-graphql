@@ -28,10 +28,11 @@ import {
 } from 'gql/mutation/me/mentor-import';
 import SubjectType, { CategoryType, TopicType } from 'gql/types/subject';
 import QuestionType from 'gql/types/question';
-import AnswerType, { AnswerMediaType } from 'gql/types/answer';
+import AnswerType from 'gql/types/answer';
 import { SubjectUpdateInput } from 'gql/mutation/me/subject-update';
 import { QuestionUpdateInput } from 'gql/mutation/me/question-update';
 import { isId } from 'gql/mutation/me/helpers';
+import { mediaNeedsTransfer } from 'utils/static-urls';
 
 enum EditType {
   NONE = 'NONE',
@@ -45,6 +46,7 @@ interface ImportPreview<T, U> {
   editType: EditType;
 }
 interface MentorImportPreview {
+  id: string;
   subjects: ImportPreview<SubjectUpdateInput, Subject>[];
   questions: ImportPreview<QuestionUpdateInput, Question>[];
   answers: ImportPreview<AnswerUpdateInput, Answer>[];
@@ -53,6 +55,7 @@ interface MentorImportPreview {
 export const MentorImportPreviewType = new GraphQLObjectType({
   name: 'MentorImportPreviewType',
   fields: () => ({
+    id: { type: GraphQLString },
     subjects: { type: GraphQLList(SubjectImportPreviewType) },
     questions: { type: GraphQLList(QuestionImportPreviewType) },
     answers: { type: GraphQLList(AnswerImportPreviewType) },
@@ -82,6 +85,7 @@ export const AnswerImportPreviewType = new GraphQLObjectType({
     editType: { type: GraphQLString },
   }),
 });
+
 export const SubjectPreviewType = new GraphQLObjectType({
   name: 'SubjectPreview',
   fields: () => ({
@@ -108,8 +112,18 @@ export const AnswerPreviewType = new GraphQLObjectType({
     question: { type: QuestionType },
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
-    media: { type: GraphQLList(AnswerMediaType) },
+    hasUntransferredMedia: { type: GraphQLBoolean },
+    media: { type: GraphQLList(AnswerMediaPreviewType) },
   }),
+});
+export const AnswerMediaPreviewType = new GraphQLObjectType({
+  name: 'AnswerMediaPreview',
+  fields: {
+    type: { type: GraphQLString },
+    tag: { type: GraphQLString },
+    needsTransfer: { type: GraphQLBoolean },
+    url: { type: GraphQLString },
+  },
 });
 
 export const mentorImportPreview = {
@@ -124,7 +138,6 @@ export const mentorImportPreview = {
   ): Promise<MentorImportPreview> => {
     const importJson = args.json;
     const exportJson = await MentorModel.export(args.mentor);
-
     const curSubjects = await SubjectModel.find({
       _id: {
         $in: importJson.subjects.map((s) => s._id).filter((id) => isId(id)),
@@ -202,6 +215,11 @@ export const mentorImportPreview = {
       const curAnswer = curAnswers.find(
         (a) => `${a.question}` === `${answerImport.question._id}`
       );
+      for (const m of answerImport.media || []) {
+        m.needsTransfer = mediaNeedsTransfer(m.url);
+        answerImport.hasUntransferredMedia =
+          answerImport.hasUntransferredMedia || m.needsTransfer;
+      }
       answerChanges.push({
         importData: answerImport,
         curData: curAnswer,
@@ -227,6 +245,7 @@ export const mentorImportPreview = {
       }))
     );
     return {
+      id: exportJson.id,
       subjects: subjectChanges,
       questions: questionChanges,
       answers: answerChanges,

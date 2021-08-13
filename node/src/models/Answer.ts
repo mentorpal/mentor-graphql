@@ -18,6 +18,7 @@ export interface AnswerMediaProps {
   type: string;
   tag: string;
   url: string;
+  needsTransfer: boolean;
 }
 export interface AnswerMedia extends AnswerMediaProps, Document {}
 
@@ -25,6 +26,7 @@ export const AnswerMediaSchema = new Schema({
   type: { type: String },
   tag: { type: String },
   url: { type: String },
+  needsTransfer: { type: Boolean, default: false },
 });
 
 export interface Answer extends Document {
@@ -33,6 +35,7 @@ export interface Answer extends Document {
   transcript: string;
   status: Status;
   media: AnswerMedia[];
+  hasUntransferredMedia: boolean;
 }
 
 export const AnswerSchema = new Schema<Answer, AnswerModel>({
@@ -45,6 +48,7 @@ export const AnswerSchema = new Schema<Answer, AnswerModel>({
     default: Status.INCOMPLETE,
   },
   media: { type: [AnswerMediaSchema] },
+  hasUntransferredMedia: { type: Boolean, default: false },
 });
 
 AnswerSchema.index({ question: -1, mentor: -1 }, { unique: true });

@@ -23,6 +23,7 @@ import { User } from './User';
 import { MentorExportJson } from 'gql/query/mentor-export';
 import { MentorImportJson } from 'gql/mutation/me/mentor-import';
 import { idOrNew } from 'gql/mutation/me/helpers';
+import { mediaNeedsTransfer, toRelativeUrl } from 'utils/static-urls';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -120,9 +121,13 @@ MentorSchema.statics.export = async function (
   if (!mentor) {
     throw new Error('mentor not found');
   }
-  const subjects = await SubjectModel.find({
-    _id: { $in: mentor.subjects },
-  });
+  const subjects = await SubjectModel.find(
+    {
+      _id: { $in: mentor.subjects },
+    },
+    null,
+    { sort: { name: 1 } }
+  );
   const sQuestions: SubjectQuestion[] = subjects.reduce(
     (accumulator, subject) => {
       return accumulator.concat(subject.questions);
@@ -142,6 +147,7 @@ MentorSchema.statics.export = async function (
     question: { $in: questions.map((q) => q._id) },
   });
   return {
+    id: mentor._id,
     subjects,
     questions,
     answers,
@@ -206,7 +212,13 @@ MentorSchema.statics.import = async function (
       }
     }
   }
-  for (const a of json.answers) {
+  for (const a of json.answers || []) {
+    a.hasUntransferredMedia = false;
+    for (const m of a.media || []) {
+      m.needsTransfer = mediaNeedsTransfer(m.url);
+      m.url = toRelativeUrl(m.url);
+      a.hasUntransferredMedia = a.hasUntransferredMedia || m.needsTransfer;
+    }
     await AnswerModel.findOneAndUpdate(
       {
         mentor: mentor._id,
@@ -216,6 +228,8 @@ MentorSchema.statics.import = async function (
         $set: {
           transcript: a.transcript,
           status: a.status,
+          media: a.media,
+          hasUntransferredMedia: a.hasUntransferredMedia,
         },
       },
       {

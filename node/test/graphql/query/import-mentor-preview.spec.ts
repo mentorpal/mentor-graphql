@@ -27,6 +27,7 @@ describe('import mentor preview', () => {
 
   it(`view changes made if imported`, async () => {
     const json = {
+      id: '5ffdf41a1ee2c62111111111',
       subjects: [
         {
           _id: '5ffdf41a1ee2c62320b49eb1',
@@ -71,6 +72,18 @@ describe('import mentor preview', () => {
             _id: '511111111111111111111111',
             question: "Don't talk and stay still.",
           },
+          media: [
+            {
+              type: 'video',
+              tag: 'web',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+            },
+            {
+              type: 'video',
+              tag: 'mobile',
+              url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+            },
+          ],
         },
         {
           transcript: 'new answer',
@@ -84,6 +97,7 @@ describe('import mentor preview', () => {
       .send({
         query: `query ImportMentorPreview($mentor: ID!, $json: MentorImportJsonType!) {
           mentorImportPreview(mentor: $mentor, json: $json) {
+            id
             subjects {
               importData {
                 name
@@ -108,6 +122,13 @@ describe('import mentor preview', () => {
                 question {
                   question
                 }
+                hasUntransferredMedia
+                media {
+                  type
+                  tag
+                  url
+                  needsTransfer
+                }
               }
               curData {
                 transcript
@@ -123,74 +144,53 @@ describe('import mentor preview', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorImportPreview).to.eql({
+      id: '5ffdf41a1ee2c62111111111',
       subjects: [
         {
-          importData: {
-            name: 'Repeat After Me',
-          },
-          curData: {
-            name: 'Repeat After Me',
-          },
+          importData: { name: 'Repeat After Me' },
+          curData: { name: 'Repeat After Me' },
           editType: 'NONE',
         },
         {
-          importData: {
-            name: 'New Subject',
-          },
+          importData: { name: 'New Subject' },
           curData: null,
           editType: 'CREATED',
         },
         {
           importData: null,
-          curData: {
-            name: 'Background',
-          },
+          curData: { name: 'Background' },
           editType: 'REMOVED',
         },
       ],
       questions: [
         {
-          importData: {
-            question: "Don't talk and stay still.",
-          },
-          curData: {
-            question: "Don't talk and stay still.",
-          },
+          importData: { question: "Don't talk and stay still." },
+          curData: { question: "Don't talk and stay still." },
           editType: 'NONE',
         },
         {
-          importData: {
-            question: 'new question',
-          },
+          importData: { question: 'new question' },
           curData: null,
           editType: 'CREATED',
         },
         {
           importData: null,
-          curData: {
-            question: 'Who are you and what do you do?',
-          },
+          curData: { question: 'Who are you and what do you do?' },
           editType: 'REMOVED',
         },
         {
           importData: null,
-          curData: {
-            question: 'How old are you?',
-          },
+          curData: { question: 'How old are you?' },
           editType: 'REMOVED',
         },
         {
           importData: null,
-          curData: {
-            question: 'Do you like your job?',
-          },
+          curData: { question: 'Do you like your job?' },
           editType: 'REMOVED',
         },
         {
           importData: null,
-          curData: {
-            question: 'What is Aaron like?',
-          },
+          curData: { question: 'What is Aaron like?' },
           editType: 'REMOVED',
         },
       ],
@@ -198,24 +198,35 @@ describe('import mentor preview', () => {
         {
           importData: {
             transcript: '[being still]',
-            question: {
-              question: "Don't talk and stay still.",
-            },
+            question: { question: "Don't talk and stay still." },
+            hasUntransferredMedia: true,
+            media: [
+              {
+                type: 'video',
+                tag: 'web',
+                url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+                needsTransfer: false,
+              },
+              {
+                type: 'video',
+                tag: 'mobile',
+                url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+                needsTransfer: true,
+              },
+            ],
           },
           curData: {
             transcript: '[being still]',
-            question: {
-              question: "Don't talk and stay still.",
-            },
+            question: { question: "Don't talk and stay still." },
           },
           editType: 'NONE',
         },
         {
           importData: {
             transcript: 'new answer',
-            question: {
-              question: 'new question',
-            },
+            question: { question: 'new question' },
+            hasUntransferredMedia: null,
+            media: null,
           },
           curData: null,
           editType: 'CREATED',
@@ -224,9 +235,7 @@ describe('import mentor preview', () => {
           importData: null,
           curData: {
             transcript: 'Test Transcript',
-            question: {
-              question: 'What is Aaron like?',
-            },
+            question: { question: 'What is Aaron like?' },
           },
           editType: 'REMOVED',
         },

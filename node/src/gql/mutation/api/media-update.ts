@@ -9,25 +9,17 @@ import {
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
-  GraphQLInputObjectType,
 } from 'graphql';
 import { Answer as AnswerModel } from 'models';
 import { AnswerMedia } from 'models/Answer';
 import { AnswerMediaInputType } from './upload-answer';
-
-export const UploadMediaType = new GraphQLInputObjectType({
-  name: 'UploadMediaType',
-  fields: () => ({
-    media: { type: AnswerMediaInputType },
-  }),
-});
 
 export const mediaUpdate = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     questionId: { type: GraphQLNonNull(GraphQLID) },
-    media: { type: GraphQLNonNull(UploadMediaType) },
+    media: { type: GraphQLNonNull(AnswerMediaInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
@@ -53,10 +45,11 @@ export const mediaUpdate = {
     } else {
       media[idx] = args.media;
     }
+    const hasUntransferredMedia = media.some((m) => m.needsTransfer);
     answer = await AnswerModel.findByIdAndUpdate(
       answer._id,
       {
-        $set: { media },
+        $set: { media, hasUntransferredMedia },
       },
       {
         new: true,
