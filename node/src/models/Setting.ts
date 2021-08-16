@@ -14,6 +14,7 @@ export interface Config {
   urlGraphql: string;
   urlVideo: string;
   urlVideoIdleTips: string;
+  videoRecorderMaxLength: number;
   googleClientId: string;
   mentorsDefault: string[];
   styleHeaderLogo: string;
@@ -33,6 +34,7 @@ export const ConfigKeys: ConfigKey[] = [
   'urlGraphql',
   'urlVideo',
   'urlVideoIdleTips',
+  'videoRecorderMaxLength',
   'googleClientId',
   'mentorsDefault',
   'styleHeaderLogo',
@@ -58,6 +60,7 @@ export function getDefaultConfig(): Config {
     urlGraphql: '/graphql',
     urlVideo: '/video',
     urlVideoIdleTips: 'https://youtu.be/xSu1BhuFt8A',
+    videoRecorderMaxLength: 300, //seconds
     googleClientId: process.env.GOOGLE_CLIENT_ID || '',
     mentorsDefault: [],
     styleHeaderLogo: '',

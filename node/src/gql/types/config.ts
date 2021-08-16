@@ -9,6 +9,7 @@ import {
   GraphQLObjectType,
   GraphQLList,
   GraphQLBoolean,
+  GraphQLInt,
 } from 'graphql';
 
 export const ConfigType = new GraphQLObjectType({
@@ -23,6 +24,7 @@ export const ConfigType = new GraphQLObjectType({
     urlGraphql: { type: GraphQLString },
     urlVideo: { type: GraphQLString },
     urlVideoIdleTips: { type: GraphQLString },
+    videoRecorderMaxLength: { type: GraphQLInt },
     styleHeaderLogo: { type: GraphQLString },
     styleHeaderColor: { type: GraphQLString },
     styleHeaderTextColor: { type: GraphQLString },
