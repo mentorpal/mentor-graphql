@@ -4,12 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLID,
-  GraphQLList,
-} from 'graphql';
+import { GraphQLObjectType, GraphQLID, GraphQLList } from 'graphql';
 import { Question as QuestionModel } from 'models';
 import { Question } from 'models/Question';
 import QuestionType from 'gql/types/question';
@@ -17,12 +12,15 @@ import QuestionType from 'gql/types/question';
 export const questionsById = {
   type: GraphQLList(QuestionType),
   args: {
-    ids: { type: GraphQLNonNull(GraphQLList(GraphQLID)) },
+    ids: { type: GraphQLList(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: { ids: string[] }
   ): Promise<Question[]> => {
+    if (!args.ids) {
+      return await QuestionModel.find({});
+    }
     return await QuestionModel.find({ _id: { $in: args.ids } });
   },
 };

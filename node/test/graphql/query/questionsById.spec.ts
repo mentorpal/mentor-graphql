@@ -24,6 +24,43 @@ describe('questionsById', () => {
     await mongoUnit.drop();
   });
 
+  it('gets a list of all questions', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query QuestionsById($ids: [ID]) {
+          questionsById(ids: $ids) {
+            _id
+          }
+        }`,
+        variables: { ids: undefined },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.questionsById).to.eql([
+      {
+        _id: '511111111111111111111111',
+      },
+      {
+        _id: '511111111111111111111112',
+      },
+      {
+        _id: '511111111111111111111113',
+      },
+      {
+        _id: '511111111111111111111114',
+      },
+      {
+        _id: '511111111111111111111115',
+      },
+      {
+        _id: '511111111111111111111116',
+      },
+      {
+        _id: '511111111111111111111117',
+      },
+    ]);
+  });
+
   it('gets a list of questions by id', async () => {
     const ids = ['511111111111111111111111', '511111111111111111111112'];
     const response = await request(app)
