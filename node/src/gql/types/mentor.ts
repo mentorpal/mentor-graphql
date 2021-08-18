@@ -23,6 +23,9 @@ import { toAbsoluteUrl } from 'utils/static-urls';
 export const MentorType = new GraphQLObjectType({
   name: 'Mentor',
   fields: () => ({
+    createdAt: { type: DateType },
+    updatedAt: { type: DateType },
+
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
     firstName: { type: GraphQLString },

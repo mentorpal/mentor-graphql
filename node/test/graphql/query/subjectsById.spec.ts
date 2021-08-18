@@ -10,7 +10,7 @@ import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 
-describe('questionsById', () => {
+describe('subjectsById', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -24,25 +24,25 @@ describe('questionsById', () => {
     await mongoUnit.drop();
   });
 
-  it('gets a list of questions by id', async () => {
-    const ids = ['511111111111111111111111', '511111111111111111111112'];
+  it('gets a list of subjects by ids', async () => {
+    const ids = ['5ffdf41a1ee2c62320b49eb1', '5ffdf41a1ee2c62320b49eb3'];
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `query QuestionsById($ids: [ID]!) {
-          questionsById(ids: $ids) {
+        query: `query SubjectsById($ids: [ID]!) {
+          subjectsById(ids: $ids) {
             _id
           }
         }`,
         variables: { ids },
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.questionsById).to.eql([
+    expect(response.body.data.subjectsById).to.eql([
       {
-        _id: '511111111111111111111111',
+        _id: '5ffdf41a1ee2c62320b49eb1',
       },
       {
-        _id: '511111111111111111111112',
+        _id: '5ffdf41a1ee2c62320b49eb3',
       },
     ]);
   });

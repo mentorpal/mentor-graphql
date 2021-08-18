@@ -10,21 +10,21 @@ import {
   GraphQLList,
   GraphQLNonNull,
 } from 'graphql';
-import { Question as QuestionModel } from 'models';
-import { Question } from 'models/Question';
-import QuestionType from 'gql/types/question';
+import { Subject as SubjectModel } from 'models';
+import { Subject } from 'models/Subject';
+import SubjectType from 'gql/types/subject';
 
-export const questionsById = {
-  type: GraphQLList(QuestionType),
+export const subjectsById = {
+  type: GraphQLList(SubjectType),
   args: {
     ids: { type: GraphQLNonNull(GraphQLList(GraphQLID)) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: { ids: string[] }
-  ): Promise<Question[]> => {
-    return await QuestionModel.find({ _id: { $in: args.ids } });
+  ): Promise<Subject[]> => {
+    return await SubjectModel.find({ _id: { $in: args.ids } });
   },
 };
 
-export default questionsById;
+export default subjectsById;

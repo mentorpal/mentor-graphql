@@ -13,6 +13,7 @@ import {
 import { mentorField } from 'gql/query/mentor';
 import { questionField } from 'gql/query/question';
 import { AnswerMediaType } from './answer';
+import DateType from './date';
 
 export const UploadTaskType = new GraphQLObjectType({
   name: 'UploadTask',
@@ -24,6 +25,8 @@ export const UploadTaskType = new GraphQLObjectType({
     uploadStatus: { type: GraphQLString },
     media: { type: GraphQLList(AnswerMediaType) },
     transcript: { type: GraphQLString },
+    createdAt: { type: DateType },
+    updatedAt: { type: DateType },
   }),
 });
 
