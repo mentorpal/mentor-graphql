@@ -13,6 +13,7 @@ import {
 } from 'graphql';
 import { Subject as SubjectModel } from 'models';
 import { Subject } from 'models/Subject';
+import DateType from './date';
 import QuestionType from './question';
 
 export const CategoryType = new GraphQLObjectType({
@@ -73,6 +74,8 @@ export const SubjectType = new GraphQLObjectType({
         );
       },
     },
+    createdAt: { type: DateType },
+    updatedAt: { type: DateType },
   }),
 });
 

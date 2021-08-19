@@ -74,10 +74,13 @@ export function getDefaultConfig(): Config {
 
 export interface SettingDoc extends Setting, Document {}
 
-export const SettingSchema = new Schema<SettingDoc>({
-  key: { type: String, unique: true },
-  value: { type: Schema.Types.Mixed },
-});
+export const SettingSchema = new Schema<SettingDoc>(
+  {
+    key: { type: String, unique: true },
+    value: { type: Schema.Types.Mixed },
+  },
+  { timestamps: true, collation: { locale: 'en', strength: 2 } }
+);
 
 SettingSchema.statics.getConfig = async function (args: {
   defaults?: Partial<Config>;

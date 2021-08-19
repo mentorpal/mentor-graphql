@@ -11,6 +11,7 @@ import {
   GraphQLID,
   GraphQLInt,
 } from 'graphql';
+import DateType from './date';
 
 export const QuestionType = new GraphQLObjectType({
   name: 'Question',
@@ -23,6 +24,8 @@ export const QuestionType = new GraphQLObjectType({
     mentor: { type: GraphQLID },
     mentorType: { type: GraphQLString },
     minVideoLength: { type: GraphQLInt },
+    createdAt: { type: DateType },
+    updatedAt: { type: DateType },
   }),
 });
 

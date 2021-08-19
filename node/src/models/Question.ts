@@ -30,25 +30,28 @@ export interface Question extends Document {
   minVideoLength: number;
 }
 
-export const QuestionSchema = new Schema<Question, QuestionModel>({
-  question: { type: String },
-  type: {
-    type: String,
-    enum: [QuestionType.UTTERANCE, QuestionType.QUESTION],
-    default: QuestionType.QUESTION,
+export const QuestionSchema = new Schema<Question, QuestionModel>(
+  {
+    question: { type: String },
+    type: {
+      type: String,
+      enum: [QuestionType.UTTERANCE, QuestionType.QUESTION],
+      default: QuestionType.QUESTION,
+    },
+    name: { type: String },
+    paraphrases: [{ type: String }],
+    mentor: {
+      type: Schema.Types.ObjectId,
+      ref: 'Mentor',
+    },
+    mentorType: {
+      type: String,
+      enum: [MentorType.VIDEO, MentorType.CHAT],
+    },
+    minVideoLength: { type: Number },
   },
-  name: { type: String },
-  paraphrases: [{ type: String }],
-  mentor: {
-    type: Schema.Types.ObjectId,
-    ref: 'Mentor',
-  },
-  mentorType: {
-    type: String,
-    enum: [MentorType.VIDEO, MentorType.CHAT],
-  },
-  minVideoLength: { type: Number },
-});
+  { timestamps: true, collation: { locale: 'en', strength: 2 } }
+);
 
 export interface QuestionModel extends Model<Question> {
   paginate(

@@ -12,6 +12,7 @@ import UserType from './user';
 import DateType from './date';
 import { Response } from 'express';
 import { RefreshToken as RefreshTokenSchema } from 'models';
+
 export interface UserAccessToken {
   user: User;
   accessToken: string;

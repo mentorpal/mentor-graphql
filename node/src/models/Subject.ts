@@ -85,14 +85,17 @@ export interface SubjectInsert {
 
 export type SubjectUpdate = Partial<SubjectInsert>;
 
-export const SubjectSchema = new Schema<Subject, SubjectModel>({
-  name: { type: String },
-  description: { type: String },
-  isRequired: { type: Boolean },
-  categories: { type: [CategorySchema] },
-  topics: { type: [TopicSchema] },
-  questions: { type: [SubjectQuestionSchema] },
-});
+export const SubjectSchema = new Schema<Subject, SubjectModel>(
+  {
+    name: { type: String },
+    description: { type: String },
+    isRequired: { type: Boolean },
+    categories: { type: [CategorySchema] },
+    topics: { type: [TopicSchema] },
+    questions: { type: [SubjectQuestionSchema] },
+  },
+  { timestamps: true, collation: { locale: 'en', strength: 2 } }
+);
 
 export interface SubjectModel extends Model<Subject> {
   paginate(

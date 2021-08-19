@@ -5,29 +5,26 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import {
-  GraphQLID,
-  GraphQLString,
   GraphQLObjectType,
+  GraphQLID,
   GraphQLList,
+  GraphQLNonNull,
 } from 'graphql';
-import { mentorField } from 'gql/query/mentor';
-import { questionField } from 'gql/query/question';
-import { AnswerMediaType } from './answer';
-import DateType from './date';
+import { Subject as SubjectModel } from 'models';
+import { Subject } from 'models/Subject';
+import SubjectType from 'gql/types/subject';
 
-export const UploadTaskType = new GraphQLObjectType({
-  name: 'UploadTask',
-  fields: () => ({
-    _id: { type: GraphQLID },
-    mentor: mentorField,
-    question: questionField,
-    taskId: { type: GraphQLString },
-    uploadStatus: { type: GraphQLString },
-    media: { type: GraphQLList(AnswerMediaType) },
-    transcript: { type: GraphQLString },
-    createdAt: { type: DateType },
-    updatedAt: { type: DateType },
-  }),
-});
+export const subjectsById = {
+  type: GraphQLList(SubjectType),
+  args: {
+    ids: { type: GraphQLNonNull(GraphQLList(GraphQLID)) },
+  },
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { ids: string[] }
+  ): Promise<Subject[]> => {
+    return await SubjectModel.find({ _id: { $in: args.ids } });
+  },
+};
 
-export default UploadTaskType;
+export default subjectsById;

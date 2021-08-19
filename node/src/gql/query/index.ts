@@ -16,8 +16,10 @@ import mentorExport from './mentor-export';
 import mentorImportPreview from './mentor-import-preview';
 import question from './question';
 import questions from './questions';
+import questionsById from './questions-by-id';
 import subject from './subject';
 import subjects from './subjects';
+import subjectsById from './subjects-by-id';
 import userQuestion from './user-question';
 import userQuestions from './user-questions';
 import users from './users';
@@ -36,8 +38,10 @@ export default new GraphQLObjectType({
     mentorImportPreview,
     question,
     questions,
+    questionsById,
     subject,
     subjects,
+    subjectsById,
     userQuestion,
     userQuestions,
     users,

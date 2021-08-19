@@ -14,6 +14,7 @@ import {
 import { questionField } from 'gql/query/question';
 import { AnswerMedia } from 'models/Answer';
 import { toAbsoluteUrl } from 'utils/static-urls';
+import DateType from './date';
 
 export const AnswerMediaType = new GraphQLObjectType({
   name: 'AnswerMedia',
@@ -39,6 +40,8 @@ export const AnswerType = new GraphQLObjectType({
     status: { type: GraphQLString },
     hasUntransferredMedia: { type: GraphQLBoolean },
     media: { type: GraphQLList(AnswerMediaType) },
+    createdAt: { type: DateType },
+    updatedAt: { type: DateType },
   }),
 });
 

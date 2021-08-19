@@ -38,18 +38,21 @@ export interface Answer extends Document {
   hasUntransferredMedia: boolean;
 }
 
-export const AnswerSchema = new Schema<Answer, AnswerModel>({
-  mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
-  question: { type: mongoose.Types.ObjectId, ref: 'Question' },
-  transcript: { type: String },
-  status: {
-    type: String,
-    enum: [Status.INCOMPLETE, Status.COMPLETE],
-    default: Status.INCOMPLETE,
+export const AnswerSchema = new Schema<Answer, AnswerModel>(
+  {
+    mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
+    question: { type: mongoose.Types.ObjectId, ref: 'Question' },
+    transcript: { type: String },
+    status: {
+      type: String,
+      enum: [Status.INCOMPLETE, Status.COMPLETE],
+      default: Status.INCOMPLETE,
+    },
+    media: { type: [AnswerMediaSchema] },
+    hasUntransferredMedia: { type: Boolean, default: false },
   },
-  media: { type: [AnswerMediaSchema] },
-  hasUntransferredMedia: { type: Boolean, default: false },
-});
+  { timestamps: true, collation: { locale: 'en', strength: 2 } }
+);
 
 AnswerSchema.index({ question: -1, mentor: -1 }, { unique: true });
 
