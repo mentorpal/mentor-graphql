@@ -30,9 +30,29 @@ const exportV1MentorQuery = `query ExportV1Mentor($yaml: String!) {
         name
         description
       }
-      
+      questions {
+        question {
+          _id
+          question
+        }
+        category {
+          id
+        }
+        topics {
+          id
+        }
+      }
     }
-    
+    questions {
+      _id
+      question
+      type
+      name
+      paraphrases
+      mentor
+      mentorType
+      minVideoLength
+    }
     answers {
       transcript
       status
