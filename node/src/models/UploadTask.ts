@@ -12,11 +12,13 @@ import { AnswerMedia, AnswerMediaSchema } from './Answer';
 
 export enum UploadStatus {
   NONE = 'NONE',
-  TRANSCRIBE_IN_PROGRESS = 'TRANSCRIBE_IN_PROGRESS',
-  TRANSCRIBE_FAILED = 'TRANSCRIBE_FAILED',
-  UPLOAD_IN_PROGRESS = 'UPLOAD_IN_PROGRESS',
-  UPLOAD_FAILED = 'UPLOAD_FAILED',
+  // TRANSCRIBE_IN_PROGRESS = 'TRANSCRIBE_IN_PROGRESS',
+  // TRANSCRIBE_FAILED = 'TRANSCRIBE_FAILED',
+  // UPLOAD_IN_PROGRESS = 'UPLOAD_IN_PROGRESS',
+  // UPLOAD_FAILED = 'UPLOAD_FAILED',
   QUEUING = 'QUEUING',
+  TRIM_IN_PROGRESS = 'TRIM_IN_PROGRESS',
+  PROCESSING = 'PROCESSING', //Encapsulates the 4 stages
   TRANSFER_IN_PROGRESS = 'TRANSFER_IN_PROGRESS',
   TRANSFER_FAILED = 'TRANSFER_FAILED',
   CANCEL_IN_PROGRESS = 'CANCEL_IN_PROGRESS',
@@ -24,11 +26,24 @@ export enum UploadStatus {
   DONE = 'DONE',
 }
 
+export enum TaskFlagStatuses {
+  NONE = 'NONE',
+  QUEUED = 'QUEUED',
+  CANCELLING = 'CANCELLING',
+  CANCELLED = 'CANCELLED',
+  FAILED = 'FAILED',
+  DONE = 'DONE',
+}
+
 export interface UploadTask extends Document {
   mentor: Mentor['_id'];
   question: Question['_id'];
-  taskId: string;
-  uploadStatus: UploadStatus;
+  taskId: string[];
+  //uploadStatus: UploadStatus;
+  uploadFlag: TaskFlagStatuses;
+  transcribingFlag: TaskFlagStatuses;
+  transcodingFlag: TaskFlagStatuses;
+  finalizationFlag: TaskFlagStatuses;
   transcript: string;
   media: AnswerMedia[];
 }
@@ -37,11 +52,31 @@ export const UploadTaskSchema = new Schema<UploadTask, UploadTaskModel>(
   {
     mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
     question: { type: mongoose.Types.ObjectId, ref: 'Question' },
-    taskId: { type: String },
-    uploadStatus: {
+    taskId: { type: [String] },
+    // uploadStatus: {
+    //   type: String,
+    //   enum: Object.values(UploadStatus),
+    //   default: UploadStatus.NONE,
+    // },
+    uploadFlag: {
       type: String,
-      enum: Object.values(UploadStatus),
-      default: UploadStatus.NONE,
+      enum: Object.values(TaskFlagStatuses),
+      default: TaskFlagStatuses.NONE,
+    },
+    transcribingFlag: {
+      type: String,
+      enum: Object.values(TaskFlagStatuses),
+      default: TaskFlagStatuses.NONE,
+    },
+    transcodingFlag: {
+      type: String,
+      enum: Object.values(TaskFlagStatuses),
+      default: TaskFlagStatuses.NONE,
+    },
+    finalizationFlag: {
+      type: String,
+      enum: Object.values(TaskFlagStatuses),
+      default: TaskFlagStatuses.NONE,
     },
     transcript: { type: String },
     media: { type: [AnswerMediaSchema] },

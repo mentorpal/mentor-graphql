@@ -43,7 +43,7 @@ describe('uploadTaskUpdate', () => {
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          status: { taskId: 'task_id', uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
+          status: { taskId: 'task_id' },
         },
       });
     expect(response.status).to.equal(200);
@@ -67,7 +67,7 @@ describe('uploadTaskUpdate', () => {
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          status: { taskId: 'task_id', uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
+          status: { taskId: 'task_id' },
         },
       });
     expect(response.status).to.equal(200);
@@ -95,6 +95,29 @@ describe('uploadTaskUpdate', () => {
         },
       });
     expect(response.status).to.equal(400);
+  });
+
+  it('testing parameters', async () => {
+    const update = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: `mutation UpdateUploadTask($mentorId: ID!, $questionId: ID!, $status: UploadTaskInputType!) {
+          api {
+            uploadTaskUpdate(mentorId: $mentorId, questionId: $questionId, status: $status)
+          }
+        }`,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111112',
+          status: {
+            taskId: ['task_id'],
+          },
+        },
+      });
+    expect(update.status).to.equal(200);
+    expect(update.body.data.api.uploadTaskUpdate).to.eql(true);
   });
 
   it(`doesn't accept invalid fields`, async () => {
@@ -133,7 +156,7 @@ describe('uploadTaskUpdate', () => {
           questionId: '511111111111111111111112',
           status: {
             taskId: 'task_id',
-            uploadStatus: 'DONE',
+            uploadFlag: 'DONE',
             transcript: 'My name is Clinton Anderson',
             media: [{ type: 'video', tag: 'web', url: 'video.mp4' }],
           },
@@ -157,7 +180,7 @@ describe('uploadTaskUpdate', () => {
                   _id
                   question
                 }
-                uploadStatus
+                uploadFlag
                 transcript
                 media {
                   type
@@ -178,7 +201,7 @@ describe('uploadTaskUpdate', () => {
           _id: '511111111111111111111112',
           question: 'Who are you and what do you do?',
         },
-        uploadStatus: 'DONE',
+        uploadFlag: 'DONE',
         transcript: 'My name is Clinton Anderson',
         media: [
           {
@@ -205,7 +228,7 @@ describe('uploadTaskUpdate', () => {
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111113',
-          status: { taskId: 'task_id', uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
+          status: { taskId: 'task_id', transcribingFlag: 'IN_PROGRESS' },
         },
       });
     expect(update.status).to.equal(200);
@@ -226,7 +249,7 @@ describe('uploadTaskUpdate', () => {
                   _id
                   question
                 }
-                uploadStatus
+                transcribingFlag
                 transcript
                 media {
                   type
@@ -247,7 +270,7 @@ describe('uploadTaskUpdate', () => {
           _id: '511111111111111111111112',
           question: 'Who are you and what do you do?',
         },
-        uploadStatus: 'TRANSCRIBE_IN_PROGRESS',
+        transcribingFlag: 'IN_PROGRESS',
         transcript: null,
         media: [],
       },
@@ -259,7 +282,7 @@ describe('uploadTaskUpdate', () => {
           _id: '511111111111111111111113',
           question: 'How old are you?',
         },
-        uploadStatus: 'TRANSCRIBE_IN_PROGRESS',
+        transcribingFlag: 'IN_PROGRESS',
         transcript: null,
         media: [],
       },

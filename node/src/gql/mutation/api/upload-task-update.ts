@@ -20,21 +20,30 @@ import {
 } from 'models';
 import { AnswerMediaProps } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
-import { UploadStatus } from 'models/UploadTask';
+import { TaskFlagStatuses } from 'models/UploadTask';
 import { AnswerMediaInputType } from './upload-answer';
 
 export interface UploadTask {
-  taskId: string;
-  uploadStatus: UploadStatus;
+  taskId: string[];
+  //uploadStatus: UploadStatus;
+  uploadFlag: TaskFlagStatuses;
+  transcribingFlag: TaskFlagStatuses;
+  transcodingFlag: TaskFlagStatuses;
+  finalizationFlag: TaskFlagStatuses;
   transcript: string;
   media: AnswerMediaProps[];
 }
 
+//Keep in mind that we changed much of these to nullable
 export const UploadTaskInputType = new GraphQLInputObjectType({
   name: 'UploadTaskInputType',
   fields: {
-    taskId: { type: GraphQLNonNull(GraphQLString) },
-    uploadStatus: { type: GraphQLNonNull(GraphQLString) },
+    taskId: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
+    //uploadStatus: { type: GraphQLString },
+    uploadFlag: { type: GraphQLString },
+    transcribingFlag: { type: GraphQLString },
+    transcodingFlag: { type: GraphQLString },
+    finalizationFlag: { type: GraphQLString },
     transcript: { type: GraphQLString },
     media: { type: GraphQLList(AnswerMediaInputType) },
   },
