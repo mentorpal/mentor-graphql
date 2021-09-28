@@ -44,6 +44,7 @@ describe('config', () => {
             cmi5Fetch
             googleClientId
             mentorsDefault
+            featuredMentors
             urlClassifier
             urlGraphql
             urlVideo
@@ -58,6 +59,7 @@ describe('config', () => {
       cmi5Fetch: '',
       googleClientId: '',
       mentorsDefault: [],
+      featuredMentors: [],
       urlClassifier: '/classifier',
       urlGraphql: '/graphql',
       urlVideo: '/video',
@@ -76,6 +78,7 @@ describe('config', () => {
             cmi5Fetch
             googleClientId
             mentorsDefault
+            featuredMentors
             urlClassifier
             urlGraphql
             urlVideo
@@ -90,6 +93,7 @@ describe('config', () => {
       cmi5Fetch: '',
       googleClientId: '',
       mentorsDefault: [],
+      featuredMentors: [],
       urlClassifier: '/classifier',
       urlGraphql: '/graphql',
       urlVideo: '/video',
@@ -141,6 +145,7 @@ describe('config', () => {
       cmi5Fetch: '/auth',
       googleClientId: '',
       mentorsDefault: ['somementor'],
+      featuredMentors: ['somementor'],
       urlClassifier: '/classifier/v2',
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
@@ -166,6 +171,7 @@ describe('config', () => {
             urlVideoIdleTips
             videoRecorderMaxLength
             mentorsDefault
+            featuredMentors
             urlClassifier
             urlGraphql
             urlVideo
