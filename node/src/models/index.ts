@@ -8,6 +8,8 @@ import Answer from './Answer';
 export { default as Answer } from './Answer';
 import Mentor from './Mentor';
 export { default as Mentor } from './Mentor';
+import MentorPanel from './MentorPanel';
+export { default as MentorPanel } from './MentorPanel';
 import Question from './Question';
 export { default as Question } from './Question';
 import Subject from './Subject';
@@ -24,6 +26,7 @@ export { default as RefreshToken } from './RefreshToken';
 export default {
   Answer,
   Mentor,
+  MentorPanel,
   Question,
   Subject,
   UploadTask,

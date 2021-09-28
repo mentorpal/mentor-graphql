@@ -4,14 +4,18 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { MentorPanel } from 'models';
-import { MentorPanelType } from 'gql/types/mentor-panel';
-import findOne from 'gql/query/find-one';
+import { GraphQLObjectType, GraphQLList, GraphQLID } from 'graphql';
+import DateType from './date';
 
-export const mentorPanelFindOne = findOne({
-  model: MentorPanel,
-  type: MentorPanelType,
-  typeName: 'mentorPanel',
+export const MentorPanelType = new GraphQLObjectType({
+  name: 'MentorPanel',
+  fields: () => ({
+    _id: { type: GraphQLID },
+    subject: { type: GraphQLID },
+    mentors: { type: GraphQLList(GraphQLID) },
+    createdAt: { type: DateType },
+    updatedAt: { type: DateType },
+  }),
 });
 
-export default mentorPanelFindOne;
+export default MentorPanelType;

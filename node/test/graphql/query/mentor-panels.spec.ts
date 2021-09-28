@@ -16,7 +16,7 @@ import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 
-describe('mentor panel', () => {
+describe('mentorPanels', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -30,27 +30,41 @@ describe('mentor panel', () => {
     await mongoUnit.drop();
   });
 
-  it('gets a list of mentors in a panel by id', async () => {
+  it('gets a list of mentorPanels', async () => {
     const response = await request(app)
       .post('/graphql')
       .send({
         query: `query {
-        mentorPanel(mentors: ["5ffdf41a1ee2c62111111113", "5ffdf41a1ee2c62111111111"]) {
-          _id
-          name
+        mentorPanels {
+          edges {
+            node {
+              _id
+              subject
+              mentors
+            }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
         }
       }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentorPanel).to.eql([
-      {
-        _id: '5ffdf41a1ee2c62111111111',
-        name: 'Clinton Anderson',
+    expect(response.body.data.mentorPanels).to.eql({
+      edges: [
+        {
+          node: {
+            _id: '5ffdf41a1ee2c62111111111',
+            subject: '5ffdf41a1ee2c62320b49eb3',
+            mentors: ['5ffdf41a1ee2c62111111112'],
+          },
+        },
+      ],
+      pageInfo: {
+        hasNextPage: false,
+        endCursor: null,
       },
-      {
-        _id: '5ffdf41a1ee2c62111111113',
-        name: 'Dan Davis',
-      },
-    ]);
+    });
   });
 });
