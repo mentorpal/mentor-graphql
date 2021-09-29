@@ -97,7 +97,7 @@ describe('uploadTaskUpdate', () => {
     expect(response.status).to.equal(400);
   });
 
-  it('testing parameters', async () => {
+  it('can update task with list of task_ids', async () => {
     const update = await request(app)
       .post('/graphql')
       .set('mentor-graphql-req', 'true')
@@ -112,12 +112,42 @@ describe('uploadTaskUpdate', () => {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
           status: {
-            taskId: ['task_id'],
+            taskId: ['task_id_1', 'task_id_2'],
           },
         },
       });
     expect(update.status).to.equal(200);
     expect(update.body.data.api.uploadTaskUpdate).to.eql(true);
+
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              uploadTasks {
+                mentor {
+                  _id
+                }
+                question {
+                  _id
+                  question
+                }
+                taskId
+                uploadFlag
+                transcript
+                media {
+                  type
+                  tag
+                  url
+                }
+              }
+            }
+          }`,
+      });
+    console.log(response);
+    expect(response.status).to.equal(200);
   });
 
   it(`doesn't accept invalid fields`, async () => {

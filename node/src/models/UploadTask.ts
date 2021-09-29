@@ -29,6 +29,7 @@ export enum UploadStatus {
 export enum TaskFlagStatuses {
   NONE = 'NONE',
   QUEUED = 'QUEUED',
+  IN_PROGRESS = 'IN_PROGRESS',
   CANCELLING = 'CANCELLING',
   CANCELLED = 'CANCELLED',
   FAILED = 'FAILED',
@@ -39,7 +40,7 @@ export interface UploadTask extends Document {
   mentor: Mentor['_id'];
   question: Question['_id'];
   taskId: string[];
-  //uploadStatus: UploadStatus;
+  transferringFlag: TaskFlagStatuses;
   uploadFlag: TaskFlagStatuses;
   transcribingFlag: TaskFlagStatuses;
   transcodingFlag: TaskFlagStatuses;
@@ -53,11 +54,11 @@ export const UploadTaskSchema = new Schema<UploadTask, UploadTaskModel>(
     mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
     question: { type: mongoose.Types.ObjectId, ref: 'Question' },
     taskId: { type: [String] },
-    // uploadStatus: {
-    //   type: String,
-    //   enum: Object.values(UploadStatus),
-    //   default: UploadStatus.NONE,
-    // },
+    transferringFlag: {
+      type: String,
+      enum: Object.values(TaskFlagStatuses),
+      default: TaskFlagStatuses.NONE,
+    },
     uploadFlag: {
       type: String,
       enum: Object.values(TaskFlagStatuses),

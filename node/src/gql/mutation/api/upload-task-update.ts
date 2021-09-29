@@ -25,7 +25,7 @@ import { AnswerMediaInputType } from './upload-answer';
 
 export interface UploadTask {
   taskId: string[];
-  //uploadStatus: UploadStatus;
+  transferringFlag: TaskFlagStatuses;
   uploadFlag: TaskFlagStatuses;
   transcribingFlag: TaskFlagStatuses;
   transcodingFlag: TaskFlagStatuses;
@@ -34,12 +34,11 @@ export interface UploadTask {
   media: AnswerMediaProps[];
 }
 
-//Keep in mind that we changed much of these to nullable
 export const UploadTaskInputType = new GraphQLInputObjectType({
   name: 'UploadTaskInputType',
   fields: {
-    taskId: { type: GraphQLList(GraphQLNonNull(GraphQLString)) },
-    //uploadStatus: { type: GraphQLString },
+    taskId: { type: GraphQLList(GraphQLString) },
+    transferringFlag: { type: GraphQLString },
     uploadFlag: { type: GraphQLString },
     transcribingFlag: { type: GraphQLString },
     transcodingFlag: { type: GraphQLString },
