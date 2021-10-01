@@ -43,7 +43,15 @@ describe('uploadTaskUpdate', () => {
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          status: { taskId: 'task_id' },
+          status: {
+            taskList: [
+              {
+                task_name: 'transcode',
+                task_id: 'task1',
+                status: 'IN_PROGRESS',
+              },
+            ],
+          },
         },
       });
     expect(response.status).to.equal(200);
@@ -67,7 +75,15 @@ describe('uploadTaskUpdate', () => {
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          status: { taskId: 'task_id' },
+          status: {
+            taskList: [
+              {
+                task_name: 'transcode',
+                task_id: 'task1',
+                status: 'IN_PROGRESS',
+              },
+            ],
+          },
         },
       });
     expect(response.status).to.equal(200);
@@ -91,13 +107,21 @@ describe('uploadTaskUpdate', () => {
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          status: { taskId: 'task_id', uploadStatus: 'TRANSCRIBE_IN_PROGRESS' },
+          status: {
+            taskList: [
+              {
+                task_name: 'transcode',
+                task_id: 'task1',
+                status: 'IN_PROGRESS',
+              },
+            ],
+          },
         },
       });
     expect(response.status).to.equal(400);
   });
 
-  it('can update task with list of task_ids', async () => {
+  it('properly creates taskList', async () => {
     const update = await request(app)
       .post('/graphql')
       .set('mentor-graphql-req', 'true')
@@ -112,7 +136,13 @@ describe('uploadTaskUpdate', () => {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
           status: {
-            taskId: ['task_id_1', 'task_id_2'],
+            taskList: [
+              {
+                task_name: 'transcode',
+                task_id: 'task1',
+                status: 'IN_PROGRESS',
+              },
+            ],
           },
         },
       });
@@ -134,8 +164,11 @@ describe('uploadTaskUpdate', () => {
                   _id
                   question
                 }
-                taskId
-                uploadFlag
+                taskList{
+                  task_name
+                  task_id
+                  status
+                }
                 transcript
                 media {
                   type
@@ -146,7 +179,6 @@ describe('uploadTaskUpdate', () => {
             }
           }`,
       });
-    console.log(response);
     expect(response.status).to.equal(200);
   });
 
@@ -185,8 +217,13 @@ describe('uploadTaskUpdate', () => {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
           status: {
-            taskId: 'task_id',
-            uploadFlag: 'DONE',
+            taskList: [
+              {
+                task_name: 'transcode',
+                task_id: 'task1',
+                status: 'IN_PROGRESS',
+              },
+            ],
             transcript: 'My name is Clinton Anderson',
             media: [{ type: 'video', tag: 'web', url: 'video.mp4' }],
           },
@@ -210,7 +247,11 @@ describe('uploadTaskUpdate', () => {
                   _id
                   question
                 }
-                uploadFlag
+                taskList{
+                  task_name
+                  task_id
+                  status
+                }
                 transcript
                 media {
                   type
@@ -231,7 +272,13 @@ describe('uploadTaskUpdate', () => {
           _id: '511111111111111111111112',
           question: 'Who are you and what do you do?',
         },
-        uploadFlag: 'DONE',
+        taskList: [
+          {
+            task_name: 'transcode',
+            task_id: 'task1',
+            status: 'IN_PROGRESS',
+          },
+        ],
         transcript: 'My name is Clinton Anderson',
         media: [
           {
@@ -258,7 +305,15 @@ describe('uploadTaskUpdate', () => {
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111113',
-          status: { taskId: 'task_id', transcribingFlag: 'IN_PROGRESS' },
+          status: {
+            taskList: [
+              {
+                task_name: 'transcode',
+                task_id: 'task1',
+                status: 'IN_PROGRESS',
+              },
+            ],
+          },
         },
       });
     expect(update.status).to.equal(200);
@@ -279,7 +334,11 @@ describe('uploadTaskUpdate', () => {
                   _id
                   question
                 }
-                transcribingFlag
+                taskList{
+                  task_name
+                  task_id
+                  status
+                }
                 transcript
                 media {
                   type
@@ -300,7 +359,13 @@ describe('uploadTaskUpdate', () => {
           _id: '511111111111111111111112',
           question: 'Who are you and what do you do?',
         },
-        transcribingFlag: 'IN_PROGRESS',
+        taskList: [
+          {
+            task_name: 'transcribe',
+            task_id: 'fake_task',
+            status: 'IN_PROGRESS',
+          },
+        ],
         transcript: null,
         media: [],
       },
@@ -312,9 +377,67 @@ describe('uploadTaskUpdate', () => {
           _id: '511111111111111111111113',
           question: 'How old are you?',
         },
-        transcribingFlag: 'IN_PROGRESS',
+        taskList: [
+          {
+            task_name: 'transcode',
+            task_id: 'task1',
+            status: 'IN_PROGRESS',
+          },
+        ],
         transcript: null,
         media: [],
+      },
+    ]);
+  });
+
+  it('updates task status in taskList', async () => {
+    const update = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $taskId: String!, $newStatus: String!) {
+          api {
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, taskId: $taskId, newStatus: $newStatus)
+          }
+        }`,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111112',
+          taskId: 'fake_task',
+          newStatus: 'DONE',
+        },
+      });
+    expect(update.status).to.equal(200);
+    expect(update.body.data.api.uploadTaskStatusUpdate).to.eql(true);
+
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              uploadTasks {
+                taskList{
+                  task_name
+                  task_id
+                  status
+                }
+              }
+            }
+          }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.uploadTasks).to.eql([
+      {
+        taskList: [
+          {
+            task_name: 'transcribe',
+            task_id: 'fake_task',
+            status: 'DONE',
+          },
+        ],
       },
     ]);
   });

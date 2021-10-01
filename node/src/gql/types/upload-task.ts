@@ -14,6 +14,7 @@ import { mentorField } from 'gql/query/mentor';
 import { questionField } from 'gql/query/question';
 import { AnswerMediaType } from './answer';
 import DateType from './date';
+import { TaskInfoType } from 'models/TaskInfo';
 
 export const UploadTaskType = new GraphQLObjectType({
   name: 'UploadTask',
@@ -21,12 +22,7 @@ export const UploadTaskType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     mentor: mentorField,
     question: questionField,
-    taskId: { type: GraphQLList(GraphQLString) },
-    transferringFlag: { type: GraphQLString },
-    uploadFlag: { type: GraphQLString },
-    transcribingFlag: { type: GraphQLString },
-    transcodingFlag: { type: GraphQLString },
-    finalizationFlag: { type: GraphQLString },
+    taskList: { type: GraphQLList(TaskInfoType) },
     media: { type: GraphQLList(AnswerMediaType) },
     transcript: { type: GraphQLString },
     createdAt: { type: DateType },

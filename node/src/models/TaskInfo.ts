@@ -4,35 +4,41 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import { User } from 'models/User';
-import mentorThumbnailUpdate from './mentor-thumbnail-update';
-import mediaUpdate from './media-update';
-import uploadAnswer from './upload-answer';
-import uploadTaskUpdate from './upload-task-update';
-import uploadTaskStatusUpdate from './upload-task-status-update';
+import { Document, Schema } from 'mongoose';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLInputObjectType,
+} from 'graphql';
 
-export const Api: GraphQLObjectType = new GraphQLObjectType({
-  name: 'ApiMutation',
-  fields: () => ({
-    mentorThumbnailUpdate,
-    mediaUpdate,
-    uploadAnswer,
-    uploadTaskUpdate,
-    uploadTaskStatusUpdate,
-  }),
+export interface TaskInfoProps {
+  task_name: string;
+  task_id: string;
+  status: string;
+}
+
+export interface TaskInfo extends TaskInfoProps, Document {}
+
+export const TaskInfoSchema = new Schema({
+  task_name: { type: String },
+  task_id: { type: String },
+  status: { type: String },
 });
 
-export const api = {
-  type: Api,
-  resolve: (_: any, args: any, context: { user: User }): { user: User } => {
-    if (!context.user) {
-      throw new Error('Only authenticated users');
-    }
-    return {
-      user: context.user,
-    };
+export const TaskInfoInputType = new GraphQLInputObjectType({
+  name: 'TaskInfoInputType',
+  fields: {
+    task_name: { type: GraphQLString },
+    task_id: { type: GraphQLString },
+    status: { type: GraphQLString },
   },
-};
+});
 
-export default api;
+export const TaskInfoType = new GraphQLObjectType({
+  name: 'TaskInfo',
+  fields: {
+    task_name: { type: GraphQLString },
+    task_id: { type: GraphQLString },
+    status: { type: GraphQLString },
+  },
+});

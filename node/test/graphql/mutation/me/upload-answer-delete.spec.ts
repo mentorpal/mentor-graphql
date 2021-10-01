@@ -133,7 +133,6 @@ describe('uploadTaskDelete', () => {
                   _id
                   question
                 }
-                transcribingFlag
                 transcript
                 media {
                   type

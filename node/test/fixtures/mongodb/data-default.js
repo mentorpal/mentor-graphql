@@ -255,7 +255,13 @@ module.exports = {
     {
       mentor: ObjectId('5ffdf41a1ee2c62111111111'),
       question: ObjectId('511111111111111111111112'),
-      transcribingFlag: 'IN_PROGRESS',
+      taskList: [
+        {
+          task_name: 'transcribe',
+          task_id: 'fake_task',
+          status: 'IN_PROGRESS',
+        },
+      ],
     },
   ],
 };

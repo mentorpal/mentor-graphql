@@ -69,7 +69,6 @@ describe('query me/uploadTasks', () => {
                   _id
                   question
                 }
-                transcribingFlag
                 transcript
                 media {
                   type
@@ -90,7 +89,6 @@ describe('query me/uploadTasks', () => {
           _id: '511111111111111111111112',
           question: 'Who are you and what do you do?',
         },
-        transcribingFlag: 'IN_PROGRESS',
         transcript: null,
         media: [],
       },

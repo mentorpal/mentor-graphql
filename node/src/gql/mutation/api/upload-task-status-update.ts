@@ -10,47 +10,29 @@ import {
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
-  GraphQLInputObjectType,
-  GraphQLList,
 } from 'graphql';
 import {
   Mentor as MentorModel,
   Question as QuestionModel,
   UploadTask as UploadTaskModel,
 } from 'models';
-import { AnswerMediaProps } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
-import { TaskInfoInputType, TaskInfoProps } from 'models/TaskInfo';
-import { AnswerMediaInputType } from './upload-answer';
 
-export interface UploadTask {
-  taskList: [TaskInfoProps];
-  transcript: string;
-  media: AnswerMediaProps[];
-}
-
-export const UploadTaskInputType = new GraphQLInputObjectType({
-  name: 'UploadTaskInputType',
-  fields: {
-    taskList: { type: GraphQLList(TaskInfoInputType) },
-    transcript: { type: GraphQLString },
-    media: { type: GraphQLList(AnswerMediaInputType) },
-  },
-});
-
-export const uploadTaskUpdate = {
+export const uploadTaskStatusUpdate = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     questionId: { type: GraphQLNonNull(GraphQLID) },
-    status: { type: GraphQLNonNull(UploadTaskInputType) },
+    taskId: { type: GraphQLNonNull(GraphQLString) },
+    newStatus: { type: GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
       mentorId: string;
       questionId: string;
-      status: UploadTask;
+      taskId: string;
+      newStatus: string;
     }
   ): Promise<boolean> => {
     if (!(await QuestionModel.exists({ _id: args.questionId }))) {
@@ -60,21 +42,36 @@ export const uploadTaskUpdate = {
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
     }
-    const task = await UploadTaskModel.findOneAndUpdate(
+    const uploadTask = await UploadTaskModel.findOne({
+      mentor: mentor._id,
+      question: args.questionId,
+    });
+    if (!uploadTask) return false;
+    const updatedTaskList = uploadTask.taskList;
+    const taskIndex = updatedTaskList.findIndex(
+      (task) => task.task_id == args.taskId
+    );
+    if (taskIndex > -1) {
+      updatedTaskList[taskIndex].status = args.newStatus;
+    } else {
+      throw new Error(`no task found for id '${args.taskId}'`);
+    }
+
+    const updatedUploadTask = await UploadTaskModel.findOneAndUpdate(
       {
         mentor: mentor._id,
         question: args.questionId,
       },
       {
-        $set: args.status,
+        taskList: updatedTaskList,
       },
       {
-        upsert: true,
         new: true,
       }
     );
-    return Boolean(task);
+
+    return Boolean(updatedUploadTask);
   },
 };
 
-export default uploadTaskUpdate;
+export default uploadTaskStatusUpdate;

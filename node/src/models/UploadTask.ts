@@ -9,22 +9,7 @@ import mongoose, { Document, Model, Schema } from 'mongoose';
 import { Question } from './Question';
 import { Mentor } from './Mentor';
 import { AnswerMedia, AnswerMediaSchema } from './Answer';
-
-export enum UploadStatus {
-  NONE = 'NONE',
-  // TRANSCRIBE_IN_PROGRESS = 'TRANSCRIBE_IN_PROGRESS',
-  // TRANSCRIBE_FAILED = 'TRANSCRIBE_FAILED',
-  // UPLOAD_IN_PROGRESS = 'UPLOAD_IN_PROGRESS',
-  // UPLOAD_FAILED = 'UPLOAD_FAILED',
-  QUEUING = 'QUEUING',
-  TRIM_IN_PROGRESS = 'TRIM_IN_PROGRESS',
-  PROCESSING = 'PROCESSING', //Encapsulates the 4 stages
-  TRANSFER_IN_PROGRESS = 'TRANSFER_IN_PROGRESS',
-  TRANSFER_FAILED = 'TRANSFER_FAILED',
-  CANCEL_IN_PROGRESS = 'CANCEL_IN_PROGRESS',
-  CANCELLED = 'CANCELLED',
-  DONE = 'DONE',
-}
+import { TaskInfo, TaskInfoSchema } from './TaskInfo';
 
 export enum TaskFlagStatuses {
   NONE = 'NONE',
@@ -39,12 +24,7 @@ export enum TaskFlagStatuses {
 export interface UploadTask extends Document {
   mentor: Mentor['_id'];
   question: Question['_id'];
-  taskId: string[];
-  transferringFlag: TaskFlagStatuses;
-  uploadFlag: TaskFlagStatuses;
-  transcribingFlag: TaskFlagStatuses;
-  transcodingFlag: TaskFlagStatuses;
-  finalizationFlag: TaskFlagStatuses;
+  taskList: TaskInfo[];
   transcript: string;
   media: AnswerMedia[];
 }
@@ -53,32 +33,7 @@ export const UploadTaskSchema = new Schema<UploadTask, UploadTaskModel>(
   {
     mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
     question: { type: mongoose.Types.ObjectId, ref: 'Question' },
-    taskId: { type: [String] },
-    transferringFlag: {
-      type: String,
-      enum: Object.values(TaskFlagStatuses),
-      default: TaskFlagStatuses.NONE,
-    },
-    uploadFlag: {
-      type: String,
-      enum: Object.values(TaskFlagStatuses),
-      default: TaskFlagStatuses.NONE,
-    },
-    transcribingFlag: {
-      type: String,
-      enum: Object.values(TaskFlagStatuses),
-      default: TaskFlagStatuses.NONE,
-    },
-    transcodingFlag: {
-      type: String,
-      enum: Object.values(TaskFlagStatuses),
-      default: TaskFlagStatuses.NONE,
-    },
-    finalizationFlag: {
-      type: String,
-      enum: Object.values(TaskFlagStatuses),
-      default: TaskFlagStatuses.NONE,
-    },
+    taskList: { type: [TaskInfoSchema] },
     transcript: { type: String },
     media: { type: [AnswerMediaSchema] },
   },
