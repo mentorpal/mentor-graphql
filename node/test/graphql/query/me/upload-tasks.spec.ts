@@ -89,7 +89,7 @@ describe('query me/uploadTasks', () => {
           _id: '511111111111111111111112',
           question: 'Who are you and what do you do?',
         },
-        transcript: null,
+        transcript: 'fake_transcript',
         media: [],
       },
     ]);

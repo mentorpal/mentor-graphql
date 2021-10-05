@@ -10,13 +10,16 @@ import {
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
+  GraphQLList,
 } from 'graphql';
 import {
   Mentor as MentorModel,
   Question as QuestionModel,
   UploadTask as UploadTaskModel,
 } from 'models';
+import { AnswerMedia } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
+import { AnswerMediaInputType } from './upload-answer';
 
 export const uploadTaskStatusUpdate = {
   type: GraphQLBoolean,
@@ -25,6 +28,8 @@ export const uploadTaskStatusUpdate = {
     questionId: { type: GraphQLNonNull(GraphQLID) },
     taskId: { type: GraphQLNonNull(GraphQLString) },
     newStatus: { type: GraphQLNonNull(GraphQLString) },
+    transcript: { type: GraphQLString },
+    media: { type: GraphQLList(AnswerMediaInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
@@ -33,6 +38,8 @@ export const uploadTaskStatusUpdate = {
       questionId: string;
       taskId: string;
       newStatus: string;
+      transcript: string;
+      media: AnswerMedia[];
     }
   ): Promise<boolean> => {
     if (!(await QuestionModel.exists({ _id: args.questionId }))) {
@@ -42,35 +49,48 @@ export const uploadTaskStatusUpdate = {
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
     }
-    const uploadTask = await UploadTaskModel.findOne({
+    await UploadTaskModel.findOne({
       mentor: mentor._id,
       question: args.questionId,
-    });
-    if (!uploadTask) return false;
-    const updatedTaskList = uploadTask.taskList;
-    const taskIndex = updatedTaskList.findIndex(
-      (task) => task.task_id == args.taskId
-    );
-    if (taskIndex > -1) {
-      updatedTaskList[taskIndex].status = args.newStatus;
-    } else {
-      throw new Error(`no task found for id '${args.taskId}'`);
-    }
+    })
+      .then((uploadTask) => {
+        const updatedTaskList = uploadTask.taskList;
+        const taskIndex = updatedTaskList.findIndex(
+          (task) => task.task_id == args.taskId
+        );
+        if (taskIndex > -1) {
+          updatedTaskList[taskIndex].status = args.newStatus;
+          uploadTask.markModified('status');
+        }
+        if (args.transcript) {
+          uploadTask.transcript = args.transcript;
+          uploadTask.markModified('transcript');
+        }
+        if (args.media) {
+          uploadTask.media = args.media;
+          uploadTask.markModified('media');
+        }
+        uploadTask.save();
+      })
+      .catch((err) => {
+        console.log(err);
+        return false;
+      });
 
-    const updatedUploadTask = await UploadTaskModel.findOneAndUpdate(
-      {
-        mentor: mentor._id,
-        question: args.questionId,
-      },
-      {
-        taskList: updatedTaskList,
-      },
-      {
-        new: true,
-      }
-    );
+    // const updatedUploadTask = await UploadTaskModel.findOneAndUpdate(
+    //   {
+    //     mentor: mentor._id,
+    //     question: args.questionId,
+    //   },
+    //   {
+    //     taskList: updatedTaskList,
+    //   },
+    //   {
+    //     new: true,
+    //   }
+    // );
 
-    return Boolean(updatedUploadTask);
+    return true;
   },
 };
 

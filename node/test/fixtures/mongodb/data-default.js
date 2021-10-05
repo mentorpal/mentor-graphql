@@ -262,6 +262,7 @@ module.exports = {
           status: 'IN_PROGRESS',
         },
       ],
+      transcript: 'fake_transcript',
     },
   ],
 };

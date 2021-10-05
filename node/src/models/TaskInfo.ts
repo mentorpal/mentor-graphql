@@ -9,12 +9,18 @@ import {
   GraphQLString,
   GraphQLObjectType,
   GraphQLInputObjectType,
+  GraphQLList,
 } from 'graphql';
+import { AnswerMediaProps, AnswerMediaSchema } from './Answer';
+import { AnswerMediaInputType } from 'gql/mutation/api/upload-answer';
+import { AnswerMediaType } from 'gql/types/answer';
 
 export interface TaskInfoProps {
   task_name: string;
   task_id: string;
   status: string;
+  transcript: string;
+  media: AnswerMediaProps[];
 }
 
 export interface TaskInfo extends TaskInfoProps, Document {}
@@ -23,6 +29,8 @@ export const TaskInfoSchema = new Schema({
   task_name: { type: String },
   task_id: { type: String },
   status: { type: String },
+  transcript: { type: String },
+  media: { type: [AnswerMediaSchema] },
 });
 
 export const TaskInfoInputType = new GraphQLInputObjectType({
@@ -31,6 +39,8 @@ export const TaskInfoInputType = new GraphQLInputObjectType({
     task_name: { type: GraphQLString },
     task_id: { type: GraphQLString },
     status: { type: GraphQLString },
+    transcript: { type: GraphQLString },
+    media: { type: GraphQLList(AnswerMediaInputType) },
   },
 });
 
@@ -40,5 +50,7 @@ export const TaskInfoType = new GraphQLObjectType({
     task_name: { type: GraphQLString },
     task_id: { type: GraphQLString },
     status: { type: GraphQLString },
+    media: { type: GraphQLList(AnswerMediaType) },
+    transcript: { type: GraphQLString },
   },
 });
