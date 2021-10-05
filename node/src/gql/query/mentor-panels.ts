@@ -6,12 +6,11 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { MentorPanel } from 'models';
 import { MentorPanelType } from 'gql/types/mentor-panel';
-import findOne from 'gql/query/find-one';
+import findAll from 'gql/query/find-all';
 
-export const mentorPanelFindOne = findOne({
+export const mentorPanels = findAll({
+  nodeType: MentorPanelType,
   model: MentorPanel,
-  type: MentorPanelType,
-  typeName: 'mentorPanel',
 });
 
-export default mentorPanelFindOne;
+export default mentorPanels;

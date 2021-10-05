@@ -17,6 +17,7 @@ export interface Config {
   videoRecorderMaxLength: number;
   googleClientId: string;
   mentorsDefault: string[];
+  featuredMentors: string[];
   styleHeaderLogo: string;
   styleHeaderColor: string;
   styleHeaderTextColor: string;
@@ -37,6 +38,7 @@ export const ConfigKeys: ConfigKey[] = [
   'videoRecorderMaxLength',
   'googleClientId',
   'mentorsDefault',
+  'featuredMentors',
   'styleHeaderLogo',
   'styleHeaderColor',
   'styleHeaderTextColor',
@@ -63,6 +65,7 @@ export function getDefaultConfig(): Config {
     videoRecorderMaxLength: 300, //seconds
     googleClientId: process.env.GOOGLE_CLIENT_ID || '',
     mentorsDefault: [],
+    featuredMentors: [],
     styleHeaderLogo: '',
     styleHeaderColor: '',
     styleHeaderTextColor: '',

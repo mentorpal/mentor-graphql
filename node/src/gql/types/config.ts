@@ -10,6 +10,7 @@ import {
   GraphQLList,
   GraphQLBoolean,
   GraphQLInt,
+  GraphQLID,
 } from 'graphql';
 
 export const ConfigType = new GraphQLObjectType({
@@ -20,6 +21,7 @@ export const ConfigType = new GraphQLObjectType({
     cmi5Fetch: { type: GraphQLString },
     googleClientId: { type: GraphQLString },
     mentorsDefault: { type: GraphQLList(GraphQLString) },
+    featuredMentors: { type: GraphQLList(GraphQLID) },
     urlClassifier: { type: GraphQLString },
     urlGraphql: { type: GraphQLString },
     urlVideo: { type: GraphQLString },
