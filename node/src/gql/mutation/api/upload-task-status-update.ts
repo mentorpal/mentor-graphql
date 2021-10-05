@@ -54,6 +54,8 @@ export const uploadTaskStatusUpdate = {
       question: args.questionId,
     })
       .then((uploadTask) => {
+        if(!uploadTask)
+          return false;
         const updatedTaskList = uploadTask.taskList;
         const taskIndex = updatedTaskList.findIndex(
           (task) => task.task_id == args.taskId
@@ -70,25 +72,15 @@ export const uploadTaskStatusUpdate = {
           uploadTask.media = args.media;
           uploadTask.markModified('media');
         }
-        uploadTask.save();
+        uploadTask.save().catch((err)=>{
+          console.log(`failed to save. error: ${err}`)
+        })
       })
       .catch((err) => {
+        console.log(`no task found for mentor ${mentor._id} and question ${args.questionId}`)
         console.log(err);
         return false;
       });
-
-    // const updatedUploadTask = await UploadTaskModel.findOneAndUpdate(
-    //   {
-    //     mentor: mentor._id,
-    //     question: args.questionId,
-    //   },
-    //   {
-    //     taskList: updatedTaskList,
-    //   },
-    //   {
-    //     new: true,
-    //   }
-    // );
 
     return true;
   },
