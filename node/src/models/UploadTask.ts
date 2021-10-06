@@ -9,26 +9,22 @@ import mongoose, { Document, Model, Schema } from 'mongoose';
 import { Question } from './Question';
 import { Mentor } from './Mentor';
 import { AnswerMedia, AnswerMediaSchema } from './Answer';
+import { TaskInfo, TaskInfoSchema } from './TaskInfo';
 
-export enum UploadStatus {
+export enum TaskFlagStatuses {
   NONE = 'NONE',
-  TRANSCRIBE_IN_PROGRESS = 'TRANSCRIBE_IN_PROGRESS',
-  TRANSCRIBE_FAILED = 'TRANSCRIBE_FAILED',
-  UPLOAD_IN_PROGRESS = 'UPLOAD_IN_PROGRESS',
-  UPLOAD_FAILED = 'UPLOAD_FAILED',
-  QUEUING = 'QUEUING',
-  TRANSFER_IN_PROGRESS = 'TRANSFER_IN_PROGRESS',
-  TRANSFER_FAILED = 'TRANSFER_FAILED',
-  CANCEL_IN_PROGRESS = 'CANCEL_IN_PROGRESS',
+  QUEUED = 'QUEUED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  CANCELLING = 'CANCELLING',
   CANCELLED = 'CANCELLED',
+  FAILED = 'FAILED',
   DONE = 'DONE',
 }
 
 export interface UploadTask extends Document {
   mentor: Mentor['_id'];
   question: Question['_id'];
-  taskId: string;
-  uploadStatus: UploadStatus;
+  taskList: TaskInfo[];
   transcript: string;
   media: AnswerMedia[];
 }
@@ -37,12 +33,7 @@ export const UploadTaskSchema = new Schema<UploadTask, UploadTaskModel>(
   {
     mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
     question: { type: mongoose.Types.ObjectId, ref: 'Question' },
-    taskId: { type: String },
-    uploadStatus: {
-      type: String,
-      enum: Object.values(UploadStatus),
-      default: UploadStatus.NONE,
-    },
+    taskList: { type: [TaskInfoSchema] },
     transcript: { type: String },
     media: { type: [AnswerMediaSchema] },
   },

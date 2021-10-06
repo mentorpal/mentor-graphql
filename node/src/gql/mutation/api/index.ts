@@ -10,6 +10,7 @@ import mentorThumbnailUpdate from './mentor-thumbnail-update';
 import mediaUpdate from './media-update';
 import uploadAnswer from './upload-answer';
 import uploadTaskUpdate from './upload-task-update';
+import uploadTaskStatusUpdate from './upload-task-status-update';
 
 export const Api: GraphQLObjectType = new GraphQLObjectType({
   name: 'ApiMutation',
@@ -18,6 +19,7 @@ export const Api: GraphQLObjectType = new GraphQLObjectType({
     mediaUpdate,
     uploadAnswer,
     uploadTaskUpdate,
+    uploadTaskStatusUpdate,
   }),
 });
 

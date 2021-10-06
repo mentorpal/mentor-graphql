@@ -36,7 +36,6 @@ describe('query me/uploadTasks', () => {
                 _id
                 question
               }
-              uploadStatus
               transcript
               media {
                 type
@@ -70,7 +69,6 @@ describe('query me/uploadTasks', () => {
                   _id
                   question
                 }
-                uploadStatus
                 transcript
                 media {
                   type
@@ -91,8 +89,7 @@ describe('query me/uploadTasks', () => {
           _id: '511111111111111111111112',
           question: 'Who are you and what do you do?',
         },
-        uploadStatus: 'TRANSCRIBE_IN_PROGRESS',
-        transcript: null,
+        transcript: 'fake_transcript',
         media: [],
       },
     ]);
