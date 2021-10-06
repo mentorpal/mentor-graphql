@@ -178,27 +178,33 @@ module.exports = {
     {
       _id: ObjectId('511111111111111111111112'),
       question: 'Who are you and what do you do?',
+      type: 'QUESTION',
     },
     {
       _id: ObjectId('511111111111111111111113'),
       question: 'How old are you?',
+      type: 'QUESTION',
     },
     {
       _id: ObjectId('511111111111111111111114'),
       question: 'Do you like your job?',
+      type: 'QUESTION',
     },
     {
       _id: ObjectId('511111111111111111111115'),
       question: 'Is STEM fun?',
+      type: 'QUESTION',
     },
     {
       _id: ObjectId('511111111111111111111116'),
       question: 'Julia?',
       mentor: ObjectId('5ffdf41a1ee2c62111111112'),
+      type: 'QUESTION',
     },
     {
       _id: ObjectId('511111111111111111111117'),
       question: 'What is Aaron like?',
+      type: 'QUESTION',
     },
   ],
 
