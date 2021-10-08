@@ -154,6 +154,7 @@ describe('config', () => {
       styleHeaderLogo: '/a/logo.png',
       styleHeaderColor: '',
       styleHeaderTextColor: '',
+      displayGuestPrompt: false,
       disclaimerTitle: '',
       disclaimerText: '',
       disclaimerDisabled: true,
@@ -178,6 +179,7 @@ describe('config', () => {
             styleHeaderLogo
             styleHeaderColor
             styleHeaderTextColor
+            displayGuestPrompt
             disclaimerTitle
             disclaimerText
             disclaimerDisabled

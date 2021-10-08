@@ -30,6 +30,7 @@ export const ConfigType = new GraphQLObjectType({
     styleHeaderLogo: { type: GraphQLString },
     styleHeaderColor: { type: GraphQLString },
     styleHeaderTextColor: { type: GraphQLString },
+    displayGuestPrompt: { type: GraphQLBoolean },
     disclaimerTitle: { type: GraphQLString },
     disclaimerText: { type: GraphQLString },
     disclaimerDisabled: { type: GraphQLBoolean },

@@ -21,6 +21,7 @@ export interface Config {
   styleHeaderLogo: string;
   styleHeaderColor: string;
   styleHeaderTextColor: string;
+  displayGuestPrompt: boolean;
   disclaimerTitle: string;
   disclaimerText: string;
   disclaimerDisabled: boolean;
@@ -69,6 +70,7 @@ export function getDefaultConfig(): Config {
     styleHeaderLogo: '',
     styleHeaderColor: '',
     styleHeaderTextColor: '',
+    displayGuestPrompt: false,
     disclaimerTitle: '',
     disclaimerText: '',
     disclaimerDisabled: true,
