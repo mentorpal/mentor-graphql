@@ -45,6 +45,7 @@ describe('config', () => {
             googleClientId
             mentorsDefault
             featuredMentors
+            activeMentors
             urlClassifier
             urlGraphql
             urlVideo
@@ -60,6 +61,7 @@ describe('config', () => {
       googleClientId: '',
       mentorsDefault: [],
       featuredMentors: [],
+      activeMentors: [],
       urlClassifier: '/classifier',
       urlGraphql: '/graphql',
       urlVideo: '/video',
@@ -79,6 +81,7 @@ describe('config', () => {
             googleClientId
             mentorsDefault
             featuredMentors
+            activeMentors
             urlClassifier
             urlGraphql
             urlVideo
@@ -94,6 +97,7 @@ describe('config', () => {
       googleClientId: '',
       mentorsDefault: [],
       featuredMentors: [],
+      activeMentors: [],
       urlClassifier: '/classifier',
       urlGraphql: '/graphql',
       urlVideo: '/video',
@@ -146,6 +150,7 @@ describe('config', () => {
       googleClientId: '',
       mentorsDefault: ['somementor'],
       featuredMentors: ['somementor'],
+      activeMentors: ['somementor'],
       urlClassifier: '/classifier/v2',
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
@@ -173,6 +178,7 @@ describe('config', () => {
             videoRecorderMaxLength
             mentorsDefault
             featuredMentors
+            activeMentors
             urlClassifier
             urlGraphql
             urlVideo

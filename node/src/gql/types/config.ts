@@ -22,6 +22,7 @@ export const ConfigType = new GraphQLObjectType({
     googleClientId: { type: GraphQLString },
     mentorsDefault: { type: GraphQLList(GraphQLString) },
     featuredMentors: { type: GraphQLList(GraphQLID) },
+    activeMentors: { type: GraphQLList(GraphQLID) },
     urlClassifier: { type: GraphQLString },
     urlGraphql: { type: GraphQLString },
     urlVideo: { type: GraphQLString },
