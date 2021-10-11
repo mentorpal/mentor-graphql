@@ -10,10 +10,11 @@ import {
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLInputObjectType,
+  GraphQLID,
 } from 'graphql';
 import { Mentor as MentorModel } from 'models';
 import { Mentor } from 'models/Mentor';
-import { User } from 'models/User';
+import { User, UserRole } from 'models/User';
 
 export interface UpdateMentorDetails {
   name: string;
@@ -40,17 +41,24 @@ export const updateMentorDetails = {
   type: GraphQLBoolean,
   args: {
     mentor: { type: GraphQLNonNull(UpdateMentorDetailsType) },
+    mentorId: { type: GraphQLID },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: UpdateMentorDetails },
+    args: { mentor: UpdateMentorDetails; mentorId: string },
     context: { user: User }
   ): Promise<boolean> => {
-    const mentor: Mentor = await MentorModel.findOne({
+    let mentor: Mentor = await MentorModel.findOne({
       user: context.user._id,
     });
     if (!mentor) {
       throw new Error('you do not have a mentor');
+    }
+    if (args.mentorId && `${mentor._id}` !== `${args.mentorId}`) {
+      if (context.user.userRole !== UserRole.ADMIN) {
+        throw new Error('you do not have permission to edit this mentor');
+      }
+      mentor = await MentorModel.findById(args.mentorId);
     }
     const updated = await MentorModel.findByIdAndUpdate(
       mentor._id,

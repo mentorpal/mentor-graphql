@@ -16,16 +16,18 @@ import {
   UploadTask as UploadTaskModel,
 } from 'models';
 import { Mentor } from 'models/Mentor';
-import { User } from 'models/User';
+import { User, UserRole } from 'models/User';
 
 export const uploadTaskDelete = {
   type: GraphQLBoolean,
   args: {
+    mentorId: { type: GraphQLID },
     questionId: { type: GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
+      mentorId: string;
       questionId: string;
     },
     context: { user: User }
@@ -33,11 +35,17 @@ export const uploadTaskDelete = {
     if (!(await QuestionModel.exists({ _id: args.questionId }))) {
       throw new Error(`no question found for id '${args.questionId}'`);
     }
-    const mentor: Mentor = await MentorModel.findOne({
+    let mentor: Mentor = await MentorModel.findOne({
       user: context.user._id,
     });
     if (!mentor) {
       throw new Error('you do not have a mentor');
+    }
+    if (args.mentorId && `${mentor._id}` !== `${args.mentorId}`) {
+      if (context.user.userRole !== UserRole.ADMIN) {
+        throw new Error('you do not have permission to edit this mentor');
+      }
+      mentor = await MentorModel.findById(args.mentorId);
     }
     const task = await UploadTaskModel.deleteOne({
       mentor: mentor._id,
