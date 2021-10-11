@@ -5,29 +5,36 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 
-import { Types } from 'mongoose';
-import { GraphQLList, GraphQLObjectType } from 'graphql';
-import { User } from 'models/User';
+import { GraphQLID, GraphQLList, GraphQLObjectType } from 'graphql';
+import { User, UserRole } from 'models/User';
 import { Mentor as MentorModel } from 'models';
 import { UploadTask as UploadTaskModel } from 'models';
 import { UploadTask } from 'models/UploadTask';
 import { UploadTaskType } from 'gql/types/upload-task';
+import { Mentor } from 'models/Mentor';
 
 export const uploadTasks = {
   type: GraphQLList(UploadTaskType),
+  args: { mentorId: { type: GraphQLID } },
   resolve: async (
     _: GraphQLObjectType,
     args: any,
-    context: { user: User }
+    context: { user: User; mentorId: string }
   ): Promise<UploadTask[]> => {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
-    const mentor = await MentorModel.findOne({
-      user: Types.ObjectId(`${context.user._id}`),
+    let mentor: Mentor = await MentorModel.findOne({
+      user: context.user._id,
     });
     if (!mentor) {
-      throw new Error('Mentor not found for user');
+      throw new Error('you do not have a mentor');
+    }
+    if (args.mentorId && `${mentor._id}` !== `${args.mentorId}`) {
+      if (context.user.userRole !== UserRole.ADMIN) {
+        throw new Error('you do not have permission to edit this mentor');
+      }
+      mentor = await MentorModel.findById(args.mentorId);
     }
     const tasks = await UploadTaskModel.find({
       mentor: mentor._id,

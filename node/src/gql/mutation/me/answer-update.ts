@@ -19,7 +19,7 @@ import {
 } from 'models';
 import { Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
-import { User } from 'models/User';
+import { User, UserRole } from 'models/User';
 
 export interface AnswerUpdateInput {
   transcript: string;
@@ -37,22 +37,29 @@ export const UpdateAnswerInputType = new GraphQLInputObjectType({
 export const updateAnswer = {
   type: GraphQLBoolean,
   args: {
+    mentorId: { type: GraphQLID },
     questionId: { type: GraphQLNonNull(GraphQLID) },
     answer: { type: GraphQLNonNull(UpdateAnswerInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { questionId: string; answer: AnswerUpdateInput },
+    args: { mentorId: string; questionId: string; answer: AnswerUpdateInput },
     context: { user: User }
   ): Promise<boolean> => {
     if (!(await QuestionModel.exists({ _id: args.questionId }))) {
       throw new Error(`no question found for id '${args.questionId}'`);
     }
-    const mentor: Mentor = await MentorModel.findOne({
+    let mentor: Mentor = await MentorModel.findOne({
       user: context.user._id,
     });
     if (!mentor) {
       throw new Error('you do not have a mentor');
+    }
+    if (args.mentorId && `${mentor._id}` !== `${args.mentorId}`) {
+      if (context.user.userRole !== UserRole.ADMIN) {
+        throw new Error('you do not have permission to edit this mentor');
+      }
+      mentor = await MentorModel.findById(args.mentorId);
     }
     const answer = await AnswerModel.findOneAndUpdate(
       {
