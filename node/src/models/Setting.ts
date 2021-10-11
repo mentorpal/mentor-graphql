@@ -18,6 +18,7 @@ export interface Config {
   googleClientId: string;
   mentorsDefault: string[];
   featuredMentors: string[];
+  activeMentors: string[];
   styleHeaderLogo: string;
   styleHeaderColor: string;
   styleHeaderTextColor: string;
@@ -40,6 +41,7 @@ export const ConfigKeys: ConfigKey[] = [
   'googleClientId',
   'mentorsDefault',
   'featuredMentors',
+  'activeMentors',
   'styleHeaderLogo',
   'styleHeaderColor',
   'styleHeaderTextColor',
@@ -67,6 +69,7 @@ export function getDefaultConfig(): Config {
     googleClientId: process.env.GOOGLE_CLIENT_ID || '',
     mentorsDefault: [],
     featuredMentors: [],
+    activeMentors: [],
     styleHeaderLogo: '',
     styleHeaderColor: '',
     styleHeaderTextColor: '',
