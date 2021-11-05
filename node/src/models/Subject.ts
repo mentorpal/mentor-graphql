@@ -15,6 +15,7 @@ import {
 import { Question, QuestionType } from './Question';
 import {
   questionInputToUpdate,
+  SubjectQuestionUpdateInput,
   SubjectUpdateInput,
 } from 'gql/mutation/me/subject-update';
 import { idOrNew } from 'gql/mutation/me/helpers';
@@ -109,6 +110,10 @@ export interface SubjectModel extends Model<Subject> {
     type?: QuestionType,
     categoryID?: string
   ): SubjectQuestion[];
+  addOrUpdateQuestions(
+    subject: string | Subject,
+    questions: SubjectQuestionUpdateInput[]
+  ): Promise<Subject>;
   updateOrCreate(subject: SubjectUpdateInput): Promise<Subject>;
 }
 
@@ -168,6 +173,46 @@ SubjectSchema.statics.updateOrCreate = async function (
     { _id: idOrNew(subject._id) },
     {
       $set: subjectUpdate,
+    },
+    {
+      new: true,
+      upsert: true,
+    }
+  );
+};
+
+SubjectSchema.statics.addOrUpdateQuestions = async function (
+  s: string | Subject,
+  qs: SubjectQuestionUpdateInput[]
+) {
+  const subject: Subject = typeof s === 'string' ? await this.findById(s) : s;
+  if (!subject) {
+    throw new Error(`subject ${s} not found`);
+  }
+  // don't include questions that have no question text
+  qs = qs.filter((q) => q.question.question);
+  if (qs.length === 0) {
+    return subject;
+  }
+  const questions: SubjectQuestionProps[] = subject.questions;
+  const topics = subject.topics.map((t) => t.id);
+  const questionUpdates = await Promise.all(
+    qs.map((qi) => questionInputToUpdate(qi, topics))
+  );
+  for (const qu of questionUpdates) {
+    const idx = questions.findIndex(
+      (q) => `${q.question}` === `${qu.question}`
+    );
+    if (idx === -1) {
+      questions.push(qu);
+    } else {
+      questions[idx] = qu;
+    }
+  }
+  return await this.findOneAndUpdate(
+    { _id: subject._id },
+    {
+      $set: { questions },
     },
     {
       new: true,
