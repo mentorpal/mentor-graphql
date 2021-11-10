@@ -8,6 +8,7 @@ import { ExtractMethods, Model, Schema } from 'mongoose';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mongoPaging = require('mongo-cursor-pagination');
 mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
+mongoPaging.config.MAX_LIMIT = 5000;
 
 export interface PaginatedResolveResult<T> {
   results: T[];
