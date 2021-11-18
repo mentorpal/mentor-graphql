@@ -91,6 +91,7 @@ export const answerUpload = {
           ...args.answer,
           hasUntransferredMedia,
           status: Status.COMPLETE,
+          hasEditedTranscript: false,
         },
       },
       {

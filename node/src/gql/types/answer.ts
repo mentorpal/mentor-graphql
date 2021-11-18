@@ -36,6 +36,7 @@ export const AnswerType = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLID },
     question: questionField,
+    hasEditedTranscript: { type: GraphQLBoolean },
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
     hasUntransferredMedia: { type: GraphQLBoolean },

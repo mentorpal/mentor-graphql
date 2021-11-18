@@ -110,6 +110,7 @@ export const AnswerPreviewType = new GraphQLObjectType({
   name: 'AnswerPreview',
   fields: () => ({
     question: { type: QuestionType },
+    hasEditedTranscript: { type: GraphQLBoolean },
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
     hasUntransferredMedia: { type: GraphQLBoolean },
