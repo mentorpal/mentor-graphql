@@ -184,9 +184,6 @@ describe('subjectAddOrUpdateQuestions', () => {
           ],
         },
       });
-    console.log(
-      JSON.stringify(response.body.data.me.subjectAddOrUpdateQuestions)
-    );
     expect(response.status).to.equal(200);
     expect(response.body.data.me.subjectAddOrUpdateQuestions).to.eql({
       _id: '5ffdf41a1ee2c62320b49eb2',
