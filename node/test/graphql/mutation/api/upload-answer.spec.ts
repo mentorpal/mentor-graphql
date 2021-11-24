@@ -403,7 +403,7 @@ describe('uploadAnswer', () => {
     });
   });
 
-  it('new uploads sets editedTranscript to false', async () => {
+  it('can set hasEditedTranscript', async () => {
     const precheck = await request(app)
       .post('/graphql')
       .send({
@@ -428,6 +428,7 @@ describe('uploadAnswer', () => {
         _id: '511111111111111111111111',
       },
     });
+
     const response = await request(app)
       .post('/graphql')
       .set('mentor-graphql-req', 'true')
@@ -438,15 +439,7 @@ describe('uploadAnswer', () => {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111111',
           answer: {
-            transcript:
-              "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-            media: [
-              {
-                type: 'video',
-                tag: 'web',
-                url: `${process.env.STATIC_URL_BASE}/video.mp4`,
-              },
-            ],
+            hasEditedTranscript: false,
           },
         },
       });
