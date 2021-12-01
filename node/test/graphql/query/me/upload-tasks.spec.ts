@@ -94,4 +94,120 @@ describe('query me/uploadTasks', () => {
       },
     ]);
   });
+
+  it(`\"USER\"\'s cannot view other mentors upload tasks`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              uploadTasks (mentorId: "5ffdf41a1ee2c62111111111") {
+                mentor {
+                  _id
+                }
+                question {
+                  _id
+                  question
+                }
+                transcript
+                media {
+                  type
+                  tag
+                  url
+                }
+              }
+            }
+          }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.errors[0].message).to.equal(
+      'you do not have permission to view this mentors information'
+    );
+  });
+
+  it(`\"CONTENT_MANAGER\"\'s can view other mentors upload tasks`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea5');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              uploadTasks (mentorId: "5ffdf41a1ee2c62111111111") {
+                mentor {
+                  _id
+                }
+                question {
+                  _id
+                  question
+                }
+                transcript
+                media {
+                  type
+                  tag
+                  url
+                }
+              }
+            }
+          }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.uploadTasks).to.eql([
+      {
+        mentor: {
+          _id: '5ffdf41a1ee2c62111111111',
+        },
+        question: {
+          _id: '511111111111111111111112',
+          question: 'Who are you and what do you do?',
+        },
+        transcript: 'fake_transcript',
+        media: [],
+      },
+    ]);
+  });
+
+  it(`\"ADMIN\"\'s can view other mentors upload tasks`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              uploadTasks (mentorId: "5ffdf41a1ee2c62111111111") {
+                mentor {
+                  _id
+                }
+                question {
+                  _id
+                  question
+                }
+                transcript
+                media {
+                  type
+                  tag
+                  url
+                }
+              }
+            }
+          }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.uploadTasks).to.eql([
+      {
+        mentor: {
+          _id: '5ffdf41a1ee2c62111111111',
+        },
+        question: {
+          _id: '511111111111111111111112',
+          question: 'Who are you and what do you do?',
+        },
+        transcript: 'fake_transcript',
+        media: [],
+      },
+    ]);
+  });
 });

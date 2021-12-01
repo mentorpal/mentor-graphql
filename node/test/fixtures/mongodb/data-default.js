@@ -33,9 +33,29 @@ module.exports = {
       email: 'no@mentor.com',
       userRole: 'CONTENT_MANAGER',
     },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ea5'),
+      name: 'Jacob Ferguson',
+      email: 'jacob@ferguson.com',
+      userRole: 'CONTENT_MANAGER',
+    },
   ],
 
   mentors: [
+    {
+      _id: ObjectId('5ffdf41a1ee2c62111111110'),
+      name: 'Jacob Ferguson',
+      firstName: 'Jacob',
+      title: 'Managing all the content',
+      thumbnail:
+        'mentor/thumbnails/5ffdf41a1ee2c62111111111-20210621T000000.png',
+      defaultSubject: '5ffdf41a1ee2c62320b49eb1',
+      subjects: [
+        ObjectId('5ffdf41a1ee2c62320b49eb1'),
+        ObjectId('5ffdf41a1ee2c62320b49eb2'),
+      ],
+      user: ObjectId('5ffdf41a1ee2c62320b49ea5'),
+    },
     {
       _id: ObjectId('5ffdf41a1ee2c62111111111'),
       name: 'Clinton Anderson',

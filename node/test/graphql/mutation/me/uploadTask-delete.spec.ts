@@ -162,4 +162,66 @@ describe('uploadTaskDelete', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.me.uploadTaskDelete).to.eql(null);
   });
+
+  it(`\"USER\"\'s cannot delete other mentors upload tasks`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2');
+    const update = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation DeleteUploadTask($questionId: ID!, $mentorId: ID!) {
+          me {
+            uploadTaskDelete(questionId: $questionId, mentorId: $mentorId)
+          }
+        }`,
+        variables: {
+          questionId: '511111111111111111111112',
+          mentorId: '5ffdf41a1ee2c62111111112',
+        },
+      });
+    expect(update.status).to.equal(200);
+    expect(update.body.errors[0].message).to.equal(
+      'you do not have permission to edit this mentor'
+    );
+  });
+
+  it(`\"CONTENT_MANAGER\"\'s can delete other mentors upload tasks`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea5');
+    const update = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation DeleteUploadTask($questionId: ID!, $mentorId: ID!) {
+          me {
+            uploadTaskDelete(questionId: $questionId, mentorId: $mentorId)
+          }
+        }`,
+        variables: {
+          questionId: '511111111111111111111112',
+          mentorId: '5ffdf41a1ee2c62111111112',
+        },
+      });
+    expect(update.status).to.equal(200);
+    expect(update.body.data.me.uploadTaskDelete).to.eql(true);
+  });
+
+  it(`\"ADMIN\"\'s can delete other mentors upload tasks`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const update = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation DeleteUploadTask($questionId: ID!, $mentorId: ID!) {
+          me {
+            uploadTaskDelete(questionId: $questionId, mentorId: $mentorId)
+          }
+        }`,
+        variables: {
+          questionId: '511111111111111111111112',
+          mentorId: '5ffdf41a1ee2c62111111112',
+        },
+      });
+    expect(update.status).to.equal(200);
+    expect(update.body.data.me.uploadTaskDelete).to.eql(true);
+  });
 });

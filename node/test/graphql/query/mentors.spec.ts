@@ -70,6 +70,12 @@ describe('mentors', () => {
             name: 'Clinton Anderson',
           },
         },
+        {
+          node: {
+            _id: '5ffdf41a1ee2c62111111110',
+            name: 'Jacob Ferguson',
+          },
+        },
       ],
       pageInfo: {
         hasNextPage: false,

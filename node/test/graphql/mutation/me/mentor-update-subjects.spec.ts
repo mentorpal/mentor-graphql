@@ -271,4 +271,75 @@ describe('updateMentorSubjects', () => {
       });
     expect(response.status).to.equal(500);
   });
+
+  it('"USER"\'s cannot update other mentors subjects', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2'); //mentor with role "User"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateMentorSubjects($mentor: UpdateMentorSubjectsType!, $mentorId: ID!) {
+          me {
+            updateMentorSubjects(mentor: $mentor, mentorId: $mentorId)
+          }
+        }`,
+        variables: {
+          mentor: {
+            defaultSubject: null,
+            subjects: ['5ffdf41a1ee2c62320b49eb3'],
+          },
+          mentorId: '5ffdf41a1ee2c62111111112',
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.errors[0].message).to.equal(
+      'you do not have permission to edit this mentor'
+    );
+  });
+
+  it('"CONTENT_MANAGERS"\'s can update other mentors subjects', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea5'); //mentor with role "Content Manager"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateMentorSubjects($mentor: UpdateMentorSubjectsType!, $mentorId: ID!) {
+          me {
+            updateMentorSubjects(mentor: $mentor, mentorId: $mentorId)
+          }
+        }`,
+        variables: {
+          mentor: {
+            defaultSubject: null,
+            subjects: ['5ffdf41a1ee2c62320b49eb3'],
+          },
+          mentorId: '5ffdf41a1ee2c62111111112',
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateMentorSubjects).to.eql(true);
+  });
+
+  it('"ADMIN"\'s can update other mentors subjects', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1'); //mentor with role "Content Manager"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateMentorSubjects($mentor: UpdateMentorSubjectsType!, $mentorId: ID!) {
+          me {
+            updateMentorSubjects(mentor: $mentor, mentorId: $mentorId)
+          }
+        }`,
+        variables: {
+          mentor: {
+            defaultSubject: null,
+            subjects: ['5ffdf41a1ee2c62320b49eb3'],
+          },
+          mentorId: '5ffdf41a1ee2c62111111112',
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateMentorSubjects).to.eql(true);
+  });
 });

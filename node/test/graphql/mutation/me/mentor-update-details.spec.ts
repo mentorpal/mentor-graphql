@@ -204,4 +204,59 @@ describe('updateMentorDetails', () => {
       });
     expect(response.status).to.equal(500);
   });
+
+  it('"USER"\'s cannot update other mentors details', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2'); //mentor with role "User"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateMentorDetails($mentor: UpdateMentorDetailsType!, $mentorId: ID!) {
+          me {
+            updateMentorDetails(mentor: $mentor, mentorId: $mentorId)
+          }
+        }`,
+        variables: { mentor: {}, mentorId: '5ffdf41a1ee2c62111111112' },
+      });
+    console.log(response);
+    expect(response.status).to.equal(200);
+    expect(response.body.errors[0].message).to.equal(
+      'you do not have permission to edit this mentor'
+    );
+  });
+
+  it('"CONTENT_MANAGER"\'s can update other mentors details', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea5'); //mentor with role "Content Manager"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateMentorDetails($mentor: UpdateMentorDetailsType!, $mentorId: ID!) {
+          me {
+            updateMentorDetails(mentor: $mentor, mentorId: $mentorId)
+          }
+        }`,
+        variables: { mentor: {}, mentorId: '5ffdf41a1ee2c62111111112' },
+      });
+    console.log(response);
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateMentorDetails).to.eql(true);
+  });
+
+  it('"ADMIN"\'s can update other mentors details', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1'); //mentor with role "Content Manager"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateMentorDetails($mentor: UpdateMentorDetailsType!, $mentorId: ID!) {
+          me {
+            updateMentorDetails(mentor: $mentor, mentorId: $mentorId)
+          }
+        }`,
+        variables: { mentor: {}, mentorId: '5ffdf41a1ee2c62111111112' },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateMentorDetails).to.eql(true);
+  });
 });

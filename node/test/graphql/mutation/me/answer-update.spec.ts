@@ -213,4 +213,81 @@ describe('updateAnswer', () => {
       `no question found for id '511111111111111111999999'`
     );
   });
+
+  it('"USER"\'s cannot update other mentors answers', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2'); //mentor with role "User"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!, $mentorId: ID!) {
+          me {
+            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId)
+          }
+        }`,
+        variables: {
+          questionId: '511111111111111111111112',
+          mentorId: '5ffdf41a1ee2c62320b49ea3', //other mentor
+          answer: {
+            transcript:
+              "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+            status: 'Complete',
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.errors[0].message).to.equal(
+      'you do not have permission to edit this mentor'
+    );
+  });
+
+  it('"CONTENT_MANAGER"\'s cannot update other mentors answers', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea5'); //mentor with role "Content Manager"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!, $mentorId: ID!) {
+          me {
+            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId)
+          }
+        }`,
+        variables: {
+          questionId: '511111111111111111111112',
+          mentorId: '5ffdf41a1ee2c62111111111', //other mentor
+          answer: {
+            transcript:
+              "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+            status: 'Complete',
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateAnswer).to.eql(true);
+  });
+
+  it('"ADMIN"\'s cannot update other mentors answers', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1'); //mentor with role "Admin"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!, $mentorId: ID!) {
+          me {
+            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId)
+          }
+        }`,
+        variables: {
+          questionId: '511111111111111111111112',
+          mentorId: '5ffdf41a1ee2c62111111111', //other mentor
+          answer: {
+            transcript:
+              "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+            status: 'Complete',
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateAnswer).to.eql(true);
+  });
 });
