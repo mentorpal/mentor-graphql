@@ -402,4 +402,72 @@ describe('uploadAnswer', () => {
       ],
     });
   });
+
+  it('can set hasEditedTranscript', async () => {
+    const precheck = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111111") {
+          answers {
+            hasEditedTranscript
+            question {
+              _id
+            }
+          }
+        }
+    }`,
+      });
+    expect(precheck.status).to.equal(200);
+    let updatedAnswer = precheck.body.data.mentor.answers.find(
+      (a: any) => a.question._id === '511111111111111111111111'
+    );
+    expect(updatedAnswer).to.eql({
+      hasEditedTranscript: true,
+      question: {
+        _id: '511111111111111111111111',
+      },
+    });
+
+    const response = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: answerMutation,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111111',
+          answer: {
+            hasEditedTranscript: false,
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.api.uploadAnswer).to.eql(true);
+    const r2 = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111111") {
+          answers {
+            hasEditedTranscript
+            question {
+              _id
+            }
+          }
+        }
+    }`,
+      });
+    expect(r2.status).to.equal(200);
+    updatedAnswer = r2.body.data.mentor.answers.find(
+      (a: any) => a.question._id === '511111111111111111111111'
+    );
+    expect(updatedAnswer).to.eql({
+      hasEditedTranscript: false,
+      question: {
+        _id: '511111111111111111111111',
+      },
+    });
+  });
 });
