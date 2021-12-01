@@ -32,6 +32,7 @@ export const AnswerMediaSchema = new Schema({
 export interface Answer extends Document {
   mentor: Mentor['_id'];
   question: Question['_id'];
+  hasEditedTranscript: boolean;
   transcript: string;
   status: Status;
   media: AnswerMedia[];
@@ -42,6 +43,7 @@ export const AnswerSchema = new Schema<Answer, AnswerModel>(
   {
     mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
     question: { type: mongoose.Types.ObjectId, ref: 'Question' },
+    hasEditedTranscript: { type: Boolean, default: false },
     transcript: { type: String },
     status: {
       type: String,

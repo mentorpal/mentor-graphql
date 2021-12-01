@@ -64,13 +64,30 @@ export const updateAnswer = {
       }
       mentor = await MentorModel.findById(args.mentorId);
     }
-    const answer = await AnswerModel.findOneAndUpdate(
+
+    let answer = await AnswerModel.findOne({
+      mentor: mentor._id,
+      question: args.questionId,
+    });
+    let hasEditedTranscript = Boolean(answer && answer.hasEditedTranscript);
+    if (
+      answer &&
+      answer.transcript &&
+      answer.transcript !== args.answer.transcript
+    ) {
+      hasEditedTranscript = true;
+    }
+
+    answer = await AnswerModel.findOneAndUpdate(
       {
         mentor: mentor._id,
         question: args.questionId,
       },
       {
-        $set: args.answer,
+        $set: {
+          ...args.answer,
+          hasEditedTranscript,
+        },
       },
       {
         upsert: true,

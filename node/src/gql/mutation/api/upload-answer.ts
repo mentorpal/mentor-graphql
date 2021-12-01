@@ -25,6 +25,7 @@ import { mediaNeedsTransfer } from 'utils/static-urls';
 export interface UploadAnswer {
   transcript: string;
   media: AnswerMediaProps[];
+  hasEditedTranscript: boolean;
 }
 
 export const AnswerMediaInputType = new GraphQLInputObjectType({
@@ -42,6 +43,7 @@ export const UploadAnswerType = new GraphQLInputObjectType({
   fields: () => ({
     transcript: { type: GraphQLString },
     media: { type: GraphQLList(AnswerMediaInputType) },
+    hasEditedTranscript: { type: GraphQLBoolean },
   }),
 });
 
@@ -81,7 +83,17 @@ export const answerUpload = {
       m.needsTransfer = mediaNeedsTransfer(m.url);
       hasUntransferredMedia ||= m.needsTransfer;
     }
-    const answer = await AnswerModel.findOneAndUpdate(
+    let answer = await AnswerModel.findOne({
+      mentor: mentor._id,
+      question: args.questionId,
+    });
+    const hasEditedTranscript =
+      args.answer.hasEditedTranscript !== undefined
+        ? args.answer.hasEditedTranscript
+        : answer
+        ? answer.hasEditedTranscript
+        : false;
+    answer = await AnswerModel.findOneAndUpdate(
       {
         mentor: mentor._id,
         question: args.questionId,
@@ -91,6 +103,7 @@ export const answerUpload = {
           ...args.answer,
           hasUntransferredMedia,
           status: Status.COMPLETE,
+          hasEditedTranscript: hasEditedTranscript,
         },
       },
       {

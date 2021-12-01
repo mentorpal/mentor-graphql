@@ -42,6 +42,7 @@ export const MentorImportJsonType = new GraphQLInputObjectType({
 
 export interface AnswerUpdateInput {
   question: QuestionUpdateInput;
+  hasEditedTranscript: boolean;
   transcript: string;
   status: Status;
   hasUntransferredMedia: boolean;
@@ -52,6 +53,7 @@ export const AnswerUpdateInputType = new GraphQLInputObjectType({
   name: 'AnswerUpdateInputType',
   fields: () => ({
     question: { type: GraphQLNonNull(QuestionUpdateInputType) },
+    hasEditedTranscript: { type: GraphQLBoolean },
     transcript: { type: GraphQLNonNull(GraphQLString) },
     status: { type: GraphQLNonNull(GraphQLString) },
     hasUntransferredMedia: { type: GraphQLBoolean },
