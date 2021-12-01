@@ -19,7 +19,7 @@ export const uploadTasks = {
   resolve: async (
     _: GraphQLObjectType,
     args: any,
-    context: { user: User; mentorId: string }
+    context: { user: User }
   ): Promise<UploadTask[]> => {
     if (!context.user) {
       throw new Error('Only authenticated users');
