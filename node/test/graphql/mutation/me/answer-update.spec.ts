@@ -241,7 +241,7 @@ describe('updateAnswer', () => {
     );
   });
 
-  it('"CONTENT_MANAGER"\'s cannot update other mentors answers', async () => {
+  it('"CONTENT_MANAGER"\'s can update other mentors answers', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea5'); //mentor with role "Content Manager"
     const response = await request(app)
       .post('/graphql')
@@ -266,7 +266,7 @@ describe('updateAnswer', () => {
     expect(response.body.data.me.updateAnswer).to.eql(true);
   });
 
-  it('"ADMIN"\'s cannot update other mentors answers', async () => {
+  it('"ADMIN"\'s can update other mentors answers', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1'); //mentor with role "Admin"
     const response = await request(app)
       .post('/graphql')
