@@ -18,8 +18,10 @@ export const uploadTasks = {
   args: { mentorId: { type: GraphQLID } },
   resolve: async (
     _: GraphQLObjectType,
-    args: any,
-    context: { user: User; mentorId: string }
+    args: {
+      mentorId: string;
+    },
+    context: { user: User }
   ): Promise<UploadTask[]> => {
     if (!context.user) {
       throw new Error('Only authenticated users');
@@ -31,8 +33,13 @@ export const uploadTasks = {
       throw new Error('you do not have a mentor');
     }
     if (args.mentorId && `${mentor._id}` !== `${args.mentorId}`) {
-      if (context.user.userRole !== UserRole.ADMIN) {
-        throw new Error('you do not have permission to edit this mentor');
+      if (
+        context.user.userRole !== UserRole.ADMIN &&
+        context.user.userRole !== UserRole.CONTENT_MANAGER
+      ) {
+        throw new Error(
+          'you do not have permission to view this mentors information'
+        );
       }
       mentor = await MentorModel.findById(args.mentorId);
     }

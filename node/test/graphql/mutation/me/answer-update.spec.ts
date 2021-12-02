@@ -214,103 +214,80 @@ describe('updateAnswer', () => {
     );
   });
 
-  it('updating an answers transcript sets hasEditedTranscript to true', async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const questionId = '511111111111111111111117';
+  it('"USER"\'s cannot update other mentors answers', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2'); //mentor with role "User"
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
+        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!, $mentorId: ID!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer)
+            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId)
           }
         }`,
         variables: {
-          questionId: '511111111111111111111117',
+          questionId: '511111111111111111111112',
+          mentorId: '5ffdf41a1ee2c62320b49ea3', //other mentor
           answer: {
-            transcript: 'Edited Transcript',
+            transcript:
+              "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
             status: 'Complete',
           },
         },
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.updateAnswer).to.eql(true);
-
-    const r2 = await request(app)
-      .post('/graphql')
-      .send({
-        query: `query {
-          mentor(id: "5ffdf41a1ee2c62111111111") {
-            isDirty
-            answers {
-              hasEditedTranscript
-              transcript
-              status
-              question {
-                _id
-              }
-            }
-          }
-      }`,
-      });
-    expect(r2.status).to.equal(200);
-    expect(r2.body.data.mentor.isDirty).to.eql(true);
-    const updatedAnswer = r2.body.data.mentor.answers.find(
-      (a: any) => a.question._id === questionId
+    expect(response.body.errors[0].message).to.equal(
+      'you do not have permission to edit this mentor'
     );
-    expect(updatedAnswer).to.have.property('transcript', 'Edited Transcript');
-    expect(updatedAnswer).to.have.property('status', 'Complete');
-    expect(updatedAnswer).to.have.property('hasEditedTranscript', true);
   });
 
-  it('updating with same transcript does not change hasEditedTranscript', async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const questionId = '511111111111111111111117';
+  it('"CONTENT_MANAGER"\'s can update other mentors answers', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea5'); //mentor with role "Content Manager"
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
+        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!, $mentorId: ID!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer)
+            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId)
           }
         }`,
         variables: {
-          questionId: '511111111111111111111117',
+          questionId: '511111111111111111111112',
+          mentorId: '5ffdf41a1ee2c62111111111', //other mentor
           answer: {
-            transcript: 'Test Transcript',
+            transcript:
+              "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
             status: 'Complete',
           },
         },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateAnswer).to.eql(true);
+  });
 
-    const r2 = await request(app)
+  it('"ADMIN"\'s can update other mentors answers', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1'); //mentor with role "Admin"
+    const response = await request(app)
       .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
       .send({
-        query: `query {
-          mentor(id: "5ffdf41a1ee2c62111111111") {
-            isDirty
-            answers {
-              hasEditedTranscript
-              transcript
-              status
-              question {
-                _id
-              }
-            }
+        query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!, $mentorId: ID!) {
+          me {
+            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId)
           }
-      }`,
+        }`,
+        variables: {
+          questionId: '511111111111111111111112',
+          mentorId: '5ffdf41a1ee2c62111111111', //other mentor
+          answer: {
+            transcript:
+              "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+            status: 'Complete',
+          },
+        },
       });
-    expect(r2.status).to.equal(200);
-    expect(r2.body.data.mentor.isDirty).to.eql(true);
-    const updatedAnswer = r2.body.data.mentor.answers.find(
-      (a: any) => a.question._id === questionId
-    );
-    expect(updatedAnswer).to.have.property('transcript', 'Test Transcript');
-    expect(updatedAnswer).to.have.property('status', 'Complete');
-    expect(updatedAnswer).to.have.property('hasEditedTranscript', false);
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateAnswer).to.eql(true);
   });
 });

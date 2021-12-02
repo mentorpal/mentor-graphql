@@ -42,7 +42,10 @@ export const uploadTaskDelete = {
       throw new Error('you do not have a mentor');
     }
     if (args.mentorId && `${mentor._id}` !== `${args.mentorId}`) {
-      if (context.user.userRole !== UserRole.ADMIN) {
+      if (
+        context.user.userRole !== UserRole.ADMIN &&
+        context.user.userRole !== UserRole.CONTENT_MANAGER
+      ) {
         throw new Error('you do not have permission to edit this mentor');
       }
       mentor = await MentorModel.findById(args.mentorId);
