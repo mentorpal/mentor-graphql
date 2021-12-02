@@ -18,7 +18,9 @@ export const uploadTasks = {
   args: { mentorId: { type: GraphQLID } },
   resolve: async (
     _: GraphQLObjectType,
-    args: any,
+    args: {
+      mentorId: string;
+    },
     context: { user: User }
   ): Promise<UploadTask[]> => {
     if (!context.user) {
