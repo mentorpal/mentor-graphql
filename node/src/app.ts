@@ -16,7 +16,7 @@ import * as Tracing from '@sentry/tracing';
 
 export async function createApp(): Promise<Express> {
   const gqlMiddleware = (await import('gql/middleware')).default;
-  if (process.env.NODE_ENV !== 'production') {
+  if (!process.env.NODE_ENV || !process.env.NODE_ENV.includes('production')) {
     require('longjohn'); // full stack traces when testing
   }
   const configureEnv = (await import('utils/configure-env')).default;
