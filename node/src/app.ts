@@ -11,6 +11,8 @@ import mongoose from 'mongoose';
 import morgan from 'morgan';
 import path from 'path';
 import { logger } from 'utils/logging';
+import * as Sentry from '@sentry/node';
+import * as Tracing from '@sentry/tracing';
 
 export async function createApp(): Promise<Express> {
   const gqlMiddleware = (await import('gql/middleware')).default;
@@ -27,6 +29,25 @@ export async function createApp(): Promise<Express> {
   if (process.env['NODE_ENV'] !== 'test') {
     app.use(morgan('dev'));
   }
+  if (process.env.IS_SENTRY_ENABLED === 'true') {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN_MENTOR_GRAPHQL,
+      environment: process.env.NODE_ENV,
+      integrations: [
+        new Sentry.Integrations.Http({ tracing: true }),
+        new Tracing.Integrations.Express({ app }),
+      ],
+      // configure sample of errors to send for performance monitoring (1.0 for 100%)
+      // @see https://docs.sentry.io/platforms/javascript/configuration/sampling/
+      tracesSampleRate: 0.25,
+    });
+    // RequestHandler creates a separate execution context using domains, so that every
+    // transaction/span/breadcrumb is attached to its own Hub instance
+    app.use(Sentry.Handlers.requestHandler());
+    // TracingHandler creates a trace for every incoming request
+    app.use(Sentry.Handlers.tracingHandler());
+  }
+
   const corsOptions = {
     credentials: true,
     origin: ['http://local.mentorpal.org:8000', 'http://localhost:8000'],
@@ -37,6 +58,22 @@ export async function createApp(): Promise<Express> {
   app.use(express.urlencoded({ limit: '1mb' }));
   app.use('/graphql', gqlMiddleware);
   app.use(express.static(path.join(__dirname, 'public')));
+
+  app.get('/test-error-handler', function () {
+    throw new Error('testing error handler, safe to ignore');
+  });
+  app.get('/test-error-unhandled', function () {
+    setTimeout(() => {
+      new Promise((_, reject) =>
+        reject(new Error('test unhandled rejection, safe to ignore'))
+      );
+    });
+  });
+  if (process.env.IS_SENTRY_ENABLED === 'true') {
+    // The error handler must be before any other error middleware and after all controllers
+    app.use(Sentry.Handlers.errorHandler());
+  }
+
   app.use(function (
     err: any, // eslint-disable-line @typescript-eslint/no-explicit-any
     req: Request,
