@@ -4,14 +4,14 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-/**
- * Module dependencies.
- */
-import createApp from 'app';
+import * as Sentry from '@sentry/node';
+import { createApp, appStop } from 'app';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('mentor-admin:server');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const http = require('http');
+import process from 'process';
+import logger from './utils/logging';
 
 /**
  * Normalize a port into a number, string, or false.
@@ -30,6 +30,8 @@ function normalizePort(val: string): string | boolean | number {
 }
 
 async function serverStart() {
+  logger.info('starting server');
+  logger.info(`node env: "${process.env.NODE_ENV}"`);
   const app = await createApp();
   const port = normalizePort(process.env.PORT || '3001');
   app.set('port', port);
@@ -42,10 +44,10 @@ async function serverStart() {
     // handle specific listen errors with friendly messages
     switch (error.code) {
       case 'EACCES':
-        console.error(bind + ' requires elevated privileges');
+        logger.error(bind + ' requires elevated privileges');
         process.exit(1);
       case 'EADDRINUSE':
-        console.error(bind + ' is already in use');
+        logger.error(bind + ' is already in use');
         process.exit(1);
       default:
         throw error;
@@ -58,7 +60,29 @@ async function serverStart() {
     debug('Listening on ' + bind);
   });
   server.listen(port);
-  console.log('node version ' + process.version);
+  logger.info('node version ' + process.version);
+
+  // see https://nodejs.org/api/process.html#process_warning_using_uncaughtexception_correctly
+  process.on('uncaughtException', (err: Error) => {
+    logger.error('Uncaught exception!');
+    logger.error(err);
+    if (process.env.IS_SENTRY_ENABLED === 'true') {
+      Sentry.captureException(err);
+      Sentry.flush(2000).then((done) => {
+        if (done) {
+          logger.info('sentry flush successful');
+        } else {
+          logger.error('sentry flush timed out!');
+        }
+      });
+    }
+    appStop();
+    setTimeout(() => process.exit(1), 3000);
+  });
+  process.on('unhandledRejection', (reason: Error, promise: Promise<any>) => {
+    logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    throw reason; // goes to uncaughtException
+  });
 }
 
 serverStart();
