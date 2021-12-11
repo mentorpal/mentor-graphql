@@ -6,6 +6,8 @@ The full terms of this copyright and license should always be found in the root 
 */
 import isHex from 'is-hex';
 import mongoose from 'mongoose';
+import { logger } from 'utils/logging';
+
 /**
  * Checks if a given object is of type ObjectId.
  * If it isn't, looks for an object id in property _id.
@@ -30,7 +32,8 @@ function toIdPlugin(schema) {
       try {
         return mongoose.Types.ObjectId(obj);
       } catch (castErr) {
-        console.log(`cast error for id '${obj}': ${castErr}`);
+        logger.error(`cast error for id '${obj}': ${castErr}`);
+        logger.error(castErr);
       }
     }
 

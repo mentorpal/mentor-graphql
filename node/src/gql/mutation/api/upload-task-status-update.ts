@@ -12,6 +12,7 @@ import {
   GraphQLID,
   GraphQLList,
 } from 'graphql';
+import { logger } from 'utils/logging';
 import {
   Mentor as MentorModel,
   Question as QuestionModel,
@@ -42,6 +43,7 @@ export const uploadTaskStatusUpdate = {
       media: AnswerMedia[];
     }
   ): Promise<boolean> => {
+    logger.info('uploadTaskStatusUpdate', args);
     if (!(await QuestionModel.exists({ _id: args.questionId }))) {
       throw new Error(`no question found for id '${args.questionId}'`);
     }
@@ -71,15 +73,16 @@ export const uploadTaskStatusUpdate = {
           uploadTask.media = args.media;
           uploadTask.markModified('media');
         }
-        uploadTask.save().catch((err) => {
-          console.log(`failed to save. error: ${err}`);
+        uploadTask.save().catch((err: Error) => {
+          logger.error('failed to save');
+          logger.error(err)
         });
       })
-      .catch((err) => {
-        console.log(
+      .catch((err: Error) => {
+        logger.error(
           `no task found for mentor ${mentor._id} and question ${args.questionId}`
         );
-        console.log(err);
+        logger.error(err);
         return false;
       });
 
