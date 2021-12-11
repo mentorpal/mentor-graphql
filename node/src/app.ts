@@ -8,7 +8,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import express, { Request, Response, NextFunction, Express } from 'express';
 import mongoose from 'mongoose';
-import morgan from 'morgan';
+import morgan, { TokenIndexer } from 'morgan';
 import path from 'path';
 import { logger } from 'utils/logging';
 import * as Sentry from '@sentry/node';
@@ -27,7 +27,18 @@ export async function createApp(): Promise<Express> {
   require('./auth');
   const app = express();
   if (!process.env.NODE_ENV?.includes('test')) {
-    app.use(morgan('dev'));
+    app.use(
+      morgan((tokens: TokenIndexer, req: Request, res: Response) =>
+        JSON.stringify({
+          message: 'http-request-log',
+          method: tokens['method'](req, res),
+          url: tokens['url'](req, res),
+          status: tokens['status'](req, res),
+          'response-time': tokens['response-time'](req, res),
+          'content-length': tokens['res'](req, res, 'content-length'),
+        })
+      )
+    );
   }
   if (process.env.IS_SENTRY_ENABLED === 'true') {
     logger.info(`sentry enabled, calling init on ${process.env.NODE_ENV}`);
