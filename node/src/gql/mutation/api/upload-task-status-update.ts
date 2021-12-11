@@ -75,7 +75,7 @@ export const uploadTaskStatusUpdate = {
         }
         uploadTask.save().catch((err: Error) => {
           logger.error('failed to save');
-          logger.error(err)
+          logger.error(err);
         });
       })
       .catch((err: Error) => {
