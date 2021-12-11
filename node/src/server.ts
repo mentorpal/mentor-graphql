@@ -31,7 +31,7 @@ function normalizePort(val: string): string | boolean | number {
 
 async function serverStart() {
   logger.info('starting server');
-  logger.info(`node env: "${process.env.NODE_ENV}"`);
+  logger.info(`node env: '${process.env.NODE_ENV}'`);
   const app = await createApp();
   const port = normalizePort(process.env.PORT || '3001');
   app.set('port', port);
@@ -81,7 +81,9 @@ async function serverStart() {
   });
   process.on('unhandledRejection', (reason: Error, promise: Promise<any>) => {
     logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
-    throw reason; // goes to uncaughtException
+    if (process.env.IS_SENTRY_ENABLED === 'true') {
+      Sentry.captureException(reason);
+    }
   });
 }
 

@@ -16,20 +16,21 @@ import * as Tracing from '@sentry/tracing';
 
 export async function createApp(): Promise<Express> {
   const gqlMiddleware = (await import('gql/middleware')).default;
-  if (!process.env.NODE_ENV || !process.env.NODE_ENV.includes('production')) {
+  if (!process.env.NODE_ENV?.includes('prod')) {
     require('longjohn'); // full stack traces when testing
   }
   const configureEnv = (await import('utils/configure-env')).default;
   configureEnv();
-  if (process.env['APP_DISABLE_AUTO_START'] !== 'true') {
+  if (process.env.APP_DISABLE_AUTO_START !== 'true') {
     await appStart();
   }
   require('./auth');
   const app = express();
-  if (process.env['NODE_ENV'] !== 'test') {
+  if (!process.env.NODE_ENV?.includes('test')) {
     app.use(morgan('dev'));
   }
   if (process.env.IS_SENTRY_ENABLED === 'true') {
+    logger.info(`sentry enabled, calling init on ${process.env.NODE_ENV}`);
     Sentry.init({
       dsn: process.env.SENTRY_DSN_MENTOR_GRAPHQL,
       environment: process.env.NODE_ENV,
@@ -56,19 +57,26 @@ export async function createApp(): Promise<Express> {
   app.use(express.json({ limit: '1mb' }));
   app.use(cookieParser());
   app.use(express.urlencoded({ limit: '1mb' }));
-  app.use('/graphql', gqlMiddleware);
-  app.use(express.static(path.join(__dirname, 'public')));
-
-  app.get('/test-error-handler', function () {
+  // in order to test behind nginx, these two must be under /graphql:
+  app.get('/graphql/test-error-handler', (_, res) => {
+    res.send(
+      'This handler throws an error, go to Sentry console to check for new issues'
+    );
     throw new Error('testing error handler, safe to ignore');
   });
-  app.get('/test-error-unhandled', function () {
+  app.get('/graphql/test-error-unhandled', (_, res) => {
+    res.send(
+      'This handler does not handle promise rejection, go to Sentry console to check for new issues'
+    );
     setTimeout(() => {
       new Promise((_, reject) =>
         reject(new Error('test unhandled rejection, safe to ignore'))
       );
     });
   });
+  app.use('/graphql', gqlMiddleware);
+  app.use(express.static(path.join(__dirname, 'public'))); // todo remove if not used
+
   if (process.env.IS_SENTRY_ENABLED === 'true') {
     // The error handler must be before any other error middleware and after all controllers
     app.use(Sentry.Handlers.errorHandler());
