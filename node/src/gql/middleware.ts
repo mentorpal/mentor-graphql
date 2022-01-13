@@ -42,7 +42,9 @@ export default graphqlHTTP((req: Request, res: Response) => {
     const next = (user: User, newToken = '') => {
       resolve({
         schema,
-        graphiql: true,
+        ...(!process.env.NODE_ENV?.includes('prod') && {
+          graphiql: { headerEditorEnabled: true },
+        }),
         context: {
           user: user || null,
           newToken: newToken || '',

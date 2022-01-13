@@ -63,14 +63,26 @@ export const uploadTaskStatusUpdate = {
         );
         if (taskIndex > -1) {
           updatedTaskList[taskIndex].status = args.newStatus;
-          uploadTask.markModified('status');
+          if (args.media) {
+            updatedTaskList[taskIndex].media = args.media;
+          }
+          if (args.transcript) {
+            updatedTaskList[taskIndex].transcript = args.transcript;
+          }
+          uploadTask.markModified('taskList');
         }
         if (args.transcript) {
           uploadTask.transcript = args.transcript;
           uploadTask.markModified('transcript');
         }
         if (args.media) {
-          uploadTask.media = args.media;
+          if (!uploadTask.media) {
+            uploadTask.media = args.media;
+          } else {
+            args.media.forEach((m) => {
+              uploadTask.media.push(m);
+            });
+          }
           uploadTask.markModified('media');
         }
         uploadTask.save().catch((err: Error) => {
