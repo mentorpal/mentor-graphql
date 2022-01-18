@@ -7,7 +7,6 @@ The full terms of this copyright and license should always be found in the root 
 
 import {
   GraphQLID,
-  GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
 } from 'graphql';
@@ -15,9 +14,6 @@ import { User, UserRole } from 'models/User';
 import { UploadTask as UploadTaskModel } from 'models';
 import { UploadTask } from 'models/UploadTask';
 import { UploadTaskType } from 'gql/types/upload-task';
-import { Mentor as MentorModel } from 'models';
-import { Mentor } from 'models/Mentor';
-import mongoose from 'mongoose'
 
 export const uploadTask = {
   type: UploadTaskType,
@@ -45,7 +41,7 @@ export const uploadTask = {
       );
     }
     const task = await UploadTaskModel.findOne({
-      mentor:  args.mentorId,
+      mentor: args.mentorId,
       question: args.questionId,
     });
     return task;
