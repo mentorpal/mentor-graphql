@@ -25,6 +25,7 @@ import subjectsById from './subjects-by-id';
 import userQuestion from './user-question';
 import userQuestions from './user-questions';
 import users from './users';
+import uploadTask from './upload-task';
 
 export default new GraphQLObjectType({
   name: 'Query',
@@ -49,5 +50,6 @@ export default new GraphQLObjectType({
     userQuestion,
     userQuestions,
     users,
+    uploadTask,
   },
 });

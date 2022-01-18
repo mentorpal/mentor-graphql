@@ -218,7 +218,6 @@ describe('updateMentorDetails', () => {
         }`,
         variables: { mentor: {}, mentorId: '5ffdf41a1ee2c62111111112' },
       });
-    console.log(response);
     expect(response.status).to.equal(200);
     expect(response.body.errors[0].message).to.equal(
       'you do not have permission to edit this mentor'
@@ -238,7 +237,6 @@ describe('updateMentorDetails', () => {
         }`,
         variables: { mentor: {}, mentorId: '5ffdf41a1ee2c62111111112' },
       });
-    console.log(response);
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateMentorDetails).to.eql(true);
   });
