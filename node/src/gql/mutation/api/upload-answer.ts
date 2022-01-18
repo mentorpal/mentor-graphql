@@ -18,7 +18,7 @@ import {
   Mentor as MentorModel,
   Question as QuestionModel,
 } from 'models';
-import { AnswerMediaProps, Status } from 'models/Answer';
+import { AnswerMedia, AnswerMediaProps, Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
 import { mediaNeedsTransfer } from 'utils/static-urls';
 
@@ -87,6 +87,20 @@ export const answerUpload = {
       mentor: mentor._id,
       question: args.questionId,
     });
+    const media = answer?.media || [];
+    if (args.answer.media) {
+      args.answer.media.forEach((m: AnswerMedia) => {
+        // replace existing or add new:
+        const prev = media.find((e) => e.url === m.url);
+        if (prev) {
+          Object.keys(m)
+            .filter((k) => k !== '_id')
+            .forEach((k: keyof AnswerMedia) => ((prev[k] as unknown) = m[k]));
+        } else {
+          media.push(m);
+        }
+      });
+    }
     const hasEditedTranscript =
       args.answer.hasEditedTranscript !== undefined
         ? args.answer.hasEditedTranscript
@@ -102,8 +116,9 @@ export const answerUpload = {
         $set: {
           ...args.answer,
           hasUntransferredMedia,
-          status: Status.COMPLETE,
+          status: Status.INCOMPLETE, // with partial updates we cant tell here
           hasEditedTranscript: hasEditedTranscript,
+          media,
         },
       },
       {

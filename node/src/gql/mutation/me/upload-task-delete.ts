@@ -11,10 +11,12 @@ import {
   GraphQLID,
 } from 'graphql';
 import {
+  Answer as AnswerModel,
   Mentor as MentorModel,
   Question as QuestionModel,
   UploadTask as UploadTaskModel,
 } from 'models';
+import { Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
 import { User, UserRole } from 'models/User';
 
@@ -54,6 +56,23 @@ export const uploadTaskDelete = {
       mentor: mentor._id,
       question: args.questionId,
     });
+
+    await AnswerModel.findOneAndUpdate(
+      {
+        mentor: mentor._id,
+        question: args.questionId,
+      },
+      {
+        $set: {
+          status: Status.COMPLETE,
+        },
+      },
+      {
+        // to be on the safe side, if there's no anwser for some reason, make this a no-op:
+        new: false,
+        upsert: false,
+      }
+    );
     return Boolean(task);
   },
 };
