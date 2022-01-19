@@ -5,19 +5,11 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 
-import {
-  GraphQLID,
-  GraphQLList,
-  GraphQLNonNull,
-  GraphQLObjectType,
-} from 'graphql';
+import { GraphQLID, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import { User, UserRole } from 'models/User';
 import { UploadTask as UploadTaskModel } from 'models';
 import { UploadTask } from 'models/UploadTask';
 import { UploadTaskType } from 'gql/types/upload-task';
-import { Mentor as MentorModel } from 'models';
-import { Mentor } from 'models/Mentor';
-import mongoose from 'mongoose'
 
 export const uploadTask = {
   type: UploadTaskType,
@@ -36,16 +28,21 @@ export const uploadTask = {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
-    if (
-      context.user.userRole !== UserRole.ADMIN &&
-      context.user.userRole !== UserRole.CONTENT_MANAGER
-    ) {
-      throw new Error(
-        'you are not authorized to view this mentors information'
-      );
-    }
+    if (context.user.id) {
+      // jwt strategy (users)
+      if (
+        context.user.id !== args.mentorId &&
+        context.user.userRole !== UserRole.ADMIN &&
+        context.user.userRole !== UserRole.CONTENT_MANAGER
+      ) {
+        throw new Error(
+          'you are not authorized to view this mentors information'
+        );
+      }
+    } // else bearer-api strategy (services)
+
     const task = await UploadTaskModel.findOne({
-      mentor:  args.mentorId,
+      mentor: args.mentorId,
       question: args.questionId,
     });
     return task;
