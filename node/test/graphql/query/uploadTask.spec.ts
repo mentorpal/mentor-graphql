@@ -29,22 +29,11 @@ describe('query uploadTask', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `query UploadTask($mentorId: ID!, $questionId: ID!) {
-          uploadTask (mentorId: $mentorId, questionId: $questionId) {
-            mentor {
-              _id
-            }
-            question {
-              _id
-              question
-            }
-            transcript
+        query: `query {
+          uploadTask (mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111111112") {
+            _id
           }
         }`,
-        variables: {
-          mentorId: '5ffdf41a1ee2c62111111111',
-          questionId: '511111111111111111111112',
-        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
@@ -59,22 +48,11 @@ describe('query uploadTask', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `query UploadTask($mentorId: ID!, $questionId: ID!) {
-          uploadTask (mentorId: $mentorId, questionId: $questionId) {
-            mentor {
-              _id
-            }
-            question {
-              _id
-              question
-            }
-            transcript
+        query: `query {
+          uploadTask (mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111111112") {
+            _id
           }
         }`,
-        variables: {
-          mentorId: '5ffdf41a1ee2c62111111111',
-          questionId: '511111111111111111111112',
-        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
@@ -116,6 +94,28 @@ describe('query uploadTask', () => {
         question: 'Who are you and what do you do?',
       },
       transcript: 'fake_transcript',
+    });
+  });
+
+  it(`provides the upload task to authenticated services`, async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: `query {
+          uploadTask (mentorId: "5ffdf41a1ee2c62111111111", questionId: "511111111111111111111112") {
+            mentor {
+              _id
+            }
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.uploadTask).to.eql({
+      mentor: {
+        _id: '5ffdf41a1ee2c62111111111',
+      },
     });
   });
 });

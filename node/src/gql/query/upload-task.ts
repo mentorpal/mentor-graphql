@@ -28,14 +28,19 @@ export const uploadTask = {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
-    if (
-      context.user.userRole !== UserRole.ADMIN &&
-      context.user.userRole !== UserRole.CONTENT_MANAGER
-    ) {
-      throw new Error(
-        'you are not authorized to view this mentors information'
-      );
-    }
+    if (context.user.id) {
+      // jwt strategy (users)
+      if (
+        context.user.id !== args.mentorId &&
+        context.user.userRole !== UserRole.ADMIN &&
+        context.user.userRole !== UserRole.CONTENT_MANAGER
+      ) {
+        throw new Error(
+          'you are not authorized to view this mentors information'
+        );
+      }
+    } // else bearer-api strategy (services)
+
     const task = await UploadTaskModel.findOne({
       mentor: args.mentorId,
       question: args.questionId,
