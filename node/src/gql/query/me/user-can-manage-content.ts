@@ -4,34 +4,27 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import { User } from 'models/User';
-import { mentor } from './mentor';
-import { uploadTasks } from './upload-tasks';
-import { categoryAnswers } from './category-answers';
-import { canManageContent } from './user-can-manage-content';
+import { GraphQLString, GraphQLObjectType, GraphQLBoolean } from 'graphql';
+import { User, UserRole } from 'models/User';
+import { User as UserSchema } from 'models';
 
-export const Me: GraphQLObjectType = new GraphQLObjectType({
-  name: 'MeQuery',
-  fields: {
-    mentor,
-    uploadTasks,
-    categoryAnswers,
-    canManageContent,
+export const canManageContent = {
+  type: GraphQLBoolean,
+  args: {
+    userId: { type: GraphQLString },
   },
-});
-
-export const me = {
-  type: Me,
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  resolve: (_: any, args: any, context: { user: User }): { user: User } => {
-    if (!context.user) {
-      throw new Error('Only authenticated users');
-    }
-    return {
-      user: context.user,
-    };
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { userId: string },
+    context: { user: User }
+  ): Promise<boolean> => {
+    const userIdToFind = args.userId ? args.userId : context.user.id;
+    const user = await UserSchema.findOne({ _id: userIdToFind });
+    return (
+      user.userRole === UserRole.CONTENT_MANAGER ||
+      user.userRole === UserRole.ADMIN
+    );
   },
 };
 
-export default me;
+export default canManageContent;
