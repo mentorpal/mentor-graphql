@@ -12,6 +12,8 @@ import UserType from './user';
 import DateType from './date';
 import { Response } from 'express';
 import { RefreshToken as RefreshTokenSchema } from 'models';
+import { Mentor as MentorModel } from 'models';
+import { Mentor } from 'models/Mentor';
 
 export interface UserAccessToken {
   user: User;
@@ -36,7 +38,7 @@ export async function getRefreshedToken(token: string): Promise<any> {
   await newRefreshToken.save();
 
   // generate new jwt
-  const jwtToken = generateJwtToken(user);
+  const jwtToken = await generateJwtToken(user);
   return { jwtToken, user };
 }
 
@@ -87,12 +89,23 @@ export function generateRefreshToken(user: User): any {
 }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-export function generateJwtToken(user: User): any {
+export async function generateJwtToken(user: User): Promise<any> {
   // generates short lived (15 min) access tokens
   const expiresIn = 15 * 60; // 15 minute expiry
   const expirationDate = new Date(Date.now() + expiresIn * 1000);
+  const mentors: Mentor[] = await MentorModel.find({
+    user: user._id,
+  });
+  const mentorIds: string[] = mentors.map((mentor) => {
+    return mentor._id;
+  });
   const accessToken = jwt.sign(
-    { id: user._id, expirationDate },
+    {
+      id: user._id,
+      role: user.userRole,
+      mentorIds,
+      expirationDate,
+    },
     process.env.JWT_SECRET,
     { expiresIn }
   );
@@ -107,7 +120,10 @@ export function generateAccessToken(user: User): UserAccessToken {
   const expiresIn = accessTokenDuration();
   const expirationDate = new Date(Date.now() + expiresIn * 1000);
   const accessToken = jwt.sign(
-    { id: user._id, expirationDate },
+    {
+      id: user._id,
+      expirationDate,
+    },
     process.env.JWT_SECRET,
     { expiresIn }
   );
