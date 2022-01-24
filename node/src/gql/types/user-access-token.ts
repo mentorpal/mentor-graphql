@@ -116,12 +116,22 @@ export async function generateJwtToken(user: User): Promise<any> {
   };
 }
 
-export function generateAccessToken(user: User): UserAccessToken {
+export async function generateAccessToken(
+  user: User
+): Promise<UserAccessToken> {
   const expiresIn = accessTokenDuration();
   const expirationDate = new Date(Date.now() + expiresIn * 1000);
+  const mentors: Mentor[] = await MentorModel.find({
+    user: user._id,
+  });
+  const mentorIds: string[] = mentors.map((mentor) => {
+    return mentor._id;
+  });
   const accessToken = jwt.sign(
     {
       id: user._id,
+      role: user.userRole,
+      mentorIds,
       expirationDate,
     },
     process.env.JWT_SECRET,
