@@ -12,8 +12,6 @@ import UserType from './user';
 import DateType from './date';
 import { Response } from 'express';
 import { RefreshToken as RefreshTokenSchema } from 'models';
-import { Mentor as MentorModel } from 'models';
-import { Mentor } from 'models/Mentor';
 
 export interface UserAccessToken {
   user: User;
@@ -38,7 +36,7 @@ export async function getRefreshedToken(token: string): Promise<any> {
   await newRefreshToken.save();
 
   // generate new jwt
-  const jwtToken = await generateJwtToken(user);
+  const jwtToken = generateJwtToken(user);
   return { jwtToken, user };
 }
 
@@ -89,21 +87,15 @@ export function generateRefreshToken(user: User): any {
 }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-export async function generateJwtToken(user: User): Promise<any> {
+export function generateJwtToken(user: User): any {
   // generates short lived (15 min) access tokens
   const expiresIn = 15 * 60; // 15 minute expiry
   const expirationDate = new Date(Date.now() + expiresIn * 1000);
-  const mentors: Mentor[] = await MentorModel.find({
-    user: user._id,
-  });
-  const mentorIds: string[] = mentors.map((mentor) => {
-    return mentor._id;
-  });
   const accessToken = jwt.sign(
     {
       id: user._id,
       role: user.userRole,
-      mentorIds,
+      mentorIds: user.mentorIds,
       expirationDate,
     },
     process.env.JWT_SECRET,
@@ -116,22 +108,14 @@ export async function generateJwtToken(user: User): Promise<any> {
   };
 }
 
-export async function generateAccessToken(
-  user: User
-): Promise<UserAccessToken> {
+export function generateAccessToken(user: User): UserAccessToken {
   const expiresIn = accessTokenDuration();
   const expirationDate = new Date(Date.now() + expiresIn * 1000);
-  const mentors: Mentor[] = await MentorModel.find({
-    user: user._id,
-  });
-  const mentorIds: string[] = mentors.map((mentor) => {
-    return mentor._id;
-  });
   const accessToken = jwt.sign(
     {
       id: user._id,
       role: user.userRole,
-      mentorIds,
+      mentorIds: user.mentorIds,
       expirationDate,
     },
     process.env.JWT_SECRET,
