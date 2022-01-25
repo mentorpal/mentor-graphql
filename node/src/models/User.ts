@@ -38,7 +38,7 @@ export const UserSchema = new Schema<User, UserModel>(
       default: UserRole.USER,
     },
     mentorIds: {
-      type: [String],
+      type: [Schema.Types.ObjectId],
       default: [],
     },
     lastLoginAt: { type: Date },
