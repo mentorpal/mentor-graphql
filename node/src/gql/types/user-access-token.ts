@@ -92,7 +92,12 @@ export function generateJwtToken(user: User): any {
   const expiresIn = 15 * 60; // 15 minute expiry
   const expirationDate = new Date(Date.now() + expiresIn * 1000);
   const accessToken = jwt.sign(
-    { id: user._id, expirationDate },
+    {
+      id: user._id,
+      role: user.userRole,
+      mentorIds: user.mentorIds,
+      expirationDate,
+    },
     process.env.JWT_SECRET,
     { expiresIn }
   );
@@ -107,7 +112,12 @@ export function generateAccessToken(user: User): UserAccessToken {
   const expiresIn = accessTokenDuration();
   const expirationDate = new Date(Date.now() + expiresIn * 1000);
   const accessToken = jwt.sign(
-    { id: user._id, expirationDate },
+    {
+      id: user._id,
+      role: user.userRole,
+      mentorIds: user.mentorIds,
+      expirationDate,
+    },
     process.env.JWT_SECRET,
     { expiresIn }
   );

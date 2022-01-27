@@ -23,6 +23,7 @@ export interface User extends Document {
   name: string;
   email: string;
   userRole: string;
+  mentorIds: string[];
   lastLoginAt: Date;
 }
 
@@ -35,6 +36,10 @@ export const UserSchema = new Schema<User, UserModel>(
       type: String,
       enum: [UserRole.USER, UserRole.CONTENT_MANAGER, UserRole.ADMIN],
       default: UserRole.USER,
+    },
+    mentorIds: {
+      type: [Schema.Types.ObjectId],
+      default: [],
     },
     lastLoginAt: { type: Date },
   },
