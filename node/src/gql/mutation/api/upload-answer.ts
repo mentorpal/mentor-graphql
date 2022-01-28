@@ -91,7 +91,7 @@ export const answerUpload = {
     if (args.answer.media) {
       args.answer.media.forEach((m: AnswerMedia) => {
         // replace existing or add new:
-        const prev = media.find((e) => e.url === m.url);
+        const prev = media.find((e) => e.tag === m.tag);
         if (prev) {
           Object.keys(m)
             .filter((k) => k !== '_id')
