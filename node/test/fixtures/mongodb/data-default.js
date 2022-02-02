@@ -59,6 +59,7 @@ module.exports = {
     {
       _id: ObjectId('5ffdf41a1ee2c62111111111'),
       name: 'Clinton Anderson',
+      email: 'clint@email.com',
       firstName: 'Clint',
       title: "Nuclear Electrician's Mate",
       thumbnail:
