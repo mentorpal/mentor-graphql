@@ -78,16 +78,25 @@ export const loginGoogle = {
       if (!user) {
         throw new Error('failed to create user');
       }
-      // Create a new mentor if creating a new user account
+      // Create/Migrate mentor to user model
       if (!user.mentorIds.length) {
-        const newMentor = new MentorSchema({
-          user: user._id,
-          name: googleResponse.name,
-          firstName: googleResponse.given_name,
-          email: googleResponse.email,
-        });
-        const savedMentor = await newMentor.save();
-        const mentorId = savedMentor._id;
+        const newMentor = await MentorSchema.findOneAndUpdate(
+          {
+            user: user._id,
+          },
+          {
+            $set: {
+              name: googleResponse.name,
+              firstName: googleResponse.given_name,
+              email: googleResponse.email,
+            },
+          },
+          {
+            new: true,
+            upsert: true,
+          }
+        );
+        const mentorId = newMentor._id;
         await UserSchema.findOneAndUpdate(
           {
             googleId: googleResponse.id,
