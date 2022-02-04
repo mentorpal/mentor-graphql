@@ -25,6 +25,7 @@ import { SubjectQuestion, Topic } from 'models/Subject';
 export interface MentorClientData {
   _id: string;
   name: string;
+  email: string;
   title: string;
   mentorType: string;
   topicQuestions: TopicQuestions[];
@@ -48,6 +49,7 @@ export const MentorClientDataType = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
+    email: { type: GraphQLString },
     title: { type: GraphQLString },
     mentorType: { type: GraphQLString },
     topicQuestions: { type: GraphQLList(TopicQuestionsType) },
@@ -140,6 +142,7 @@ export const mentorData = {
       _id: mentor._id,
       name: mentor.name,
       title: mentor.title,
+      email: mentor.email,
       mentorType: mentor.mentorType,
       topicQuestions: Object.keys(topicQuestions).map((key) => {
         const t = topics.find((t) => `${t.id}` === key);

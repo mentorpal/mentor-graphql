@@ -50,6 +50,7 @@ describe('mentorClientData', () => {
           mentorClientData(mentor: "5ffdf41a1ee2c62111111111") {
             _id
             name
+            email
             title
             mentorType
             topicQuestions {
@@ -73,6 +74,7 @@ describe('mentorClientData', () => {
     expect(response.body.data.mentorClientData).to.eql({
       _id: '5ffdf41a1ee2c62111111111',
       name: 'Clinton Anderson',
+      email: 'clint@email.com',
       title: "Nuclear Electrician's Mate",
       mentorType: 'VIDEO',
       topicQuestions: [],
