@@ -32,7 +32,7 @@ describe('subjectAddOrUpdateQuestions', () => {
         query: `mutation SubjectAddOrUpdateQuestions($subject: ID!, $questions: [SubjectQuestionInputType]!) {
           me {
             subjectAddOrUpdateQuestions(subject: $subject, questions: $questions) {
-              _id
+              question
             }
           }
         }`,
@@ -57,7 +57,7 @@ describe('subjectAddOrUpdateQuestions', () => {
         query: `mutation SubjectAddOrUpdateQuestions($questions: [SubjectQuestionInputType]!) {
           me {
             subjectAddOrUpdateQuestions(questions: $questions) {
-              _id
+              question
             }
           }
         }`,
@@ -77,7 +77,7 @@ describe('subjectAddOrUpdateQuestions', () => {
         query: `mutation SubjectAddOrUpdateQuestions($subject: ID!) {
           me {
             subjectAddOrUpdateQuestions(subject: $subject) {
-              _id
+              question
             }
           }
         }`,
@@ -97,7 +97,7 @@ describe('subjectAddOrUpdateQuestions', () => {
         query: `mutation SubjectAddOrUpdateQuestions($subject: ID!, $questions: [SubjectQuestionInputType]!) {
           me {
             subjectAddOrUpdateQuestions(subject: $subject, questions: $questions) {
-              _id
+              question
             }
           }
         }`,
@@ -113,7 +113,7 @@ describe('subjectAddOrUpdateQuestions', () => {
     );
   });
 
-  it('adds and updates questions', async () => {
+  it.only('adds and updates questions', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
@@ -122,32 +122,9 @@ describe('subjectAddOrUpdateQuestions', () => {
         query: `mutation SubjectAddOrUpdateQuestions($subject: ID!, $questions: [SubjectQuestionInputType]!) {
           me {
             subjectAddOrUpdateQuestions(subject: $subject, questions: $questions) {
-              _id
-              name
-              description
-              isRequired
-              categories {
-                id
-                name
-              }
-              topics {
-                id
-                name
-                description
-              }
-              questions {
-                question {
-                  question
-                }
-                category {
-                  id
-                  name
-                }
-                topics {
-                  id
-                  name
-                }
-              }
+              question
+              category
+              topics
             }
           }
         }`,
@@ -185,59 +162,17 @@ describe('subjectAddOrUpdateQuestions', () => {
         },
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.subjectAddOrUpdateQuestions).to.eql({
-      _id: '5ffdf41a1ee2c62320b49eb2',
-      name: 'Background',
-      description:
-        'These questions will ask general questions about your background that might be relevant to how people understand your career.',
-      isRequired: true,
-      categories: [{ id: 'category', name: 'Category' }],
-      topics: [
-        {
-          id: '5ffdf41a1ee2c62320b49ec2',
-          name: 'Background',
-          description:
-            'These questions will ask general questions about your background, that might be relevant to how people understand your career',
-        },
-        {
-          id: '5ffdf41a1ee2c62320b49ec3',
-          name: 'Advice',
-          description:
-            'These questions will ask you to give advice to someone who is interested in your career',
-        },
-      ],
-      questions: [
-        {
-          question: { question: 'Who are you and what do you do?' },
-          category: null,
-          topics: [{ id: '5ffdf41a1ee2c62320b49ec2', name: 'Background' }],
-        },
-        {
-          question: { question: 'How old are you?' },
-          category: { id: 'category', name: 'Category' },
-          topics: [{ id: '5ffdf41a1ee2c62320b49ec2', name: 'Background' }],
-        },
-        {
-          question: { question: 'Do you like your job?' },
-          category: null,
-          topics: [{ id: '5ffdf41a1ee2c62320b49ec3', name: 'Advice' }],
-        },
-        {
-          question: { question: 'Updated?' },
-          category: { id: 'category', name: 'Category' },
-          topics: [{ id: '5ffdf41a1ee2c62320b49ec2', name: 'Background' }],
-        },
-        {
-          question: { question: 'What is Aaron like?' },
-          category: { id: 'category', name: 'Category' },
-          topics: [],
-        },
-        {
-          question: { question: 'New?' },
-          category: null,
-          topics: [{ id: '5ffdf41a1ee2c62320b49ec2', name: 'Background' }],
-        },
-      ],
-    });
+    expect(response.body.data.me.subjectAddOrUpdateQuestions).to.eql([
+      {
+        question: '511111111111111111111116',
+        category: 'category',
+        topics: ['5ffdf41a1ee2c62320b49ec2'],
+      },
+      {
+        question: '511111111111111111111110',
+        category: 'invalid',
+        topics: ['5ffdf41a1ee2c62320b49ec2'],
+      },
+    ]);
   });
 });

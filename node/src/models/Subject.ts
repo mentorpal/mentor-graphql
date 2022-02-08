@@ -113,7 +113,7 @@ export interface SubjectModel extends Model<Subject> {
   addOrUpdateQuestions(
     subject: string | Subject,
     questions: SubjectQuestionUpdateInput[]
-  ): Promise<Subject>;
+  ): Promise<SubjectQuestionProps[]>;
   updateOrCreate(subject: SubjectUpdateInput): Promise<Subject>;
 }
 
@@ -209,7 +209,7 @@ SubjectSchema.statics.addOrUpdateQuestions = async function (
       questions[idx] = qu;
     }
   }
-  return await this.findOneAndUpdate(
+  await this.findOneAndUpdate(
     { _id: subject._id },
     {
       $set: { questions },
@@ -219,6 +219,7 @@ SubjectSchema.statics.addOrUpdateQuestions = async function (
       upsert: true,
     }
   );
+  return questionUpdates;
 };
 
 SubjectSchema.index({ name: -1, _id: -1 });
