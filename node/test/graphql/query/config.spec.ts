@@ -155,6 +155,7 @@ describe('config', () => {
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
       urlVideoIdleTips: 'https://some/custom/url',
+      filterEmailMentorAddress: 'fakeemail@gmail.com',
       videoRecorderMaxLength: 300,
       styleHeaderLogo: '/a/logo.png',
       styleHeaderColor: '',
@@ -175,6 +176,7 @@ describe('config', () => {
             cmi5Fetch
             googleClientId
             urlVideoIdleTips
+            filterEmailMentorAddress
             videoRecorderMaxLength
             mentorsDefault
             featuredMentors
