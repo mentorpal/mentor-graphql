@@ -113,7 +113,7 @@ describe('subjectAddOrUpdateQuestions', () => {
     );
   });
 
-  it.only('adds and updates questions', async () => {
+  it('adds and updates questions', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
