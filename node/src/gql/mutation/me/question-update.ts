@@ -36,7 +36,7 @@ export const QuestionUpdateInputType = new GraphQLInputObjectType({
     question: { type: GraphQLString },
     type: { type: GraphQLString },
     name: { type: GraphQLString },
-    clientId: {type: GraphQLString },
+    clientId: { type: GraphQLString },
     paraphrases: { type: GraphQLList(GraphQLString) },
     mentor: { type: GraphQLID },
     mentorType: { type: GraphQLString },
