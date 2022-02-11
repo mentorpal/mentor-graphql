@@ -20,6 +20,7 @@ export const QuestionType = new GraphQLObjectType({
     question: { type: GraphQLString },
     type: { type: GraphQLString },
     name: { type: GraphQLString },
+    clientId: { type: GraphQLString },
     paraphrases: { type: GraphQLList(GraphQLString) },
     mentor: { type: GraphQLID },
     mentorType: { type: GraphQLString },

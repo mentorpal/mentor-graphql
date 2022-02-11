@@ -135,6 +135,7 @@ describe('subjectAddOrUpdateQuestions', () => {
               question: {
                 _id: '511111111111111111111116',
                 question: 'Updated?',
+                clientId:"12346",
               },
               category: { id: 'category' },
               topics: [
@@ -147,6 +148,7 @@ describe('subjectAddOrUpdateQuestions', () => {
               question: {
                 _id: '511111111111111111111110',
                 question: 'New?',
+                clientId:"12346",
               },
               category: { id: 'invalid' },
               topics: [
@@ -161,6 +163,7 @@ describe('subjectAddOrUpdateQuestions', () => {
           ],
         },
       });
+      console.log(response.body)
     expect(response.status).to.equal(200);
     expect(response.body.data.me.subjectAddOrUpdateQuestions).to.eql([
       {
