@@ -299,6 +299,7 @@ module.exports = {
           status: 'IN_PROGRESS',
         },
       ],
+      originalVideoUrl: 'fake_video_url',
       transcript: 'fake_transcript',
     },
   ],

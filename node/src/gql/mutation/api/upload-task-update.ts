@@ -26,6 +26,7 @@ import { AnswerMediaInputType } from './upload-answer';
 export interface UploadTask {
   taskList: [TaskInfoProps];
   transcript: string;
+  originalVideoUrl: string;
   media: AnswerMediaProps[];
 }
 
@@ -35,6 +36,7 @@ export const UploadTaskInputType = new GraphQLInputObjectType({
     taskList: { type: GraphQLList(TaskInfoInputType) },
     transcript: { type: GraphQLString },
     media: { type: GraphQLList(AnswerMediaInputType) },
+    originalVideoUrl: { type: GraphQLString },
   },
 });
 
