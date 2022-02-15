@@ -18,12 +18,6 @@ import {
   SubjectQuestionUpdateInput,
 } from './subject-update';
 
-interface SubjectAddOrUpdateQuestionReturnType {
-  question: number;
-  category: string;
-  topics: string[];
-}
-
 interface SubjectAddOrUpdateQuestionGQLType {
   question: number;
   category: string;
@@ -48,7 +42,7 @@ export const subjectAddOrUpdateQuestions = {
   resolve: async (
     _root: GraphQLObjectType,
     args: { subject: string; questions: SubjectQuestionUpdateInput[] }
-  ): Promise<SubjectAddOrUpdateQuestionReturnType[]> => {
+  ): Promise<SubjectAddOrUpdateQuestionGQLType[]> => {
     return await SubjectModel.addOrUpdateQuestions(
       args.subject,
       args.questions
