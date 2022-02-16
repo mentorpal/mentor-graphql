@@ -9,18 +9,32 @@ import {
   GraphQLNonNull,
   GraphQLID,
   GraphQLList,
+  GraphQLString,
 } from 'graphql';
 
 import { Subject as SubjectModel } from 'models';
-import { Subject } from 'models/Subject';
-import SubjectType from 'gql/types/subject';
 import {
   SubjectQuestionInputType,
   SubjectQuestionUpdateInput,
 } from './subject-update';
 
+interface SubjectAddOrUpdateQuestionGQLType {
+  question: number;
+  category: string;
+  topics: string[];
+}
+
+export const SubjectAddOrUpdateQuestionGQLType = new GraphQLObjectType({
+  name: 'SubjectAddQuestionGQLType',
+  fields: {
+    category: { type: GraphQLString },
+    topics: { type: GraphQLList(GraphQLID) },
+    question: { type: GraphQLID },
+  },
+});
+
 export const subjectAddOrUpdateQuestions = {
-  type: SubjectType,
+  type: GraphQLList(SubjectAddOrUpdateQuestionGQLType),
   args: {
     subject: { type: GraphQLNonNull(GraphQLID) },
     questions: { type: GraphQLNonNull(GraphQLList(SubjectQuestionInputType)) },
@@ -28,7 +42,7 @@ export const subjectAddOrUpdateQuestions = {
   resolve: async (
     _root: GraphQLObjectType,
     args: { subject: string; questions: SubjectQuestionUpdateInput[] }
-  ): Promise<Subject> => {
+  ): Promise<SubjectAddOrUpdateQuestionGQLType[]> => {
     return await SubjectModel.addOrUpdateQuestions(
       args.subject,
       args.questions
