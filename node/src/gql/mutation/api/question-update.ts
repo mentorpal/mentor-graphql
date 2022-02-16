@@ -4,37 +4,26 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import { User } from 'models/User';
-import mentorThumbnailUpdate from './mentor-thumbnail-update';
-import mediaUpdate from './media-update';
-import uploadAnswer from './upload-answer';
-import uploadTaskUpdate from './upload-task-update';
-import uploadTaskStatusUpdate from './upload-task-status-update';
-import questionUpdate from './question-update';
+import { GraphQLObjectType, GraphQLNonNull } from 'graphql';
+import { Question as QuestionModel } from 'models';
+import { Question } from 'models/Question';
+import QuestionType from 'gql/types/question';
+import {
+  QuestionUpdateInput,
+  QuestionUpdateInputType,
+} from '../me/question-update';
 
-export const Api: GraphQLObjectType = new GraphQLObjectType({
-  name: 'ApiMutation',
-  fields: () => ({
-    mentorThumbnailUpdate,
-    mediaUpdate,
-    uploadAnswer,
-    uploadTaskUpdate,
-    uploadTaskStatusUpdate,
-    questionUpdate,
-  }),
-});
-
-export const api = {
-  type: Api,
-  resolve: (_: any, args: any, context: { user: User }): { user: User } => {
-    if (!context.user) {
-      throw new Error('Only authenticated users');
-    }
-    return {
-      user: context.user,
-    };
+export const updateQuestion = {
+  type: QuestionType,
+  args: {
+    question: { type: GraphQLNonNull(QuestionUpdateInputType) },
+  },
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { question: QuestionUpdateInput }
+  ): Promise<Question> => {
+    return await QuestionModel.updateOrCreate(args.question);
   },
 };
 
-export default api;
+export default updateQuestion;

@@ -24,6 +24,7 @@ export interface Question extends Document {
   question: string;
   type: string;
   name: string;
+  clientId: string;
   paraphrases: string[];
   mentor: Mentor['_id'];
   mentorType: string;
@@ -39,6 +40,7 @@ export const QuestionSchema = new Schema<Question, QuestionModel>(
       default: QuestionType.QUESTION,
     },
     name: { type: String },
+    clientId: { type: String },
     paraphrases: [{ type: String }],
     mentor: {
       type: Schema.Types.ObjectId,
