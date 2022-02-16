@@ -143,7 +143,6 @@ describe('uploadTaskUpdate', () => {
                 status: 'IN_PROGRESS',
               },
             ],
-            originalVideoUrl: 'fake_original_url',
           },
         },
       });
@@ -170,7 +169,6 @@ describe('uploadTaskUpdate', () => {
                   task_id
                   status
                 }
-                originalVideoUrl
                 transcript
                 media {
                   type
@@ -228,7 +226,6 @@ describe('uploadTaskUpdate', () => {
             ],
             transcript: 'My name is Clinton Anderson',
             media: [{ type: 'video', tag: 'web', url: 'video.mp4' }],
-            originalVideoUrl: 'fake_original_url',
           },
         },
       });
@@ -255,7 +252,6 @@ describe('uploadTaskUpdate', () => {
                   task_id
                   status
                 }
-                originalVideoUrl
                 transcript
                 media {
                   type
@@ -283,7 +279,6 @@ describe('uploadTaskUpdate', () => {
             status: 'IN_PROGRESS',
           },
         ],
-        originalVideoUrl: 'fake_original_url',
         transcript: 'My name is Clinton Anderson',
         media: [
           {
