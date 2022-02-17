@@ -4,7 +4,12 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType, GraphQLList, GraphQLID } from 'graphql';
+import {
+  GraphQLObjectType,
+  GraphQLList,
+  GraphQLID,
+  GraphQLString,
+} from 'graphql';
 import DateType from './date';
 
 export const MentorPanelType = new GraphQLObjectType({
@@ -13,6 +18,8 @@ export const MentorPanelType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     subject: { type: GraphQLID },
     mentors: { type: GraphQLList(GraphQLID) },
+    title: { type: GraphQLString },
+    subtitle: { type: GraphQLString },
     createdAt: { type: DateType },
     updatedAt: { type: DateType },
   }),

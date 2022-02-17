@@ -17,6 +17,8 @@ import { Mentor } from './Mentor';
 export interface MentorPanel extends Document {
   subject: Subject['_id'];
   mentors: Mentor['_id'][];
+  title: string;
+  subtitle: string;
 }
 
 export interface MentorPanelModel extends Model<MentorPanel> {
@@ -30,6 +32,8 @@ export const MentorPanelSchema = new Schema<MentorPanel, MentorPanelModel>(
   {
     subject: { type: Schema.Types.ObjectId, ref: 'Subject' },
     mentors: { type: [{ type: Schema.Types.ObjectId, ref: 'Mentor' }] },
+    title: { type: String },
+    subtitle: { type: String },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
