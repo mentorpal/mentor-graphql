@@ -45,6 +45,7 @@ describe('config', () => {
             googleClientId
             mentorsDefault
             featuredMentors
+            featuredMentorPanels
             activeMentors
             urlClassifier
             urlGraphql
@@ -61,42 +62,7 @@ describe('config', () => {
       googleClientId: '',
       mentorsDefault: [],
       featuredMentors: [],
-      activeMentors: [],
-      urlClassifier: '/classifier',
-      urlGraphql: '/graphql',
-      urlVideo: '/video',
-      styleHeaderLogo: '',
-    });
-  });
-
-  it(`serves default config when no settings`, async () => {
-    const response = await request(app)
-      .post('/graphql')
-      .send({
-        query: `query {
-          config {
-            cmi5Enabled
-            cmi5Endpoint
-            cmi5Fetch
-            googleClientId
-            mentorsDefault
-            featuredMentors
-            activeMentors
-            urlClassifier
-            urlGraphql
-            urlVideo
-            styleHeaderLogo
-          }
-        }`,
-      });
-    expect(response.status).to.equal(200);
-    expect(response.body.data?.config).to.eql({
-      cmi5Enabled: false,
-      cmi5Endpoint: '',
-      cmi5Fetch: '',
-      googleClientId: '',
-      mentorsDefault: [],
-      featuredMentors: [],
+      featuredMentorPanels: [],
       activeMentors: [],
       urlClassifier: '/classifier',
       urlGraphql: '/graphql',
@@ -150,6 +116,7 @@ describe('config', () => {
       googleClientId: '',
       mentorsDefault: ['somementor'],
       featuredMentors: ['somementor'],
+      featuredMentorPanels: ['somementorpanel'],
       activeMentors: ['somementor'],
       urlClassifier: '/classifier/v2',
       urlGraphql: '/graphql/v2',
@@ -180,6 +147,7 @@ describe('config', () => {
             videoRecorderMaxLength
             mentorsDefault
             featuredMentors
+            featuredMentorPanels
             activeMentors
             urlClassifier
             urlGraphql
