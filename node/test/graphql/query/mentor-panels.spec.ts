@@ -41,6 +41,8 @@ describe('mentorPanels', () => {
               _id
               subject
               mentors
+              title
+              subtitle
             }
           }
           pageInfo {
@@ -58,6 +60,8 @@ describe('mentorPanels', () => {
             _id: '5ffdf41a1ee2c62111111111',
             subject: '5ffdf41a1ee2c62320b49eb3',
             mentors: ['5ffdf41a1ee2c62111111112'],
+            title: 'fake panel title',
+            subtitle: 'fake panel subtitle',
           },
         },
       ],

@@ -119,6 +119,12 @@ export const answerUpload = {
           status: Status.INCOMPLETE, // with partial updates we cant tell here
           hasEditedTranscript: hasEditedTranscript,
           media,
+          transcript:
+            args.answer.transcript != undefined
+              ? args.answer.transcript
+              : answer
+              ? answer.transcript
+              : '',
         },
       },
       {
