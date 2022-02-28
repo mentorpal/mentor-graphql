@@ -19,7 +19,7 @@ Development
 
 Required Software
 =================
-- node 13.2+
+- node 16.14+
 - npm
 - make
 
