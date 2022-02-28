@@ -388,6 +388,7 @@ MentorSchema.statics.getAnswers = async function ({
             question: qid,
             transcript: '',
             status: Status.INCOMPLETE,
+            media: [],
           },
         },
         {
