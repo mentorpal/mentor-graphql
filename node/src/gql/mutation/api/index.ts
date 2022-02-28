@@ -12,6 +12,7 @@ import uploadAnswer from './upload-answer';
 import uploadTaskUpdate from './upload-task-update';
 import uploadTaskStatusUpdate from './upload-task-status-update';
 import questionUpdate from './question-update';
+import mediaReplace from './media-replace';
 
 export const Api: GraphQLObjectType = new GraphQLObjectType({
   name: 'ApiMutation',
@@ -22,6 +23,7 @@ export const Api: GraphQLObjectType = new GraphQLObjectType({
     uploadTaskUpdate,
     uploadTaskStatusUpdate,
     questionUpdate,
+    mediaReplace,
   }),
 });
 
