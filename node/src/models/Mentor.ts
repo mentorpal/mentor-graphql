@@ -16,7 +16,7 @@ import {
   PaginateQuery,
   pluginPagination,
 } from './Paginatation';
-import { Answer, Status } from './Answer';
+import { Answer, AnswerMedia, Status } from './Answer';
 import { QuestionType } from './Question';
 import { Subject, SubjectQuestion, Topic } from './Subject';
 import { User } from './User';
@@ -372,40 +372,20 @@ MentorSchema.statics.getAnswers = async function ({
     acc[`${cur.question}`] = cur;
     return acc;
   }, {});
-  const answerResult = questionIds.map(async (qid: string) => {
-    const answer = answersByQid[`${qid}`];
-    if (answer) {
-      return answer;
-    } else {
-      // Question id is new, needs to be added to AnswerModel
-      const newAnswer = await AnswerModel.findOneAndUpdate(
-        {
-          question: qid,
-        },
-        {
-          $set: {
-            mentor: userMentor._id,
-            question: qid,
-            transcript: '',
-            status: Status.INCOMPLETE,
-            media: [],
-          },
-        },
-        {
-          new: true,
-          upsert: true,
-        }
-      );
-      return newAnswer;
-    }
+  const answerResult = questionIds.map((qid: string) => {
+    return (
+      answersByQid[`${qid}`] || {
+        mentor: userMentor._id,
+        question: qid,
+        transcript: '',
+        status: Status.INCOMPLETE,
+        media: [] as AnswerMedia[],
+      }
+    );
   });
-  const toReturn = await Promise.all(answerResult).then((results) => {
-    const toReturn = status
-      ? results.filter((a: Answer) => a.status === status)
-      : results;
-    return toReturn;
-  });
-  return toReturn;
+  return status
+    ? answerResult.filter((a: Answer) => a.status === status)
+    : answerResult;
 };
 
 MentorSchema.index({ name: -1, _id: -1 });
