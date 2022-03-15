@@ -26,6 +26,7 @@ import userQuestion from './user-question';
 import userQuestions from './user-questions';
 import users from './users';
 import uploadTask from './upload-task';
+import categoryAnswers from './category-answers';
 
 export default new GraphQLObjectType({
   name: 'Query',
@@ -41,6 +42,7 @@ export default new GraphQLObjectType({
     mentorExport,
     mentorImportPreview,
     mentorClientData,
+    categoryAnswers,
     question,
     questions,
     questionsById,
