@@ -9,6 +9,9 @@ import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
+  GraphQLInputObjectType,
+  GraphQLString,
+  GraphQLBoolean,
 } from 'graphql';
 import AnswerType from 'gql/types/answer';
 import SubjectType from 'gql/types/subject';
@@ -17,9 +20,11 @@ import { Mentor as MentorModel } from 'models';
 import { Answer } from 'models/Answer';
 import { Subject } from 'models/Subject';
 import { Question } from 'models/Question';
+import { Mentor } from 'models/Mentor';
 
 export interface MentorExportJson {
   id: string;
+  mentorInfo: Mentor;
   subjects: Subject[];
   questions: Question[];
   answers: Answer[];
@@ -29,9 +34,49 @@ export const MentorExportJsonType = new GraphQLObjectType({
   name: 'MentorExportJsonType',
   fields: () => ({
     id: { type: GraphQLID },
+    mentorInfo: { type: ExportedMentorInfoType },
     subjects: { type: GraphQLList(SubjectType) },
     questions: { type: GraphQLList(QuestionType) },
     answers: { type: GraphQLList(AnswerType) },
+  }),
+});
+
+export interface ExportedMentorInfo {
+  name: string;
+  firstName: string;
+  title: string;
+  email: string;
+  thumbnail: string;
+  allowContact: boolean;
+  defaultSubject: string;
+  mentorType: string;
+}
+
+export const ExportedMentorInfoInputType = new GraphQLInputObjectType({
+  name: 'ExportedMentorInfoInputType',
+  fields: () => ({
+    name: { type: GraphQLString },
+    firstName: { type: GraphQLString },
+    title: { type: GraphQLString },
+    email: { type: GraphQLString },
+    thumbnail: { type: GraphQLString },
+    allowContact: { type: GraphQLBoolean },
+    defaultSubject: { type: GraphQLID },
+    mentorType: { type: GraphQLString },
+  }),
+});
+
+export const ExportedMentorInfoType = new GraphQLObjectType({
+  name: 'ExportedMentorInfoType',
+  fields: () => ({
+    name: { type: GraphQLString },
+    firstName: { type: GraphQLString },
+    title: { type: GraphQLString },
+    email: { type: GraphQLString },
+    thumbnail: { type: GraphQLString },
+    allowContact: { type: GraphQLBoolean },
+    defaultSubject: { type: GraphQLID },
+    mentorType: { type: GraphQLString },
   }),
 });
 

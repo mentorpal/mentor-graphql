@@ -439,19 +439,19 @@ describe('import mentor', () => {
             _id: '511111111111111111111111',
             question: "Don't talk and stay still.",
           },
-          hasUntransferredMedia: false,
+          hasUntransferredMedia: true,
           media: [
             {
               tag: 'web',
               type: 'video',
               url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-              needsTransfer: false,
+              needsTransfer: true,
             },
             {
               tag: 'mobile',
               type: 'video',
               url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-              needsTransfer: false,
+              needsTransfer: true,
             },
           ],
         },
@@ -462,19 +462,19 @@ describe('import mentor', () => {
             _id: '511111111111111111111117',
             question: 'What is Aaron like?',
           },
-          hasUntransferredMedia: false,
+          hasUntransferredMedia: true,
           media: [
             {
               tag: 'web',
               type: 'video',
               url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
-              needsTransfer: false,
+              needsTransfer: true,
             },
             {
               tag: 'mobile',
               type: 'video',
               url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
-              needsTransfer: false,
+              needsTransfer: true,
             },
           ],
         },
@@ -614,7 +614,7 @@ describe('import mentor', () => {
           media: [
             {
               url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-              needsTransfer: false,
+              needsTransfer: true,
             },
             {
               url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',

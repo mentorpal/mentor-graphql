@@ -22,9 +22,14 @@ import {
   QuestionUpdateInput,
   QuestionUpdateInputType,
 } from './question-update';
+import {
+  ExportedMentorInfo,
+  ExportedMentorInfoInputType,
+} from 'gql/query/mentor-export';
 
 export interface MentorImportJson {
   id: string;
+  mentorInfo: ExportedMentorInfo;
   subjects: SubjectUpdateInput[];
   questions: QuestionUpdateInput[];
   answers: AnswerUpdateInput[];
@@ -34,6 +39,7 @@ export const MentorImportJsonType = new GraphQLInputObjectType({
   name: 'MentorImportJsonType',
   fields: () => ({
     id: { type: GraphQLString },
+    mentorInfo: { type: ExportedMentorInfoInputType },
     subjects: { type: GraphQLList(SubjectUpdateInputType) },
     questions: { type: GraphQLList(QuestionUpdateInputType) },
     answers: { type: GraphQLList(AnswerUpdateInputType) },

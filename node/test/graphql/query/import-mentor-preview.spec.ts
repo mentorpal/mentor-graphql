@@ -205,7 +205,7 @@ describe('import mentor preview', () => {
                 type: 'video',
                 tag: 'web',
                 url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-                needsTransfer: false,
+                needsTransfer: true,
               },
               {
                 type: 'video',

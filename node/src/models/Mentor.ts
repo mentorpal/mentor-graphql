@@ -23,7 +23,6 @@ import { User } from './User';
 import { MentorExportJson } from 'gql/query/mentor-export';
 import { MentorImportJson } from 'gql/mutation/me/mentor-import';
 import { idOrNew } from 'gql/mutation/me/helpers';
-import { mediaNeedsTransfer, toRelativeUrl } from 'utils/static-urls';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -148,6 +147,7 @@ MentorSchema.statics.export = async function (
   });
   return {
     id: mentor._id,
+    mentorInfo: mentor,
     subjects,
     questions,
     answers,
@@ -158,28 +158,66 @@ MentorSchema.statics.import = async function (
   m: string | Mentor,
   json: MentorImportJson
 ): Promise<Mentor> {
-  const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
+  // Gets the mentor while also updating its info with that of the importing mentor
+  const mentor: Mentor =
+    typeof m === 'string'
+      ? await this.findByIdAndUpdate(m, { ...json.mentorInfo })
+      : m;
   if (!mentor) {
     throw new Error('mentor not found');
   }
+
+  // remove any answer documents that the replaced mentor may have that the importing mentor does not
+  const questionIds = json.answers.map((a) => a.question._id);
+  try {
+    await AnswerModel.remove({
+      mentor: mentor._id,
+      question: { $nin: questionIds },
+    });
+  } catch (error) {
+    // No throwing because this step is not super essential
+    console.error(`Failed to remove hanging answers: ${String(error)}`);
+  }
+
   // TODO: currently, if one fails all the subsequent calls fail
   // need to have a list of promises, but still need to create questions before anything else
+
   for (const q of json.questions) {
-    const updatedQuestion = await QuestionModel.updateOrCreate(q);
-    if (`${updatedQuestion._id}` !== `${q._id}`) {
+    let updatedOrCreatedQuestion;
+    // If the question has a specific mentor and it's not of the mentor being replaced, then always create a new question
+    if (q.mentor && q.mentor !== mentor._id) {
+      const qCopy = JSON.parse(JSON.stringify(q));
+      delete qCopy._id;
+      qCopy.mentor = mentor._id;
+      updatedOrCreatedQuestion = await QuestionModel.updateOrCreate(qCopy);
+    } else {
+      updatedOrCreatedQuestion = await QuestionModel.updateOrCreate(q);
+    }
+    const isNewQuestion = `${updatedOrCreatedQuestion._id}` !== `${q._id}`;
+    const mentorSpecific = Boolean(updatedOrCreatedQuestion.mentor);
+    if (isNewQuestion) {
       for (const subject of json.subjects) {
         const subjectQuestion = subject.questions.find(
           (sq) => `${sq.question._id}` === `${q._id}`
         );
-        if (subjectQuestion) {
-          subjectQuestion.question._id = updatedQuestion._id;
+        if (subjectQuestion && !mentorSpecific) {
+          subjectQuestion.question._id = updatedOrCreatedQuestion._id;
+        } else if (subjectQuestion && mentorSpecific) {
+          subject.questions = [
+            ...subject.questions,
+            {
+              question: updatedOrCreatedQuestion._id,
+              topics: subjectQuestion.topics,
+              category: subjectQuestion.category,
+            },
+          ];
         }
       }
       const answer = json.answers.find(
         (a) => `${a.question._id}` === `${q._id}`
       );
       if (answer) {
-        answer.question._id = updatedQuestion._id;
+        answer.question._id = updatedOrCreatedQuestion._id;
       }
     }
   }
@@ -212,13 +250,14 @@ MentorSchema.statics.import = async function (
       }
     }
   }
+
   for (const a of json.answers || []) {
-    a.hasUntransferredMedia = false;
+    // Media always needs to be transferred because we do not want the "new" mentor to use the "old" mentors bucket urls, else the 2 mentors would be linked via media urls
+    a.hasUntransferredMedia = Boolean(a.media.length);
     for (const m of a.media || []) {
-      m.needsTransfer = mediaNeedsTransfer(m.url);
-      m.url = toRelativeUrl(m.url);
-      a.hasUntransferredMedia = a.hasUntransferredMedia || m.needsTransfer;
+      m.needsTransfer = true;
     }
+    // Typically will create all new answers since mentor ids differ
     await AnswerModel.findOneAndUpdate(
       {
         mentor: mentor._id,
@@ -238,6 +277,7 @@ MentorSchema.statics.import = async function (
       }
     );
   }
+
   return await this.findByIdAndUpdate(mentor._id, {
     $set: {
       subjects: json.subjects.map((s) => s._id as Subject['_id']),
