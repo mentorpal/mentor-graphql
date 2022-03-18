@@ -14,6 +14,7 @@ import uploadTaskStatusUpdate from './upload-task-status-update';
 import questionUpdate from './question-update';
 import importTaskCreate from './import-task-create';
 import importTaskUpdate from './import-task-update';
+import mentorImport from './mentor-import';
 
 export const Api: GraphQLObjectType = new GraphQLObjectType({
   name: 'ApiMutation',
@@ -26,6 +27,7 @@ export const Api: GraphQLObjectType = new GraphQLObjectType({
     questionUpdate,
     importTaskCreate,
     importTaskUpdate,
+    mentorImport,
   }),
 });
 

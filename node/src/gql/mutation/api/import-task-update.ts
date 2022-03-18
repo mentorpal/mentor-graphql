@@ -14,10 +14,12 @@ import { ImportTask as ImportTaskModel } from 'models';
 import {
   AnswerMediaMigrateUpdateProps,
   GraphQLUpdateProps,
+  s3VideoMigrateProps,
 } from 'models/ImportTask';
 import {
   AnswerMediaMigrationInputType,
   GraphQLUpdateInputType,
+  S3VideoMigrationInputType,
 } from './import-task-create';
 
 export const importTaskUpdate = {
@@ -25,6 +27,7 @@ export const importTaskUpdate = {
   args: {
     mentor: { type: GraphQLNonNull(GraphQLID) },
     graphQLUpdate: { type: GraphQLUpdateInputType },
+    s3VideoMigrateUpdate: { type: S3VideoMigrationInputType },
     answerMediaMigrateUpdate: { type: AnswerMediaMigrationInputType },
   },
   resolve: async (
@@ -32,6 +35,7 @@ export const importTaskUpdate = {
     args: {
       mentor: string;
       graphQLUpdate: GraphQLUpdateProps;
+      s3VideoMigrateUpdate: s3VideoMigrateProps;
       answerMediaMigrateUpdate: AnswerMediaMigrateUpdateProps;
     }
   ): Promise<boolean> => {
@@ -43,6 +47,16 @@ export const importTaskUpdate = {
     if (args.graphQLUpdate) {
       importTask.graphQLUpdate.status = args.graphQLUpdate.status;
       importTask.graphQLUpdate.errorMessage = args.graphQLUpdate.errorMessage;
+    }
+
+    if (args.s3VideoMigrateUpdate) {
+      if (args.s3VideoMigrateUpdate.status) {
+        importTask.s3VideoMigrate.status = args.s3VideoMigrateUpdate.status;
+      }
+      if (args.s3VideoMigrateUpdate.answerMediaMigrations) {
+        importTask.s3VideoMigrate.answerMediaMigrations =
+          args.s3VideoMigrateUpdate.answerMediaMigrations;
+      }
     }
 
     if (args.answerMediaMigrateUpdate) {
