@@ -7,10 +7,9 @@ The full terms of this copyright and license should always be found in the root 
 
 import { GraphQLID, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import { User, UserRole } from 'models/User';
-import { ImportTask as ImportTaskModel, Mentor as MentorModel } from 'models';
+import { ImportTask as ImportTaskModel } from 'models';
 import ImportTaskType from 'gql/types/import-task';
 import { ImportTask } from 'models/ImportTask';
-import { Mentor } from 'models/Mentor';
 
 export const importTask = {
   type: ImportTaskType,
@@ -28,22 +27,17 @@ export const importTask = {
       throw new Error('Only authenticated users');
     }
     if (context.user.id) {
-      let mentor: Mentor = await MentorModel.findOne({
-        user: context.user._id,
-      });
-      if (!mentor) {
-        throw new Error('you do not have a mentor');
-      }
+      // jwt strategy (users)
       if (
-        `${mentor._id}` !== `${args.mentorId}` &&
+        context.user.id !== args.mentorId &&
         context.user.userRole !== UserRole.ADMIN &&
         context.user.userRole !== UserRole.CONTENT_MANAGER
       ) {
         throw new Error(
-          'you do not have permission to view this mentors information'
+          'you are not authorized to view this mentors information'
         );
       }
-    }
+    } // else bearer-api strategy (services)
 
     const task = await ImportTaskModel.findOne({
       mentor: args.mentorId,

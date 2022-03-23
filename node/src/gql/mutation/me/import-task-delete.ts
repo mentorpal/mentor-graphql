@@ -4,52 +4,48 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-
-import { GraphQLID, GraphQLNonNull, GraphQLObjectType } from 'graphql';
-import { User, UserRole } from 'models/User';
-import { ImportTask as ImportTaskModel, Mentor as MentorModel } from 'models';
-import ImportTaskType from 'gql/types/import-task';
-import { ImportTask } from 'models/ImportTask';
+import {
+  GraphQLObjectType,
+  GraphQLBoolean,
+  GraphQLNonNull,
+  GraphQLID,
+} from 'graphql';
+import { Mentor as MentorModel, ImportTask as ImportTaskModel } from 'models';
 import { Mentor } from 'models/Mentor';
+import { User, UserRole } from 'models/User';
 
-export const importTask = {
-  type: ImportTaskType,
+export const importTaskDelete = {
+  type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
-    _: GraphQLObjectType,
+    _root: GraphQLObjectType,
     args: {
       mentorId: string;
     },
     context: { user: User }
-  ): Promise<ImportTask> => {
-    if (!context.user) {
-      throw new Error('Only authenticated users');
+  ): Promise<boolean> => {
+    let mentor: Mentor = await MentorModel.findOne({
+      user: context.user._id,
+    });
+    if (!mentor) {
+      throw new Error('you do not have a mentor');
     }
-    if (context.user.id) {
-      let mentor: Mentor = await MentorModel.findOne({
-        user: context.user._id,
-      });
-      if (!mentor) {
-        throw new Error('you do not have a mentor');
-      }
+    if (args.mentorId && `${mentor._id}` !== `${args.mentorId}`) {
       if (
-        `${mentor._id}` !== `${args.mentorId}` &&
         context.user.userRole !== UserRole.ADMIN &&
         context.user.userRole !== UserRole.CONTENT_MANAGER
       ) {
-        throw new Error(
-          'you do not have permission to view this mentors information'
-        );
+        throw new Error('you do not have permission to edit this mentor');
       }
+      mentor = await MentorModel.findById(args.mentorId);
     }
-
-    const task = await ImportTaskModel.findOne({
-      mentor: args.mentorId,
+    const taskDelete = await ImportTaskModel.deleteOne({
+      mentor: mentor._id,
     });
-    return task;
+    return Boolean(taskDelete);
   },
 };
 
-export default importTask;
+export default importTaskDelete;
