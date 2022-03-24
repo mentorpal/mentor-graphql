@@ -256,24 +256,16 @@ MentorSchema.statics.import = async function (
     } else {
       updatedOrCreatedQuestion = await QuestionModel.updateOrCreate(q);
     }
-    const isNewQuestion = `${updatedOrCreatedQuestion._id}` !== `${q._id}`;
-    const mentorSpecific = Boolean(updatedOrCreatedQuestion.mentor);
+    const newQId = updatedOrCreatedQuestion._id;
+    const isNewQuestion = `${newQId}` !== `${q._id}`;
     if (isNewQuestion) {
       for (const subject of json.subjects) {
-        const subjectQuestion = subject.questions.find(
+        const subjectQuestionIndex = subject.questions.findIndex(
           (sq) => `${sq.question._id}` === `${q._id}`
         );
-        if (subjectQuestion && !mentorSpecific) {
-          subjectQuestion.question._id = updatedOrCreatedQuestion._id;
-        } else if (subjectQuestion && mentorSpecific) {
-          subject.questions = [
-            ...subject.questions,
-            {
-              question: updatedOrCreatedQuestion._id,
-              topics: subjectQuestion.topics,
-              category: subjectQuestion.category,
-            },
-          ];
+        const subjectContainsQuestions = subjectQuestionIndex !== -1;
+        if (subjectContainsQuestions) {
+          subject.questions[subjectQuestionIndex].question._id = newQId;
         }
       }
       const answer = json.answers.find(
