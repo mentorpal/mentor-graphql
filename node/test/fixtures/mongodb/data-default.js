@@ -187,7 +187,7 @@ module.exports = {
             'These questions will ask you to give advice to someone who is interested in your career',
         },
       ],
-      questions: [ObjectId('511111111111111111111115')],
+      questions: [{ question: ObjectId('511111111111111111111115') }],
     },
   ],
 

@@ -679,6 +679,11 @@ describe('mentor', () => {
             question: "Don't talk and stay still.",
           },
         },
+        {
+          question: {
+            question: 'Is STEM fun?',
+          },
+        },
       ],
     });
   });

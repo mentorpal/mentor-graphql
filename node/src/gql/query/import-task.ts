@@ -28,7 +28,7 @@ export const importTask = {
       throw new Error('Only authenticated users');
     }
     if (context.user.id) {
-      let mentor: Mentor = await MentorModel.findOne({
+      const mentor: Mentor = await MentorModel.findOne({
         user: context.user._id,
       });
       if (!mentor) {

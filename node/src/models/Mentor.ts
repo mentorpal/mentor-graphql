@@ -131,12 +131,28 @@ MentorSchema.statics.export = async function (
     null,
     { sort: { name: 1 } }
   );
+  const mentorQuestions = await QuestionModel.find({
+    $or: [
+      { mentor: mentor._id },
+      { mentor: { $exists: false } },
+      { mentor: null }, // not sure if we need an explicit null check?
+    ],
+  });
+
+  // Filter out the questions from subjects that do not belong to this mentor
+  for (const s of subjects) {
+    s.questions = s.questions.filter((sq) =>
+      Boolean(mentorQuestions.find((q) => `${q._id}` == `${sq.question._id}`))
+    );
+  }
+
   const sQuestions: SubjectQuestion[] = subjects.reduce(
     (accumulator, subject) => {
       return accumulator.concat(subject.questions);
     },
     []
   );
+
   const questions = await QuestionModel.find({
     _id: { $in: sQuestions.map((q) => q.question) },
     $or: [
@@ -145,6 +161,7 @@ MentorSchema.statics.export = async function (
       { mentor: null }, // not sure if we need an explicit null check?
     ],
   });
+
   const answers: Answer[] = await AnswerModel.find({
     mentor: mentor._id,
     question: { $in: questions.map((q) => q._id) },
@@ -170,19 +187,61 @@ MentorSchema.statics.import = async function (
   if (!mentor) {
     throw new Error('mentor not found');
   }
-
-  // remove any answer documents that the replaced mentor may have that the importing mentor does not
-  const questionIds = json.answers.map((a) => a.question._id);
-  try {
-    await AnswerModel.remove({
-      mentor: mentor._id,
-      question: { $nin: questionIds },
-    });
-  } catch (error) {
-    // No throwing because this step is not super essential
-    console.error(`Failed to remove hanging answers: ${String(error)}`);
-  }
-
+  // remove all answer documents for current mentor
+  // remove all questions that are specific to the mentor getting replaced (keep track of these question ids
+  // remove all question references in subjects importing and subject model
+  const questionsToRemove = await QuestionModel.find({ mentor: mentor._id });
+  const questionIdsToRemove = questionsToRemove.map((q) => `${q._id}`);
+  await AnswerModel.deleteMany({
+    mentor: mentor._id,
+  });
+  await QuestionModel.deleteMany({
+    mentor: mentor._id,
+  });
+  //removing mentor specific q's from subjects
+  const subjectIds = mentor.subjects.map((subj) => subj._id);
+  subjectIds.forEach(async (id) => {
+    const subject = await SubjectModel.findOne({ _id: id });
+    if (subject) {
+      try {
+        const newQs = subject.questions.filter(
+          (q) =>
+            !Boolean(
+              questionIdsToRemove.find(
+                (qRemove) => `${qRemove}` === `${q.question._id}`
+              )
+            )
+        );
+        await SubjectModel.findOneAndUpdate(
+          { _id: subject._id },
+          {
+            $set: {
+              questions: newQs,
+            },
+          },
+          {
+            new: true,
+          }
+        );
+        // remove questions from imported subject
+        const importedSubject = json.subjects.find(
+          (subj) => subj._id == subject._id
+        );
+        if (importedSubject) {
+          importedSubject.questions = importedSubject.questions.filter(
+            (q) =>
+              !Boolean(
+                questionIdsToRemove.find(
+                  (qRemove) => `${qRemove}` === `${q.question._id}`
+                )
+              )
+          );
+        }
+      } catch (err) {
+        console.debug(`Failed to filter subject q's: ${err}`);
+      }
+    }
+  });
   // TODO: currently, if one fails all the subsequent calls fail
   // need to have a list of promises, but still need to create questions before anything else
 
@@ -226,6 +285,49 @@ MentorSchema.statics.import = async function (
     }
   }
   for (const s of json.subjects) {
+    // Merging categories, topics, and questions between the current subject and "new" subject
+    const curSubject = await SubjectModel.findOne({ _id: s._id });
+    const categoriesToMerge = curSubject
+      ? curSubject.categories.filter(
+          (cur_category) =>
+            !Boolean(
+              s.categories.find((new_cat) => cur_category.id === new_cat.id)
+            )
+        )
+      : [];
+    const topicsToMerge = curSubject
+      ? curSubject.topics.filter(
+          (cur_topic) =>
+            !Boolean(
+              s.topics.find((new_topic) => cur_topic.id === new_topic.id)
+            )
+        )
+      : [];
+    const questionsToMerge = curSubject
+      ? curSubject.questions.filter(
+          (cur_question) =>
+            !Boolean(
+              s.questions.find(
+                (new_question) =>
+                  `${cur_question.question}` === `${new_question.question._id}`
+              )
+            )
+        )
+      : [];
+    const categories = [...s.categories, ...categoriesToMerge];
+    const topics = [...s.topics, ...topicsToMerge];
+    const questions = [
+      ...s.questions.map((sq) => ({
+        question: sq.question._id,
+        category: sq.category?.id,
+        topics: sq.topics?.map((t) => t.id),
+      })),
+      ...questionsToMerge.map((sq) => ({
+        question: `${sq.question}`,
+        category: sq.category,
+        topics: sq.topics,
+      })),
+    ];
     const updatedSubject = await SubjectModel.findOneAndUpdate(
       { _id: idOrNew(s._id) },
       {
@@ -233,13 +335,9 @@ MentorSchema.statics.import = async function (
           name: s.name,
           description: s.description,
           isRequired: s.isRequired,
-          categories: s.categories,
-          topics: s.topics,
-          questions: s.questions.map((sq) => ({
-            question: sq.question._id,
-            category: sq.category?.id,
-            topics: sq.topics?.map((t) => t.id),
-          })),
+          categories: categories,
+          topics: topics,
+          questions: questions,
         },
       },
       {
@@ -254,7 +352,6 @@ MentorSchema.statics.import = async function (
       }
     }
   }
-
   for (const a of json.answers || []) {
     // Media always needs to be transferred because we do not want the "new" mentor to use the "old" mentors bucket urls, else the 2 mentors would be linked via media urls
     a.hasUntransferredMedia = Boolean(a.media.length);
@@ -281,7 +378,6 @@ MentorSchema.statics.import = async function (
       }
     );
   }
-
   return await this.findByIdAndUpdate(mentor._id, {
     $set: {
       subjects: json.subjects.map((s) => s._id as Subject['_id']),

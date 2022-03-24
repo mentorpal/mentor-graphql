@@ -165,15 +165,25 @@ describe('export mentor', () => {
                 question: 'Who are you and what do you do?',
               },
               category: null,
-              topics: [{ id: '5ffdf41a1ee2c62320b49ec2' }],
+              topics: [
+                {
+                  id: '5ffdf41a1ee2c62320b49ec2',
+                },
+              ],
             },
             {
               question: {
                 _id: '511111111111111111111113',
                 question: 'How old are you?',
               },
-              category: { id: 'category' },
-              topics: [{ id: '5ffdf41a1ee2c62320b49ec2' }],
+              category: {
+                id: 'category',
+              },
+              topics: [
+                {
+                  id: '5ffdf41a1ee2c62320b49ec2',
+                },
+              ],
             },
             {
               question: {
@@ -181,19 +191,20 @@ describe('export mentor', () => {
                 question: 'Do you like your job?',
               },
               category: null,
-              topics: [{ id: '5ffdf41a1ee2c62320b49ec3' }],
-            },
-            {
-              question: { _id: '511111111111111111111116', question: 'Julia?' },
-              category: null,
-              topics: [],
+              topics: [
+                {
+                  id: '5ffdf41a1ee2c62320b49ec3',
+                },
+              ],
             },
             {
               question: {
                 _id: '511111111111111111111117',
                 question: 'What is Aaron like?',
               },
-              category: { id: 'category' },
+              category: {
+                id: 'category',
+              },
               topics: [],
             },
           ],
@@ -219,7 +230,11 @@ describe('export mentor', () => {
                 question: "Don't talk and stay still.",
               },
               category: null,
-              topics: [{ id: '5ffdf41a1ee2c62320b49ec1' }],
+              topics: [
+                {
+                  id: '5ffdf41a1ee2c62320b49ec1',
+                },
+              ],
             },
           ],
         },

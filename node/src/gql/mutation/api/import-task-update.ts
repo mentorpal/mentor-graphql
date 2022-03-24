@@ -80,8 +80,17 @@ export const importTaskUpdate = {
     }
 
     // automatically sets the status for the migration depending on the status of all the media transfers
-    importTask.s3VideoMigrate.status = !importTask.s3VideoMigrate.answerMediaMigrations.length ? importTask.s3VideoMigrate.status :
-     Boolean(importTask.s3VideoMigrate.answerMediaMigrations.find((migration)=>migration.status !== "DONE" && migration.status !== "FAILED")) ? "IN_PROGRESS" : "DONE"
+    importTask.s3VideoMigrate.status = !importTask.s3VideoMigrate
+      .answerMediaMigrations.length
+      ? importTask.s3VideoMigrate.status
+      : Boolean(
+          importTask.s3VideoMigrate.answerMediaMigrations.find(
+            (migration) =>
+              migration.status !== 'DONE' && migration.status !== 'FAILED'
+          )
+        )
+      ? 'IN_PROGRESS'
+      : 'DONE';
 
     const save = await ImportTaskModel.findOneAndUpdate(
       { mentor: args.mentor },
