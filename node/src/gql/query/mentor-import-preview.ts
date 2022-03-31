@@ -175,15 +175,24 @@ export const mentorImportPreview = {
     );
 
     const curQuestions: Question[] = await QuestionModel.find({
-      _id: {
-        $in: importJson.questions.map((q) => q._id).filter((id) => isId(id)),
-      },
+      // _id: {
+      //   $in: importJson.questions.map((q) => q._id).filter((id) => isId(id)),
+      // },
     });
     const questionChanges = [];
     for (const questionImport of importJson.questions) {
-      const curQuestion = curQuestions.find(
+      const curQuestion = questionImport.mentor
+        ? null
+        : curQuestions.find(
+            (q) =>
+              `${q._id}` === `${questionImport._id}` ||
+              (!questionImport.mentor &&
+                `${q.question}` === `${questionImport.question}`)
+          );
+      const curMentorAlreadyHasQuestion = exportJson.questions.find(
         (q) => `${q._id}` === `${questionImport._id}`
       );
+
       questionChanges.push({
         importData: questionImport,
         curData: curQuestion,
@@ -193,9 +202,7 @@ export const mentorImportPreview = {
         // If the previous 2 are false, then the mentor already has the question, and no changes need to be made to that questions existence
         editType: !curQuestion
           ? EditType.CREATED
-          : !exportJson.questions.find(
-              (q) => `${q._id}` === `${questionImport._id}`
-            )
+          : !curMentorAlreadyHasQuestion
           ? EditType.ADDED
           : EditType.NONE,
       });
