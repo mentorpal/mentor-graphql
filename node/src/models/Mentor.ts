@@ -250,6 +250,9 @@ MentorSchema.statics.import = async function (
      */
 
     //START OF MY WAY
+    // Start mentor from scratch and work through imported subjects
+    mentor = await this.findOneAndUpdate({_id: mentor._id},{subjects:[]},{new:true})
+
     for (const s of json.subjects) {
       let existingSubject = await SubjectModel.findOne({ _id: idOrNew(s._id) });
       const existingSubjectQuestionDocs = existingSubject
@@ -281,7 +284,6 @@ MentorSchema.statics.import = async function (
           qCopy.mentor = mentor._id;
           updatedOrCreatedQuestion = await QuestionModel.updateOrCreate(qCopy);
           isNewQuestion = true;
-          console.error('IT WAS A MENTOR SPECIFIC QUESTION AHHHHHHHHH');
         } else {
           const questionDocument = existingSubjectQuestionDocs.length
             ? existingSubjectQuestionDocs.find(
@@ -390,18 +392,16 @@ MentorSchema.statics.import = async function (
         const newSubject = await SubjectModel.findOneAndUpdate(
           { _id: idOrNew(s._id) },
           {
-            $set: {
               name: s.name,
               description: s.description,
               isRequired: s.isRequired,
-              categoreis: s.categories,
+              categories: s.categories,
               topics: s.topics,
               questions: s.questions.map((sq) => ({
                 question: sq.question._id,
                 category: sq.category?.id,
                 topics: sq.topics?.map((t) => t.id),
               })),
-            },
           },
           {
             new: true,
@@ -409,13 +409,6 @@ MentorSchema.statics.import = async function (
           }
         );
         // Add the new subject to the mentors subject id list
-        // TODO: Not sure if this is how I should add
-        console.error(
-          `Adding subject with id ${newSubject._id as Subject['_id']} to mentor`
-        );
-        console.error(
-          `Mentor subjects before update: ${JSON.stringify(mentor.subjects)}`
-        );
         mentor = await this.findByIdAndUpdate(
           mentor._id,
           {
@@ -429,13 +422,7 @@ MentorSchema.statics.import = async function (
             new: true,
           }
         );
-        console.error(
-          `Mentor subjects after update: ${JSON.stringify(mentor.subjects)}`
-        );
       } else {
-        console.error(
-          `${existingSubject.name} subject already exists, adding its id (${existingSubject._id}) to mentor`
-        );
         // Check if the mentor already has the existing subject
         const mentorAlreadyHasSubject = mentor.subjects.find(
           (subj) => subj._id === existingSubject._id
@@ -457,7 +444,6 @@ MentorSchema.statics.import = async function (
         }
       }
     }
-    console.log(`mentor at the end: ${JSON.stringify(mentor)}\n\n`);
     return await this.findById(mentor._id);
   } catch (err) {
     console.error(err);
