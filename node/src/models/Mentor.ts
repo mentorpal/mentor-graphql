@@ -191,13 +191,26 @@ MentorSchema.statics.import = async function (
     // remove all answer documents for current mentor
     // remove all questions that are specific to the mentor getting replaced (keep track of these question ids
     // remove all question references in subjects importing and subject model
-    const questionsToRemove = await QuestionModel.find({ mentor: mentor._id });
-    const questionIdsToRemove = questionsToRemove.map((q) => `${q._id}`);
+    const mentorSpecificQsImported = json.questions.filter(
+      (q) => `${q.mentor}` === `${mentor._id}`
+    );
+    const mentorSpecificQsInDB = await QuestionModel.find({
+      mentor: mentor._id,
+    });
+    // mentor specific Q's not in the import should be removed
+    const mentorQsToRemove = mentorSpecificQsInDB.filter(
+      (dbQuestion) =>
+        !mentorSpecificQsImported.find(
+          (importedQ) => `${importedQ._id}` === `${dbQuestion._id}`
+        )
+    );
+    const questionIdsToRemove = mentorQsToRemove.map((q) => `${q._id}`);
     await AnswerModel.deleteMany({
+      question: { $in: questionIdsToRemove },
       mentor: mentor._id,
     });
     await QuestionModel.deleteMany({
-      mentor: mentor._id,
+      _id: { $in: questionIdsToRemove },
     });
     //removing mentor specific q's from subjects
     const subjectIds = mentor.subjects.map((subj) => subj._id);
@@ -241,6 +254,8 @@ MentorSchema.statics.import = async function (
         } catch (err) {
           console.debug(`Failed to filter subject q's: ${err}`);
         }
+      } else {
+        console.error(`Failed to find subject with id ${id}`);
       }
     });
 
@@ -251,7 +266,11 @@ MentorSchema.statics.import = async function (
 
     //START OF MY WAY
     // Start mentor from scratch and work through imported subjects
-    mentor = await this.findOneAndUpdate({_id: mentor._id},{subjects:[]},{new:true})
+    mentor = await this.findOneAndUpdate(
+      { _id: mentor._id },
+      { subjects: [] },
+      { new: true }
+    );
 
     for (const s of json.subjects) {
       let existingSubject = await SubjectModel.findOne({ _id: idOrNew(s._id) });
@@ -278,13 +297,15 @@ MentorSchema.statics.import = async function (
         let updatedOrCreatedQuestion;
         let isNewQuestion = false;
         // If the question has a specific mentor and it's not of the mentor being replaced, then always create a new question
-        if (importedQDoc.mentor && importedQDoc.mentor !== mentor._id) {
+        if (importedQDoc.mentor && `${importedQDoc.mentor}` !== `${mentor._id}`) {
+          console.error(`The imported question document does not have same mentor id`)
           const qCopy = JSON.parse(JSON.stringify(importedQDoc));
           delete qCopy._id;
           qCopy.mentor = mentor._id;
           updatedOrCreatedQuestion = await QuestionModel.updateOrCreate(qCopy);
           isNewQuestion = true;
         } else {
+          // Not mentor specific or it's a mentor specific for this mentor
           const questionDocument = existingSubjectQuestionDocs.length
             ? existingSubjectQuestionDocs.find(
                 (existingQ) =>
@@ -297,7 +318,8 @@ MentorSchema.statics.import = async function (
                   { question: importedQDoc.question },
                 ],
               });
-          if (questionDocument && !questionDocument.mentor) {
+          if (questionDocument) {
+            // && !questionDocument.mentor
             console.error(
               `question document found for question ${JSON.stringify(
                 importedQDoc
@@ -392,16 +414,16 @@ MentorSchema.statics.import = async function (
         const newSubject = await SubjectModel.findOneAndUpdate(
           { _id: idOrNew(s._id) },
           {
-              name: s.name,
-              description: s.description,
-              isRequired: s.isRequired,
-              categories: s.categories,
-              topics: s.topics,
-              questions: s.questions.map((sq) => ({
-                question: sq.question._id,
-                category: sq.category?.id,
-                topics: sq.topics?.map((t) => t.id),
-              })),
+            name: s.name,
+            description: s.description,
+            isRequired: s.isRequired,
+            categories: s.categories,
+            topics: s.topics,
+            questions: s.questions.map((sq) => ({
+              question: sq.question._id,
+              category: sq.category?.id,
+              topics: sq.topics?.map((t) => t.id),
+            })),
           },
           {
             new: true,
