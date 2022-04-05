@@ -38,6 +38,8 @@ enum EditType {
   ADDED = 'ADDED',
   REMOVED = 'REMOVED',
   CREATED = 'CREATED',
+  OLD_FOLLOWUP = 'OLD_FOLLOWUP',
+  OLD_ANSWER = 'OLD_ANSWER',
 }
 interface ImportPreview<T, U> {
   importData?: T;
@@ -215,7 +217,7 @@ export const mentorImportPreview = {
     questionChanges.push(
       ...removedQuestions.map((q) => ({
         curData: q,
-        editType: EditType.REMOVED,
+        editType: EditType.OLD_FOLLOWUP,
       }))
     );
 
@@ -227,7 +229,7 @@ export const mentorImportPreview = {
           .filter((id) => isId(id)),
       },
     });
-    const answerChanges = [];
+    let answerChanges = [];
     for (const answerImport of importJson.answers) {
       const curAnswer = curAnswers.find(
         (a) => `${a.question}` === `${answerImport.question._id}`
@@ -237,31 +239,39 @@ export const mentorImportPreview = {
         m.needsTransfer = true;
         answerImport.hasUntransferredMedia = true;
       }
-      answerChanges.push({
-        importData: answerImport,
-        curData: curAnswer,
-        editType: !curAnswer
-          ? EditType.CREATED
-          : !exportJson.answers.find(
-              (a) => `${a.question}` === `${answerImport.question._id}`
-            )
-          ? EditType.ADDED
-          : EditType.NONE,
-      });
+      if (
+        answerImport.transcript ||
+        answerImport.media.length ||
+        curAnswer?.media.length ||
+        curAnswer?.transcript
+      )
+        answerChanges.push({
+          importData: answerImport,
+          curData: curAnswer,
+          editType: !curAnswer
+            ? EditType.CREATED
+            : !exportJson.answers.find(
+                (a) => `${a.question}` === `${answerImport.question._id}`
+              )
+            ? EditType.ADDED
+            : EditType.NONE,
+        });
     }
+
     const removedAnswers = exportJson.answers.filter(
       (a) =>
-        !importJson.answers.find(
+        Boolean(a.transcript || a.media.length) && !importJson.answers.find(
+          // TODO: check that a has some sort of info to 
           (aa) => `${aa.question._id}` === `${a.question}`
         )
     );
     answerChanges.push(
       ...removedAnswers.map((a) => ({
         curData: a,
-        editType: EditType.REMOVED,
+        editType: EditType.OLD_ANSWER,
       }))
     );
-
+    // We don't care to show answer documents that have no changes
     return {
       id: exportJson.id,
       subjects: subjectChanges,

@@ -254,6 +254,27 @@ module.exports = {
       ],
     },
     {
+      _id: ObjectId('511111111111111111111114'),
+      mentor: ObjectId('5ffdf41a1ee2c62111111112'),
+      question: ObjectId('511111111111111111111116'),
+      hasEditedTranscript: false,
+      transcript: 'Julia transcript',
+      video: 'https://test/url',
+      status: 'COMPLETE',
+      media: [
+        {
+          type: 'video',
+          tag: 'web',
+          url: 'videos/5ffdf41a1ee2c62111111112/511111111111111111111116/web.mp4',
+        },
+        {
+          type: 'video',
+          tag: 'mobile',
+          url: 'videos/5ffdf41a1ee2c62111111112/511111111111111111111116/mobile.mp4',
+        },
+      ],
+    },
+    {
       _id: ObjectId('511111111111111111111113'),
       mentor: ObjectId('5ffdf41a1ee2c62111111111'),
       question: ObjectId('511111111111111111111117'),

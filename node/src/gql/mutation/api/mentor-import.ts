@@ -8,19 +8,35 @@ import { GraphQLID, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import { MentorType } from 'gql/types/mentor';
 import { Mentor as MentorModel } from 'models';
 import { Mentor } from 'models/Mentor';
-import { MentorImportJson, MentorImportJsonType } from '../me/mentor-import';
+import {
+  MentorImportJson,
+  MentorImportJsonType,
+  ReplacedMentorDataChangesType,
+  ReplacedMentorDataChanges,
+} from '../me/mentor-import';
 
 export const importMentor = {
   type: MentorType,
   args: {
     mentor: { type: GraphQLNonNull(GraphQLID) },
     json: { type: GraphQLNonNull(MentorImportJsonType) },
+    replacedMentorDataChanges: {
+      type: GraphQLNonNull(ReplacedMentorDataChangesType),
+    },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: string; json: MentorImportJson }
+    args: {
+      mentor: string;
+      json: MentorImportJson;
+      replacedMentorDataChanges: ReplacedMentorDataChanges;
+    }
   ): Promise<Mentor> => {
-    return await MentorModel.import(args.mentor, args.json);
+    return await MentorModel.import(
+      args.mentor,
+      args.json,
+      args.replacedMentorDataChanges
+    );
   },
 };
 

@@ -33,14 +33,18 @@ describe('import mentor', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!) {
+        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!, $replacedMentorDataChanges: ReplacedMentorDataChangesType!) {
           me {
-            mentorImport(mentor: $mentor, json: $json) {
+            mentorImport(mentor: $mentor, json: $json, replacedMentorDataChanges: $replacedMentorDataChanges) {
               _id
             }  
           }
         }`,
-        variables: { mentor: '5ffdf41a1ee2c62111112111', json: {} },
+        variables: {
+          mentor: '5ffdf41a1ee2c62111112111',
+          json: {},
+          replacedMentorDataChanges: { questionChanges: [], answerChanges: [] },
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
@@ -278,14 +282,18 @@ describe('import mentor', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!) {
+        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!, $replacedMentorDataChanges: ReplacedMentorDataChangesType!) {
           me {
-            mentorImport(mentor: $mentor, json: $json) {
+            mentorImport(mentor: $mentor, json: $json, replacedMentorDataChanges: $replacedMentorDataChanges) {
               _id
             }
           }
         }`,
-        variables: { mentor: '5ffdf41a1ee2c62111111113', json: mentorJson },
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111113',
+          json: mentorJson,
+          replacedMentorDataChanges: { questionChanges: [], answerChanges: [] },
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.mentorImport).to.eql({
@@ -597,14 +605,18 @@ describe('import mentor', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!) {
+        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!, $replacedMentorDataChanges: ReplacedMentorDataChangesType!) {
           me {
-            mentorImport(mentor: $mentor, json: $json) {
+            mentorImport(mentor: $mentor, json: $json, replacedMentorDataChanges: $replacedMentorDataChanges) {
               _id
             }  
           }
         }`,
-        variables: { mentor: '5ffdf41a1ee2c62111111113', json: json },
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111113',
+          json: json,
+          replacedMentorDataChanges: { questionChanges: [], answerChanges: [] },
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.mentorImport).to.eql({
@@ -713,7 +725,7 @@ describe('import mentor', () => {
     });
   });
 
-  it.only(`when a mentor is replaced, their mentor specific questions get removed if not in imported JSON`, async () => {
+  it(`when a mentor is replaced, their mentor specific questions are removed only if marked for removal`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea4');
     // export mentor 5ffdf41a1ee2c62111111111
     let response = await request(app)
@@ -724,237 +736,37 @@ describe('import mentor', () => {
       });
     expect(response.status).to.equal(200);
     const mentorJson = response.body.data.mentorExport;
-    expect(mentorJson).to.eql({
-      id: '5ffdf41a1ee2c62111111111',
-      subjects: [
-        {
-          _id: '5ffdf41a1ee2c62320b49eb2',
-          name: 'Background',
-          description:
-            'These questions will ask general questions about your background that might be relevant to how people understand your career.',
-          isRequired: true,
-          topics: [
-            {
-              id: '5ffdf41a1ee2c62320b49ec2',
-              name: 'Background',
-              description:
-                'These questions will ask general questions about your background, that might be relevant to how people understand your career',
-            },
-            {
-              id: '5ffdf41a1ee2c62320b49ec3',
-              name: 'Advice',
-              description:
-                'These questions will ask you to give advice to someone who is interested in your career',
-            },
-          ],
-          categories: [
-            {
-              id: 'category',
-              name: 'Category',
-              description: 'A test category',
-            },
-          ],
-          questions: [
-            {
-              question: {
-                _id: '511111111111111111111112',
-                question: 'Who are you and what do you do?',
-              },
-              category: null,
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec2',
-                },
-              ],
-            },
-            {
-              question: {
-                _id: '511111111111111111111113',
-                question: 'How old are you?',
-              },
-              category: {
-                id: 'category',
-              },
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec2',
-                },
-              ],
-            },
-            {
-              question: {
-                _id: '511111111111111111111114',
-                question: 'Do you like your job?',
-              },
-              category: null,
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec3',
-                },
-              ],
-            },
-            {
-              question: {
-                _id: '511111111111111111111117',
-                question: 'What is Aaron like?',
-              },
-              category: {
-                id: 'category',
-              },
-              topics: [],
-            },
-          ],
-        },
-        {
-          _id: '5ffdf41a1ee2c62320b49eb1',
-          name: 'Repeat After Me',
-          description:
-            "These are miscellaneous phrases you'll be asked to repeat.",
-          isRequired: true,
-          topics: [
-            {
-              id: '5ffdf41a1ee2c62320b49ec1',
-              name: 'Idle',
-              description: '30-second idle clip',
-            },
-          ],
-          categories: [],
-          questions: [
-            {
-              question: {
-                _id: '511111111111111111111111',
-                question: "Don't talk and stay still.",
-              },
-              category: null,
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec1',
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      questions: [
-        {
-          _id: '511111111111111111111111',
-          question: "Don't talk and stay still.",
-          type: 'UTTERANCE',
-          name: 'idle',
-          paraphrases: [],
-          mentor: null,
-          mentorType: null,
-          minVideoLength: null,
-        },
-        {
-          _id: '511111111111111111111112',
-          question: 'Who are you and what do you do?',
-          type: 'QUESTION',
-          name: null,
-          paraphrases: [],
-          mentor: null,
-          mentorType: null,
-          minVideoLength: null,
-        },
-        {
-          _id: '511111111111111111111113',
-          question: 'How old are you?',
-          type: 'QUESTION',
-          name: null,
-          paraphrases: [],
-          mentor: null,
-          mentorType: null,
-          minVideoLength: null,
-        },
-        {
-          _id: '511111111111111111111114',
-          question: 'Do you like your job?',
-          type: 'QUESTION',
-          name: null,
-          paraphrases: [],
-          mentor: null,
-          mentorType: null,
-          minVideoLength: null,
-        },
-        {
-          _id: '511111111111111111111117',
-          question: 'What is Aaron like?',
-          type: 'QUESTION',
-          name: null,
-          paraphrases: [],
-          mentor: null,
-          mentorType: null,
-          minVideoLength: null,
-        },
-      ],
-      answers: [
-        {
-          transcript: '[being still]',
-          status: 'COMPLETE',
-          question: {
-            _id: '511111111111111111111111',
-            question: "Don't talk and stay still.",
-          },
-          hasUntransferredMedia: false,
-          media: [
-            {
-              tag: 'web',
-              type: 'video',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-              needsTransfer: false,
-            },
-            {
-              tag: 'mobile',
-              type: 'video',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-              needsTransfer: false,
-            },
-          ],
-        },
-        {
-          transcript: 'Test Transcript',
-          status: 'COMPLETE',
-          question: {
-            _id: '511111111111111111111117',
-            question: 'What is Aaron like?',
-          },
-          hasUntransferredMedia: false,
-          media: [
-            {
-              tag: 'web',
-              type: 'video',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
-              needsTransfer: false,
-            },
-            {
-              tag: 'mobile',
-              type: 'video',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
-              needsTransfer: false,
-            },
-          ],
-        },
-      ],
-    });
 
     response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!) {
+        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!, $replacedMentorDataChanges: ReplacedMentorDataChangesType!) {
           me {
-            mentorImport(mentor: $mentor, json: $json) {
+            mentorImport(mentor: $mentor, json: $json, replacedMentorDataChanges: $replacedMentorDataChanges) {
               _id
             }
           }
         }`,
-        variables: { mentor: '5ffdf41a1ee2c62111111112', json: mentorJson },
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111112',
+          json: mentorJson,
+          replacedMentorDataChanges: {
+            questionChanges: [
+              {
+                editType: 'REMOVED',
+                data: { _id: '511111111111111111111116', mentor:"5ffdf41a1ee2c62111111112" },
+              },
+            ],
+            answerChanges: [],
+          },
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.mentorImport).to.eql({
       _id: '5ffdf41a1ee2c62111111112',
     });
-    // all mentor specific questions should be removed from question model
+    // all mentor specific questions should not remain
     response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
@@ -971,7 +783,7 @@ describe('import mentor', () => {
       });
     expect(response.body.data.questions.edges).to.eql([]);
 
-    // all mentor specific questions should be removed from subjects model
+    // all mentor specific questions should not remain in subject
     response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
@@ -990,277 +802,6 @@ describe('import mentor', () => {
       { question: { _id: '511111111111111111111112' } },
       { question: { _id: '511111111111111111111113' } },
       { question: { _id: '511111111111111111111114' } },
-      { question: { _id: '511111111111111111111117' } },
-    ]);
-  });
-
-  it(`when a mentor is replaced, their mentor specific questions remain if in imported JSON`, async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea4');
-    // export mentor 5ffdf41a1ee2c62111111111
-    let response = await request(app)
-      .post('/graphql')
-      .send({
-        query: exportMentorQuery,
-        variables: { mentor: '5ffdf41a1ee2c62111111112' },
-      });
-    expect(response.status).to.equal(200);
-    const mentorJson = response.body.data.mentorExport;
-    expect(mentorJson).to.eql({
-      id: '5ffdf41a1ee2c62111111112',
-      subjects: [
-        {
-          _id: '5ffdf41a1ee2c62320b49eb2',
-          name: 'Background',
-          description:
-            'These questions will ask general questions about your background that might be relevant to how people understand your career.',
-          isRequired: true,
-          topics: [
-            {
-              id: '5ffdf41a1ee2c62320b49ec2',
-              name: 'Background',
-              description:
-                'These questions will ask general questions about your background, that might be relevant to how people understand your career',
-            },
-            {
-              id: '5ffdf41a1ee2c62320b49ec3',
-              name: 'Advice',
-              description:
-                'These questions will ask you to give advice to someone who is interested in your career',
-            },
-          ],
-          categories: [
-            {
-              id: 'category',
-              name: 'Category',
-              description: 'A test category',
-            },
-          ],
-          questions: [
-            {
-              question: {
-                _id: '511111111111111111111112',
-                question: 'Who are you and what do you do?',
-              },
-              category: null,
-              topics: [{ id: '5ffdf41a1ee2c62320b49ec2' }],
-            },
-            {
-              question: {
-                _id: '511111111111111111111113',
-                question: 'How old are you?',
-              },
-              category: { id: 'category' },
-              topics: [{ id: '5ffdf41a1ee2c62320b49ec2' }],
-            },
-            {
-              question: {
-                _id: '511111111111111111111114',
-                question: 'Do you like your job?',
-              },
-              category: null,
-              topics: [{ id: '5ffdf41a1ee2c62320b49ec3' }],
-            },
-            {
-              question: { _id: '511111111111111111111116', question: 'Julia?' },
-              category: null,
-              topics: [],
-            },
-            {
-              question: {
-                _id: '511111111111111111111117',
-                question: 'What is Aaron like?',
-              },
-              category: { id: 'category' },
-              topics: [],
-            },
-          ],
-        },
-        {
-          _id: '5ffdf41a1ee2c62320b49eb1',
-          name: 'Repeat After Me',
-          description:
-            "These are miscellaneous phrases you'll be asked to repeat.",
-          isRequired: true,
-          topics: [
-            {
-              id: '5ffdf41a1ee2c62320b49ec1',
-              name: 'Idle',
-              description: '30-second idle clip',
-            },
-          ],
-          categories: [],
-          questions: [
-            {
-              question: {
-                _id: '511111111111111111111111',
-                question: "Don't talk and stay still.",
-              },
-              category: null,
-              topics: [{ id: '5ffdf41a1ee2c62320b49ec1' }],
-            },
-          ],
-        },
-        {
-          _id: '5ffdf41a1ee2c62320b49eb3',
-          name: 'STEM',
-          description: 'These questions will ask about STEM careers.',
-          isRequired: false,
-          topics: [
-            {
-              id: '5ffdf41a1ee2c62320b49ec3',
-              name: 'Advice',
-              description:
-                'These questions will ask you to give advice to someone who is interested in your career',
-            },
-          ],
-          categories: [],
-          questions: [
-            {
-              question: {
-                _id: '511111111111111111111115',
-                question: 'Is STEM fun?',
-              },
-              category: null,
-              topics: [],
-            },
-          ],
-        },
-      ],
-      questions: [
-        {
-          _id: '511111111111111111111111',
-          question: "Don't talk and stay still.",
-          type: 'UTTERANCE',
-          name: 'idle',
-          paraphrases: [],
-          mentor: null,
-          mentorType: null,
-          minVideoLength: null,
-        },
-        {
-          _id: '511111111111111111111112',
-          question: 'Who are you and what do you do?',
-          type: 'QUESTION',
-          name: null,
-          paraphrases: [],
-          mentor: null,
-          mentorType: null,
-          minVideoLength: null,
-        },
-        {
-          _id: '511111111111111111111113',
-          question: 'How old are you?',
-          type: 'QUESTION',
-          name: null,
-          paraphrases: [],
-          mentor: null,
-          mentorType: null,
-          minVideoLength: null,
-        },
-        {
-          _id: '511111111111111111111114',
-          question: 'Do you like your job?',
-          type: 'QUESTION',
-          name: null,
-          paraphrases: [],
-          mentor: null,
-          mentorType: null,
-          minVideoLength: null,
-        },
-        {
-          _id: '511111111111111111111115',
-          question: 'Is STEM fun?',
-          type: 'QUESTION',
-          name: null,
-          paraphrases: [],
-          mentor: null,
-          mentorType: null,
-          minVideoLength: null,
-        },
-        {
-          _id: '511111111111111111111116',
-          question: 'Julia?',
-          type: 'QUESTION',
-          name: null,
-          paraphrases: [],
-          mentor: '5ffdf41a1ee2c62111111112',
-          mentorType: null,
-          minVideoLength: null,
-        },
-        {
-          _id: '511111111111111111111117',
-          question: 'What is Aaron like?',
-          type: 'QUESTION',
-          name: null,
-          paraphrases: [],
-          mentor: null,
-          mentorType: null,
-          minVideoLength: null,
-        },
-      ],
-      answers: [],
-    });
-
-    response = await request(app)
-      .post('/graphql')
-      .set('Authorization', `bearer ${token}`)
-      .send({
-        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!) {
-          me {
-            mentorImport(mentor: $mentor, json: $json) {
-              _id
-            }
-          }
-        }`,
-        variables: { mentor: '5ffdf41a1ee2c62111111112', json: mentorJson },
-      });
-    expect(response.status).to.equal(200);
-    expect(response.body.data.me.mentorImport).to.eql({
-      _id: '5ffdf41a1ee2c62111111112',
-    });
-    // all mentor specific questions should still remain
-    response = await request(app)
-      .post('/graphql')
-      .set('Authorization', `bearer ${token}`)
-      .send({
-        query: `query{
-          questions(filter:{mentor:"5ffdf41a1ee2c62111111112"}){
-            edges{
-              node{
-                question
-              }
-            }
-          }
-        }`,
-      });
-    expect(response.body.data.questions.edges).to.eql([
-      {
-        "node":{
-          "question":"Julia?"
-        }
-      }
-    ]);
-
-    // all mentor specific questions should still remain in subject
-    response = await request(app)
-      .post('/graphql')
-      .set('Authorization', `bearer ${token}`)
-      .send({
-        query: `query{
-          subject(id:"5ffdf41a1ee2c62320b49eb2"){
-            questions{
-              question{
-                _id
-              }
-            }
-          }
-        }`,
-      });
-    expect(response.body.data.subject.questions).to.eql([
-      { question: { _id: '511111111111111111111112' } },
-      { question: { _id: '511111111111111111111113' } },
-      { question: { _id: '511111111111111111111114' } },
-      { question: { _id: '511111111111111111111116' } },
       { question: { _id: '511111111111111111111117' } },
     ]);
   });
@@ -1517,14 +1058,18 @@ describe('import mentor', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!) {
+        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!, $replacedMentorDataChanges: ReplacedMentorDataChangesType!) {
           me {
-            mentorImport(mentor: $mentor, json: $json) {
+            mentorImport(mentor: $mentor, json: $json, replacedMentorDataChanges: $replacedMentorDataChanges) {
               _id
             }
           }
         }`,
-        variables: { mentor: '5ffdf41a1ee2c62111111111', json: json },
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111111',
+          json: json,
+          replacedMentorDataChanges: { questionChanges: [], answerChanges: [] },
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.mentorImport).to.eql({
@@ -1589,14 +1134,18 @@ describe('import mentor', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!) {
+        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!, $replacedMentorDataChanges: ReplacedMentorDataChangesType!) {
         me {
-          mentorImport(mentor: $mentor, json: $json) {
+          mentorImport(mentor: $mentor, json: $json, replacedMentorDataChanges: $replacedMentorDataChanges) {
             _id
           }
         }
       }`,
-        variables: { mentor: '5ffdf41a1ee2c62111111111', json: json },
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111111',
+          json: json,
+          replacedMentorDataChanges: { questionChanges: [], answerChanges: [] },
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.mentorImport).to.eql({
@@ -1716,14 +1265,18 @@ describe('import mentor', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!) {
+        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!, $replacedMentorDataChanges: ReplacedMentorDataChangesType!) {
         me {
-          mentorImport(mentor: $mentor, json: $json) {
+          mentorImport(mentor: $mentor, json: $json, replacedMentorDataChanges: $replacedMentorDataChanges) {
             _id
           }
         }
       }`,
-        variables: { mentor: '5ffdf41a1ee2c62111111111', json: json },
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111111',
+          json: json,
+          replacedMentorDataChanges: { questionChanges: [], answerChanges: [] },
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.mentorImport).to.eql({
@@ -1817,31 +1370,117 @@ describe('import mentor', () => {
                 }`,
       });
     console.log(JSON.stringify(response.body.data.subjects.edges));
-    // expect(response.body.data.subjects.edges).to.eql([
-    //   {
-    //     node: {
-    //       questions: [
-    //         {
-    //           question: {
-    //             _id: '511111111111111111111124',
-    //             question: 'New Qustion matches no text or id!?',
-    //             mentor: '5ffdf41a1ee2c62111111111',
-    //           },
-    //         },
-    //         {
-    //           question: {
-    //             _id: '511111111111111111111111',
-    //             question: "Don't talk and stay still.",
-    //             mentor: null,
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   },
-    // ]);
+    expect(response.body.data.subjects.edges).to.eql([
+      {
+        node: {
+          questions: [
+            {
+              question: {
+                _id: '511111111111111111111111',
+                question: "Don't talk and stay still.",
+                mentor: null,
+              },
+            },
+            {
+              question: {
+                _id: '511111111111111111111124',
+                question: 'New Qustion matches no text or id!?',
+                mentor: '5ffdf41a1ee2c62111111111',
+              },
+            },
+          ],
+        },
+      },
+    ]);
   });
 
-  it('Importing a mentor with less subjects than the current mentor only keeps imported subjects', async () => {});
+  it('Only answers marked for removal get removed from mentor', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea5');
+    const json = {
+      ...uneditedJson,
+      answers: [] as string[],
+    };
+    let response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query{
+        answer(mentor: "5ffdf41a1ee2c62111111111", question:"511111111111111111111111"){
+          question{
+            _id
+          }
+        }
+      }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.answer).to.eql({
+      question: { _id: '511111111111111111111111' },
+    });
+    response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation ImportMentor($mentor: ID!, $json: MentorImportJsonType!, $replacedMentorDataChanges: ReplacedMentorDataChangesType!) {
+                  me {
+                      mentorImport(mentor: $mentor, json: $json, replacedMentorDataChanges: $replacedMentorDataChanges) {
+                        _id
+                      }
+                    }
+                  }`,
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111111',
+          json: json,
+          replacedMentorDataChanges: {
+            questionChanges: [],
+            answerChanges: [
+              {
+                editType: 'REMOVED',
+                data: {
+                  question: { _id: '511111111111111111111111' },
+                  transcript: '',
+                  status: '',
+                },
+              },
+            ],
+          },
+        },
+      });
+    // console.log(response.body);
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.mentorImport).to.eql({
+      _id: '5ffdf41a1ee2c62111111111',
+    });
+    // check that answer was removed
+    response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query{
+        answer(mentor: "5ffdf41a1ee2c62111111111", question:"511111111111111111111111"){
+          question{
+            _id
+          }
+        }
+      }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.answer).to.eql(null);
+    // check that other answers remain
+    response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query{
+        answer(mentor: "5ffdf41a1ee2c62111111111", question:"511111111111111111111117"){
+          question{
+            _id
+          }
+        }
+      }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.answer).to.not.eql(null);
+  });
 
-
+  // it('Importing a mentor with less subjects than the current mentor only keeps imported subjects', async () => {});
 });

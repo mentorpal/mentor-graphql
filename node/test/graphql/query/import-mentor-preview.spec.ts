@@ -176,22 +176,22 @@ describe('import mentor preview', () => {
         {
           importData: null,
           curData: { question: 'Who are you and what do you do?' },
-          editType: 'REMOVED',
+          editType: 'OLD_FOLLOWUP',
         },
         {
           importData: null,
           curData: { question: 'How old are you?' },
-          editType: 'REMOVED',
+          editType: 'OLD_FOLLOWUP',
         },
         {
           importData: null,
           curData: { question: 'Do you like your job?' },
-          editType: 'REMOVED',
+          editType: 'OLD_FOLLOWUP',
         },
         {
           importData: null,
           curData: { question: 'What is Aaron like?' },
-          editType: 'REMOVED',
+          editType: 'OLD_FOLLOWUP',
         },
       ],
       answers: [
@@ -237,14 +237,14 @@ describe('import mentor preview', () => {
             transcript: 'Test Transcript',
             question: { question: 'What is Aaron like?' },
           },
-          editType: 'REMOVED',
+          editType: 'OLD_ANSWER',
         },
       ],
     });
   });
 
   // current mentor == mentor getting replaced
-  it('questions that are part of the current mentor and not part of import are marked as REMOVED', async () => {
+  it('questions that are part of the current mentor and not part of import are marked as OLD_FOLLOWUPS', async () => {
     const json = {
       id: '5ffdf41a1ee2c62111111111',
       subjects: [
@@ -364,22 +364,22 @@ describe('import mentor preview', () => {
         {
           importData: null,
           curData: { question: 'Who are you and what do you do?' },
-          editType: 'REMOVED',
+          editType: 'OLD_FOLLOWUP',
         },
         {
           importData: null,
           curData: { question: 'How old are you?' },
-          editType: 'REMOVED',
+          editType: 'OLD_FOLLOWUP',
         },
         {
           importData: null,
           curData: { question: 'Do you like your job?' },
-          editType: 'REMOVED',
+          editType: 'OLD_FOLLOWUP',
         },
         {
           importData: null,
           curData: { question: 'What is Aaron like?' },
-          editType: 'REMOVED',
+          editType: 'OLD_FOLLOWUP',
         },
       ],
       answers: [
@@ -415,7 +415,7 @@ describe('import mentor preview', () => {
             transcript: 'Test Transcript',
             question: { question: 'What is Aaron like?' },
           },
-          editType: 'REMOVED',
+          editType: 'OLD_ANSWER',
         },
       ],
     });
