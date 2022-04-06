@@ -65,9 +65,9 @@ export async function createApp(): Promise<Express> {
     origin: ['http://local.mentorpal.org:8000', 'http://localhost:8000'],
   };
   app.use(cors(corsOptions));
-  app.use(express.json({ limit: '1mb' }));
+  app.use(express.json({ limit: '2mb' }));
   app.use(cookieParser());
-  app.use(express.urlencoded({ limit: '1mb', extended: true }));
+  app.use(express.urlencoded({ limit: '2mb', extended: true }));
   // in order to test behind nginx, these two must be under /graphql:
   app.get('/graphql/test-error-handler', (_, res) => {
     res.send(
