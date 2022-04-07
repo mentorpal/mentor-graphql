@@ -176,11 +176,7 @@ export const mentorImportPreview = {
       }))
     );
 
-    const curQuestions: Question[] = await QuestionModel.find({
-      // _id: {
-      //   $in: importJson.questions.map((q) => q._id).filter((id) => isId(id)),
-      // },
-    });
+    const curQuestions: Question[] = await QuestionModel.find({});
     const questionChanges = [];
     for (const questionImport of importJson.questions) {
       const curQuestion = questionImport.mentor
@@ -239,6 +235,7 @@ export const mentorImportPreview = {
         m.needsTransfer = true;
         answerImport.hasUntransferredMedia = true;
       }
+
       if (
         answerImport.transcript ||
         answerImport.media.length ||
@@ -271,7 +268,6 @@ export const mentorImportPreview = {
         editType: EditType.OLD_ANSWER,
       }))
     );
-    // We don't care to show answer documents that have no changes
     return {
       id: exportJson.id,
       subjects: subjectChanges,
