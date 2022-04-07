@@ -31,7 +31,6 @@ export const login = {
         throw new Error('invalid user');
       }
       const userId = context.user._id;
-      // const userId = '6184d14c068d43dc6822a712';
       const user = await UserSchema.findByIdAndUpdate(
         userId,
         {
