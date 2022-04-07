@@ -755,7 +755,10 @@ describe('import mentor', () => {
             questionChanges: [
               {
                 editType: 'REMOVED',
-                data: { _id: '511111111111111111111116', mentor:"5ffdf41a1ee2c62111111112" },
+                data: {
+                  _id: '511111111111111111111116',
+                  mentor: '5ffdf41a1ee2c62111111112',
+                },
               },
             ],
             answerChanges: [],

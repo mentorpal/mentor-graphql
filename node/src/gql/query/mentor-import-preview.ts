@@ -229,7 +229,7 @@ export const mentorImportPreview = {
           .filter((id) => isId(id)),
       },
     });
-    let answerChanges = [];
+    const answerChanges = [];
     for (const answerImport of importJson.answers) {
       const curAnswer = curAnswers.find(
         (a) => `${a.question}` === `${answerImport.question._id}`
@@ -260,8 +260,8 @@ export const mentorImportPreview = {
 
     const removedAnswers = exportJson.answers.filter(
       (a) =>
-        Boolean(a.transcript || a.media.length) && !importJson.answers.find(
-          // TODO: check that a has some sort of info to 
+        Boolean(a.transcript || a.media.length) &&
+        !importJson.answers.find(
           (aa) => `${aa.question._id}` === `${a.question}`
         )
     );

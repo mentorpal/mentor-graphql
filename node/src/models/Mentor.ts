@@ -188,11 +188,6 @@ MentorSchema.statics.import = async function (
   replacedMentorDataChanges: ReplacedMentorDataChanges
 ): Promise<Mentor> {
   try {
-    console.error(
-      `replaced mentor data changes here: ${JSON.stringify(
-        replacedMentorDataChanges
-      )}`
-    );
     // Gets the mentor while also updating its info with that of the importing mentor
     let mentor: Mentor =
       typeof m === 'string'
@@ -201,7 +196,7 @@ MentorSchema.statics.import = async function (
     if (!mentor) {
       throw new Error('mentor not found');
     }
-    // remove specified answer documents for current mentor (make sure that the )
+    // remove specified answer documents for current mentor
     const answerQIdsToRemove = replacedMentorDataChanges.answerChanges
       .filter((q) => q.editType === 'REMOVED')
       .map((a) => a.data.question._id);
@@ -209,41 +204,67 @@ MentorSchema.statics.import = async function (
       question: { $in: answerQIdsToRemove },
       mentor: mentor._id,
     });
-    console.error(
+    console.log(
       `Answers removed for specified answers: ${JSON.stringify(
         answersRemovedDoc
       )}`
     );
 
-    // remove all answer and question docs as specified in request (safeguard removal of only questions that are mentor specific)
+    // remove specified questions (and their answer docs, if they exist) from current mentor
+    // safeguard against removal of any questions that are not specific to this mentor
     const questionIdsToRemove = replacedMentorDataChanges.questionChanges
-      .filter((q) => q.editType === 'REMOVED' && q.data.mentor && `${q.data.mentor}` === `${mentor._id}`)
+      .filter(
+        (q) =>
+          q.editType === 'REMOVED' &&
+          q.data.mentor &&
+          `${q.data.mentor}` === `${mentor._id}`
+      )
       .map((q) => q.data._id);
-    console.error(
+    console.log(
       `Removing these question ids ${JSON.stringify(questionIdsToRemove)}`
     );
-    const answersRemovedPerQuestionDoc = await AnswerModel.deleteMany({
+    await AnswerModel.deleteMany({
       question: { $in: questionIdsToRemove },
       mentor: mentor._id,
     });
-    console.error(
-      `Answers removed due to questions removed doc: ${JSON.stringify(
-        answersRemovedPerQuestionDoc
-      )}`
-    );
     const questionsRemovedDoc = await QuestionModel.deleteMany({
       _id: { $in: questionIdsToRemove },
+      mentor: mentor._id,
     });
-    console.error(
+    console.log(
       `Questions removed doc: ${JSON.stringify(questionsRemovedDoc)}`
     );
-    //removing selected q's from subjects
+
+    // removing selected q's from subjects
     const subjectIds = mentor.subjects.map((subj) => subj._id);
     subjectIds.forEach(async (id) => {
       const subject = await SubjectModel.findOne({ _id: id });
       if (subject) {
-        try {
-          const newQs = subject.questions.filter(
+        const newQs = subject.questions.filter(
+          (q) =>
+            !Boolean(
+              questionIdsToRemove.find(
+                (qRemove) => `${qRemove}` === `${q.question._id}`
+              )
+            )
+        );
+        await SubjectModel.findOneAndUpdate(
+          { _id: subject._id },
+          {
+            $set: {
+              questions: newQs,
+            },
+          },
+          {
+            new: true,
+          }
+        );
+        // remove questions from imported subject
+        const importedSubject = json.subjects.find(
+          (subj) => subj._id == subject._id
+        );
+        if (importedSubject) {
+          importedSubject.questions = importedSubject.questions.filter(
             (q) =>
               !Boolean(
                 questionIdsToRemove.find(
@@ -251,46 +272,19 @@ MentorSchema.statics.import = async function (
                 )
               )
           );
-          await SubjectModel.findOneAndUpdate(
-            { _id: subject._id },
-            {
-              $set: {
-                questions: newQs,
-              },
-            },
-            {
-              new: true,
-            }
-          );
-          // remove questions from imported subject
-          const importedSubject = json.subjects.find(
-            (subj) => subj._id == subject._id
-          );
-          if (importedSubject) {
-            importedSubject.questions = importedSubject.questions.filter(
-              (q) =>
-                !Boolean(
-                  questionIdsToRemove.find(
-                    (qRemove) => `${qRemove}` === `${q.question._id}`
-                  )
-                )
-            );
-          }
-        } catch (err) {
-          console.debug(`Failed to filter subject q's: ${err}`);
         }
       } else {
-        console.error(`Failed to find subject with id ${id}`);
+        console.error(
+          `Failed to find subject with id ${id} when removing specific question ids`
+        );
       }
     });
 
-    // Main differences:
     /**
-     * We work through each subject, that subjects questions, and then that questions answer document (if one exists) all in order
+     * We work through one subject at a time, and that subjects questions/answers one at a time.
      */
 
-    //START OF MY WAY
-    // Start mentor from scratch and work through imported subjects
+    // Start the mentor with no subjects, and we add them on as we go.
     mentor = await this.findOneAndUpdate(
       { _id: mentor._id },
       { subjects: [] },
@@ -304,38 +298,31 @@ MentorSchema.statics.import = async function (
             _id: { $in: existingSubject.questions.map((q) => `${q.question}`) },
           })
         : [];
-      console.error(`Working on subject: ${s.name}`);
+      console.log(`Working on subject: ${s.name}`);
       for (const q of s.questions) {
-        console.error(`working on question ${JSON.stringify(q.question)}`);
+        console.log(`working on question ${JSON.stringify(q.question)}`);
         const originalQId = JSON.parse(JSON.stringify(q.question._id));
         const importedQDoc = json.questions.find(
           (importedQ) => `${importedQ._id}` === `${q.question._id}`
         );
         if (!importedQDoc) {
           console.error(
-            `Failed to find an imported question document for question: ${JSON.stringify(
+            `Failed to find an imported question document for subject question: ${JSON.stringify(
               q
             )}`
           );
           continue;
         }
         let updatedOrCreatedQuestion;
-        let isNewQuestion = false;
-        // If the question has a specific mentor and it's not of the mentor being replaced, then always create a new question
-        if (
-          importedQDoc.mentor &&
-          `${importedQDoc.mentor}` !== `${mentor._id}`
-        ) {
-          console.error(
-            `The imported question document does not have same mentor id`
-          );
+        const isNewMentorSpecificQuestion =
+          importedQDoc.mentor && `${importedQDoc.mentor}` !== `${mentor._id}`;
+        if (isNewMentorSpecificQuestion) {
           const qCopy = JSON.parse(JSON.stringify(importedQDoc));
           delete qCopy._id;
           qCopy.mentor = mentor._id;
           updatedOrCreatedQuestion = await QuestionModel.updateOrCreate(qCopy);
-          isNewQuestion = true;
         } else {
-          // Not mentor specific or it's a mentor specific for this mentor
+          // Try to find pre-existing queston document by id or text
           const questionDocument = existingSubjectQuestionDocs.length
             ? existingSubjectQuestionDocs.find(
                 (existingQ) =>
@@ -348,8 +335,12 @@ MentorSchema.statics.import = async function (
                   { question: importedQDoc.question },
                 ],
               });
-          if (questionDocument) {
-            // && !questionDocument.mentor
+          // question document must either not be mentor specific or be specific to the mentor being replaced, else this mentor can't see the question.
+          const questionDocumentExists =
+            questionDocument &&
+            (!questionDocument.mentor ||
+              `${questionDocument.mentor}` === `${mentor._id}`);
+          if (questionDocumentExists) {
             console.error(
               `question document found for question ${JSON.stringify(
                 importedQDoc
@@ -357,23 +348,16 @@ MentorSchema.statics.import = async function (
             );
             updatedOrCreatedQuestion = questionDocument;
           } else {
-            console.log(`mentor specific, or question document not found`);
+            // No pre-existing question documents found by text or id, so make this new question mentor specific.
             importedQDoc.mentor = typeof m === 'string' ? m : m._id;
             updatedOrCreatedQuestion = await QuestionModel.updateOrCreate(
               importedQDoc
             );
-            isNewQuestion = true;
           }
         }
         const newQId = updatedOrCreatedQuestion._id;
-        if (isNewQuestion) {
-          console.error(
-            `new question document created for ${JSON.stringify(
-              q
-            )}, new doc has id ${updatedOrCreatedQuestion._id}`
-          );
-        }
-        // If the subject already exists, then no matter what we add the question to it
+
+        // If this is a pre-existing subject, then just add the question document to it
         if (existingSubject) {
           const existingSubjectAlreadyHasQuestion =
             existingSubject.questions.find(
@@ -408,7 +392,6 @@ MentorSchema.statics.import = async function (
           }
         } else {
           // Subject does not exist, so we update the imported json with the new question id
-          // TODO: This is assuming that it's updating by reference, not sure if it will work.
           q.question._id = updatedOrCreatedQuestion._id;
         }
 
@@ -438,8 +421,6 @@ MentorSchema.statics.import = async function (
         }
       }
 
-      //  If the subject does not already exist, then just create it because the questions are already all
-      //    created and assigned to id's in the DB
       if (!existingSubject) {
         const newSubject = await SubjectModel.findOneAndUpdate(
           { _id: idOrNew(s._id) },
@@ -498,7 +479,6 @@ MentorSchema.statics.import = async function (
     }
     return await this.findById(mentor._id);
   } catch (err) {
-    console.error(err);
     throw new Error(err);
   }
 };
