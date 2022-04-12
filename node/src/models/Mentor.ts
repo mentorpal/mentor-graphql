@@ -26,6 +26,7 @@ import {
   ReplacedMentorDataChanges,
 } from 'gql/mutation/me/mentor-import';
 import { idOrNew } from 'gql/mutation/me/helpers';
+import UserQuestion from './UserQuestion';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -173,12 +174,26 @@ MentorSchema.statics.export = async function (
     mentor: mentor._id,
     question: { $in: questions.map((q) => q._id) },
   });
+
+  let userQuestions = await UserQuestion.find({
+    mentor: mentor._id,
+  });
+
+  // Filter out any userQuestions that contain answers that do not exist within the answers we're going to send out
+  const answerDocIds = answers.map((a) => `${a._id}`);
+  userQuestions = userQuestions.filter((userQuestion) =>
+    answerDocIds.find(
+      (answerDocId) => answerDocId == userQuestion.classifierAnswer?._id
+    )
+  );
+
   return {
     id: mentor._id,
     mentorInfo: mentor,
     subjects,
     questions,
     answers,
+    userQuestions,
   };
 };
 
@@ -280,6 +295,15 @@ MentorSchema.statics.import = async function (
       }
     });
 
+    // Safeguard: Filter out any userQuestions that contain answer documents that were not imported with this mentor, this could result in null references
+    json.userQuestions = json.userQuestions.filter((userQuestion) =>
+      json.answers.find(
+        (a) =>
+          `${a.question._id}` ==
+          `${userQuestion.classifierAnswer?.question?._id}`
+      )
+    );
+
     /**
      * We work through one subject at a time, and that subjects questions/answers one at a time.
      */
@@ -290,7 +314,9 @@ MentorSchema.statics.import = async function (
       { subjects: [] },
       { new: true }
     );
-
+    console.error(
+      `userQuestions before processing: ${JSON.stringify(json.userQuestions)}`
+    );
     for (const s of json.subjects) {
       let existingSubject = await SubjectModel.findOne({ _id: idOrNew(s._id) });
       const existingSubjectQuestionDocs = existingSubject
@@ -403,7 +429,7 @@ MentorSchema.statics.import = async function (
           for (const m of importedAnswerDocumentForQuestion.media || []) {
             m.needsTransfer = true;
           }
-          await AnswerModel.findOneAndUpdate(
+          const newAnswerDocument = await AnswerModel.findOneAndUpdate(
             {
               question: updatedOrCreatedQuestion._id,
               mentor: mentor._id,
@@ -416,11 +442,63 @@ MentorSchema.statics.import = async function (
             },
             {
               upsert: true,
+              new: true,
             }
           );
+
+          // Anytime an answer document is created, update related imported userQuestions that contain the imported answer document in either classifierAnswer or graderAnswer with the new answer document
+          const importedUserQuestions = json.userQuestions.filter(
+            (importedUserQuestion) =>
+              importedUserQuestion.classifierAnswer?.question?._id ==
+                importedAnswerDocumentForQuestion.question._id ||
+              importedUserQuestion.graderAnswer?.question?._id ==
+                importedAnswerDocumentForQuestion.question._id
+          );
+          if (importedUserQuestions.length) {
+            for (const importedUserQuestion of importedUserQuestions) {
+              const replaceClassifierAnswer =
+                importedUserQuestion.classifierAnswer?.question?._id ==
+                importedAnswerDocumentForQuestion.question._id;
+              const replaceGraderAnswer =
+                importedUserQuestion.graderAnswer?.question?._id ==
+                importedAnswerDocumentForQuestion.question._id;
+              if (replaceClassifierAnswer) {
+                importedUserQuestion.classifierAnswer = newAnswerDocument;
+              }
+              if (replaceGraderAnswer) {
+                importedUserQuestion.graderAnswer = newAnswerDocument;
+              }
+
+              // Updating JSON with updated version of userQuestion
+              for (let userQuestion of json.userQuestions) {
+                if (userQuestion._id == importedUserQuestion._id) {
+                  userQuestion = importedUserQuestion;
+                }
+              }
+            }
+          }
         }
       }
+      // Create userQuestion documents now that they all contain existing answer documents
+      for (const userQuestion of json.userQuestions) {
+        await UserQuestion.findOneAndUpdate(
+          {
+            _id: idOrNew(userQuestion._id),
+          },
+          {
+            ...userQuestion,
+            mentor: mentor._id,
+          },
+          {
+            upsert: true,
+            new: true,
+          }
+        );
+      }
 
+      console.error(
+        `userQuestions after processing: ${JSON.stringify(json.userQuestions)}`
+      );
       if (!existingSubject) {
         const newSubject = await SubjectModel.findOneAndUpdate(
           { _id: idOrNew(s._id) },
@@ -479,6 +557,7 @@ MentorSchema.statics.import = async function (
     }
     return await this.findById(mentor._id);
   } catch (err) {
+    console.error(err);
     throw new Error(err);
   }
 };

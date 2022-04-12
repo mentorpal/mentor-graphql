@@ -16,11 +16,13 @@ import {
 import AnswerType from 'gql/types/answer';
 import SubjectType from 'gql/types/subject';
 import QuestionType from 'gql/types/question';
+import UserQuestionType from 'gql/types/user-question';
 import { Mentor as MentorModel } from 'models';
 import { Answer } from 'models/Answer';
 import { Subject } from 'models/Subject';
 import { Question } from 'models/Question';
 import { Mentor } from 'models/Mentor';
+import { UserQuestion } from 'models/UserQuestion';
 
 export interface MentorExportJson {
   id: string;
@@ -28,6 +30,7 @@ export interface MentorExportJson {
   subjects: Subject[];
   questions: Question[];
   answers: Answer[];
+  userQuestions: UserQuestion[];
 }
 
 export const MentorExportJsonType = new GraphQLObjectType({
@@ -38,6 +41,7 @@ export const MentorExportJsonType = new GraphQLObjectType({
     subjects: { type: GraphQLList(SubjectType) },
     questions: { type: GraphQLList(QuestionType) },
     answers: { type: GraphQLList(AnswerType) },
+    userQuestions: { type: GraphQLList(UserQuestionType) },
   }),
 });
 

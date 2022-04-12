@@ -75,6 +75,33 @@ export const exportMentorQuery = `query ExportMentor($mentor: ID!) {
         needsTransfer
       }
     }
+    userQuestions{
+      _id
+      classifierAnswerType
+      feedback
+      question
+      mentor{
+        _id
+        name
+      }
+      classifierAnswer{
+        _id
+        question{
+          _id
+          question
+        }
+        transcript
+      }
+      confidence
+      graderAnswer{
+        _id
+        question{
+          _id
+          question
+        }
+        transcript
+      }
+    }
   }
 }`;
 
@@ -120,13 +147,14 @@ describe('export mentor', () => {
     );
   });
 
-  it(`exports mentor's subjects, questions, and answers as JSON`, async () => {
+  it(`exports mentor's subjects, questions, answers, and userQuestions as JSON`, async () => {
     const response = await request(app)
       .post('/graphql')
       .send({
         query: exportMentorQuery,
         variables: { mentor: '5ffdf41a1ee2c62111111111' },
       });
+    console.error(JSON.stringify(response.body.data.mentorExport));
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorExport).to.eql({
       id: '5ffdf41a1ee2c62111111111',
@@ -165,25 +193,15 @@ describe('export mentor', () => {
                 question: 'Who are you and what do you do?',
               },
               category: null,
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec2',
-                },
-              ],
+              topics: [{ id: '5ffdf41a1ee2c62320b49ec2' }],
             },
             {
               question: {
                 _id: '511111111111111111111113',
                 question: 'How old are you?',
               },
-              category: {
-                id: 'category',
-              },
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec2',
-                },
-              ],
+              category: { id: 'category' },
+              topics: [{ id: '5ffdf41a1ee2c62320b49ec2' }],
             },
             {
               question: {
@@ -191,20 +209,14 @@ describe('export mentor', () => {
                 question: 'Do you like your job?',
               },
               category: null,
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec3',
-                },
-              ],
+              topics: [{ id: '5ffdf41a1ee2c62320b49ec3' }],
             },
             {
               question: {
                 _id: '511111111111111111111117',
                 question: 'What is Aaron like?',
               },
-              category: {
-                id: 'category',
-              },
+              category: { id: 'category' },
               topics: [],
             },
           ],
@@ -230,11 +242,7 @@ describe('export mentor', () => {
                 question: "Don't talk and stay still.",
               },
               category: null,
-              topics: [
-                {
-                  id: '5ffdf41a1ee2c62320b49ec1',
-                },
-              ],
+              topics: [{ id: '5ffdf41a1ee2c62320b49ec1' }],
             },
           ],
         },
@@ -337,6 +345,25 @@ describe('export mentor', () => {
               needsTransfer: false,
             },
           ],
+        },
+      ],
+      userQuestions: [
+        {
+          _id: '5ffdf41a1ee2c62320b49ee1',
+          classifierAnswerType: 'CLASSIFIER',
+          feedback: 'NEUTRAL',
+          question: 'who are you?',
+          mentor: { _id: '5ffdf41a1ee2c62111111111', name: 'Clinton Anderson' },
+          classifierAnswer: {
+            _id: '511111111111111111111112',
+            question: {
+              _id: '511111111111111111111111',
+              question: "Don't talk and stay still.",
+            },
+            transcript: '[being still]',
+          },
+          confidence: null,
+          graderAnswer: null,
         },
       ],
     });
