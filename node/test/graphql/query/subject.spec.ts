@@ -50,6 +50,7 @@ describe('subject', () => {
           subject(id: "5ffdf41a1ee2c62320b49eb1") {
             _id
             name
+            type
             description
           }
       }`,
@@ -58,6 +59,7 @@ describe('subject', () => {
     expect(response.body.data.subject).to.eql({
       _id: '5ffdf41a1ee2c62320b49eb1',
       name: 'Repeat After Me',
+      type: 'UTTERANCE_GROUP',
       description: "These are miscellaneous phrases you'll be asked to repeat.",
     });
   });

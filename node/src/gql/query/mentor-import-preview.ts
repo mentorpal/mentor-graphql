@@ -91,6 +91,7 @@ export const SubjectPreviewType = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
+    type: { type: GraphQLString },
     description: { type: GraphQLString },
     isRequired: { type: GraphQLBoolean },
     topics: { type: GraphQLList(TopicType) },

@@ -72,6 +72,7 @@ export const SubjectQuestionInputType = new GraphQLInputObjectType({
 export interface SubjectUpdateInput {
   _id: string;
   name: string;
+  type: string;
   description: string;
   isRequired: boolean;
   categories: CategoryUpdateInput[];
@@ -84,6 +85,7 @@ export const SubjectUpdateInputType = new GraphQLInputObjectType({
   fields: () => ({
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
+    type: { type: GraphQLString },
     description: { type: GraphQLString },
     isRequired: { type: GraphQLBoolean },
     categories: { type: GraphQLList(CategoryInputType) },
