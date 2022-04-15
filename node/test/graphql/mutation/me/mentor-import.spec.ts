@@ -64,7 +64,6 @@ describe('import mentor', () => {
       });
     expect(response.status).to.equal(200);
     const mentorJson = response.body.data.mentorExport;
-    console.error(JSON.stringify(mentorJson));
     expect(mentorJson).to.eql({
       id: '5ffdf41a1ee2c62111111111',
       subjects: [
@@ -1369,7 +1368,6 @@ describe('import mentor', () => {
                   }
                 }`,
       });
-    console.log(JSON.stringify(response.body.data.subjects.edges));
     expect(response.body.data.subjects.edges).to.eql([
       {
         node: {
@@ -1445,7 +1443,6 @@ describe('import mentor', () => {
           },
         },
       });
-    // console.log(response.body);
     expect(response.status).to.equal(200);
     expect(response.body.data.me.mentorImport).to.eql({
       _id: '5ffdf41a1ee2c62111111111',
