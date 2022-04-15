@@ -21,9 +21,12 @@ import { QuestionType } from './Question';
 import { Subject, SubjectQuestion, Topic } from './Subject';
 import { User } from './User';
 import { MentorExportJson } from 'gql/query/mentor-export';
-import { MentorImportJson } from 'gql/mutation/me/mentor-import';
+import {
+  MentorImportJson,
+  ReplacedMentorDataChanges,
+} from 'gql/mutation/me/mentor-import';
 import { idOrNew } from 'gql/mutation/me/helpers';
-import { mediaNeedsTransfer, toRelativeUrl } from 'utils/static-urls';
+import UserQuestion from './UserQuestion';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -84,7 +87,11 @@ export interface MentorModel extends Model<Mentor> {
     categoryId,
   }: GetMentorDataParams): Answer[];
   export(mentor: string): Promise<MentorExportJson>;
-  import(mentor: string, json: MentorImportJson): Promise<Mentor>;
+  import(
+    mentor: string,
+    json: MentorImportJson,
+    replacedMentorDataChanges: ReplacedMentorDataChanges
+  ): Promise<Mentor>;
 }
 
 export const MentorSchema = new Schema<Mentor, MentorModel>(
@@ -94,8 +101,12 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     title: { type: String },
     email: { type: String },
     thumbnail: { type: String, default: '' },
-    allowContact: { type: Boolean },
-    defaultSubject: { type: Schema.Types.ObjectId, ref: 'Subject' },
+    allowContact: { type: Boolean, default: false },
+    defaultSubject: {
+      type: Schema.Types.ObjectId,
+      ref: 'Subject',
+      default: '',
+    },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
     lastTrainedAt: { type: Date },
     isDirty: { type: Boolean, default: true },
@@ -128,12 +139,28 @@ MentorSchema.statics.export = async function (
     null,
     { sort: { name: 1 } }
   );
+  const mentorQuestions = await QuestionModel.find({
+    $or: [
+      { mentor: mentor._id },
+      { mentor: { $exists: false } },
+      { mentor: null }, // not sure if we need an explicit null check?
+    ],
+  });
+
+  // Filter out the questions from subjects that do not belong to this mentor
+  for (const s of subjects) {
+    s.questions = s.questions.filter((sq) =>
+      Boolean(mentorQuestions.find((q) => `${q._id}` == `${sq.question._id}`))
+    );
+  }
+
   const sQuestions: SubjectQuestion[] = subjects.reduce(
     (accumulator, subject) => {
       return accumulator.concat(subject.questions);
     },
     []
   );
+
   const questions = await QuestionModel.find({
     _id: { $in: sQuestions.map((q) => q.question) },
     $or: [
@@ -142,108 +169,368 @@ MentorSchema.statics.export = async function (
       { mentor: null }, // not sure if we need an explicit null check?
     ],
   });
+
   const answers: Answer[] = await AnswerModel.find({
     mentor: mentor._id,
     question: { $in: questions.map((q) => q._id) },
   });
+
+  let userQuestions = await UserQuestion.find({
+    mentor: mentor._id,
+  });
+
+  // Filter out any userQuestions that contain answers that do not exist within the answers we're going to send out
+  const answerDocIds = answers.map((a) => `${a._id}`);
+  userQuestions = userQuestions.filter((userQuestion) =>
+    answerDocIds.find(
+      (answerDocId) => answerDocId == userQuestion.classifierAnswer?._id
+    )
+  );
+
   return {
     id: mentor._id,
+    mentorInfo: mentor,
     subjects,
     questions,
     answers,
+    userQuestions,
   };
 };
 
 MentorSchema.statics.import = async function (
   m: string | Mentor,
-  json: MentorImportJson
+  json: MentorImportJson,
+  replacedMentorDataChanges: ReplacedMentorDataChanges
 ): Promise<Mentor> {
-  const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
-  if (!mentor) {
-    throw new Error('mentor not found');
-  }
-  // TODO: currently, if one fails all the subsequent calls fail
-  // need to have a list of promises, but still need to create questions before anything else
-  for (const q of json.questions) {
-    const updatedQuestion = await QuestionModel.updateOrCreate(q);
-    if (`${updatedQuestion._id}` !== `${q._id}`) {
-      for (const subject of json.subjects) {
-        const subjectQuestion = subject.questions.find(
-          (sq) => `${sq.question._id}` === `${q._id}`
+  try {
+    // Gets the mentor while also updating its info with that of the importing mentor
+    let mentor: Mentor =
+      typeof m === 'string'
+        ? await this.findByIdAndUpdate(m, { ...json.mentorInfo })
+        : m;
+    if (!mentor) {
+      throw new Error('mentor not found');
+    }
+    // remove specified answer documents for current mentor
+    const answerQIdsToRemove = replacedMentorDataChanges.answerChanges
+      .filter((q) => q.editType === 'REMOVED')
+      .map((a) => a.data.question._id);
+    await AnswerModel.deleteMany({
+      question: { $in: answerQIdsToRemove },
+      mentor: mentor._id,
+    });
+
+    // remove specified questions (and their answer docs, if they exist) from current mentor
+    // safeguard against removal of any questions that are not specific to this mentor
+    const questionIdsToRemove = replacedMentorDataChanges.questionChanges
+      .filter(
+        (q) =>
+          q.editType === 'REMOVED' &&
+          q.data.mentor &&
+          `${q.data.mentor}` === `${mentor._id}`
+      )
+      .map((q) => q.data._id);
+    await AnswerModel.deleteMany({
+      question: { $in: questionIdsToRemove },
+      mentor: mentor._id,
+    });
+    await QuestionModel.deleteMany({
+      _id: { $in: questionIdsToRemove },
+      mentor: mentor._id,
+    });
+
+    // removing selected q's from subjects
+    const subjectIds = mentor.subjects.map((subj) => subj._id);
+    subjectIds.forEach(async (id) => {
+      const subject = await SubjectModel.findOne({ _id: id });
+      if (subject) {
+        const newQs = subject.questions.filter(
+          (q) =>
+            !Boolean(
+              questionIdsToRemove.find(
+                (qRemove) => `${qRemove}` === `${q.question._id}`
+              )
+            )
         );
-        if (subjectQuestion) {
-          subjectQuestion.question._id = updatedQuestion._id;
+        await SubjectModel.findOneAndUpdate(
+          { _id: subject._id },
+          {
+            $set: {
+              questions: newQs,
+            },
+          },
+          {
+            new: true,
+          }
+        );
+        // remove questions from imported subject
+        const importedSubject = json.subjects.find(
+          (subj) => subj._id == subject._id
+        );
+        if (importedSubject) {
+          importedSubject.questions = importedSubject.questions.filter(
+            (q) =>
+              !Boolean(
+                questionIdsToRemove.find(
+                  (qRemove) => `${qRemove}` === `${q.question._id}`
+                )
+              )
+          );
+        }
+      } else {
+        console.error(
+          `Failed to find subject with id ${id} when removing specific question ids`
+        );
+      }
+    });
+
+    // Safeguard: Filter out any userQuestions that contain answer documents that were not imported with this mentor, this could result in null references
+    json.userQuestions = json.userQuestions.filter((userQuestion) =>
+      json.answers.find(
+        (a) =>
+          `${a.question._id}` ==
+          `${userQuestion.classifierAnswer?.question?._id}`
+      )
+    );
+
+    /**
+     * We work through one subject at a time, and that subjects questions/answers one at a time.
+     */
+
+    // Start the mentor with no subjects, and we add them on as we go.
+    mentor = await this.findOneAndUpdate(
+      { _id: mentor._id },
+      { subjects: [] },
+      { new: true }
+    );
+    for (const s of json.subjects) {
+      let existingSubject = await SubjectModel.findOne({ _id: idOrNew(s._id) });
+      const existingSubjectQuestionDocs = existingSubject
+        ? await QuestionModel.find({
+            _id: { $in: existingSubject.questions.map((q) => `${q.question}`) },
+          })
+        : [];
+      for (const q of s.questions) {
+        const originalQId = JSON.parse(JSON.stringify(q.question._id));
+        const importedQDoc = json.questions.find(
+          (importedQ) => `${importedQ._id}` === `${q.question._id}`
+        );
+        if (!importedQDoc) {
+          console.error(
+            `Failed to find an imported question document for subject question: ${JSON.stringify(
+              q
+            )}`
+          );
+          continue;
+        }
+        let updatedOrCreatedQuestion;
+        const isNewMentorSpecificQuestion =
+          importedQDoc.mentor && `${importedQDoc.mentor}` !== `${mentor._id}`;
+        if (isNewMentorSpecificQuestion) {
+          const qCopy = JSON.parse(JSON.stringify(importedQDoc));
+          delete qCopy._id;
+          qCopy.mentor = mentor._id;
+          updatedOrCreatedQuestion = await QuestionModel.updateOrCreate(qCopy);
+        } else {
+          // Try to find pre-existing queston document by id or text
+          const questionDocument = existingSubjectQuestionDocs.length
+            ? existingSubjectQuestionDocs.find(
+                (existingQ) =>
+                  `${existingQ._id}` === `${importedQDoc._id}` ||
+                  existingQ.question === importedQDoc.question
+              )
+            : await QuestionModel.findOne({
+                $or: [
+                  { _id: idOrNew(importedQDoc._id) },
+                  { question: importedQDoc.question },
+                ],
+              });
+          // question document must either not be mentor specific or be specific to the mentor being replaced, else this mentor can't see the question.
+          const questionDocumentExists =
+            questionDocument &&
+            (!questionDocument.mentor ||
+              `${questionDocument.mentor}` === `${mentor._id}`);
+          if (questionDocumentExists) {
+            updatedOrCreatedQuestion = questionDocument;
+          } else {
+            // No pre-existing question documents found by text or id, so make this new question mentor specific.
+            importedQDoc.mentor = typeof m === 'string' ? m : m._id;
+            updatedOrCreatedQuestion = await QuestionModel.updateOrCreate(
+              importedQDoc
+            );
+          }
+        }
+        const newQId = updatedOrCreatedQuestion._id;
+
+        // If this is a pre-existing subject, then just add the question document to it
+        if (existingSubject) {
+          const existingSubjectAlreadyHasQuestion =
+            existingSubject.questions.find(
+              (existingQ) => `${existingQ.question._id}` === `${newQId}`
+            );
+          if (!existingSubjectAlreadyHasQuestion) {
+            try {
+              existingSubject = await SubjectModel.findOneAndUpdate(
+                { _id: existingSubject._id },
+                {
+                  questions: [
+                    ...existingSubject.questions,
+                    {
+                      question: updatedOrCreatedQuestion._id,
+                      category: q.category?.id,
+                      topics: q.topics?.map((t) => t.id),
+                    },
+                  ],
+                },
+                {
+                  new: true,
+                }
+              );
+            } catch (err) {
+              throw new Error(`Failed to update existing subject model with `);
+            }
+          }
+        } else {
+          // Subject does not exist, so we update the imported json with the new question id
+          q.question._id = updatedOrCreatedQuestion._id;
+        }
+
+        const importedAnswerDocumentForQuestion = json.answers.find(
+          (importedAnswer) => importedAnswer.question._id === originalQId
+        );
+        if (importedAnswerDocumentForQuestion) {
+          // With the new question document created, handle creating the new answer documents for that question
+          for (const m of importedAnswerDocumentForQuestion.media || []) {
+            m.needsTransfer = true;
+          }
+          const newAnswerDocument = await AnswerModel.findOneAndUpdate(
+            {
+              question: updatedOrCreatedQuestion._id,
+              mentor: mentor._id,
+            },
+            {
+              transcript: importedAnswerDocumentForQuestion.transcript,
+              status: importedAnswerDocumentForQuestion.status,
+              media: importedAnswerDocumentForQuestion.media,
+              hasUntransferredMedia: true,
+            },
+            {
+              upsert: true,
+              new: true,
+            }
+          );
+
+          // Anytime an answer document is created, update related imported userQuestions that contain the imported answer document in either classifierAnswer or graderAnswer with the new answer document
+          const importedUserQuestions = json.userQuestions.filter(
+            (importedUserQuestion) =>
+              importedUserQuestion.classifierAnswer?.question?._id ==
+                importedAnswerDocumentForQuestion.question._id ||
+              importedUserQuestion.graderAnswer?.question?._id ==
+                importedAnswerDocumentForQuestion.question._id
+          );
+          if (importedUserQuestions.length) {
+            for (const importedUserQuestion of importedUserQuestions) {
+              const replaceClassifierAnswer =
+                importedUserQuestion.classifierAnswer?.question?._id ==
+                importedAnswerDocumentForQuestion.question._id;
+              const replaceGraderAnswer =
+                importedUserQuestion.graderAnswer?.question?._id ==
+                importedAnswerDocumentForQuestion.question._id;
+              if (replaceClassifierAnswer) {
+                importedUserQuestion.classifierAnswer = newAnswerDocument;
+              }
+              if (replaceGraderAnswer) {
+                importedUserQuestion.graderAnswer = newAnswerDocument;
+              }
+
+              // Updating JSON with updated version of userQuestion
+              for (let userQuestion of json.userQuestions) {
+                if (userQuestion._id == importedUserQuestion._id) {
+                  userQuestion = importedUserQuestion;
+                }
+              }
+            }
+          }
         }
       }
-      const answer = json.answers.find(
-        (a) => `${a.question._id}` === `${q._id}`
-      );
-      if (answer) {
-        answer.question._id = updatedQuestion._id;
+      // Create userQuestion documents now that they all contain existing answer documents
+      for (const userQuestion of json.userQuestions) {
+        await UserQuestion.findOneAndUpdate(
+          {
+            _id: idOrNew(userQuestion._id),
+          },
+          {
+            ...userQuestion,
+            mentor: mentor._id,
+          },
+          {
+            upsert: true,
+            new: true,
+          }
+        );
+      }
+
+      if (!existingSubject) {
+        const newSubject = await SubjectModel.findOneAndUpdate(
+          { _id: idOrNew(s._id) },
+          {
+            name: s.name,
+            description: s.description,
+            isRequired: s.isRequired,
+            categories: s.categories,
+            topics: s.topics,
+            questions: s.questions.map((sq) => ({
+              question: sq.question._id,
+              category: sq.category?.id,
+              topics: sq.topics?.map((t) => t.id),
+            })),
+          },
+          {
+            new: true,
+            upsert: true,
+          }
+        );
+        // Add the new subject to the mentors subject id list
+        mentor = await this.findByIdAndUpdate(
+          mentor._id,
+          {
+            $set: {
+              subjects: mentor.subjects.concat(
+                newSubject._id as Subject['_id']
+              ),
+            },
+          },
+          {
+            new: true,
+          }
+        );
+      } else {
+        // Check if the mentor already has the existing subject
+        const mentorAlreadyHasSubject = mentor.subjects.find(
+          (subj) => subj._id === existingSubject._id
+        );
+        if (!mentorAlreadyHasSubject) {
+          mentor = await this.findByIdAndUpdate(
+            mentor._id,
+            {
+              $set: {
+                subjects: mentor.subjects.concat(
+                  existingSubject._id as Subject['_id']
+                ),
+              },
+            },
+            {
+              new: true,
+            }
+          );
+        }
       }
     }
+    return await this.findById(mentor._id);
+  } catch (err) {
+    console.error(err);
+    throw new Error(err);
   }
-  for (const s of json.subjects) {
-    const updatedSubject = await SubjectModel.findOneAndUpdate(
-      { _id: idOrNew(s._id) },
-      {
-        $set: {
-          name: s.name,
-          description: s.description,
-          isRequired: s.isRequired,
-          type: s.type,
-          categories: s.categories,
-          topics: s.topics,
-          questions: s.questions.map((sq) => ({
-            question: sq.question._id,
-            category: sq.category?.id,
-            topics: sq.topics?.map((t) => t.id),
-          })),
-        },
-      },
-      {
-        new: true,
-        upsert: true,
-      }
-    );
-    if (`${updatedSubject._id}` !== `${s._id}`) {
-      const subject = json.subjects.find((js) => `${js._id}` === `${s._id}`);
-      if (subject) {
-        subject._id = updatedSubject._id;
-      }
-    }
-  }
-  for (const a of json.answers || []) {
-    a.hasUntransferredMedia = false;
-    for (const m of a.media || []) {
-      m.needsTransfer = mediaNeedsTransfer(m.url);
-      m.url = toRelativeUrl(m.url);
-      a.hasUntransferredMedia = a.hasUntransferredMedia || m.needsTransfer;
-    }
-    await AnswerModel.findOneAndUpdate(
-      {
-        mentor: mentor._id,
-        question: a.question._id,
-      },
-      {
-        $set: {
-          transcript: a.transcript,
-          status: a.status,
-          media: a.media,
-          hasUntransferredMedia: a.hasUntransferredMedia,
-        },
-      },
-      {
-        new: true,
-        upsert: true,
-      }
-    );
-  }
-  return await this.findByIdAndUpdate(mentor._id, {
-    $set: {
-      subjects: json.subjects.map((s) => s._id as Subject['_id']),
-    },
-  });
 };
 
 // Return subjects in alphabetical order

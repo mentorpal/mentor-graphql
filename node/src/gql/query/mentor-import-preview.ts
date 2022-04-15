@@ -32,13 +32,14 @@ import AnswerType from 'gql/types/answer';
 import { SubjectUpdateInput } from 'gql/mutation/me/subject-update';
 import { QuestionUpdateInput } from 'gql/mutation/me/question-update';
 import { isId } from 'gql/mutation/me/helpers';
-import { mediaNeedsTransfer } from 'utils/static-urls';
 
 enum EditType {
   NONE = 'NONE',
   ADDED = 'ADDED',
   REMOVED = 'REMOVED',
   CREATED = 'CREATED',
+  OLD_FOLLOWUP = 'OLD_FOLLOWUP',
+  OLD_ANSWER = 'OLD_ANSWER',
 }
 interface ImportPreview<T, U> {
   importData?: T;
@@ -138,8 +139,8 @@ export const mentorImportPreview = {
     _root: GraphQLObjectType,
     args: { mentor: string; json: MentorImportJson }
   ): Promise<MentorImportPreview> => {
-    const importJson = args.json;
-    const exportJson = await MentorModel.export(args.mentor);
+    const importJson = args.json; //The mentor being imported
+    const exportJson = await MentorModel.export(args.mentor); //The mentor being replaced
     const curSubjects = await SubjectModel.find({
       _id: {
         $in: importJson.subjects.map((s) => s._id).filter((id) => isId(id)),
@@ -153,6 +154,9 @@ export const mentorImportPreview = {
       subjectChanges.push({
         importData: subjectImport,
         curData: cur,
+        // If the subject does not exist, tags it to be CREATED
+        // If the subject exists but the mentor being replaced does not currently have it added, then tags it to be ADDED
+        // If the previous 2 are false, then the mentor already has the subject, no changes need to be made to that subjects existence
         editType: !cur
           ? EditType.CREATED
           : !exportJson.subjects.find(
@@ -162,6 +166,7 @@ export const mentorImportPreview = {
           : EditType.NONE,
       });
     }
+    // Check if the current mentor has subjects that the imported mentor does not, mark them for removal if so
     const removedSubjects = exportJson.subjects.filter(
       (s) => !importJson.subjects.find((ss) => `${ss._id}` === `${s._id}`)
     );
@@ -172,35 +177,44 @@ export const mentorImportPreview = {
       }))
     );
 
-    const curQuestions: Question[] = await QuestionModel.find({
-      _id: {
-        $in: importJson.questions.map((q) => q._id).filter((id) => isId(id)),
-      },
-    });
+    const curQuestions: Question[] = await QuestionModel.find({});
     const questionChanges = [];
     for (const questionImport of importJson.questions) {
-      const curQuestion = curQuestions.find(
+      const curQuestion = questionImport.mentor
+        ? null
+        : curQuestions.find(
+            (q) =>
+              `${q._id}` === `${questionImport._id}` ||
+              (!questionImport.mentor &&
+                `${q.question}` === `${questionImport.question}`)
+          );
+      const curMentorAlreadyHasQuestion = exportJson.questions.find(
         (q) => `${q._id}` === `${questionImport._id}`
       );
+
       questionChanges.push({
         importData: questionImport,
         curData: curQuestion,
+        // If the question does not exist, tags it to be CREATED
+        //    (this typically occurs when importing a mentor from careerfair --> v2 or vice versa, where questions have different id's, could this cause duplicate questions?)
+        // If the question exists but the mentor being replaced does not currently have it added, then tags it to be ADDED
+        // If the previous 2 are false, then the mentor already has the question, and no changes need to be made to that questions existence
         editType: !curQuestion
           ? EditType.CREATED
-          : !exportJson.questions.find(
-              (q) => `${q._id}` === `${questionImport._id}`
-            )
+          : !curMentorAlreadyHasQuestion
           ? EditType.ADDED
           : EditType.NONE,
       });
     }
+
+    // Check if the current mentor has questions that the imported mentor does not, mark them for removal if so
     const removedQuestions = exportJson.questions.filter(
       (q) => !importJson.questions.find((qq) => `${qq._id}` === `${q._id}`)
     );
     questionChanges.push(
       ...removedQuestions.map((q) => ({
         curData: q,
-        editType: EditType.REMOVED,
+        editType: EditType.OLD_FOLLOWUP,
       }))
     );
 
@@ -217,25 +231,34 @@ export const mentorImportPreview = {
       const curAnswer = curAnswers.find(
         (a) => `${a.question}` === `${answerImport.question._id}`
       );
+      // Media ALWAYS needs to be transferred between the 2 different mentors buckets so as to unlink them
       for (const m of answerImport.media || []) {
-        m.needsTransfer = mediaNeedsTransfer(m.url);
-        answerImport.hasUntransferredMedia =
-          answerImport.hasUntransferredMedia || m.needsTransfer;
+        m.needsTransfer = true;
+        answerImport.hasUntransferredMedia = true;
       }
-      answerChanges.push({
-        importData: answerImport,
-        curData: curAnswer,
-        editType: !curAnswer
-          ? EditType.CREATED
-          : !exportJson.answers.find(
-              (a) => `${a.question}` === `${answerImport.question._id}`
-            )
-          ? EditType.ADDED
-          : EditType.NONE,
-      });
+
+      if (
+        answerImport.transcript ||
+        answerImport.media.length ||
+        curAnswer?.media.length ||
+        curAnswer?.transcript
+      )
+        answerChanges.push({
+          importData: answerImport,
+          curData: curAnswer,
+          editType: !curAnswer
+            ? EditType.CREATED
+            : !exportJson.answers.find(
+                (a) => `${a.question}` === `${answerImport.question._id}`
+              )
+            ? EditType.ADDED
+            : EditType.NONE,
+        });
     }
+
     const removedAnswers = exportJson.answers.filter(
       (a) =>
+        Boolean(a.transcript || a.media.length) &&
         !importJson.answers.find(
           (aa) => `${aa.question._id}` === `${a.question}`
         )
@@ -243,7 +266,7 @@ export const mentorImportPreview = {
     answerChanges.push(
       ...removedAnswers.map((a) => ({
         curData: a,
-        editType: EditType.REMOVED,
+        editType: EditType.OLD_ANSWER,
       }))
     );
     return {
