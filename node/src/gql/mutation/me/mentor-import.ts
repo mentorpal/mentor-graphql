@@ -12,31 +12,90 @@ import {
   GraphQLNonNull,
   GraphQLObjectType,
   GraphQLString,
+  GraphQLFloat,
 } from 'graphql';
 import { MentorType } from 'gql/types/mentor';
 import { Mentor as MentorModel } from 'models';
 import { Mentor } from 'models/Mentor';
-import { AnswerMediaProps, Status } from 'models/Answer';
+import { AnswerMedia, AnswerMediaProps, Status } from 'models/Answer';
 import { SubjectUpdateInput, SubjectUpdateInputType } from './subject-update';
 import {
   QuestionUpdateInput,
   QuestionUpdateInputType,
 } from './question-update';
+import {
+  ExportedMentorInfo,
+  ExportedMentorInfoInputType,
+} from 'gql/query/mentor-export';
+import { UserQuestion } from 'models/UserQuestion';
 
 export interface MentorImportJson {
   id: string;
+  mentorInfo: ExportedMentorInfo;
   subjects: SubjectUpdateInput[];
   questions: QuestionUpdateInput[];
   answers: AnswerUpdateInput[];
+  userQuestions: UserQuestion[];
 }
 
 export const MentorImportJsonType = new GraphQLInputObjectType({
   name: 'MentorImportJsonType',
   fields: () => ({
     id: { type: GraphQLString },
+    mentorInfo: { type: ExportedMentorInfoInputType },
     subjects: { type: GraphQLList(SubjectUpdateInputType) },
     questions: { type: GraphQLList(QuestionUpdateInputType) },
     answers: { type: GraphQLList(AnswerUpdateInputType) },
+    userQuestions: { type: GraphQLList(UserQuestionInputType) },
+  }),
+});
+
+interface Question {
+  _id: string;
+  question: string;
+  type: string;
+  name: string;
+  clientId: string;
+  paraphrases: string[];
+  mentor: string;
+  mentorType: string;
+  minVideoLength: number;
+}
+
+interface AnswerGQL {
+  _id: string;
+  question: Question;
+  hasEditedTranscript: boolean;
+  transcript: string;
+  status: Status;
+  media?: AnswerMedia[];
+  hasUntransferredMedia: boolean;
+}
+
+export interface ReplacedMentorQuestionChanges {
+  editType: string;
+  data: Question;
+}
+
+export interface ReplacedMentorAnswerChanges {
+  editType: string;
+  data: AnswerGQL;
+}
+
+export interface ReplacedMentorDataChanges {
+  questionChanges: ReplacedMentorQuestionChanges[];
+  answerChanges: ReplacedMentorAnswerChanges[];
+}
+
+export const ReplacedMentorDataChangesType = new GraphQLInputObjectType({
+  name: 'ReplacedMentorDataChangesType',
+  fields: () => ({
+    questionChanges: {
+      type: GraphQLList(ReplacedMentorQuestionChangesInputType),
+    },
+    answerChanges: {
+      type: GraphQLList(ReplacedMentorAnswerChangesInputType),
+    },
   }),
 });
 
@@ -49,15 +108,72 @@ export interface AnswerUpdateInput {
   media: AnswerMediaProps[];
 }
 
+export const ReplacedMentorQuestionChangesInputType =
+  new GraphQLInputObjectType({
+    name: 'ReplacedMentorQuestionChangesInputType',
+    fields: () => ({
+      editType: { type: GraphQLString },
+      data: { type: QuestionUpdateInputType },
+    }),
+  });
+
+export const ReplacedMentorAnswerChangesInputType = new GraphQLInputObjectType({
+  name: 'ReplacedMentorAnswerChangesInputType',
+  fields: () => ({
+    editType: { type: GraphQLString },
+    data: { type: AnswerUpdateInputType },
+  }),
+});
+
 export const AnswerUpdateInputType = new GraphQLInputObjectType({
   name: 'AnswerUpdateInputType',
   fields: () => ({
+    _id: { type: GraphQLID },
     question: { type: GraphQLNonNull(QuestionUpdateInputType) },
     hasEditedTranscript: { type: GraphQLBoolean },
     transcript: { type: GraphQLNonNull(GraphQLString) },
     status: { type: GraphQLNonNull(GraphQLString) },
     hasUntransferredMedia: { type: GraphQLBoolean },
     media: { type: GraphQLList(AnswerMediaUpdateInputType) },
+  }),
+});
+
+export const UserQuestionInputType = new GraphQLInputObjectType({
+  name: 'UserQuestionInputType',
+  fields: () => ({
+    _id: { type: GraphQLID },
+    question: { type: GraphQLString },
+    confidence: { type: GraphQLFloat },
+    classifierAnswerType: { type: GraphQLString },
+    feedback: { type: GraphQLString },
+    mentor: { type: MentorUserQuestionInputType },
+    classifierAnswer: { type: AnswerUserQuestionInputType },
+    graderAnswer: { type: AnswerUserQuestionInputType },
+  }),
+});
+
+export const MentorUserQuestionInputType = new GraphQLInputObjectType({
+  name: 'MentorUserQuestionInputType',
+  fields: () => ({
+    _id: { type: GraphQLID },
+    name: { type: GraphQLString },
+  }),
+});
+
+export const AnswerUserQuestionInputType = new GraphQLInputObjectType({
+  name: 'AnswerUserQuestionInputType',
+  fields: () => ({
+    _id: { type: GraphQLID },
+    transcript: { type: GraphQLString },
+    question: { type: QuestionUserQuestionInputType },
+  }),
+});
+
+export const QuestionUserQuestionInputType = new GraphQLInputObjectType({
+  name: 'QuestionUserQuestionInputType',
+  fields: () => ({
+    _id: { type: GraphQLID },
+    question: { type: GraphQLString },
   }),
 });
 
@@ -76,12 +192,23 @@ export const importMentor = {
   args: {
     mentor: { type: GraphQLNonNull(GraphQLID) },
     json: { type: GraphQLNonNull(MentorImportJsonType) },
+    replacedMentorDataChanges: {
+      type: GraphQLNonNull(ReplacedMentorDataChangesType),
+    },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: string; json: MentorImportJson }
+    args: {
+      mentor: string;
+      json: MentorImportJson;
+      replacedMentorDataChanges: ReplacedMentorDataChanges;
+    }
   ): Promise<Mentor> => {
-    return await MentorModel.import(args.mentor, args.json);
+    return await MentorModel.import(
+      args.mentor,
+      args.json,
+      args.replacedMentorDataChanges
+    );
   },
 };
 

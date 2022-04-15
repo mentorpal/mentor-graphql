@@ -22,6 +22,8 @@ import UserQuestion from './UserQuestion';
 export { default as UserQuestion } from './UserQuestion';
 import RefreshToken from './RefreshToken';
 export { default as RefreshToken } from './RefreshToken';
+import ImportTask from './ImportTask';
+export { default as ImportTask } from './ImportTask';
 
 export default {
   Answer,
@@ -33,4 +35,5 @@ export default {
   User,
   UserQuestion,
   RefreshToken,
+  ImportTask,
 };
