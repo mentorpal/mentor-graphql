@@ -75,6 +75,33 @@ export const exportMentorQuery = `query ExportMentor($mentor: ID!) {
         needsTransfer
       }
     }
+    userQuestions{
+      _id
+      classifierAnswerType
+      feedback
+      question
+      mentor{
+        _id
+        name
+      }
+      classifierAnswer{
+        _id
+        question{
+          _id
+          question
+        }
+        transcript
+      }
+      confidence
+      graderAnswer{
+        _id
+        question{
+          _id
+          question
+        }
+        transcript
+      }
+    }
   }
 }`;
 
@@ -120,7 +147,7 @@ describe('export mentor', () => {
     );
   });
 
-  it(`exports mentor's subjects, questions, and answers as JSON`, async () => {
+  it(`exports mentor's subjects, questions, answers, and userQuestions as JSON`, async () => {
     const response = await request(app)
       .post('/graphql')
       .send({
@@ -182,11 +209,6 @@ describe('export mentor', () => {
               },
               category: null,
               topics: [{ id: '5ffdf41a1ee2c62320b49ec3' }],
-            },
-            {
-              question: { _id: '511111111111111111111116', question: 'Julia?' },
-              category: null,
-              topics: [],
             },
             {
               question: {
@@ -324,6 +346,72 @@ describe('export mentor', () => {
           ],
         },
       ],
+      userQuestions: [
+        {
+          _id: '5ffdf41a1ee2c62320b49ee1',
+          classifierAnswerType: 'CLASSIFIER',
+          feedback: 'NEUTRAL',
+          question: 'who are you?',
+          mentor: { _id: '5ffdf41a1ee2c62111111111', name: 'Clinton Anderson' },
+          classifierAnswer: {
+            _id: '511111111111111111111112',
+            question: {
+              _id: '511111111111111111111111',
+              question: "Don't talk and stay still.",
+            },
+            transcript: '[being still]',
+          },
+          confidence: null,
+          graderAnswer: null,
+        },
+      ],
     });
+  });
+
+  it('mentor exported subjects do not include other mentors specific questions', async () => {
+    //
+    let response = await request(app)
+      .post('/graphql')
+      .send({
+        query: exportMentorQuery,
+        variables: { mentor: '5ffdf41a1ee2c62111111111' },
+      });
+    expect(response.status).to.equal(200);
+    // subjects[0] == "Background"
+    const mentorJson = response.body.data.mentorExport.subjects[0].questions;
+    expect(mentorJson).to.eql([
+      {
+        question: {
+          _id: '511111111111111111111112',
+          question: 'Who are you and what do you do?',
+        },
+        category: null,
+        topics: [{ id: '5ffdf41a1ee2c62320b49ec2' }],
+      },
+      {
+        question: {
+          _id: '511111111111111111111113',
+          question: 'How old are you?',
+        },
+        category: { id: 'category' },
+        topics: [{ id: '5ffdf41a1ee2c62320b49ec2' }],
+      },
+      {
+        question: {
+          _id: '511111111111111111111114',
+          question: 'Do you like your job?',
+        },
+        category: null,
+        topics: [{ id: '5ffdf41a1ee2c62320b49ec3' }],
+      },
+      {
+        question: {
+          _id: '511111111111111111111117',
+          question: 'What is Aaron like?',
+        },
+        category: { id: 'category' },
+        topics: [],
+      },
+    ]);
   });
 });
