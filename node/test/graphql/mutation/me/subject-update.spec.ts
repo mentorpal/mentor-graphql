@@ -66,7 +66,7 @@ describe('updateSubject', () => {
     const subject = JSON.stringify({
       _id: '5ffdf41a1ee2c62320b49eb3',
       name: 'stem',
-      type: 'TOPIC_GROUP',
+      type: 'SUBJECT',
       categories: [
         {
           id: 'newcategory',
@@ -155,7 +155,7 @@ describe('updateSubject', () => {
     expect(response.body.data.me.updateSubject).to.eql({
       _id: '5ffdf41a1ee2c62320b49eb3',
       name: 'stem',
-      type: 'TOPIC_GROUP',
+      type: 'SUBJECT',
       description: 'These questions will ask about STEM careers.',
       isRequired: false,
       categories: [

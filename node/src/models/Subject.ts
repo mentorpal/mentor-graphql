@@ -91,7 +91,7 @@ export type SubjectUpdate = Partial<SubjectInsert>;
 export const SubjectSchema = new Schema<Subject, SubjectModel>(
   {
     name: { type: String },
-    type: { type: String, default: 'TOPIC_GROUP' },
+    type: { type: String, default: 'SUBJECT' },
     description: { type: String },
     isRequired: { type: Boolean },
     categories: { type: [CategorySchema] },
