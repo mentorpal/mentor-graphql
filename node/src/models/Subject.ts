@@ -68,6 +68,7 @@ export const SubjectQuestionSchema = new Schema({
 
 export interface Subject extends Document {
   name: string;
+  type: string;
   description: string;
   isRequired: boolean;
   categories: Category[];
@@ -77,6 +78,7 @@ export interface Subject extends Document {
 
 export interface SubjectInsert {
   name: string;
+  type: string;
   description: string;
   isRequired: boolean;
   categories: CategoryProps[];
@@ -89,6 +91,7 @@ export type SubjectUpdate = Partial<SubjectInsert>;
 export const SubjectSchema = new Schema<Subject, SubjectModel>(
   {
     name: { type: String },
+    type: { type: String, default: 'SUBJECT' },
     description: { type: String },
     isRequired: { type: Boolean },
     categories: { type: [CategorySchema] },

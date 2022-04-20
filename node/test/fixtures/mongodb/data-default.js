@@ -107,6 +107,7 @@ module.exports = {
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49eb1'),
       name: 'Repeat After Me',
+      type: 'UTTERANCES',
       description: "These are miscellaneous phrases you'll be asked to repeat.",
       isRequired: true,
       categories: [],
