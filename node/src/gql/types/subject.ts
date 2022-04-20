@@ -49,6 +49,7 @@ export const SubjectType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
     description: { type: GraphQLString },
+    type: { type: GraphQLString },
     isRequired: {
       type: GraphQLBoolean,
       resolve: async (subject: Subject) => {
