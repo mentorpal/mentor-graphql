@@ -216,20 +216,18 @@ describe('import mentor', () => {
             question: "Don't talk and stay still.",
           },
           hasUntransferredMedia: false,
-          media: [
-            {
-              tag: 'web',
-              type: 'video',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-              needsTransfer: false,
-            },
-            {
-              tag: 'mobile',
-              type: 'video',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-              needsTransfer: false,
-            },
-          ],
+          webMedia: {
+            tag: 'web',
+            type: 'video',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+            needsTransfer: false,
+          },
+          mobileMedia: {
+            tag: 'mobile',
+            type: 'video',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+            needsTransfer: false,
+          },
         },
         {
           transcript: 'Test Transcript',
@@ -239,20 +237,18 @@ describe('import mentor', () => {
             question: 'What is Aaron like?',
           },
           hasUntransferredMedia: false,
-          media: [
-            {
-              tag: 'web',
-              type: 'video',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
-              needsTransfer: false,
-            },
-            {
-              tag: 'mobile',
-              type: 'video',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
-              needsTransfer: false,
-            },
-          ],
+          webMedia: {
+            tag: 'web',
+            type: 'video',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
+            needsTransfer: false,
+          },
+          mobileMedia: {
+            tag: 'mobile',
+            type: 'video',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
+            needsTransfer: false,
+          },
         },
       ],
       userQuestions: [
@@ -475,20 +471,18 @@ describe('import mentor', () => {
           question: 'What is Aaron like?',
         },
         hasUntransferredMedia: true,
-        media: [
-          {
-            tag: 'web',
-            type: 'video',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
-            needsTransfer: true,
-          },
-          {
-            tag: 'mobile',
-            type: 'video',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
-            needsTransfer: true,
-          },
-        ],
+        webMedia: {
+          tag: 'web',
+          type: 'video',
+          url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
+          needsTransfer: true,
+        },
+        mobileMedia: {
+          tag: 'mobile',
+          type: 'video',
+          url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
+          needsTransfer: true,
+        },
       },
       {
         transcript: '[being still]',
@@ -498,20 +492,18 @@ describe('import mentor', () => {
           question: "Don't talk and stay still.",
         },
         hasUntransferredMedia: true,
-        media: [
-          {
-            tag: 'web',
-            type: 'video',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-            needsTransfer: true,
-          },
-          {
-            tag: 'mobile',
-            type: 'video',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-            needsTransfer: true,
-          },
-        ],
+        webMedia: {
+          tag: 'web',
+          type: 'video',
+          url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+          needsTransfer: true,
+        },
+        mobileMedia: {
+          tag: 'mobile',
+          type: 'video',
+          url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+          needsTransfer: true,
+        },
       },
     ]);
   });
@@ -573,24 +565,21 @@ describe('import mentor', () => {
           transcript: '[being still]',
           question: { _id: '511111111111111111111111' },
           status: 'COMPLETE',
-          media: [
-            {
-              type: 'video',
-              tag: 'web',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-            },
-            {
-              type: 'video',
-              tag: 'mobile',
-              url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-            },
-          ],
+          webMedia: {
+            type: 'video',
+            tag: 'web',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+          },
+          mobileMedia: {
+            type: 'video',
+            tag: 'mobile',
+            url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+          },
         },
         {
           transcript: 'new answer',
           question: { _id: '511111111111111111111199' },
           status: 'COMPLETE',
-          media: [],
         },
       ],
       userQuestions: [] as string[],
@@ -641,7 +630,11 @@ describe('import mentor', () => {
                 question
               }
               hasUntransferredMedia
-              media {
+              webMedia {
+                url
+                needsTransfer
+              }
+              mobileMedia {
                 url
                 needsTransfer
               }
@@ -699,22 +692,21 @@ describe('import mentor', () => {
           transcript: '[being still]',
           question: { question: "Don't talk and stay still." },
           hasUntransferredMedia: true,
-          media: [
-            {
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-              needsTransfer: true,
-            },
-            {
-              url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-              needsTransfer: true,
-            },
-          ],
+          webMedia: {
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+            needsTransfer: true,
+          },
+          mobileMedia: {
+            url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+            needsTransfer: true,
+          },
         },
         {
           transcript: 'new answer',
           question: { question: 'new question' },
           hasUntransferredMedia: true,
-          media: [],
+          webMedia: null,
+          mobileMedia: null,
         },
       ],
     });
@@ -976,20 +968,18 @@ describe('import mentor', () => {
           question: "Don't talk and stay still.",
         },
         hasUntransferredMedia: false,
-        media: [
-          {
-            tag: 'web',
-            type: 'video',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-            needsTransfer: false,
-          },
-          {
-            tag: 'mobile',
-            type: 'video',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-            needsTransfer: false,
-          },
-        ],
+        webMedia: {
+          tag: 'web',
+          type: 'video',
+          url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+          needsTransfer: false,
+        },
+        mobileMedia: {
+          tag: 'mobile',
+          type: 'video',
+          url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+          needsTransfer: false,
+        },
       },
       {
         transcript: 'Test Transcript',
@@ -999,20 +989,18 @@ describe('import mentor', () => {
           question: 'What is Aaron like?',
         },
         hasUntransferredMedia: false,
-        media: [
-          {
-            tag: 'web',
-            type: 'video',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
-            needsTransfer: false,
-          },
-          {
-            tag: 'mobile',
-            type: 'video',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
-            needsTransfer: false,
-          },
-        ],
+        webMedia: {
+          tag: 'web',
+          type: 'video',
+          url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
+          needsTransfer: false,
+        },
+        mobileMedia: {
+          tag: 'mobile',
+          type: 'video',
+          url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
+          needsTransfer: false,
+        },
       },
     ],
     userQuestions: [] as string[],
@@ -1506,18 +1494,16 @@ describe('import mentor', () => {
           hasEditedTranscript: false,
           transcript: 'new answer 5',
           status: 'COMPLETE',
-          media: [
-            {
-              type: 'video',
-              tag: 'web',
-              url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111119/web.mp4',
-            },
-            {
-              type: 'video',
-              tag: 'mobile',
-              url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111119/mobile.mp4',
-            },
-          ],
+          webMedia: {
+            type: 'video',
+            tag: 'web',
+            url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111119/web.mp4',
+          },
+          mobileMedia: {
+            type: 'video',
+            tag: 'mobile',
+            url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111119/mobile.mp4',
+          },
         },
       ],
       subjects: uneditedJson.subjects.map((subj) => {

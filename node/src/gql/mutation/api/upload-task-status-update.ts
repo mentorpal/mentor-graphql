@@ -10,7 +10,6 @@ import {
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
-  GraphQLList,
 } from 'graphql';
 import { logger } from 'utils/logging';
 import {
@@ -30,7 +29,9 @@ export const uploadTaskStatusUpdate = {
     taskId: { type: GraphQLNonNull(GraphQLString) },
     newStatus: { type: GraphQLNonNull(GraphQLString) },
     transcript: { type: GraphQLString },
-    media: { type: GraphQLList(AnswerMediaInputType) },
+    webMedia: { type: AnswerMediaInputType },
+    mobileMedia: { type: AnswerMediaInputType },
+    vttMedia: { type: AnswerMediaInputType },
   },
   resolve: async (
     _root: GraphQLObjectType,
@@ -40,7 +41,9 @@ export const uploadTaskStatusUpdate = {
       taskId: string;
       newStatus: string;
       transcript: string;
-      media: AnswerMedia[];
+      webMedia: AnswerMedia;
+      mobileMedia: AnswerMedia;
+      vttMedia: AnswerMedia;
     }
   ): Promise<boolean> => {
     logger.info('uploadTaskStatusUpdate', args);
@@ -63,8 +66,14 @@ export const uploadTaskStatusUpdate = {
         );
         if (taskIndex > -1) {
           updatedTaskList[taskIndex].status = args.newStatus;
-          if (args.media) {
-            updatedTaskList[taskIndex].media = args.media;
+          if (args.webMedia) {
+            updatedTaskList[taskIndex].webMedia = args.webMedia;
+          }
+          if (args.mobileMedia) {
+            updatedTaskList[taskIndex].mobileMedia = args.mobileMedia;
+          }
+          if (args.vttMedia) {
+            updatedTaskList[taskIndex].vttMedia = args.vttMedia;
           }
           if (args.transcript) {
             updatedTaskList[taskIndex].transcript = args.transcript;
@@ -75,15 +84,17 @@ export const uploadTaskStatusUpdate = {
           uploadTask.transcript = args.transcript;
           uploadTask.markModified('transcript');
         }
-        if (args.media) {
-          if (!uploadTask.media) {
-            uploadTask.media = args.media;
-          } else {
-            args.media.forEach((m) => {
-              uploadTask.media.push(m);
-            });
-          }
-          uploadTask.markModified('media');
+        if (args.webMedia) {
+          uploadTask.webMedia = args.webMedia;
+          uploadTask.markModified('webMedia');
+        }
+        if (args.mobileMedia) {
+          uploadTask.mobileMedia = args.mobileMedia;
+          uploadTask.markModified('mobileMedia');
+        }
+        if (args.vttMedia) {
+          uploadTask.vttMedia = args.vttMedia;
+          uploadTask.markModified('vttMedia');
         }
         uploadTask.save().catch((err: Error) => {
           logger.error('failed to save');

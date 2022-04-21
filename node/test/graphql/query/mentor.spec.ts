@@ -697,7 +697,12 @@ describe('mentor', () => {
           name
           answers(status: "COMPLETE") {
             transcript
-            media {
+            webMedia {
+              type
+              tag
+              url
+            }
+            mobileMedia {
               type
               tag
               url
@@ -713,33 +718,29 @@ describe('mentor', () => {
       answers: [
         {
           transcript: 'Test Transcript',
-          media: [
-            {
-              type: 'video',
-              tag: 'web',
-              url: `${process.env.STATIC_URL_BASE}/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4`,
-            },
-            {
-              type: 'video',
-              tag: 'mobile',
-              url: `${process.env.STATIC_URL_BASE}/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4`,
-            },
-          ],
+          webMedia: {
+            type: 'video',
+            tag: 'web',
+            url: `${process.env.STATIC_URL_BASE}/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4`,
+          },
+          mobileMedia: {
+            type: 'video',
+            tag: 'mobile',
+            url: `${process.env.STATIC_URL_BASE}/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4`,
+          },
         },
         {
           transcript: '[being still]',
-          media: [
-            {
-              type: 'video',
-              tag: 'web',
-              url: `${process.env.STATIC_URL_BASE}/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4`,
-            },
-            {
-              type: 'video',
-              tag: 'mobile',
-              url: `${process.env.STATIC_URL_BASE}/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4`,
-            },
-          ],
+          webMedia: {
+            type: 'video',
+            tag: 'web',
+            url: `${process.env.STATIC_URL_BASE}/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4`,
+          },
+          mobileMedia: {
+            type: 'video',
+            tag: 'mobile',
+            url: `${process.env.STATIC_URL_BASE}/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4`,
+          },
         },
       ],
     });

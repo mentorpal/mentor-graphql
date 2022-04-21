@@ -126,6 +126,7 @@ describe('uploadAnswer', () => {
           },
         },
       });
+    console.log(response.body);
     expect(response.status).to.equal(200);
     expect(response.body.data.api.uploadAnswer).to.eql(true);
     const r2 = await request(app)
@@ -136,11 +137,6 @@ describe('uploadAnswer', () => {
             answers {
               transcript
               status
-              media {
-                type
-                tag
-                url
-              }
               question {
                 _id
               }
@@ -156,14 +152,13 @@ describe('uploadAnswer', () => {
       transcript:
         "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
       status: 'INCOMPLETE',
-      media: [],
       question: {
         _id: '511111111111111111111112',
       },
     });
   });
 
-  it('appends media', async () => {
+  it('updates correct media', async () => {
     let response = await request(app)
       .post('/graphql')
       .set('mentor-graphql-req', 'true')
@@ -176,13 +171,11 @@ describe('uploadAnswer', () => {
           answer: {
             transcript:
               "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-            media: [
-              {
-                type: 'video',
-                tag: 'web',
-                url: `${process.env.STATIC_URL_BASE}/video.mp4`,
-              },
-            ],
+            webMedia: {
+              type: 'video',
+              tag: 'web',
+              url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+            },
           },
         },
       });
@@ -201,13 +194,11 @@ describe('uploadAnswer', () => {
           answer: {
             transcript:
               "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-            media: [
-              {
-                type: 'video',
-                tag: 'web',
-                url: `${process.env.STATIC_URL_BASE}/video.mp4`,
-              },
-            ],
+            webMedia: {
+              type: 'video',
+              tag: 'web',
+              url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+            },
           },
         },
       });
@@ -221,7 +212,7 @@ describe('uploadAnswer', () => {
             answers {
               transcript
               status
-              media {
+              webMedia{
                 type
                 tag
                 url
@@ -237,13 +228,11 @@ describe('uploadAnswer', () => {
     const updatedAnswer = r2.body.data.mentor.answers.find(
       (a: any) => a.question._id === '511111111111111111111112'
     );
-    expect(updatedAnswer.media).to.eql([
-      {
-        type: 'video',
-        tag: 'web',
-        url: `${process.env.STATIC_URL_BASE}/video.mp4`,
-      },
-    ]);
+    expect(updatedAnswer.webMedia).to.eql({
+      type: 'video',
+      tag: 'web',
+      url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+    });
   });
 
   it('uploads video with transcript', async () => {
@@ -259,13 +248,11 @@ describe('uploadAnswer', () => {
           answer: {
             transcript:
               "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-            media: [
-              {
-                type: 'video',
-                tag: 'web',
-                url: `${process.env.STATIC_URL_BASE}/video.mp4`,
-              },
-            ],
+            webMedia: {
+              type: 'video',
+              tag: 'web',
+              url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+            },
           },
         },
       });
@@ -279,7 +266,7 @@ describe('uploadAnswer', () => {
             answers {
               transcript
               status
-              media {
+              webMedia {
                 type
                 tag
                 url
@@ -299,13 +286,11 @@ describe('uploadAnswer', () => {
       transcript:
         "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
       status: 'INCOMPLETE',
-      media: [
-        {
-          type: 'video',
-          tag: 'web',
-          url: `${process.env.STATIC_URL_BASE}/video.mp4`,
-        },
-      ],
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+      },
       question: {
         _id: '511111111111111111111112',
       },
@@ -325,13 +310,11 @@ describe('uploadAnswer', () => {
           answer: {
             transcript:
               "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-            media: [
-              {
-                type: 'video',
-                tag: 'web',
-                url: `video.mp4`,
-              },
-            ],
+            webMedia: {
+              type: 'video',
+              tag: 'web',
+              url: `video.mp4`,
+            },
           },
         },
       });
@@ -343,7 +326,7 @@ describe('uploadAnswer', () => {
         query: `query Answer($mentor: ID!, $question: ID!) {
           answer(mentor: $mentor, question: $question) {
             hasUntransferredMedia
-            media {
+            webMedia {
               type
               tag
               url
@@ -359,14 +342,12 @@ describe('uploadAnswer', () => {
     expect(answer.status).to.equal(200);
     expect(answer.body.data.answer).to.eql({
       hasUntransferredMedia: false,
-      media: [
-        {
-          type: 'video',
-          tag: 'web',
-          url: `${process.env.STATIC_URL_BASE}/video.mp4`,
-          needsTransfer: false,
-        },
-      ],
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+        needsTransfer: false,
+      },
     });
   });
 
@@ -383,13 +364,11 @@ describe('uploadAnswer', () => {
           answer: {
             transcript:
               "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-            media: [
-              {
-                type: 'video',
-                tag: 'web',
-                url: `https://different.mentorpal.org/video.mp4`,
-              },
-            ],
+            webMedia: {
+              type: 'video',
+              tag: 'web',
+              url: `https://different.mentorpal.org/video.mp4`,
+            },
           },
         },
       });
@@ -401,7 +380,7 @@ describe('uploadAnswer', () => {
         query: `query Answer($mentor: ID!, $question: ID!) {
       answer(mentor: $mentor, question: $question) {
         hasUntransferredMedia
-        media {
+        webMedia {
           type
           tag
           url
@@ -417,14 +396,12 @@ describe('uploadAnswer', () => {
     expect(answer.status).to.equal(200);
     expect(answer.body.data.answer).to.eql({
       hasUntransferredMedia: true,
-      media: [
-        {
-          type: 'video',
-          tag: 'web',
-          url: `https://different.mentorpal.org/video.mp4`,
-          needsTransfer: true,
-        },
-      ],
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: `https://different.mentorpal.org/video.mp4`,
+        needsTransfer: true,
+      },
     });
   });
 
@@ -441,13 +418,11 @@ describe('uploadAnswer', () => {
           answer: {
             transcript:
               "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-            media: [
-              {
-                type: 'video',
-                tag: 'web',
-                url: `${process.env.STATIC_URL_BASE}/video.mp4`,
-              },
-            ],
+            webMedia: {
+              type: 'video',
+              tag: 'web',
+              url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+            },
           },
         },
       });
@@ -459,7 +434,7 @@ describe('uploadAnswer', () => {
         query: `query Answer($mentor: ID!, $question: ID!) {
         answer(mentor: $mentor, question: $question) {
           hasUntransferredMedia
-          media {
+          webMedia {
             type
             tag
             url
@@ -475,14 +450,12 @@ describe('uploadAnswer', () => {
     expect(answer.status).to.equal(200);
     expect(answer.body.data.answer).to.eql({
       hasUntransferredMedia: false,
-      media: [
-        {
-          type: 'video',
-          tag: 'web',
-          url: `${process.env.STATIC_URL_BASE}/video.mp4`,
-          needsTransfer: false,
-        },
-      ],
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+        needsTransfer: false,
+      },
     });
   });
 

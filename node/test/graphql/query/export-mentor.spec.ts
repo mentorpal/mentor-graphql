@@ -68,7 +68,13 @@ export const exportMentorQuery = `query ExportMentor($mentor: ID!) {
         question
       }
       hasUntransferredMedia
-      media {
+      webMedia {
+        tag
+        type
+        url
+        needsTransfer
+      }
+      mobileMedia{
         tag
         type
         url
@@ -307,20 +313,18 @@ describe('export mentor', () => {
             question: "Don't talk and stay still.",
           },
           hasUntransferredMedia: false,
-          media: [
-            {
-              tag: 'web',
-              type: 'video',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-              needsTransfer: false,
-            },
-            {
-              tag: 'mobile',
-              type: 'video',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-              needsTransfer: false,
-            },
-          ],
+          webMedia: {
+            tag: 'web',
+            type: 'video',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+            needsTransfer: false,
+          },
+          mobileMedia: {
+            tag: 'mobile',
+            type: 'video',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+            needsTransfer: false,
+          },
         },
         {
           transcript: 'Test Transcript',
@@ -330,20 +334,18 @@ describe('export mentor', () => {
             question: 'What is Aaron like?',
           },
           hasUntransferredMedia: false,
-          media: [
-            {
-              tag: 'web',
-              type: 'video',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
-              needsTransfer: false,
-            },
-            {
-              tag: 'mobile',
-              type: 'video',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
-              needsTransfer: false,
-            },
-          ],
+          webMedia: {
+            tag: 'web',
+            type: 'video',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
+            needsTransfer: false,
+          },
+          mobileMedia: {
+            tag: 'mobile',
+            type: 'video',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
+            needsTransfer: false,
+          },
         },
       ],
       userQuestions: [

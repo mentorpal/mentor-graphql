@@ -170,7 +170,12 @@ describe('uploadTaskUpdate', () => {
                   status
                 }
                 transcript
-                media {
+                webMedia {
+                  type
+                  tag
+                  url
+                }
+                mobileMedia {
                   type
                   tag
                   url
@@ -225,10 +230,11 @@ describe('uploadTaskUpdate', () => {
               },
             ],
             transcript: 'My name is Clinton Anderson',
-            media: [{ type: 'video', tag: 'web', url: 'video.mp4' }],
+            webMedia: { type: 'video', tag: 'web', url: 'video.mp4' },
           },
         },
       });
+    console.log(update.body);
     expect(update.status).to.equal(200);
     expect(update.body.data.api.uploadTaskUpdate).to.eql(true);
 
@@ -253,7 +259,7 @@ describe('uploadTaskUpdate', () => {
                   status
                 }
                 transcript
-                media {
+                webMedia {
                   type
                   tag
                   url
@@ -262,6 +268,7 @@ describe('uploadTaskUpdate', () => {
             }
           }`,
       });
+    console.log(response.body);
     expect(response.status).to.equal(200);
     expect(response.body.data.me.uploadTasks).to.eql([
       {
@@ -280,13 +287,11 @@ describe('uploadTaskUpdate', () => {
           },
         ],
         transcript: 'My name is Clinton Anderson',
-        media: [
-          {
-            type: 'video',
-            tag: 'web',
-            url: 'https://static.mentorpal.org/video.mp4',
-          },
-        ],
+        webMedia: {
+          type: 'video',
+          tag: 'web',
+          url: 'https://static.mentorpal.org/video.mp4',
+        },
       },
     ]);
   });
@@ -340,7 +345,17 @@ describe('uploadTaskUpdate', () => {
                   status
                 }
                 transcript
-                media {
+                webMedia {
+                  type
+                  tag
+                  url
+                }
+                mobileMedia {
+                  type
+                  tag
+                  url
+                }
+                vttMedia {
                   type
                   tag
                   url
@@ -367,7 +382,9 @@ describe('uploadTaskUpdate', () => {
           },
         ],
         transcript: 'fake_transcript',
-        media: [],
+        webMedia: null,
+        mobileMedia: null,
+        vttMedia: null,
       },
       {
         mentor: {
@@ -385,7 +402,9 @@ describe('uploadTaskUpdate', () => {
           },
         ],
         transcript: null,
-        media: [],
+        webMedia: null,
+        mobileMedia: null,
+        vttMedia: null,
       },
     ]);
   });
@@ -448,9 +467,9 @@ describe('uploadTaskUpdate', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $taskId: String!, $newStatus: String!, $transcript: String!, $media: [AnswerMediaInputType]) {
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $taskId: String!, $newStatus: String!, $transcript: String!, $webMedia: AnswerMediaInputType) {
           api {
-            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, taskId: $taskId, newStatus: $newStatus, transcript: $transcript, media: $media)
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, taskId: $taskId, newStatus: $newStatus, transcript: $transcript, webMedia: $webMedia)
           }
         }`,
         variables: {
@@ -459,9 +478,10 @@ describe('uploadTaskUpdate', () => {
           taskId: 'fake_task',
           newStatus: 'DONE',
           transcript: 'fake_transcript',
-          media: [{ type: 'video', tag: 'web', url: 'video.mp4' }],
+          webMedia: { type: 'video', tag: 'web', url: 'video.mp4' },
         },
       });
+    console.log(update.body);
     expect(update.status).to.equal(200);
     expect(update.body.data.api.uploadTaskStatusUpdate).to.eql(true);
 
@@ -479,7 +499,7 @@ describe('uploadTaskUpdate', () => {
                   status
                 }
                 transcript
-                media {
+                webMedia {
                   type
                   tag
                   url
@@ -488,6 +508,7 @@ describe('uploadTaskUpdate', () => {
             }
           }`,
       });
+    console.log(response.body);
     expect(response.status).to.equal(200);
     expect(response.body.data.me.uploadTasks).to.eql([
       {
@@ -499,13 +520,11 @@ describe('uploadTaskUpdate', () => {
           },
         ],
         transcript: 'fake_transcript',
-        media: [
-          {
-            type: 'video',
-            tag: 'web',
-            url: 'https://static.mentorpal.org/video.mp4',
-          },
-        ],
+        webMedia: {
+          type: 'video',
+          tag: 'web',
+          url: 'https://static.mentorpal.org/video.mp4',
+        },
       },
     ]);
   });
@@ -516,9 +535,9 @@ describe('uploadTaskUpdate', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $taskId: String!, $newStatus: String!, $transcript: String, $media: [AnswerMediaInputType]) {
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $taskId: String!, $newStatus: String!, $transcript: String) {
           api {
-            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, taskId: $taskId, newStatus: $newStatus, transcript: $transcript, media: $media)
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, taskId: $taskId, newStatus: $newStatus, transcript: $transcript)
           }
         }`,
         variables: {

@@ -26,7 +26,9 @@ export interface UploadTask extends Document {
   question: Question['_id'];
   taskList: TaskInfo[];
   transcript: string;
-  media: AnswerMedia[];
+  webMedia: AnswerMedia;
+  mobileMedia: AnswerMedia;
+  vttMedia: AnswerMedia;
 }
 
 export const UploadTaskSchema = new Schema<UploadTask, UploadTaskModel>(
@@ -35,7 +37,9 @@ export const UploadTaskSchema = new Schema<UploadTask, UploadTaskModel>(
     question: { type: mongoose.Types.ObjectId, ref: 'Question' },
     taskList: { type: [TaskInfoSchema] },
     transcript: { type: String },
-    media: { type: [AnswerMediaSchema] },
+    webMedia: { type: AnswerMediaSchema },
+    mobileMedia: { type: AnswerMediaSchema },
+    vttMedia: { type: AnswerMediaSchema },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );

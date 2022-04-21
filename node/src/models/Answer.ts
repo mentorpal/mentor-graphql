@@ -35,7 +35,9 @@ export interface Answer extends Document {
   hasEditedTranscript: boolean;
   transcript: string;
   status: Status;
-  media: AnswerMedia[];
+  webMedia: AnswerMedia;
+  mobileMedia: AnswerMedia;
+  vttMedia: AnswerMedia;
   hasUntransferredMedia: boolean;
 }
 
@@ -50,7 +52,9 @@ export const AnswerSchema = new Schema<Answer, AnswerModel>(
       enum: [Status.INCOMPLETE, Status.COMPLETE],
       default: Status.INCOMPLETE,
     },
-    media: { type: [AnswerMediaSchema] },
+    webMedia: { type: AnswerMediaSchema },
+    mobileMedia: { type: AnswerMediaSchema },
+    vttMedia: { type: AnswerMediaSchema },
     hasUntransferredMedia: { type: Boolean, default: false },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }

@@ -61,7 +61,12 @@ describe('mentorClientData', () => {
               _id
               name
               transcript
-              media {
+              webMedia {
+                type
+                tag
+                url
+              }
+              mobileMedia {
                 type
                 tag
                 url
@@ -83,18 +88,17 @@ describe('mentorClientData', () => {
           _id: '511111111111111111111112',
           name: 'idle',
           transcript: '[being still]',
-          media: [
-            {
-              type: 'video',
-              tag: 'web',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-            },
-            {
-              type: 'video',
-              tag: 'mobile',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-            },
-          ],
+
+          webMedia: {
+            type: 'video',
+            tag: 'web',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+          },
+          mobileMedia: {
+            type: 'video',
+            tag: 'mobile',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+          },
         },
       ],
     });
@@ -118,7 +122,12 @@ describe('mentorClientData', () => {
               _id
               name
               transcript
-              media {
+              webMedia {
+                type
+                tag
+                url
+              }
+              mobileMedia {
                 type
                 tag
                 url
@@ -139,18 +148,17 @@ describe('mentorClientData', () => {
           _id: '511111111111111111111112',
           name: 'idle',
           transcript: '[being still]',
-          media: [
-            {
-              type: 'video',
-              tag: 'web',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-            },
-            {
-              type: 'video',
-              tag: 'mobile',
-              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-            },
-          ],
+
+          webMedia: {
+            type: 'video',
+            tag: 'web',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+          },
+          mobileMedia: {
+            type: 'video',
+            tag: 'mobile',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+          },
         },
       ],
     });
@@ -174,7 +182,12 @@ describe('mentorClientData', () => {
               _id
               name
               transcript
-              media {
+              webMedia {
+                type
+                tag
+                url
+              }
+              mobileMedia {
                 type
                 tag
                 url

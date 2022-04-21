@@ -68,7 +68,9 @@ interface AnswerGQL {
   hasEditedTranscript: boolean;
   transcript: string;
   status: Status;
-  media?: AnswerMedia[];
+  webMedia?: AnswerMedia;
+  mobileMedia?: AnswerMedia;
+  vttMedia?: AnswerMedia;
   hasUntransferredMedia: boolean;
 }
 
@@ -105,7 +107,9 @@ export interface AnswerUpdateInput {
   transcript: string;
   status: Status;
   hasUntransferredMedia: boolean;
-  media: AnswerMediaProps[];
+  webMedia: AnswerMediaProps;
+  mobileMedia: AnswerMediaProps;
+  vttMedia: AnswerMediaProps;
 }
 
 export const ReplacedMentorQuestionChangesInputType =
@@ -134,7 +138,9 @@ export const AnswerUpdateInputType = new GraphQLInputObjectType({
     transcript: { type: GraphQLNonNull(GraphQLString) },
     status: { type: GraphQLNonNull(GraphQLString) },
     hasUntransferredMedia: { type: GraphQLBoolean },
-    media: { type: GraphQLList(AnswerMediaUpdateInputType) },
+    webMedia: { type: AnswerMediaUpdateInputType },
+    mobileMedia: { type: AnswerMediaUpdateInputType },
+    vttMedia: { type: AnswerMediaUpdateInputType },
   }),
 });
 

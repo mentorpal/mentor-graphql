@@ -19,14 +19,18 @@ export const mediaUpdate = {
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     questionId: { type: GraphQLNonNull(GraphQLID) },
-    media: { type: GraphQLNonNull(AnswerMediaInputType) },
+    webMedia: { type: AnswerMediaInputType },
+    mobileMedia: { type: AnswerMediaInputType },
+    vttMedia: { type: AnswerMediaInputType },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
       mentorId: string;
       questionId: string;
-      media: AnswerMedia;
+      webMedia: AnswerMedia;
+      mobileMedia: AnswerMedia;
+      vttMedia: AnswerMedia;
     }
   ): Promise<boolean> => {
     let answer = await AnswerModel.findOne({
@@ -36,20 +40,26 @@ export const mediaUpdate = {
     if (!answer) {
       throw new Error('no answer found');
     }
-    const media = answer.media;
-    const idx = media.findIndex(
-      (m) => m.type === args.media.type && m.tag === args.media.tag
-    );
-    if (idx === -1) {
-      media.push(args.media);
-    } else {
-      media[idx] = args.media;
+    const hasUntransferredMedia =
+      answer.webMedia.needsTransfer ||
+      answer.mobileMedia.needsTransfer ||
+      answer.vttMedia.needsTransfer;
+    const update_args: Record<string, boolean | AnswerMedia> = {
+      hasUntransferredMedia: hasUntransferredMedia,
+    };
+    if (args.webMedia) {
+      update_args['webMedia'] = args.webMedia;
     }
-    const hasUntransferredMedia = media.some((m) => m.needsTransfer);
+    if (args.mobileMedia) {
+      update_args['mobileMedia'] = args.mobileMedia;
+    }
+    if (args.vttMedia) {
+      update_args['vttMedia'] = args.vttMedia;
+    }
     answer = await AnswerModel.findByIdAndUpdate(
       answer._id,
       {
-        $set: { media, hasUntransferredMedia },
+        $set: update_args,
       },
       {
         new: true,
