@@ -11,7 +11,6 @@ import {
   GraphQLNonNull,
   GraphQLID,
   GraphQLInputObjectType,
-  GraphQLList,
 } from 'graphql';
 import {
   Mentor as MentorModel,
@@ -24,21 +23,23 @@ import { TaskInfoInputType, TaskInfoProps } from 'models/TaskInfo';
 import { AnswerMediaInputType } from './upload-answer';
 
 export interface UploadTask {
-  taskList: [TaskInfoProps];
+  trimUploadTask: TaskInfoProps;
+  transcodeWebTask: TaskInfoProps;
+  transcodeMobileTask: TaskInfoProps;
+  transcribeTask: TaskInfoProps;
   transcript: string;
-  webMedia: AnswerMediaProps;
-  mobileMedia: AnswerMediaProps;
-  vttMedia: AnswerMediaProps;
+  originalMedia: AnswerMediaProps;
 }
 
 export const UploadTaskInputType = new GraphQLInputObjectType({
   name: 'UploadTaskInputType',
   fields: {
-    taskList: { type: GraphQLList(TaskInfoInputType) },
+    trimUploadTask: { type: TaskInfoInputType },
+    transcodeWebTask: { type: TaskInfoInputType },
+    transcodeMobileTask: { type: TaskInfoInputType },
+    transcribeTask: { type: TaskInfoInputType },
     transcript: { type: GraphQLString },
-    webMedia: { type: AnswerMediaInputType },
-    mobileMedia: { type: AnswerMediaInputType },
-    vttMedia: { type: AnswerMediaInputType },
+    originalMedia: { type: AnswerMediaInputType },
   },
 });
 

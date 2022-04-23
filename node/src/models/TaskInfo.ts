@@ -16,36 +16,27 @@ import { AnswerMediaType } from 'gql/types/answer';
 
 export interface TaskInfoProps {
   task_name: string;
-  task_id: string;
   status: string;
   transcript: string;
-  webMedia: AnswerMediaProps;
-  mobileMedia: AnswerMediaProps;
-  vttMedia: AnswerMediaProps;
+  media: AnswerMediaProps;
 }
 
 export interface TaskInfo extends TaskInfoProps, Document {}
 
 export const TaskInfoSchema = new Schema({
   task_name: { type: String },
-  task_id: { type: String },
   status: { type: String },
   transcript: { type: String },
-  webMedia: { type: AnswerMediaSchema },
-  mobileMedia: { type: AnswerMediaSchema },
-  vttMedia: { type: AnswerMediaSchema },
+  media: { type: AnswerMediaSchema },
 });
 
 export const TaskInfoInputType = new GraphQLInputObjectType({
   name: 'TaskInfoInputType',
   fields: {
     task_name: { type: GraphQLString },
-    task_id: { type: GraphQLString },
     status: { type: GraphQLString },
     transcript: { type: GraphQLString },
-    webMedia: { type: AnswerMediaInputType },
-    mobileMedia: { type: AnswerMediaInputType },
-    vttMedia: { type: AnswerMediaInputType },
+    media: { type: AnswerMediaInputType },
   },
 });
 
@@ -53,11 +44,8 @@ export const TaskInfoType = new GraphQLObjectType({
   name: 'TaskInfo',
   fields: {
     task_name: { type: GraphQLString },
-    task_id: { type: GraphQLString },
     status: { type: GraphQLString },
-    webMedia: { type: AnswerMediaType },
-    mobileMedia: { type: AnswerMediaType },
-    vttMedia: { type: AnswerMediaType },
+    media: { type: AnswerMediaType },
     transcript: { type: GraphQLString },
   },
 });

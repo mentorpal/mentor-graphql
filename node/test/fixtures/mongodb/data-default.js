@@ -310,13 +310,10 @@ module.exports = {
     {
       mentor: ObjectId('5ffdf41a1ee2c62111111111'),
       question: ObjectId('511111111111111111111112'),
-      taskList: [
-        {
-          task_name: 'transcribe',
-          task_id: 'fake_task',
-          status: 'IN_PROGRESS',
-        },
-      ],
+      transcribeTask: {
+        task_name: 'transcribe',
+        status: 'IN_PROGRESS',
+      },
       transcript: 'fake_transcript',
     },
   ],

@@ -24,22 +24,24 @@ export enum TaskFlagStatuses {
 export interface UploadTask extends Document {
   mentor: Mentor['_id'];
   question: Question['_id'];
-  taskList: TaskInfo[];
+  trimUploadTask: TaskInfo;
+  transcodeWebTask: TaskInfo;
+  transcodeMobileTask: TaskInfo;
+  transcribeTask: TaskInfo;
   transcript: string;
-  webMedia: AnswerMedia;
-  mobileMedia: AnswerMedia;
-  vttMedia: AnswerMedia;
+  originalMedia: AnswerMedia;
 }
 
 export const UploadTaskSchema = new Schema<UploadTask, UploadTaskModel>(
   {
     mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
     question: { type: mongoose.Types.ObjectId, ref: 'Question' },
-    taskList: { type: [TaskInfoSchema] },
+    trimUploadTask: { type: TaskInfoSchema },
+    transcodeWebTask: { type: TaskInfoSchema },
+    transcodeMobileTask: { type: TaskInfoSchema },
+    transcribeTask: { type: TaskInfoSchema },
     transcript: { type: String },
-    webMedia: { type: AnswerMediaSchema },
-    mobileMedia: { type: AnswerMediaSchema },
-    vttMedia: { type: AnswerMediaSchema },
+    originalMedia: { type: AnswerMediaSchema },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );

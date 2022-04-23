@@ -17,36 +17,45 @@ import {
   Question as QuestionModel,
   UploadTask as UploadTaskModel,
 } from 'models';
-import { AnswerMedia } from 'models/Answer';
+import { AnswerMediaProps } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
 import { AnswerMediaInputType } from './upload-answer';
+import { TaskInfo, TaskInfoInputType, TaskInfoProps } from 'models/TaskInfo';
 
 export const uploadTaskStatusUpdate = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     questionId: { type: GraphQLNonNull(GraphQLID) },
-    taskId: { type: GraphQLNonNull(GraphQLString) },
-    newStatus: { type: GraphQLNonNull(GraphQLString) },
+    originalMedia: { type: AnswerMediaInputType },
     transcript: { type: GraphQLString },
-    webMedia: { type: AnswerMediaInputType },
-    mobileMedia: { type: AnswerMediaInputType },
-    vttMedia: { type: AnswerMediaInputType },
+    trimUploadTask: { type: TaskInfoInputType },
+    transcodeWebTask: { type: TaskInfoInputType },
+    transcodeMobileTask: { type: TaskInfoInputType },
+    transcribeTask: { type: TaskInfoInputType },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
       mentorId: string;
       questionId: string;
-      taskId: string;
-      newStatus: string;
+      originalMedia: AnswerMediaProps;
       transcript: string;
-      webMedia: AnswerMedia;
-      mobileMedia: AnswerMedia;
-      vttMedia: AnswerMedia;
+      trimUploadTask: TaskInfo;
+      transcodeWebTask: TaskInfo;
+      transcodeMobileTask: TaskInfo;
+      transcribeTask: TaskInfo;
     }
   ): Promise<boolean> => {
     logger.info('uploadTaskStatusUpdate', args);
+    const numberTaskInputs =
+      Number(Boolean(args.transcodeWebTask)) +
+      Number(Boolean(args.transcodeMobileTask)) +
+      Number(Boolean(args.transcribeTask)) +
+      Number(Boolean(args.trimUploadTask));
+    if (numberTaskInputs > 1) {
+      throw new Error('Please only input one task to update at a time.');
+    }
     if (!(await QuestionModel.exists({ _id: args.questionId }))) {
       throw new Error(`no question found for id '${args.questionId}'`);
     }
@@ -54,62 +63,81 @@ export const uploadTaskStatusUpdate = {
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
     }
-    await UploadTaskModel.findOne({
+    const uploadTask = await UploadTaskModel.findOne({
       mentor: mentor._id,
       question: args.questionId,
-    })
-      .then((uploadTask) => {
-        if (!uploadTask) return false;
-        const updatedTaskList = uploadTask.taskList;
-        const taskIndex = updatedTaskList.findIndex(
-          (task) => task.task_id == args.taskId
-        );
-        if (taskIndex > -1) {
-          updatedTaskList[taskIndex].status = args.newStatus;
-          if (args.webMedia) {
-            updatedTaskList[taskIndex].webMedia = args.webMedia;
-          }
-          if (args.mobileMedia) {
-            updatedTaskList[taskIndex].mobileMedia = args.mobileMedia;
-          }
-          if (args.vttMedia) {
-            updatedTaskList[taskIndex].vttMedia = args.vttMedia;
-          }
-          if (args.transcript) {
-            updatedTaskList[taskIndex].transcript = args.transcript;
-          }
-          uploadTask.markModified('taskList');
-        }
-        if (args.transcript) {
-          uploadTask.transcript = args.transcript;
-          uploadTask.markModified('transcript');
-        }
-        if (args.webMedia) {
-          uploadTask.webMedia = args.webMedia;
-          uploadTask.markModified('webMedia');
-        }
-        if (args.mobileMedia) {
-          uploadTask.mobileMedia = args.mobileMedia;
-          uploadTask.markModified('mobileMedia');
-        }
-        if (args.vttMedia) {
-          uploadTask.vttMedia = args.vttMedia;
-          uploadTask.markModified('vttMedia');
-        }
-        uploadTask.save().catch((err: Error) => {
-          logger.error('failed to save');
-          logger.error(err);
-        });
-      })
-      .catch((err: Error) => {
-        logger.error(
-          `no task found for mentor ${mentor._id} and question ${args.questionId}`
-        );
-        logger.error(err);
-        return false;
-      });
+    });
+    if (!uploadTask) {
+      return false;
+    }
+    const webTaskArg = args.transcodeWebTask;
+    const mobileTaskArg = args.transcodeMobileTask;
+    const transcribeTaskArg = args.transcribeTask;
+    const trimUploadTaskArg = args.trimUploadTask;
+    const updates: Record<string, string | TaskInfoProps | AnswerMediaProps> =
+      {};
 
-    return true;
+    if (args.transcript) {
+      updates['transcript'] = args.transcript;
+    }
+    if (args.originalMedia) {
+      updates['originalMedia'] = args.originalMedia;
+    }
+    if (webTaskArg) {
+      updates['transcodeWebTask'] = {
+        task_name:
+          webTaskArg.task_name || uploadTask.transcodeWebTask?.task_name,
+        status: webTaskArg.status || uploadTask.transcodeWebTask?.status,
+        transcript:
+          webTaskArg.transcript || uploadTask.transcodeWebTask?.transcript,
+        media: webTaskArg.media || uploadTask.transcodeWebTask?.media,
+      };
+    }
+    if (mobileTaskArg) {
+      updates['transcodeMobileTask'] = {
+        task_name:
+          mobileTaskArg.task_name || uploadTask.transcodeMobileTask?.task_name,
+        status: mobileTaskArg.status || uploadTask.transcodeMobileTask?.status,
+        transcript:
+          mobileTaskArg.transcript ||
+          uploadTask.transcodeMobileTask?.transcript,
+        media: mobileTaskArg.media || uploadTask.transcodeMobileTask?.media,
+      };
+    }
+    if (transcribeTaskArg) {
+      updates['transcribeTask'] = {
+        task_name:
+          transcribeTaskArg.task_name || uploadTask.transcribeTask?.task_name,
+        status: transcribeTaskArg.status || uploadTask.transcribeTask?.status,
+        transcript:
+          transcribeTaskArg.transcript || uploadTask.transcribeTask?.transcript,
+        media: transcribeTaskArg.media || uploadTask.transcribeTask?.media,
+      };
+    }
+    if (trimUploadTaskArg) {
+      updates['trimUploadTask'] = {
+        task_name:
+          trimUploadTaskArg.task_name || uploadTask.trimUploadTask?.task_name,
+        status: trimUploadTaskArg.status || uploadTask.trimUploadTask?.status,
+        transcript:
+          trimUploadTaskArg.transcript || uploadTask.trimUploadTask?.transcript,
+        media: trimUploadTaskArg.media || uploadTask.trimUploadTask?.media,
+      };
+    }
+    const updatedTask = await UploadTaskModel.findOneAndUpdate(
+      {
+        mentor: mentor._id,
+        question: args.questionId,
+      },
+      {
+        $set: updates,
+      },
+      {
+        new: true,
+      }
+    );
+    console.log(`Updated task: ${JSON.stringify(updatedTask)}`);
+    return Boolean(updatedTask);
   },
 };
 

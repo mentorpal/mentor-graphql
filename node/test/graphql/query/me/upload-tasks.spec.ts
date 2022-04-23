@@ -37,12 +37,7 @@ describe('query me/uploadTasks', () => {
                 question
               }
               transcript
-              webMedia {
-                type
-                tag
-                url
-              }
-              mobileMedia {
+              originalMedia {
                 type
                 tag
                 url
@@ -75,12 +70,7 @@ describe('query me/uploadTasks', () => {
                   question
                 }
                 transcript
-                webMedia {
-                  type
-                  tag
-                  url
-                }
-                mobileMedia {
+                originalMedia {
                   type
                   tag
                   url
@@ -100,8 +90,7 @@ describe('query me/uploadTasks', () => {
           question: 'Who are you and what do you do?',
         },
         transcript: 'fake_transcript',
-        webMedia: null,
-        mobileMedia: null,
+        originalMedia: null,
       },
     ]);
   });
@@ -123,12 +112,7 @@ describe('query me/uploadTasks', () => {
                   question
                 }
                 transcript
-                webMedia {
-                  type
-                  tag
-                  url
-                }
-                mobileMedia {
+                originalMedia {
                   type
                   tag
                   url
@@ -160,12 +144,7 @@ describe('query me/uploadTasks', () => {
                   question
                 }
                 transcript
-                webMedia {
-                  type
-                  tag
-                  url
-                }
-                mobileMedia {
+                originalMedia {
                   type
                   tag
                   url
@@ -185,8 +164,7 @@ describe('query me/uploadTasks', () => {
           question: 'Who are you and what do you do?',
         },
         transcript: 'fake_transcript',
-        webMedia: null,
-        mobileMedia: null,
+        originalMedia: null,
       },
     ]);
   });
@@ -208,12 +186,7 @@ describe('query me/uploadTasks', () => {
                   question
                 }
                 transcript
-                webMedia {
-                  type
-                  tag
-                  url
-                }
-                mobileMedia {
+                originalMedia {
                   type
                   tag
                   url
@@ -233,8 +206,7 @@ describe('query me/uploadTasks', () => {
           question: 'Who are you and what do you do?',
         },
         transcript: 'fake_transcript',
-        webMedia: null,
-        mobileMedia: null,
+        originalMedia: null,
       },
     ]);
   });
