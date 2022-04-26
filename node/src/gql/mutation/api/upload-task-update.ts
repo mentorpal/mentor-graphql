@@ -29,6 +29,9 @@ export interface UploadTask {
   transcribeTask: TaskInfoProps;
   transcript: string;
   originalMedia: AnswerMediaProps;
+  webMedia: AnswerMediaProps;
+  mobileMedia: AnswerMediaProps;
+  vttMedia: AnswerMediaProps;
 }
 
 export const UploadTaskInputType = new GraphQLInputObjectType({
@@ -40,6 +43,9 @@ export const UploadTaskInputType = new GraphQLInputObjectType({
     transcribeTask: { type: TaskInfoInputType },
     transcript: { type: GraphQLString },
     originalMedia: { type: AnswerMediaInputType },
+    webMedia: { type: AnswerMediaInputType },
+    mobileMedia: { type: AnswerMediaInputType },
+    vttMedia: { type: AnswerMediaInputType },
   },
 });
 

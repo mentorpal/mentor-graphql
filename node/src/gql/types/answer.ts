@@ -9,6 +9,7 @@ import {
   GraphQLString,
   GraphQLObjectType,
   GraphQLBoolean,
+  GraphQLList
 } from 'graphql';
 import { questionField } from 'gql/query/question';
 import { AnswerMedia } from 'models/Answer';
@@ -39,6 +40,7 @@ export const AnswerType = new GraphQLObjectType({
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
     hasUntransferredMedia: { type: GraphQLBoolean },
+    media: {type: GraphQLList(AnswerMediaType)},
     webMedia: { type: AnswerMediaType },
     mobileMedia: { type: AnswerMediaType },
     vttMedia: { type: AnswerMediaType },

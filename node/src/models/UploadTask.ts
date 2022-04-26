@@ -30,6 +30,9 @@ export interface UploadTask extends Document {
   transcribeTask: TaskInfo;
   transcript: string;
   originalMedia: AnswerMedia;
+  webMedia: AnswerMedia;
+  mobileMedia: AnswerMedia;
+  vttMedia: AnswerMedia;
 }
 
 export const UploadTaskSchema = new Schema<UploadTask, UploadTaskModel>(
@@ -42,6 +45,9 @@ export const UploadTaskSchema = new Schema<UploadTask, UploadTaskModel>(
     transcribeTask: { type: TaskInfoSchema },
     transcript: { type: String },
     originalMedia: { type: AnswerMediaSchema },
+    webMedia: { type: AnswerMediaSchema },
+    mobileMedia: { type: AnswerMediaSchema },
+    vttMedia: { type: AnswerMediaSchema },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );

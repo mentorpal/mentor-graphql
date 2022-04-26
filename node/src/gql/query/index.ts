@@ -6,6 +6,7 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { GraphQLObjectType } from 'graphql';
 import answer from './answer';
+import answers from './answers';
 import config from './config';
 import health from './health';
 import me from './me';
@@ -33,6 +34,7 @@ export default new GraphQLObjectType({
   name: 'Query',
   fields: {
     answer,
+    answers,
     config,
     health,
     me,

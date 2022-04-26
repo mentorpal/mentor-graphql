@@ -374,17 +374,20 @@ describe('uploadTaskUpdate', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $transcodeWebTask: TaskInfoInputType) {
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
           api {
-            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, transcodeWebTask: $transcodeWebTask)
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
           }
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          transcodeWebTask: {
-            task_name: 'transcribe',
-            status: 'DONE',
+          uploadTaskStatusInput: {
+            transcodeWebTask: {
+              task_name: 'transcribe',
+              task_id: '1235',
+              status: 'DONE',
+            },
           },
         },
       });
@@ -400,14 +403,17 @@ describe('uploadTaskUpdate', () => {
               uploadTasks {
                 transcodeWebTask{
                   task_name
+                  task_id
                   status
                 }
                 transcodeMobileTask{
                   task_name
+                  task_id
                   status
                 }
                 transcribeTask{
                   task_name
+                  task_id
                   status
                 }
               }
@@ -419,11 +425,13 @@ describe('uploadTaskUpdate', () => {
       {
         transcodeWebTask: {
           task_name: 'transcribe',
+          task_id: '1235',
           status: 'DONE',
         },
         transcodeMobileTask: null,
         transcribeTask: {
           task_name: 'transcribe',
+          task_id: 'transcribe_task_id',
           status: 'IN_PROGRESS',
         },
       },
@@ -433,17 +441,20 @@ describe('uploadTaskUpdate', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $transcodeMobileTask: TaskInfoInputType) {
-        api {
-          uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, transcodeMobileTask: $transcodeMobileTask)
-        }
-      }`,
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
+          api {
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
+          }
+        }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          transcodeMobileTask: {
-            task_name: 'transcode-mobile',
-            status: 'DONE',
+          uploadTaskStatusInput: {
+            transcodeMobileTask: {
+              task_name: 'transcode-mobile',
+              task_id: '54312',
+              status: 'DONE',
+            },
           },
         },
       });
@@ -458,14 +469,17 @@ describe('uploadTaskUpdate', () => {
             uploadTasks {
               transcodeWebTask{
                 task_name
+                task_id
                 status
               }
               transcodeMobileTask{
                 task_name
+                task_id
                 status
               }
               transcribeTask{
                 task_name
+                task_id
                 status
               }
             }
@@ -477,14 +491,17 @@ describe('uploadTaskUpdate', () => {
       {
         transcodeWebTask: {
           task_name: 'transcribe',
+          task_id: '1235',
           status: 'DONE',
         },
         transcodeMobileTask: {
           task_name: 'transcode-mobile',
+          task_id: '54312',
           status: 'DONE',
         },
         transcribeTask: {
           task_name: 'transcribe',
+          task_id: 'transcribe_task_id',
           status: 'IN_PROGRESS',
         },
       },
@@ -495,16 +512,18 @@ describe('uploadTaskUpdate', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $transcribeTask: TaskInfoInputType) {
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
           api {
-            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, transcribeTask: $transcribeTask)
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
           }
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          transcribeTask: {
-            status: 'DONE',
+          uploadTaskStatusInput: {
+            transcribeTask: {
+              status: 'DONE',
+            },
           },
         },
       });
@@ -519,14 +538,17 @@ describe('uploadTaskUpdate', () => {
               uploadTasks {
                 transcodeWebTask{
                   task_name
+                  task_id
                   status
                 }
                 transcodeMobileTask{
                   task_name
+                  task_id
                   status
                 }
                 transcribeTask{
                   task_name
+                  task_id
                   status
                 }
               }
@@ -538,38 +560,43 @@ describe('uploadTaskUpdate', () => {
       {
         transcodeWebTask: {
           task_name: 'transcribe',
+          task_id: '1235',
           status: 'DONE',
         },
         transcodeMobileTask: {
           task_name: 'transcode-mobile',
+          task_id: '54312',
           status: 'DONE',
         },
         transcribeTask: {
           task_name: 'transcribe',
+          task_id: 'transcribe_task_id',
           status: 'DONE',
         },
       },
     ]);
   });
 
-  it('updates original media', async () => {
+  it('updates medias', async () => {
     const updateOriginalMedia = await request(app)
       .post('/graphql')
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $originalMedia: AnswerMediaInputType) {
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
           api {
-            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, originalMedia: $originalMedia)
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
           }
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          originalMedia: {
-            type: 'video',
-            tag: 'web',
-            url: 'http://random.url/',
+          uploadTaskStatusInput: {
+            originalMedia: {
+              type: 'video',
+              tag: 'web',
+              url: 'http://random.url/',
+            },
           },
         },
       });
@@ -622,6 +649,116 @@ describe('uploadTaskUpdate', () => {
         },
       },
     ]);
+
+    const updateOtherMedias = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
+          api {
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
+          }
+        }`,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111112',
+          uploadTaskStatusInput: {
+            webMedia: {
+              type: 'video',
+              tag: 'web',
+              url: 'http://random.url/',
+            },
+            mobileMedia: {
+              type: 'video',
+              tag: 'mobile',
+              url: 'http://random.url/',
+            },
+            vttMedia: {
+              type: 'vtt',
+              tag: 'en',
+              url: 'http://random.url/',
+            },
+          },
+        },
+      });
+    expect(updateOtherMedias.status).to.equal(200);
+    expect(updateOtherMedias.body.data.api.uploadTaskStatusUpdate).to.eql(true);
+
+    const updateOtherMediasResponse = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+          me {
+            uploadTasks {
+              transcodeWebTask{
+                task_name
+                status
+              }
+              transcodeMobileTask{
+                task_name
+                status
+              }
+              transcribeTask{
+                task_name
+                status
+              }
+              originalMedia{
+                type
+                tag
+                url
+              }
+              webMedia{
+                type
+                tag
+                url
+              }
+              mobileMedia{
+                type
+                tag
+                url
+              }
+              vttMedia{
+                type
+                tag
+                url
+              }
+            }
+          }
+        }`,
+      });
+    expect(updateOtherMediasResponse.status).to.equal(200);
+    expect(updateOtherMediasResponse.body.data.me.uploadTasks).to.eql([
+      {
+        transcodeWebTask: null,
+        transcodeMobileTask: null,
+        transcribeTask: {
+          task_name: 'transcribe',
+          status: 'IN_PROGRESS',
+        },
+        originalMedia: {
+          type: 'video',
+          tag: 'web',
+          url: 'http://random.url/',
+        },
+        webMedia: {
+          type: 'video',
+          tag: 'web',
+          url: 'http://random.url/',
+        },
+        mobileMedia: {
+          type: 'video',
+          tag: 'mobile',
+          url: 'http://random.url/',
+        },
+        vttMedia: {
+          type: 'vtt',
+          tag: 'en',
+          url: 'http://random.url/',
+        },
+      },
+    ]);
   });
 
   it('doesnt allow multiple task updates in the same mutation', async () => {
@@ -630,21 +767,23 @@ describe('uploadTaskUpdate', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $transcodeWebTask: TaskInfoInputType, $transcodeMobileTask: TaskInfoInputType) {
-        api {
-          uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, transcodeWebTask: $transcodeWebTask, transcodeMobileTask: $transcodeMobileTask)
-        }
-      }`,
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
+          api {
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
+          }
+        }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          transcodeWebTask: {
-            task_name: 'transcribe',
-            status: 'DONE',
-          },
-          transcodeMobileTask: {
-            task_name: 'transcribe',
-            status: 'DONE',
+          uploadTaskStatusInput: {
+            transcodeWebTask: {
+              task_name: 'transcribe',
+              status: 'DONE',
+            },
+            transcodeMobileTask: {
+              task_name: 'transcribe',
+              status: 'DONE',
+            },
           },
         },
       });
@@ -661,16 +800,18 @@ describe('uploadTaskUpdate', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $transcript: String!, $originalMedia: AnswerMediaInputType) {
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
           api {
-            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, transcript: $transcript, originalMedia: $originalMedia)
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
           }
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          transcript: 'fake_transcript',
-          originalMedia: { type: 'video', tag: 'original', url: 'video.mp4' },
+          uploadTaskStatusInput: {
+            transcript: 'fake_transcript',
+            originalMedia: { type: 'video', tag: 'original', url: 'video.mp4' },
+          },
         },
       });
     expect(update.status).to.equal(200);
@@ -721,18 +862,20 @@ describe('uploadTaskUpdate', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $transcript: String, $originalMedia: AnswerMediaInputType) {
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
           api {
-            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, transcript: $transcript, originalMedia: $originalMedia)
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
           }
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          originalMedia: {
-            type: 'video',
-            tag: 'web',
-            url: 'https://static.mentorpal.org/video.mp4',
+          uploadTaskStatusInput: {
+            originalMedia: {
+              type: 'video',
+              tag: 'web',
+              url: 'https://static.mentorpal.org/video.mp4',
+            },
           },
         },
       });

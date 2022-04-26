@@ -72,6 +72,7 @@ interface AnswerGQL {
   mobileMedia?: AnswerMedia;
   vttMedia?: AnswerMedia;
   hasUntransferredMedia: boolean;
+  media: AnswerMedia[];
 }
 
 export interface ReplacedMentorQuestionChanges {

@@ -16,6 +16,7 @@ import { AnswerMediaType } from 'gql/types/answer';
 
 export interface TaskInfoProps {
   task_name: string;
+  task_id: string;
   status: string;
   transcript: string;
   media: AnswerMediaProps;
@@ -25,6 +26,7 @@ export interface TaskInfo extends TaskInfoProps, Document {}
 
 export const TaskInfoSchema = new Schema({
   task_name: { type: String },
+  task_id: { type: String },
   status: { type: String },
   transcript: { type: String },
   media: { type: AnswerMediaSchema },
@@ -34,6 +36,7 @@ export const TaskInfoInputType = new GraphQLInputObjectType({
   name: 'TaskInfoInputType',
   fields: {
     task_name: { type: GraphQLString },
+    task_id: { type: GraphQLString },
     status: { type: GraphQLString },
     transcript: { type: GraphQLString },
     media: { type: AnswerMediaInputType },
@@ -44,6 +47,7 @@ export const TaskInfoType = new GraphQLObjectType({
   name: 'TaskInfo',
   fields: {
     task_name: { type: GraphQLString },
+    task_id: { type: GraphQLString },
     status: { type: GraphQLString },
     media: { type: AnswerMediaType },
     transcript: { type: GraphQLString },

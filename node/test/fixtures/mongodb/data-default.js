@@ -312,6 +312,7 @@ module.exports = {
       question: ObjectId('511111111111111111111112'),
       transcribeTask: {
         task_name: 'transcribe',
+        task_id: 'transcribe_task_id',
         status: 'IN_PROGRESS',
       },
       transcript: 'fake_transcript',

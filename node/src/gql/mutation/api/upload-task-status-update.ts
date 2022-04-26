@@ -10,6 +10,7 @@ import {
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
+  GraphQLInputObjectType,
 } from 'graphql';
 import { logger } from 'utils/logging';
 import {
@@ -22,71 +23,114 @@ import { Mentor } from 'models/Mentor';
 import { AnswerMediaInputType } from './upload-answer';
 import { TaskInfo, TaskInfoInputType, TaskInfoProps } from 'models/TaskInfo';
 
+export const UploadTaskStatusUpdateInputType = new GraphQLInputObjectType({
+  name: 'UploadTaskStatusUpdateInputType',
+  fields: {
+    transcript: { type: GraphQLString },
+    originalMedia: { type: AnswerMediaInputType },
+    webMedia: { type: AnswerMediaInputType },
+    mobileMedia: { type: AnswerMediaInputType },
+    vttMedia: { type: AnswerMediaInputType },
+    trimUploadTask: { type: TaskInfoInputType },
+    transcodeWebTask: { type: TaskInfoInputType },
+    transcodeMobileTask: { type: TaskInfoInputType },
+    transcribeTask: { type: TaskInfoInputType },
+  },
+});
+
+export interface UploadTaskStatusUpdateInput {
+  transcript: string;
+  originalMedia: AnswerMediaProps;
+  webMedia: AnswerMediaProps;
+  mobileMedia: AnswerMediaProps;
+  vttMedia: AnswerMediaProps;
+  trimUploadTask: TaskInfo;
+  transcodeWebTask: TaskInfo;
+  transcodeMobileTask: TaskInfo;
+  transcribeTask: TaskInfo;
+}
+
 export const uploadTaskStatusUpdate = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     questionId: { type: GraphQLNonNull(GraphQLID) },
-    originalMedia: { type: AnswerMediaInputType },
-    transcript: { type: GraphQLString },
-    trimUploadTask: { type: TaskInfoInputType },
-    transcodeWebTask: { type: TaskInfoInputType },
-    transcodeMobileTask: { type: TaskInfoInputType },
-    transcribeTask: { type: TaskInfoInputType },
+    uploadTaskStatusInput: {
+      type: GraphQLNonNull(UploadTaskStatusUpdateInputType),
+    },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
       mentorId: string;
       questionId: string;
-      originalMedia: AnswerMediaProps;
-      transcript: string;
-      trimUploadTask: TaskInfo;
-      transcodeWebTask: TaskInfo;
-      transcodeMobileTask: TaskInfo;
-      transcribeTask: TaskInfo;
+      uploadTaskStatusInput: UploadTaskStatusUpdateInput;
     }
   ): Promise<boolean> => {
+    console.error(args.uploadTaskStatusInput);
+    const { mentorId, questionId } = args;
+    const {
+      transcript,
+      originalMedia,
+      webMedia,
+      mobileMedia,
+      vttMedia,
+      trimUploadTask,
+      transcodeWebTask,
+      transcodeMobileTask,
+      transcribeTask,
+    } = args.uploadTaskStatusInput;
     logger.info('uploadTaskStatusUpdate', args);
     const numberTaskInputs =
-      Number(Boolean(args.transcodeWebTask)) +
-      Number(Boolean(args.transcodeMobileTask)) +
-      Number(Boolean(args.transcribeTask)) +
-      Number(Boolean(args.trimUploadTask));
+      Number(Boolean(transcodeWebTask)) +
+      Number(Boolean(transcodeMobileTask)) +
+      Number(Boolean(transcribeTask)) +
+      Number(Boolean(trimUploadTask));
     if (numberTaskInputs > 1) {
       throw new Error('Please only input one task to update at a time.');
     }
-    if (!(await QuestionModel.exists({ _id: args.questionId }))) {
-      throw new Error(`no question found for id '${args.questionId}'`);
+    if (!(await QuestionModel.exists({ _id: questionId }))) {
+      throw new Error(`no question found for id '${questionId}'`);
     }
-    const mentor: Mentor = await MentorModel.findById(args.mentorId);
+    const mentor: Mentor = await MentorModel.findById(mentorId);
     if (!mentor) {
-      throw new Error(`no mentor found for id '${args.mentorId}'`);
+      throw new Error(`no mentor found for id '${mentorId}'`);
     }
     const uploadTask = await UploadTaskModel.findOne({
       mentor: mentor._id,
-      question: args.questionId,
+      question: questionId,
     });
     if (!uploadTask) {
       return false;
     }
-    const webTaskArg = args.transcodeWebTask;
-    const mobileTaskArg = args.transcodeMobileTask;
-    const transcribeTaskArg = args.transcribeTask;
-    const trimUploadTaskArg = args.trimUploadTask;
+    const webTaskArg = transcodeWebTask;
+    const mobileTaskArg = transcodeMobileTask;
+    const transcribeTaskArg = transcribeTask;
+    const trimUploadTaskArg = trimUploadTask;
     const updates: Record<string, string | TaskInfoProps | AnswerMediaProps> =
       {};
 
-    if (args.transcript) {
-      updates['transcript'] = args.transcript;
+    if (transcript) {
+      updates['transcript'] = transcript;
     }
-    if (args.originalMedia) {
-      updates['originalMedia'] = args.originalMedia;
+    if (originalMedia) {
+      updates['originalMedia'] = originalMedia;
     }
+    if (webMedia) {
+      updates['webMedia'] = webMedia;
+    }
+    if (mobileMedia) {
+      updates['mobileMedia'] = mobileMedia;
+    }
+    if (vttMedia) {
+      updates['vttMedia'] = vttMedia;
+    }
+
     if (webTaskArg) {
       updates['transcodeWebTask'] = {
         task_name:
           webTaskArg.task_name || uploadTask.transcodeWebTask?.task_name,
+        task_id: webTaskArg.task_id || uploadTask.transcodeWebTask?.task_id,
         status: webTaskArg.status || uploadTask.transcodeWebTask?.status,
         transcript:
           webTaskArg.transcript || uploadTask.transcodeWebTask?.transcript,
@@ -97,6 +141,8 @@ export const uploadTaskStatusUpdate = {
       updates['transcodeMobileTask'] = {
         task_name:
           mobileTaskArg.task_name || uploadTask.transcodeMobileTask?.task_name,
+        task_id:
+          mobileTaskArg.task_id || uploadTask.transcodeMobileTask?.task_id,
         status: mobileTaskArg.status || uploadTask.transcodeMobileTask?.status,
         transcript:
           mobileTaskArg.transcript ||
@@ -108,6 +154,8 @@ export const uploadTaskStatusUpdate = {
       updates['transcribeTask'] = {
         task_name:
           transcribeTaskArg.task_name || uploadTask.transcribeTask?.task_name,
+        task_id:
+          transcribeTaskArg.task_id || uploadTask.transcribeTask?.task_id,
         status: transcribeTaskArg.status || uploadTask.transcribeTask?.status,
         transcript:
           transcribeTaskArg.transcript || uploadTask.transcribeTask?.transcript,
@@ -118,6 +166,8 @@ export const uploadTaskStatusUpdate = {
       updates['trimUploadTask'] = {
         task_name:
           trimUploadTaskArg.task_name || uploadTask.trimUploadTask?.task_name,
+        task_id:
+          trimUploadTaskArg.task_id || uploadTask.trimUploadTask?.task_id,
         status: trimUploadTaskArg.status || uploadTask.trimUploadTask?.status,
         transcript:
           trimUploadTaskArg.transcript || uploadTask.trimUploadTask?.transcript,
@@ -127,7 +177,7 @@ export const uploadTaskStatusUpdate = {
     const updatedTask = await UploadTaskModel.findOneAndUpdate(
       {
         mentor: mentor._id,
-        question: args.questionId,
+        question: questionId,
       },
       {
         $set: updates,
