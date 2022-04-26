@@ -41,9 +41,9 @@ export const mediaUpdate = {
       throw new Error('no answer found');
     }
     const hasUntransferredMedia =
-      answer.webMedia.needsTransfer ||
-      answer.mobileMedia.needsTransfer ||
-      answer.vttMedia.needsTransfer;
+      answer.webMedia?.needsTransfer ||
+      answer.mobileMedia?.needsTransfer ||
+      answer.vttMedia?.needsTransfer;
     const update_args: Record<string, boolean | AnswerMedia> = {
       hasUntransferredMedia: hasUntransferredMedia,
     };

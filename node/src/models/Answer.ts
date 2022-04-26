@@ -69,7 +69,7 @@ export const AnswerSchema = new Schema<Answer, AnswerModel>(
     webMedia: { type: AnswerMediaSchema },
     mobileMedia: { type: AnswerMediaSchema },
     vttMedia: { type: AnswerMediaSchema },
-    media: {type: [AnswerMediaSchema]},
+    media: { type: [AnswerMediaSchema] },
     hasUntransferredMedia: { type: Boolean, default: false },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
