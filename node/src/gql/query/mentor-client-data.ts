@@ -36,7 +36,9 @@ export interface AnswerClientData {
   _id: string;
   name: string;
   transcript: string;
-  media: AnswerMedia[];
+  webMedia: AnswerMedia;
+  mobileMedia: AnswerMedia;
+  vttMedia: AnswerMedia;
 }
 
 export interface TopicQuestions {
@@ -63,7 +65,9 @@ export const AnswerClientDataType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
     transcript: { type: GraphQLString },
-    media: { type: GraphQLList(AnswerMediaType) },
+    webMedia: { type: AnswerMediaType },
+    mobileMedia: { type: AnswerMediaType },
+    vttMedia: { type: AnswerMediaType },
   }),
 });
 
@@ -159,7 +163,9 @@ export const mentorData = {
         name: utteranceQuestions.find((q) => `${q.id}` === `${u.question}`)
           ?.name,
         transcript: u.transcript,
-        media: u.media,
+        webMedia: u.webMedia,
+        mobileMedia: u.mobileMedia,
+        vttMedia: u.vttMedia,
       })),
     };
   },

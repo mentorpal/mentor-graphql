@@ -10,7 +10,7 @@ import {
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
-  GraphQLList,
+  GraphQLInputObjectType,
 } from 'graphql';
 import { logger } from 'utils/logging';
 import {
@@ -18,87 +18,176 @@ import {
   Question as QuestionModel,
   UploadTask as UploadTaskModel,
 } from 'models';
-import { AnswerMedia } from 'models/Answer';
+import { AnswerMediaProps } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
 import { AnswerMediaInputType } from './upload-answer';
+import { TaskInfo, TaskInfoInputType, TaskInfoProps } from 'models/TaskInfo';
+
+export const UploadTaskStatusUpdateInputType = new GraphQLInputObjectType({
+  name: 'UploadTaskStatusUpdateInputType',
+  fields: {
+    transcript: { type: GraphQLString },
+    originalMedia: { type: AnswerMediaInputType },
+    webMedia: { type: AnswerMediaInputType },
+    mobileMedia: { type: AnswerMediaInputType },
+    vttMedia: { type: AnswerMediaInputType },
+    trimUploadTask: { type: TaskInfoInputType },
+    transcodeWebTask: { type: TaskInfoInputType },
+    transcodeMobileTask: { type: TaskInfoInputType },
+    transcribeTask: { type: TaskInfoInputType },
+  },
+});
+
+export interface UploadTaskStatusUpdateInput {
+  transcript: string;
+  originalMedia: AnswerMediaProps;
+  webMedia: AnswerMediaProps;
+  mobileMedia: AnswerMediaProps;
+  vttMedia: AnswerMediaProps;
+  trimUploadTask: TaskInfo;
+  transcodeWebTask: TaskInfo;
+  transcodeMobileTask: TaskInfo;
+  transcribeTask: TaskInfo;
+}
 
 export const uploadTaskStatusUpdate = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     questionId: { type: GraphQLNonNull(GraphQLID) },
-    taskId: { type: GraphQLNonNull(GraphQLString) },
-    newStatus: { type: GraphQLNonNull(GraphQLString) },
-    transcript: { type: GraphQLString },
-    media: { type: GraphQLList(AnswerMediaInputType) },
+    uploadTaskStatusInput: {
+      type: GraphQLNonNull(UploadTaskStatusUpdateInputType),
+    },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
       mentorId: string;
       questionId: string;
-      taskId: string;
-      newStatus: string;
-      transcript: string;
-      media: AnswerMedia[];
+      uploadTaskStatusInput: UploadTaskStatusUpdateInput;
     }
   ): Promise<boolean> => {
+    console.error(args.uploadTaskStatusInput);
+    const { mentorId, questionId } = args;
+    const {
+      transcript,
+      originalMedia,
+      webMedia,
+      mobileMedia,
+      vttMedia,
+      trimUploadTask,
+      transcodeWebTask,
+      transcodeMobileTask,
+      transcribeTask,
+    } = args.uploadTaskStatusInput;
     logger.info('uploadTaskStatusUpdate', args);
-    if (!(await QuestionModel.exists({ _id: args.questionId }))) {
-      throw new Error(`no question found for id '${args.questionId}'`);
+    const numberTaskInputs =
+      Number(Boolean(transcodeWebTask)) +
+      Number(Boolean(transcodeMobileTask)) +
+      Number(Boolean(transcribeTask)) +
+      Number(Boolean(trimUploadTask));
+    if (numberTaskInputs > 1) {
+      throw new Error('Please only input one task to update at a time.');
     }
-    const mentor: Mentor = await MentorModel.findById(args.mentorId);
+    if (!(await QuestionModel.exists({ _id: questionId }))) {
+      throw new Error(`no question found for id '${questionId}'`);
+    }
+    const mentor: Mentor = await MentorModel.findById(mentorId);
     if (!mentor) {
-      throw new Error(`no mentor found for id '${args.mentorId}'`);
+      throw new Error(`no mentor found for id '${mentorId}'`);
     }
-    await UploadTaskModel.findOne({
+    const uploadTask = await UploadTaskModel.findOne({
       mentor: mentor._id,
-      question: args.questionId,
-    })
-      .then((uploadTask) => {
-        if (!uploadTask) return false;
-        const updatedTaskList = uploadTask.taskList;
-        const taskIndex = updatedTaskList.findIndex(
-          (task) => task.task_id == args.taskId
-        );
-        if (taskIndex > -1) {
-          updatedTaskList[taskIndex].status = args.newStatus;
-          if (args.media) {
-            updatedTaskList[taskIndex].media = args.media;
-          }
-          if (args.transcript) {
-            updatedTaskList[taskIndex].transcript = args.transcript;
-          }
-          uploadTask.markModified('taskList');
-        }
-        if (args.transcript) {
-          uploadTask.transcript = args.transcript;
-          uploadTask.markModified('transcript');
-        }
-        if (args.media) {
-          if (!uploadTask.media) {
-            uploadTask.media = args.media;
-          } else {
-            args.media.forEach((m) => {
-              uploadTask.media.push(m);
-            });
-          }
-          uploadTask.markModified('media');
-        }
-        uploadTask.save().catch((err: Error) => {
-          logger.error('failed to save');
-          logger.error(err);
-        });
-      })
-      .catch((err: Error) => {
-        logger.error(
-          `no task found for mentor ${mentor._id} and question ${args.questionId}`
-        );
-        logger.error(err);
-        return false;
-      });
+      question: questionId,
+    });
+    if (!uploadTask) {
+      return false;
+    }
+    const webTaskArg = transcodeWebTask;
+    const mobileTaskArg = transcodeMobileTask;
+    const transcribeTaskArg = transcribeTask;
+    const trimUploadTaskArg = trimUploadTask;
+    const updates: Record<string, string | TaskInfoProps | AnswerMediaProps> =
+      {};
 
-    return true;
+    if (transcript) {
+      updates['transcript'] = transcript;
+    }
+    if (originalMedia) {
+      updates['originalMedia'] = originalMedia;
+    }
+    if (webMedia) {
+      updates['webMedia'] = webMedia;
+    }
+    if (mobileMedia) {
+      updates['mobileMedia'] = mobileMedia;
+    }
+    if (vttMedia) {
+      updates['vttMedia'] = vttMedia;
+    }
+
+    if (webTaskArg) {
+      updates['transcodeWebTask'] = {
+        task_name:
+          webTaskArg.task_name || uploadTask.transcodeWebTask?.task_name,
+        task_id: webTaskArg.task_id || uploadTask.transcodeWebTask?.task_id,
+        status: webTaskArg.status || uploadTask.transcodeWebTask?.status,
+        transcript:
+          webTaskArg.transcript || uploadTask.transcodeWebTask?.transcript,
+        media: webTaskArg.media || uploadTask.transcodeWebTask?.media,
+      };
+    }
+    if (mobileTaskArg) {
+      updates['transcodeMobileTask'] = {
+        task_name:
+          mobileTaskArg.task_name || uploadTask.transcodeMobileTask?.task_name,
+        task_id:
+          mobileTaskArg.task_id || uploadTask.transcodeMobileTask?.task_id,
+        status: mobileTaskArg.status || uploadTask.transcodeMobileTask?.status,
+        transcript:
+          mobileTaskArg.transcript ||
+          uploadTask.transcodeMobileTask?.transcript,
+        media: mobileTaskArg.media || uploadTask.transcodeMobileTask?.media,
+      };
+    }
+    if (transcribeTaskArg) {
+      updates['transcribeTask'] = {
+        task_name:
+          transcribeTaskArg.task_name || uploadTask.transcribeTask?.task_name,
+        task_id:
+          transcribeTaskArg.task_id || uploadTask.transcribeTask?.task_id,
+        status: transcribeTaskArg.status || uploadTask.transcribeTask?.status,
+        transcript:
+          transcribeTaskArg.transcript || uploadTask.transcribeTask?.transcript,
+        media: transcribeTaskArg.media || uploadTask.transcribeTask?.media,
+      };
+    }
+    if (trimUploadTaskArg) {
+      updates['trimUploadTask'] = {
+        task_name:
+          trimUploadTaskArg.task_name || uploadTask.trimUploadTask?.task_name,
+        task_id:
+          trimUploadTaskArg.task_id || uploadTask.trimUploadTask?.task_id,
+        status: trimUploadTaskArg.status || uploadTask.trimUploadTask?.status,
+        transcript:
+          trimUploadTaskArg.transcript || uploadTask.trimUploadTask?.transcript,
+        media: trimUploadTaskArg.media || uploadTask.trimUploadTask?.media,
+      };
+    }
+    const updatedTask = await UploadTaskModel.findOneAndUpdate(
+      {
+        mentor: mentor._id,
+        question: questionId,
+      },
+      {
+        $set: updates,
+      },
+      {
+        new: true,
+      }
+    );
+    console.log(`Updated task: ${JSON.stringify(updatedTask)}`);
+    return Boolean(updatedTask);
   },
 };
 

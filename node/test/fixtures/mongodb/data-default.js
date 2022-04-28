@@ -231,7 +231,6 @@ module.exports = {
       type: 'QUESTION',
     },
   ],
-
   answers: [
     {
       _id: ObjectId('511111111111111111111112'),
@@ -241,18 +240,16 @@ module.exports = {
       transcript: '[being still]',
       video: 'https://idle/url',
       status: 'COMPLETE',
-      media: [
-        {
-          type: 'video',
-          tag: 'web',
-          url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-        },
-        {
-          type: 'video',
-          tag: 'mobile',
-          url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-        },
-      ],
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+      },
+      mobileMedia: {
+        type: 'video',
+        tag: 'mobile',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+      },
     },
     {
       _id: ObjectId('511111111111111111111114'),
@@ -262,18 +259,16 @@ module.exports = {
       transcript: 'Julia transcript',
       video: 'https://test/url',
       status: 'COMPLETE',
-      media: [
-        {
-          type: 'video',
-          tag: 'web',
-          url: 'videos/5ffdf41a1ee2c62111111112/511111111111111111111116/web.mp4',
-        },
-        {
-          type: 'video',
-          tag: 'mobile',
-          url: 'videos/5ffdf41a1ee2c62111111112/511111111111111111111116/mobile.mp4',
-        },
-      ],
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: 'videos/5ffdf41a1ee2c62111111112/511111111111111111111116/web.mp4',
+      },
+      mobileMedia: {
+        type: 'video',
+        tag: 'mobile',
+        url: 'videos/5ffdf41a1ee2c62111111112/511111111111111111111116/mobile.mp4',
+      },
     },
     {
       _id: ObjectId('511111111111111111111113'),
@@ -283,18 +278,16 @@ module.exports = {
       transcript: 'Test Transcript',
       video: 'https://test/url',
       status: 'COMPLETE',
-      media: [
-        {
-          type: 'video',
-          tag: 'web',
-          url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
-        },
-        {
-          type: 'video',
-          tag: 'mobile',
-          url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
-        },
-      ],
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
+      },
+      mobileMedia: {
+        type: 'video',
+        tag: 'mobile',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
+      },
     },
   ],
 
@@ -317,13 +310,11 @@ module.exports = {
     {
       mentor: ObjectId('5ffdf41a1ee2c62111111111'),
       question: ObjectId('511111111111111111111112'),
-      taskList: [
-        {
-          task_name: 'transcribe',
-          task_id: 'fake_task',
-          status: 'IN_PROGRESS',
-        },
-      ],
+      transcribeTask: {
+        task_name: 'transcribe',
+        task_id: 'transcribe_task_id',
+        status: 'IN_PROGRESS',
+      },
       transcript: 'fake_transcript',
     },
   ],

@@ -11,20 +11,21 @@ import {
   GraphQLNonNull,
   GraphQLID,
   GraphQLInputObjectType,
-  GraphQLList,
 } from 'graphql';
 import {
   Answer as AnswerModel,
   Mentor as MentorModel,
   Question as QuestionModel,
 } from 'models';
-import { AnswerMedia, AnswerMediaProps, Status } from 'models/Answer';
+import { AnswerMediaProps, Status } from 'models/Answer';
 import { Mentor } from 'models/Mentor';
 import { mediaNeedsTransfer } from 'utils/static-urls';
 
 export interface UploadAnswer {
   transcript: string;
-  media: AnswerMediaProps[];
+  webMedia: AnswerMediaProps;
+  mobileMedia: AnswerMediaProps;
+  vttMedia: AnswerMediaProps;
   hasEditedTranscript: boolean;
 }
 
@@ -42,7 +43,9 @@ export const UploadAnswerType = new GraphQLInputObjectType({
   name: 'UploadAnswerType',
   fields: () => ({
     transcript: { type: GraphQLString },
-    media: { type: GraphQLList(AnswerMediaInputType) },
+    webMedia: { type: AnswerMediaInputType },
+    mobileMedia: { type: AnswerMediaInputType },
+    vttMedia: { type: AnswerMediaInputType },
     hasEditedTranscript: { type: GraphQLBoolean },
   }),
 });
@@ -78,54 +81,56 @@ export const answerUpload = {
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
     }
-    let hasUntransferredMedia = false;
-    for (const m of args.answer.media || []) {
-      m.needsTransfer = mediaNeedsTransfer(m.url);
-      hasUntransferredMedia ||= m.needsTransfer;
-    }
+    const argWebMedia = args.answer.webMedia;
+    const argMobileMedia = args.answer.mobileMedia;
+    const argVttMedia = args.answer.vttMedia;
     let answer = await AnswerModel.findOne({
       mentor: mentor._id,
       question: args.questionId,
     });
-    const media = answer?.media || [];
-    if (args.answer.media) {
-      args.answer.media.forEach((m: AnswerMedia) => {
-        // replace existing or add new:
-        const prev = media.find((e) => e.url === m.url);
-        if (prev) {
-          Object.keys(m)
-            .filter((k) => k !== '_id')
-            .forEach((k: keyof AnswerMedia) => ((prev[k] as unknown) = m[k]));
-        } else {
-          media.push(m);
-        }
-      });
-    }
     const hasEditedTranscript =
       args.answer.hasEditedTranscript !== undefined
         ? args.answer.hasEditedTranscript
         : answer
         ? answer.hasEditedTranscript
         : false;
+
+    // any = Boolean, String, Answer
+    const updates: Record<string, string | boolean | AnswerMediaProps> = {
+      ...args.answer,
+      status: Status.INCOMPLETE, // with partial updates we cant tell here
+      hasEditedTranscript: hasEditedTranscript,
+      transcript:
+        args.answer.transcript != undefined
+          ? args.answer.transcript
+          : answer
+          ? answer.transcript
+          : '',
+    };
+    if (argWebMedia) {
+      argWebMedia.needsTransfer = mediaNeedsTransfer(argWebMedia.url);
+      updates['webMedia'] = argWebMedia;
+    }
+    if (argMobileMedia) {
+      argMobileMedia.needsTransfer = mediaNeedsTransfer(argMobileMedia.url);
+      updates['mobileMedia'] = argMobileMedia;
+    }
+    if (argVttMedia) {
+      argVttMedia.needsTransfer = mediaNeedsTransfer(argVttMedia.url);
+      updates['vttMedia'] = argVttMedia;
+    }
+    const hasUntransferredMedia =
+      Boolean(argWebMedia?.needsTransfer) ||
+      Boolean(argMobileMedia?.needsTransfer) ||
+      Boolean(argVttMedia?.needsTransfer);
+    updates['hasUntransferredMedia'] = hasUntransferredMedia;
     answer = await AnswerModel.findOneAndUpdate(
       {
         mentor: mentor._id,
         question: args.questionId,
       },
       {
-        $set: {
-          ...args.answer,
-          hasUntransferredMedia,
-          status: Status.INCOMPLETE, // with partial updates we cant tell here
-          hasEditedTranscript: hasEditedTranscript,
-          media,
-          transcript:
-            args.answer.transcript != undefined
-              ? args.answer.transcript
-              : answer
-              ? answer.transcript
-              : '',
-        },
+        $set: updates,
       },
       {
         upsert: true,
