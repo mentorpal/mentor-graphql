@@ -15,6 +15,7 @@ import { questionField } from 'gql/query/question';
 import { AnswerMedia } from 'models/Answer';
 import { toAbsoluteUrl } from 'utils/static-urls';
 import DateType from './date';
+import { mentorField } from 'gql/query/mentor';
 
 export const AnswerMediaType = new GraphQLObjectType({
   name: 'AnswerMedia',
@@ -36,6 +37,7 @@ export const AnswerType = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLID },
     question: questionField,
+    mentor: mentorField,
     hasEditedTranscript: { type: GraphQLBoolean },
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
