@@ -16,7 +16,7 @@ import {
   PaginateQuery,
   pluginPagination,
 } from './Paginatation';
-import { Answer, AnswerMedia, Status } from './Answer';
+import { Answer, Status } from './Answer';
 import { QuestionType } from './Question';
 import { Subject, SubjectQuestion, Topic } from './Subject';
 import { User } from './User';
@@ -400,8 +400,14 @@ MentorSchema.statics.import = async function (
         );
         if (importedAnswerDocumentForQuestion) {
           // With the new question document created, handle creating the new answer documents for that question
-          for (const m of importedAnswerDocumentForQuestion.media || []) {
-            m.needsTransfer = true;
+          if (importedAnswerDocumentForQuestion.webMedia) {
+            importedAnswerDocumentForQuestion.webMedia.needsTransfer = true;
+          }
+          if (importedAnswerDocumentForQuestion.mobileMedia) {
+            importedAnswerDocumentForQuestion.mobileMedia.needsTransfer = true;
+          }
+          if (importedAnswerDocumentForQuestion.vttMedia) {
+            importedAnswerDocumentForQuestion.vttMedia.needsTransfer = true;
           }
           const newAnswerDocument = await AnswerModel.findOneAndUpdate(
             {
@@ -411,7 +417,9 @@ MentorSchema.statics.import = async function (
             {
               transcript: importedAnswerDocumentForQuestion.transcript,
               status: importedAnswerDocumentForQuestion.status,
-              media: importedAnswerDocumentForQuestion.media,
+              webMedia: importedAnswerDocumentForQuestion.webMedia,
+              mobileMedia: importedAnswerDocumentForQuestion.mobileMedia,
+              vttMedia: importedAnswerDocumentForQuestion.vttMedia,
               hasUntransferredMedia: true,
             },
             {
@@ -667,7 +675,9 @@ MentorSchema.statics.getAnswers = async function ({
         question: qid,
         transcript: '',
         status: Status.INCOMPLETE,
-        media: [] as AnswerMedia[],
+        webMedia: undefined,
+        mobileMedia: undefined,
+        vttMedia: undefined,
       }
     );
   });

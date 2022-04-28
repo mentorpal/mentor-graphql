@@ -134,7 +134,7 @@ describe('uploadTaskDelete', () => {
                   question
                 }
                 transcript
-                media {
+                originalMedia {
                   type
                   tag
                   url

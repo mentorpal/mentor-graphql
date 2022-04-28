@@ -44,13 +44,11 @@ describe('uploadTaskUpdate', () => {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
           status: {
-            taskList: [
-              {
-                task_name: 'transcode',
-                task_id: 'task1',
-                status: 'IN_PROGRESS',
-              },
-            ],
+            originalMedia: {
+              type: 'video',
+              tag: 'web',
+              url: '',
+            },
           },
         },
       });
@@ -76,13 +74,11 @@ describe('uploadTaskUpdate', () => {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
           status: {
-            taskList: [
-              {
-                task_name: 'transcode',
-                task_id: 'task1',
-                status: 'IN_PROGRESS',
-              },
-            ],
+            originalMedia: {
+              type: 'video',
+              tag: 'web',
+              url: '',
+            },
           },
         },
       });
@@ -108,20 +104,17 @@ describe('uploadTaskUpdate', () => {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
           status: {
-            taskList: [
-              {
-                task_name: 'transcode',
-                task_id: 'task1',
-                status: 'IN_PROGRESS',
-              },
-            ],
+            transcodeWebTask: {
+              task_name: 'transcode',
+              status: 'IN_PROGRESS',
+            },
           },
         },
       });
     expect(response.status).to.equal(400);
   });
 
-  it('properly creates taskList', async () => {
+  it('properly creates tasks', async () => {
     const update = await request(app)
       .post('/graphql')
       .set('mentor-graphql-req', 'true')
@@ -136,13 +129,10 @@ describe('uploadTaskUpdate', () => {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
           status: {
-            taskList: [
-              {
-                task_name: 'transcode',
-                task_id: 'task1',
-                status: 'IN_PROGRESS',
-              },
-            ],
+            transcodeWebTask: {
+              task_name: 'transcode',
+              status: 'IN_PROGRESS',
+            },
           },
         },
       });
@@ -164,22 +154,32 @@ describe('uploadTaskUpdate', () => {
                   _id
                   question
                 }
-                taskList{
-                  task_name
-                  task_id
-                  status
-                }
                 transcript
-                media {
-                  type
-                  tag
-                  url
+                transcodeWebTask{
+                  task_name
+                  status
                 }
               }
             }
           }`,
       });
     expect(response.status).to.equal(200);
+    expect(response.body.data.me.uploadTasks).to.eql([
+      {
+        mentor: {
+          _id: '5ffdf41a1ee2c62111111111',
+        },
+        question: {
+          _id: '511111111111111111111112',
+          question: 'Who are you and what do you do?',
+        },
+        transcript: 'fake_transcript',
+        transcodeWebTask: {
+          task_name: 'transcode',
+          status: 'IN_PROGRESS',
+        },
+      },
+    ]);
   });
 
   it(`doesn't accept invalid fields`, async () => {
@@ -217,15 +217,12 @@ describe('uploadTaskUpdate', () => {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
           status: {
-            taskList: [
-              {
-                task_name: 'transcode',
-                task_id: 'task1',
-                status: 'IN_PROGRESS',
-              },
-            ],
+            transcodeWebTask: {
+              task_name: 'transcode',
+              status: 'IN_PROGRESS',
+            },
             transcript: 'My name is Clinton Anderson',
-            media: [{ type: 'video', tag: 'web', url: 'video.mp4' }],
+            originalMedia: { type: 'video', tag: 'original', url: 'video.mp4' },
           },
         },
       });
@@ -247,13 +244,12 @@ describe('uploadTaskUpdate', () => {
                   _id
                   question
                 }
-                taskList{
+                transcodeWebTask{
                   task_name
-                  task_id
                   status
                 }
                 transcript
-                media {
+                originalMedia {
                   type
                   tag
                   url
@@ -272,21 +268,16 @@ describe('uploadTaskUpdate', () => {
           _id: '511111111111111111111112',
           question: 'Who are you and what do you do?',
         },
-        taskList: [
-          {
-            task_name: 'transcode',
-            task_id: 'task1',
-            status: 'IN_PROGRESS',
-          },
-        ],
+        transcodeWebTask: {
+          task_name: 'transcode',
+          status: 'IN_PROGRESS',
+        },
         transcript: 'My name is Clinton Anderson',
-        media: [
-          {
-            type: 'video',
-            tag: 'web',
-            url: 'https://static.mentorpal.org/video.mp4',
-          },
-        ],
+        originalMedia: {
+          type: 'video',
+          tag: 'original',
+          url: 'https://static.mentorpal.org/video.mp4',
+        },
       },
     ]);
   });
@@ -306,13 +297,10 @@ describe('uploadTaskUpdate', () => {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111113',
           status: {
-            taskList: [
-              {
-                task_name: 'transcode',
-                task_id: 'task1',
-                status: 'IN_PROGRESS',
-              },
-            ],
+            transcodeWebTask: {
+              task_name: 'transcode',
+              status: 'IN_PROGRESS',
+            },
           },
         },
       });
@@ -334,13 +322,12 @@ describe('uploadTaskUpdate', () => {
                   _id
                   question
                 }
-                taskList{
+                transcodeWebTask{
                   task_name
-                  task_id
                   status
                 }
                 transcript
-                media {
+                originalMedia {
                   type
                   tag
                   url
@@ -359,15 +346,9 @@ describe('uploadTaskUpdate', () => {
           _id: '511111111111111111111112',
           question: 'Who are you and what do you do?',
         },
-        taskList: [
-          {
-            task_name: 'transcribe',
-            task_id: 'fake_task',
-            status: 'IN_PROGRESS',
-          },
-        ],
+        transcodeWebTask: null,
         transcript: 'fake_transcript',
-        media: [],
+        originalMedia: null,
       },
       {
         mentor: {
@@ -377,49 +358,60 @@ describe('uploadTaskUpdate', () => {
           _id: '511111111111111111111113',
           question: 'How old are you?',
         },
-        taskList: [
-          {
-            task_name: 'transcode',
-            task_id: 'task1',
-            status: 'IN_PROGRESS',
-          },
-        ],
+        transcodeWebTask: {
+          task_name: 'transcode',
+          status: 'IN_PROGRESS',
+        },
         transcript: null,
-        media: [],
+        originalMedia: null,
       },
     ]);
   });
 
-  it('updates task status in taskList', async () => {
-    const update = await request(app)
+  it('updates task status one at a time', async () => {
+    const updateWeb = await request(app)
       .post('/graphql')
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $taskId: String!, $newStatus: String!) {
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
           api {
-            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, taskId: $taskId, newStatus: $newStatus)
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
           }
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          taskId: 'fake_task',
-          newStatus: 'DONE',
+          uploadTaskStatusInput: {
+            transcodeWebTask: {
+              task_name: 'transcribe',
+              task_id: '1235',
+              status: 'DONE',
+            },
+          },
         },
       });
-    expect(update.status).to.equal(200);
-    expect(update.body.data.api.uploadTaskStatusUpdate).to.eql(true);
-
+    expect(updateWeb.status).to.equal(200);
+    expect(updateWeb.body.data.api.uploadTaskStatusUpdate).to.eql(true);
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
-    const response = await request(app)
+    const updateWebResponse = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `query {
             me {
               uploadTasks {
-                taskList{
+                transcodeWebTask{
+                  task_name
+                  task_id
+                  status
+                }
+                transcodeMobileTask{
+                  task_name
+                  task_id
+                  status
+                }
+                transcribeTask{
                   task_name
                   task_id
                   status
@@ -428,18 +420,378 @@ describe('uploadTaskUpdate', () => {
             }
           }`,
       });
-    expect(response.status).to.equal(200);
-    expect(response.body.data.me.uploadTasks).to.eql([
+    expect(updateWebResponse.status).to.equal(200);
+    expect(updateWebResponse.body.data.me.uploadTasks).to.eql([
       {
-        taskList: [
-          {
-            task_name: 'transcribe',
-            task_id: 'fake_task',
-            status: 'DONE',
-          },
-        ],
+        transcodeWebTask: {
+          task_name: 'transcribe',
+          task_id: '1235',
+          status: 'DONE',
+        },
+        transcodeMobileTask: null,
+        transcribeTask: {
+          task_name: 'transcribe',
+          task_id: 'transcribe_task_id',
+          status: 'IN_PROGRESS',
+        },
       },
     ]);
+    const updateMobile = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
+          api {
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
+          }
+        }`,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111112',
+          uploadTaskStatusInput: {
+            transcodeMobileTask: {
+              task_name: 'transcode-mobile',
+              task_id: '54312',
+              status: 'DONE',
+            },
+          },
+        },
+      });
+    expect(updateMobile.status).to.equal(200);
+    expect(updateMobile.body.data.api.uploadTaskStatusUpdate).to.eql(true);
+    const updateMobileResponse = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+          me {
+            uploadTasks {
+              transcodeWebTask{
+                task_name
+                task_id
+                status
+              }
+              transcodeMobileTask{
+                task_name
+                task_id
+                status
+              }
+              transcribeTask{
+                task_name
+                task_id
+                status
+              }
+            }
+          }
+        }`,
+      });
+    expect(updateMobileResponse.status).to.equal(200);
+    expect(updateMobileResponse.body.data.me.uploadTasks).to.eql([
+      {
+        transcodeWebTask: {
+          task_name: 'transcribe',
+          task_id: '1235',
+          status: 'DONE',
+        },
+        transcodeMobileTask: {
+          task_name: 'transcode-mobile',
+          task_id: '54312',
+          status: 'DONE',
+        },
+        transcribeTask: {
+          task_name: 'transcribe',
+          task_id: 'transcribe_task_id',
+          status: 'IN_PROGRESS',
+        },
+      },
+    ]);
+
+    const updateTramscribe = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
+          api {
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
+          }
+        }`,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111112',
+          uploadTaskStatusInput: {
+            transcribeTask: {
+              status: 'DONE',
+            },
+          },
+        },
+      });
+    expect(updateTramscribe.status).to.equal(200);
+    expect(updateTramscribe.body.data.api.uploadTaskStatusUpdate).to.eql(true);
+    const updateTranscribeResponse = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              uploadTasks {
+                transcodeWebTask{
+                  task_name
+                  task_id
+                  status
+                }
+                transcodeMobileTask{
+                  task_name
+                  task_id
+                  status
+                }
+                transcribeTask{
+                  task_name
+                  task_id
+                  status
+                }
+              }
+            }
+          }`,
+      });
+    expect(updateTranscribeResponse.status).to.equal(200);
+    expect(updateTranscribeResponse.body.data.me.uploadTasks).to.eql([
+      {
+        transcodeWebTask: {
+          task_name: 'transcribe',
+          task_id: '1235',
+          status: 'DONE',
+        },
+        transcodeMobileTask: {
+          task_name: 'transcode-mobile',
+          task_id: '54312',
+          status: 'DONE',
+        },
+        transcribeTask: {
+          task_name: 'transcribe',
+          task_id: 'transcribe_task_id',
+          status: 'DONE',
+        },
+      },
+    ]);
+  });
+
+  it('updates medias', async () => {
+    const updateOriginalMedia = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
+          api {
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
+          }
+        }`,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111112',
+          uploadTaskStatusInput: {
+            originalMedia: {
+              type: 'video',
+              tag: 'web',
+              url: 'http://random.url/',
+            },
+          },
+        },
+      });
+    expect(updateOriginalMedia.status).to.equal(200);
+    expect(updateOriginalMedia.body.data.api.uploadTaskStatusUpdate).to.eql(
+      true
+    );
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const updateOriginalMediaResponse = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              uploadTasks {
+                transcodeWebTask{
+                  task_name
+                  status
+                }
+                transcodeMobileTask{
+                  task_name
+                  status
+                }
+                transcribeTask{
+                  task_name
+                  status
+                }
+                originalMedia{
+                  type
+                  tag
+                  url
+                }
+              }
+            }
+          }`,
+      });
+    expect(updateOriginalMediaResponse.status).to.equal(200);
+    expect(updateOriginalMediaResponse.body.data.me.uploadTasks).to.eql([
+      {
+        transcodeWebTask: null,
+        transcodeMobileTask: null,
+        transcribeTask: {
+          task_name: 'transcribe',
+          status: 'IN_PROGRESS',
+        },
+        originalMedia: {
+          type: 'video',
+          tag: 'web',
+          url: 'http://random.url/',
+        },
+      },
+    ]);
+
+    const updateOtherMedias = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
+          api {
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
+          }
+        }`,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111112',
+          uploadTaskStatusInput: {
+            webMedia: {
+              type: 'video',
+              tag: 'web',
+              url: 'http://random.url/',
+            },
+            mobileMedia: {
+              type: 'video',
+              tag: 'mobile',
+              url: 'http://random.url/',
+            },
+            vttMedia: {
+              type: 'vtt',
+              tag: 'en',
+              url: 'http://random.url/',
+            },
+          },
+        },
+      });
+    expect(updateOtherMedias.status).to.equal(200);
+    expect(updateOtherMedias.body.data.api.uploadTaskStatusUpdate).to.eql(true);
+
+    const updateOtherMediasResponse = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+          me {
+            uploadTasks {
+              transcodeWebTask{
+                task_name
+                status
+              }
+              transcodeMobileTask{
+                task_name
+                status
+              }
+              transcribeTask{
+                task_name
+                status
+              }
+              originalMedia{
+                type
+                tag
+                url
+              }
+              webMedia{
+                type
+                tag
+                url
+              }
+              mobileMedia{
+                type
+                tag
+                url
+              }
+              vttMedia{
+                type
+                tag
+                url
+              }
+            }
+          }
+        }`,
+      });
+    expect(updateOtherMediasResponse.status).to.equal(200);
+    expect(updateOtherMediasResponse.body.data.me.uploadTasks).to.eql([
+      {
+        transcodeWebTask: null,
+        transcodeMobileTask: null,
+        transcribeTask: {
+          task_name: 'transcribe',
+          status: 'IN_PROGRESS',
+        },
+        originalMedia: {
+          type: 'video',
+          tag: 'web',
+          url: 'http://random.url/',
+        },
+        webMedia: {
+          type: 'video',
+          tag: 'web',
+          url: 'http://random.url/',
+        },
+        mobileMedia: {
+          type: 'video',
+          tag: 'mobile',
+          url: 'http://random.url/',
+        },
+        vttMedia: {
+          type: 'vtt',
+          tag: 'en',
+          url: 'http://random.url/',
+        },
+      },
+    ]);
+  });
+
+  it('doesnt allow multiple task updates in the same mutation', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
+          api {
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
+          }
+        }`,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111112',
+          uploadTaskStatusInput: {
+            transcodeWebTask: {
+              task_name: 'transcribe',
+              status: 'DONE',
+            },
+            transcodeMobileTask: {
+              task_name: 'transcribe',
+              status: 'DONE',
+            },
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'Please only input one task to update at a time.'
+    );
   });
 
   it('updates transcript in task status update', async () => {
@@ -448,18 +800,18 @@ describe('uploadTaskUpdate', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $taskId: String!, $newStatus: String!, $transcript: String!, $media: [AnswerMediaInputType]) {
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
           api {
-            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, taskId: $taskId, newStatus: $newStatus, transcript: $transcript, media: $media)
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
           }
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          taskId: 'fake_task',
-          newStatus: 'DONE',
-          transcript: 'fake_transcript',
-          media: [{ type: 'video', tag: 'web', url: 'video.mp4' }],
+          uploadTaskStatusInput: {
+            transcript: 'fake_transcript',
+            originalMedia: { type: 'video', tag: 'original', url: 'video.mp4' },
+          },
         },
       });
     expect(update.status).to.equal(200);
@@ -473,13 +825,12 @@ describe('uploadTaskUpdate', () => {
         query: `query {
             me {
               uploadTasks {
-                taskList{
+                transcribeTask{
                   task_name
-                  task_id
                   status
                 }
                 transcript
-                media {
+                originalMedia {
                   type
                   tag
                   url
@@ -491,21 +842,16 @@ describe('uploadTaskUpdate', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.me.uploadTasks).to.eql([
       {
-        taskList: [
-          {
-            task_name: 'transcribe',
-            task_id: 'fake_task',
-            status: 'DONE',
-          },
-        ],
+        transcribeTask: {
+          task_name: 'transcribe',
+          status: 'IN_PROGRESS',
+        },
         transcript: 'fake_transcript',
-        media: [
-          {
-            type: 'video',
-            tag: 'web',
-            url: 'https://static.mentorpal.org/video.mp4',
-          },
-        ],
+        originalMedia: {
+          type: 'video',
+          tag: 'original',
+          url: 'https://static.mentorpal.org/video.mp4',
+        },
       },
     ]);
   });
@@ -516,16 +862,21 @@ describe('uploadTaskUpdate', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $taskId: String!, $newStatus: String!, $transcript: String, $media: [AnswerMediaInputType]) {
+        query: `mutation UpdateUploadTaskStatus($mentorId: ID!, $questionId: ID!, $uploadTaskStatusInput: UploadTaskStatusUpdateInputType!) {
           api {
-            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, taskId: $taskId, newStatus: $newStatus, transcript: $transcript, media: $media)
+            uploadTaskStatusUpdate(mentorId: $mentorId, questionId: $questionId, uploadTaskStatusInput: $uploadTaskStatusInput)
           }
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111112',
-          taskId: 'fake_task',
-          newStatus: 'DONE',
+          uploadTaskStatusInput: {
+            originalMedia: {
+              type: 'video',
+              tag: 'web',
+              url: 'https://static.mentorpal.org/video.mp4',
+            },
+          },
         },
       });
     expect(update.status).to.equal(200);
@@ -539,9 +890,8 @@ describe('uploadTaskUpdate', () => {
         query: `query {
             me {
               uploadTasks {
-                taskList{
+                transcribeTask{
                   task_name
-                  task_id
                   status
                 }
                 transcript
@@ -552,13 +902,10 @@ describe('uploadTaskUpdate', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.me.uploadTasks).to.eql([
       {
-        taskList: [
-          {
-            task_name: 'transcribe',
-            task_id: 'fake_task',
-            status: 'DONE',
-          },
-        ],
+        transcribeTask: {
+          task_name: 'transcribe',
+          status: 'IN_PROGRESS',
+        },
         transcript: 'fake_transcript',
       },
     ]);

@@ -116,7 +116,9 @@ export const AnswerPreviewType = new GraphQLObjectType({
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
     hasUntransferredMedia: { type: GraphQLBoolean },
-    media: { type: GraphQLList(AnswerMediaPreviewType) },
+    webMedia: { type: AnswerMediaPreviewType },
+    mobileMedia: { type: AnswerMediaPreviewType },
+    vttMedia: { type: AnswerMediaPreviewType },
   }),
 });
 export const AnswerMediaPreviewType = new GraphQLObjectType({
@@ -232,15 +234,28 @@ export const mentorImportPreview = {
         (a) => `${a.question}` === `${answerImport.question._id}`
       );
       // Media ALWAYS needs to be transferred between the 2 different mentors buckets so as to unlink them
-      for (const m of answerImport.media || []) {
-        m.needsTransfer = true;
-        answerImport.hasUntransferredMedia = true;
+      answerImport.hasUntransferredMedia =
+        Boolean(answerImport.webMedia) ||
+        Boolean(answerImport.mobileMedia) ||
+        Boolean(answerImport.vttMedia);
+      if (answerImport.webMedia) {
+        answerImport.webMedia.needsTransfer = true;
+      }
+      if (answerImport.vttMedia) {
+        answerImport.vttMedia.needsTransfer = true;
+      }
+      if (answerImport.mobileMedia) {
+        answerImport.mobileMedia.needsTransfer = true;
       }
 
       if (
         answerImport.transcript ||
-        answerImport.media.length ||
-        curAnswer?.media.length ||
+        answerImport.webMedia ||
+        answerImport.mobileMedia ||
+        answerImport.vttMedia ||
+        curAnswer?.webMedia ||
+        curAnswer?.mobileMedia ||
+        curAnswer?.vttMedia ||
         curAnswer?.transcript
       )
         answerChanges.push({
@@ -258,7 +273,8 @@ export const mentorImportPreview = {
 
     const removedAnswers = exportJson.answers.filter(
       (a) =>
-        Boolean(a.transcript || a.media.length) &&
+        // Make sure that is is an answer of value
+        Boolean(a.transcript || a.webMedia || a.mobileMedia || a.vttMedia) &&
         !importJson.answers.find(
           (aa) => `${aa.question._id}` === `${a.question}`
         )

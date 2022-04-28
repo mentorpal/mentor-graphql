@@ -8,6 +8,12 @@ The full terms of this copyright and license should always be found in the root 
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import { Question } from './Question';
 import { Mentor } from './Mentor';
+import {
+  PaginatedResolveResult,
+  PaginateOptions,
+  PaginateQuery,
+  pluginPagination,
+} from './Paginatation';
 
 export enum Status {
   INCOMPLETE = 'INCOMPLETE',
@@ -36,7 +42,17 @@ export interface Answer extends Document {
   transcript: string;
   status: Status;
   media: AnswerMedia[];
+  webMedia: AnswerMedia;
+  mobileMedia: AnswerMedia;
+  vttMedia: AnswerMedia;
   hasUntransferredMedia: boolean;
+}
+
+export interface AnswerModel extends Model<Answer> {
+  paginate(
+    query?: PaginateQuery<Question>,
+    options?: PaginateOptions
+  ): Promise<PaginatedResolveResult<Answer>>;
 }
 
 export const AnswerSchema = new Schema<Answer, AnswerModel>(
@@ -50,6 +66,9 @@ export const AnswerSchema = new Schema<Answer, AnswerModel>(
       enum: [Status.INCOMPLETE, Status.COMPLETE],
       default: Status.INCOMPLETE,
     },
+    webMedia: { type: AnswerMediaSchema },
+    mobileMedia: { type: AnswerMediaSchema },
+    vttMedia: { type: AnswerMediaSchema },
     media: { type: [AnswerMediaSchema] },
     hasUntransferredMedia: { type: Boolean, default: false },
   },
@@ -57,6 +76,7 @@ export const AnswerSchema = new Schema<Answer, AnswerModel>(
 );
 
 AnswerSchema.index({ question: -1, mentor: -1 }, { unique: true });
+pluginPagination(AnswerSchema);
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AnswerModel extends Model<Answer> {}
