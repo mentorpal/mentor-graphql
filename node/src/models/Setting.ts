@@ -14,6 +14,7 @@ export interface Config {
   urlGraphql: string;
   urlVideo: string;
   urlVideoIdleTips: string;
+  classifierLambdaEndpoint: string;
   filterEmailMentorAddress: string;
   videoRecorderMaxLength: number;
   googleClientId: string;
@@ -39,6 +40,7 @@ export const ConfigKeys: ConfigKey[] = [
   'urlGraphql',
   'urlVideo',
   'urlVideoIdleTips',
+  'classifierLambdaEndpoint',
   'filterEmailMentorAddress',
   'videoRecorderMaxLength',
   'googleClientId',
@@ -68,6 +70,7 @@ export function getDefaultConfig(): Config {
     urlClassifier: '/classifier',
     urlGraphql: '/graphql',
     urlVideo: '/video',
+    classifierLambdaEndpoint: '',
     urlVideoIdleTips: 'https://youtu.be/xSu1BhuFt8A',
     filterEmailMentorAddress: 'careerfair.ai@gmail.com',
     videoRecorderMaxLength: 300, //seconds

@@ -122,6 +122,7 @@ describe('config', () => {
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
       urlVideoIdleTips: 'https://some/custom/url',
+      classifierLambdaEndpoint: 'https://fakelambdaurl.com',
       filterEmailMentorAddress: 'fakeemail@gmail.com',
       videoRecorderMaxLength: 300,
       styleHeaderLogo: '/a/logo.png',
@@ -143,6 +144,7 @@ describe('config', () => {
             cmi5Fetch
             googleClientId
             urlVideoIdleTips
+            classifierLambdaEndpoint
             filterEmailMentorAddress
             videoRecorderMaxLength
             mentorsDefault
