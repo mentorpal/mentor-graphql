@@ -337,12 +337,18 @@ MentorSchema.statics.import = async function (
             ? existingSubjectQuestionDocs.find(
                 (existingQ) =>
                   `${existingQ._id}` === `${importedQDoc._id}` ||
-                  existingQ.question === importedQDoc.question
+                  (existingQ.question === importedQDoc.question &&
+                    !existingQ.mentor)
               )
             : await QuestionModel.findOne({
                 $or: [
                   { _id: idOrNew(importedQDoc._id) },
-                  { question: importedQDoc.question },
+                  {
+                    $and: [
+                      { question: importedQDoc.question },
+                      { mentor: { $exists: false } },
+                    ],
+                  },
                 ],
               });
           // question document must either not be mentor specific or be specific to the mentor being replaced, else this mentor can't see the question.
