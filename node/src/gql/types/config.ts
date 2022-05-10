@@ -29,6 +29,7 @@ export const ConfigType = new GraphQLObjectType({
     urlVideo: { type: GraphQLString },
     urlVideoIdleTips: { type: GraphQLString },
     classifierLambdaEndpoint: { type: GraphQLString },
+    uploadLambdaEndpoint: { type: GraphQLString },
     filterEmailMentorAddress: { type: GraphQLString },
     videoRecorderMaxLength: { type: GraphQLInt },
     styleHeaderLogo: { type: GraphQLString },
