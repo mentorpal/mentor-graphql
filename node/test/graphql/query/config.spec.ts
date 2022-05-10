@@ -123,6 +123,7 @@ describe('config', () => {
       urlVideo: '/video/v2',
       urlVideoIdleTips: 'https://some/custom/url',
       classifierLambdaEndpoint: 'https://fakelambdaurl.com',
+      uploadLambdaEndpoint: 'https://faketransferlambdaurl.com',
       filterEmailMentorAddress: 'fakeemail@gmail.com',
       videoRecorderMaxLength: 300,
       styleHeaderLogo: '/a/logo.png',
@@ -145,6 +146,7 @@ describe('config', () => {
             googleClientId
             urlVideoIdleTips
             classifierLambdaEndpoint
+            uploadLambdaEndpoint
             filterEmailMentorAddress
             videoRecorderMaxLength
             mentorsDefault
