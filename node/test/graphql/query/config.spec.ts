@@ -122,6 +122,7 @@ describe('config', () => {
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
       urlVideoIdleTips: 'https://some/custom/url',
+      urlVideoMentorpalWalkthrough: 'https://fakewalkthroughurl.com',
       classifierLambdaEndpoint: 'https://fakelambdaurl.com',
       uploadLambdaEndpoint: 'https://faketransferlambdaurl.com',
       filterEmailMentorAddress: 'fakeemail@gmail.com',
@@ -145,6 +146,7 @@ describe('config', () => {
             cmi5Fetch
             googleClientId
             urlVideoIdleTips
+            urlVideoMentorpalWalkthrough
             classifierLambdaEndpoint
             uploadLambdaEndpoint
             filterEmailMentorAddress
