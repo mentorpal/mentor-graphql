@@ -67,4 +67,5 @@ export default graphqlHTTP((req: Request, res: Response) => {
       }
     })(req, res, next);
   });
+
 });
