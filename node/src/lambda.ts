@@ -5,10 +5,10 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import * as Sentry from '@sentry/node';
-import { createApp, appStop } from 'app';
+import { createApp, appStop } from './app';
 import process from 'process';
 import logger from './utils/logging';
-const serverless = require('serverless-http');
+import * as serverless from 'serverless-http';
 
 logger.info('starting server');
 logger.info(`node env: '${process.env.NODE_ENV}'`);
@@ -18,12 +18,12 @@ logger.debug('node version ' + process.version);
  * We want to call init only once during cold start.
  * The init may not finish when handler starts executing.
  * If the init fails it should be retried on next handler invocation.
- * The Lambda runtime manages this case. If any errors occur 
- * in the initialisation code outside the handler, 
- * the function container is terminated and a new one is 
+ * The Lambda runtime manages this case. If any errors occur
+ * in the initialisation code outside the handler,
+ * the function container is terminated and a new one is
  * started up in a fresh state.
- * 
- * @returns 
+ *
+ * @returns
  */
 const init = async () => {
   // Perform all async calls here.
@@ -58,7 +58,7 @@ const init = async () => {
 
 const initPromise = init();
 
-module.exports.handler = async (event:any, context:any) => {
+module.exports.handler = async (event: any, context: any) => {
   // Ensure init has completed before proceeding
   const app = await initPromise;
   const handler = serverless(app);
