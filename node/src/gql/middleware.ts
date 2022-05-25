@@ -6,10 +6,10 @@ The full terms of this copyright and license should always be found in the root 
 */
 import passport from 'passport';
 import { graphqlHTTP } from 'express-graphql';
-import schema from './schema';
 import { Request, Response } from 'express';
-import { User } from 'models/User';
-import { getRefreshedToken } from 'gql/types/user-access-token';
+import schema from './schema';
+import { User } from '../models/User';
+import { getRefreshedToken } from './types/user-access-token';
 
 const extensions = ({ context }: any) => {
   // eslint-disable-line  @typescript-eslint/no-explicit-any
@@ -67,5 +67,4 @@ export default graphqlHTTP((req: Request, res: Response) => {
       }
     })(req, res, next);
   });
-
 });
