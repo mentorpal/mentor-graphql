@@ -19,7 +19,6 @@ import { logger } from './utils/logging';
 import requireEnv from './utils/require-env';
 import { User as UserSchema } from './models';
 
-
 function setupPassport() {
   passport.use(
     new BearerStrategy(function (token, done) {
