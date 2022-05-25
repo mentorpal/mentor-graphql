@@ -19,12 +19,12 @@ logger.debug('node version ' + process.version);
  * We want to call init only once during cold start.
  * The init may not finish when handler starts executing.
  * If the init fails it should be retried on next handler invocation.
- * The Lambda runtime manages this case. If any errors occur 
- * in the initialisation code outside the handler, 
- * the function container is terminated and a new one is 
+ * The Lambda runtime manages this case. If any errors occur
+ * in the initialisation code outside the handler,
+ * the function container is terminated and a new one is
  * started up in a fresh state.
- * 
- * @returns 
+ *
+ * @returns
  */
 const init = async () => {
   // Perform all async calls here.
@@ -59,7 +59,7 @@ const init = async () => {
 
 const initPromise = init();
 
-module.exports.handler = async (event:any, context:any) => {
+module.exports.handler = async (event: any, context: any) => {
   // Ensure init has completed before proceeding
   const app = await initPromise;
   const handler = serverless(app);
