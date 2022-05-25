@@ -6,10 +6,10 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { GraphQLNonNull, GraphQLObjectType } from 'graphql';
 
-import { Subject as SubjectModel } from 'models';
+import { Subject as SubjectModel } from '../../../models';
 
-import { Subject } from 'models/Subject';
-import SubjectType from 'gql/types/subject';
+import { Subject } from '../../../models/Subject';
+import SubjectType from '../../types/subject';
 import {
   SubjectUpdateInput,
   SubjectUpdateInputType,

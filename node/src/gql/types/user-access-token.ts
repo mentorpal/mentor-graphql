@@ -5,13 +5,13 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLString, GraphQLObjectType } from 'graphql';
+import { Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { randomBytes } from 'crypto';
-import { User } from 'models/User';
+import { User } from '../../models/User';
 import UserType from './user';
 import DateType from './date';
-import { Response } from 'express';
-import { RefreshToken as RefreshTokenSchema } from 'models';
+import { RefreshToken as RefreshTokenSchema } from '../../models';
 
 export interface UserAccessToken {
   user: User;

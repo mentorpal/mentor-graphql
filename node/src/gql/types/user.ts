@@ -10,8 +10,8 @@ import {
   GraphQLID,
   GraphQLList,
 } from 'graphql';
-import { Mentor as MentorModel } from 'models';
-import { User } from 'models/User';
+import { Mentor as MentorModel } from '../../models';
+import { User } from '../../models/User';
 import { DateType } from './date';
 import MentorType from './mentor';
 export const UserType = new GraphQLObjectType({

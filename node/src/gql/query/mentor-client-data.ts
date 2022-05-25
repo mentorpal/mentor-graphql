@@ -11,16 +11,16 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-import { AnswerMediaType } from 'gql/types/answer';
+import { AnswerMediaType } from '../types/answer';
 import {
   Mentor as MentorModel,
   Subject as SubjectModel,
   Answer as AnswerModel,
   Question as QuestionModel,
-} from 'models';
-import { AnswerMedia, Status } from 'models/Answer';
-import { QuestionType } from 'models/Question';
-import { SubjectQuestion, Topic } from 'models/Subject';
+} from '../../models';
+import { AnswerMedia, Status } from '../../models/Answer';
+import { QuestionType } from '../../models/Question';
+import { SubjectQuestion, Topic } from '../../models/Subject';
 
 export interface MentorClientData {
   _id: string;

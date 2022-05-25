@@ -4,8 +4,8 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Answer as AnswerModel } from 'models';
-import AnswerType from 'gql/types/answer';
+import { Answer as AnswerModel } from '../../models';
+import AnswerType from '../types/answer';
 import findAll from './find-all';
 
 export const answers = findAll({

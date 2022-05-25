@@ -10,9 +10,9 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-import { UserQuestion as UserQuestionModel } from 'models';
-import { UserQuestion } from 'models/UserQuestion';
-import { UserQuestionType } from 'gql/types/user-question';
+import { UserQuestion as UserQuestionModel } from '../../models';
+import { UserQuestion } from '../../models/UserQuestion';
+import { UserQuestionType } from '../types/user-question';
 
 export const userQuestionSetFeedback = {
   type: UserQuestionType,

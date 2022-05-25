@@ -6,7 +6,7 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { GraphQLObjectType, GraphQLID, GraphQLScalarType } from 'graphql';
 import { Types } from 'mongoose';
-import { HasFindOne } from 'gql/types/mongoose-type-helpers';
+import { HasFindOne } from '../types/mongoose-type-helpers';
 
 export interface ArgsConfig {
   [name: string]: {

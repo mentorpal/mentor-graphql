@@ -12,7 +12,7 @@ import {
   GraphQLString,
 } from 'graphql';
 
-import { Subject as SubjectModel } from 'models';
+import { Subject as SubjectModel } from '../../../models';
 import {
   SubjectQuestionInputType,
   SubjectQuestionUpdateInput,

@@ -10,8 +10,8 @@ import {
   GraphQLID,
   GraphQLFloat,
 } from 'graphql';
-import { Answer as AnswerModel, Mentor as MentorModel } from 'models';
-import { UserQuestion } from 'models/UserQuestion';
+import { Answer as AnswerModel, Mentor as MentorModel } from '../../models';
+import { UserQuestion } from '../../models/UserQuestion';
 import AnswerType from './answer';
 import DateType from './date';
 import MentorType from './mentor';

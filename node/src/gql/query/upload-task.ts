@@ -6,10 +6,10 @@ The full terms of this copyright and license should always be found in the root 
 */
 
 import { GraphQLID, GraphQLNonNull, GraphQLObjectType } from 'graphql';
-import { User, UserRole } from 'models/User';
-import { UploadTask as UploadTaskModel } from 'models';
-import { UploadTask } from 'models/UploadTask';
-import { UploadTaskType } from 'gql/types/upload-task';
+import { User, UserRole } from '../../models/User';
+import { UploadTask as UploadTaskModel } from '../../models';
+import { UploadTask } from '../../models/UploadTask';
+import { UploadTaskType } from '../types/upload-task';
 
 export const uploadTask = {
   type: UploadTaskType,

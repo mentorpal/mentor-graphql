@@ -5,11 +5,11 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLID, GraphQLString, GraphQLObjectType } from 'graphql';
-import { mentorField } from 'gql/query/mentor';
-import { questionField } from 'gql/query/question';
+import { mentorField } from '../query/mentor';
+import { questionField } from '../query/question';
 import { AnswerMediaType } from './answer';
 import DateType from './date';
-import { TaskInfoType } from 'models/TaskInfo';
+import { TaskInfoType } from '../../models/TaskInfo';
 
 export const UploadTaskType = new GraphQLObjectType({
   name: 'UploadTask',

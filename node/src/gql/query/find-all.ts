@@ -9,8 +9,8 @@ import {
   makeConnection,
   PaginatedResolveArgs,
   PaginatedResolveResult,
-} from 'gql/types/connection';
-import { HasPaginate } from 'gql/types/mongoose-type-helpers';
+} from '../types/connection';
+import { HasPaginate } from '../types/mongoose-type-helpers';
 import mongoose from 'mongoose';
 
 export function findAll<T extends PaginatedResolveResult>(config: {

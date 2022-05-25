@@ -5,8 +5,8 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLString, GraphQLObjectType, GraphQLBoolean } from 'graphql';
-import { User, UserRole } from 'models/User';
-import { User as UserSchema } from 'models';
+import { User, UserRole } from '../../../models/User';
+import { User as UserSchema } from '../../../models';
 
 export const canManageContent = {
   type: GraphQLBoolean,

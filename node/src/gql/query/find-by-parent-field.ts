@@ -5,7 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLObjectType } from 'graphql';
-import { HasFindById } from 'gql/types/mongoose-type-helpers';
+import { HasFindById } from '../types/mongoose-type-helpers';
 
 export function findByParentFieldQuery<T>(
   gqlType: GraphQLObjectType,

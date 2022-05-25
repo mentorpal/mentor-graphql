@@ -16,10 +16,10 @@ import {
   Answer as AnswerModel,
   Mentor as MentorModel,
   Question as QuestionModel,
-} from 'models';
-import { Status } from 'models/Answer';
-import { Mentor } from 'models/Mentor';
-import { User, UserRole } from 'models/User';
+} from '../../../models';
+import { Status } from '../../../models/Answer';
+import { Mentor } from '../../../models/Mentor';
+import { User, UserRole } from '../../../models/User';
 
 export interface AnswerUpdateInput {
   transcript: string;

@@ -10,12 +10,12 @@ import {
   GraphQLNonNull,
   GraphQLID,
 } from 'graphql';
-import { ImportTask as ImportTaskModel } from 'models';
+import { ImportTask as ImportTaskModel } from '../../../models';
 import {
   AnswerMediaMigrateUpdateProps,
   GraphQLUpdateProps,
   s3VideoMigrateProps,
-} from 'models/ImportTask';
+} from '../../../models/ImportTask';
 import {
   AnswerMediaMigrationInputType,
   GraphQLUpdateInputType,

@@ -11,8 +11,8 @@ import {
   GraphQLInputObjectType,
 } from 'graphql';
 import { AnswerMediaProps, AnswerMediaSchema } from './Answer';
-import { AnswerMediaInputType } from 'gql/mutation/api/upload-answer';
-import { AnswerMediaType } from 'gql/types/answer';
+import { AnswerMediaInputType } from '../gql/mutation/api/upload-answer';
+import { AnswerMediaType } from '../gql/types/answer';
 
 export interface TaskInfoProps {
   task_name: string;

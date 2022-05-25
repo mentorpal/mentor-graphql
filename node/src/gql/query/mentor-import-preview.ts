@@ -17,21 +17,21 @@ import {
   Subject as SubjectModel,
   Question as QuestionModel,
   Answer as AnswerModel,
-} from 'models';
-import { Subject } from 'models/Subject';
-import { Question } from 'models/Question';
-import { Answer } from 'models/Answer';
+} from '../../models';
+import { Subject } from '../../models/Subject';
+import { Question } from '../../models/Question';
+import { Answer } from '../../models/Answer';
 import {
   AnswerUpdateInput,
   MentorImportJson,
   MentorImportJsonType,
-} from 'gql/mutation/me/mentor-import';
-import SubjectType, { CategoryType, TopicType } from 'gql/types/subject';
-import QuestionType from 'gql/types/question';
-import AnswerType from 'gql/types/answer';
-import { SubjectUpdateInput } from 'gql/mutation/me/subject-update';
-import { QuestionUpdateInput } from 'gql/mutation/me/question-update';
-import { isId } from 'gql/mutation/me/helpers';
+} from '../mutation/me/mentor-import';
+import SubjectType, { CategoryType, TopicType } from '../types/subject';
+import QuestionType from '../types/question';
+import AnswerType from '../types/answer';
+import { SubjectUpdateInput } from '../mutation/me/subject-update';
+import { QuestionUpdateInput } from '../mutation/me/question-update';
+import { isId } from '../mutation/me/helpers';
 
 enum EditType {
   NONE = 'NONE',

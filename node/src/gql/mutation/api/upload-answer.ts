@@ -16,10 +16,10 @@ import {
   Answer as AnswerModel,
   Mentor as MentorModel,
   Question as QuestionModel,
-} from 'models';
-import { AnswerMediaProps, Status } from 'models/Answer';
-import { Mentor } from 'models/Mentor';
-import { mediaNeedsTransfer } from 'utils/static-urls';
+} from '../../../models';
+import { AnswerMediaProps, Status } from '../../../models/Answer';
+import { Mentor } from '../../../models/Mentor';
+import { mediaNeedsTransfer } from '../../../utils/static-urls';
 
 export interface UploadAnswer {
   transcript: string;

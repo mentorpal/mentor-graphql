@@ -13,8 +13,11 @@ import {
   GraphQLInputObjectType,
   GraphQLList,
 } from 'graphql';
-import { ImportTask as ImportTaskModel } from 'models';
-import { GraphQLUpdateProps, s3VideoMigrateProps } from 'models/ImportTask';
+import { ImportTask as ImportTaskModel } from '../../../models';
+import {
+  GraphQLUpdateProps,
+  s3VideoMigrateProps,
+} from '../../../models/ImportTask';
 
 export const GraphQLUpdateInputType = new GraphQLInputObjectType({
   name: 'GraphQLUpdateInputType',

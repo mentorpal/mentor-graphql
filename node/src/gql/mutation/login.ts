@@ -9,12 +9,12 @@ import {
   User as UserSchema,
   Mentor as MentorSchema,
   Subject as SubjectSchema,
-} from 'models';
+} from '../../models';
 import {
   UserAccessTokenType,
   UserAccessToken,
   generateAccessToken,
-} from 'gql/types/user-access-token';
+} from '../types/user-access-token';
 
 export const login = {
   type: UserAccessTokenType,

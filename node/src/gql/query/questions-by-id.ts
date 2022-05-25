@@ -10,9 +10,9 @@ import {
   GraphQLList,
   GraphQLNonNull,
 } from 'graphql';
-import { Question as QuestionModel } from 'models';
-import { Question } from 'models/Question';
-import QuestionType from 'gql/types/question';
+import { Question as QuestionModel } from '../../models';
+import { Question } from '../../models/Question';
+import QuestionType from '../types/question';
 
 export const questionsById = {
   type: GraphQLList(QuestionType),

@@ -7,8 +7,8 @@ The full terms of this copyright and license should always be found in the root 
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
-import { User as UserSchema } from 'models';
-import requireEnv from 'utils/require-env';
+import { User as UserSchema } from '../models';
+import requireEnv from '../utils/require-env';
 
 passport.use(
   new BearerStrategy(function (token, done) {

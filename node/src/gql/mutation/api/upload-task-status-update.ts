@@ -12,16 +12,20 @@ import {
   GraphQLID,
   GraphQLInputObjectType,
 } from 'graphql';
-import { logger } from 'utils/logging';
+import { logger } from '../../../utils/logging';
 import {
   Mentor as MentorModel,
   Question as QuestionModel,
   UploadTask as UploadTaskModel,
-} from 'models';
-import { AnswerMediaProps } from 'models/Answer';
-import { Mentor } from 'models/Mentor';
+} from '../../../models';
+import { AnswerMediaProps } from '../../../models/Answer';
+import { Mentor } from '../../../models/Mentor';
 import { AnswerMediaInputType } from './upload-answer';
-import { TaskInfo, TaskInfoInputType, TaskInfoProps } from 'models/TaskInfo';
+import {
+  TaskInfo,
+  TaskInfoInputType,
+  TaskInfoProps,
+} from '../../../models/TaskInfo';
 
 export const UploadTaskStatusUpdateInputType = new GraphQLInputObjectType({
   name: 'UploadTaskStatusUpdateInputType',
