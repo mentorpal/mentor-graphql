@@ -10,7 +10,6 @@ export interface Config {
   cmi5Enabled: boolean;
   cmi5Endpoint: string;
   cmi5Fetch: string;
-  urlClassifier: string;
   urlGraphql: string;
   urlVideo: string;
   urlVideoIdleTips: string;
@@ -38,7 +37,6 @@ export const ConfigKeys: ConfigKey[] = [
   'cmi5Enabled',
   'cmi5Endpoint',
   'cmi5Fetch',
-  'urlClassifier',
   'urlGraphql',
   'urlVideo',
   'urlVideoIdleTips',
@@ -71,7 +69,6 @@ export function getDefaultConfig(): Config {
     cmi5Enabled: false,
     cmi5Endpoint: '',
     cmi5Fetch: '',
-    urlClassifier: '/classifier',
     urlGraphql: '/graphql',
     urlVideo: '/video',
     classifierLambdaEndpoint: '',

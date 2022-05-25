@@ -47,7 +47,6 @@ describe('config', () => {
             featuredMentors
             featuredMentorPanels
             activeMentors
-            urlClassifier
             urlGraphql
             urlVideo
             styleHeaderLogo
@@ -64,7 +63,6 @@ describe('config', () => {
       featuredMentors: [],
       featuredMentorPanels: [],
       activeMentors: [],
-      urlClassifier: '/classifier',
       urlGraphql: '/graphql',
       urlVideo: '/video',
       styleHeaderLogo: '',
@@ -118,7 +116,6 @@ describe('config', () => {
       featuredMentors: ['somementor'],
       featuredMentorPanels: ['somementorpanel'],
       activeMentors: ['somementor'],
-      urlClassifier: '/classifier/v2',
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
       urlVideoIdleTips: 'https://some/custom/url',
@@ -155,7 +152,6 @@ describe('config', () => {
             featuredMentors
             featuredMentorPanels
             activeMentors
-            urlClassifier
             urlGraphql
             urlVideo
             styleHeaderLogo

@@ -24,7 +24,6 @@ export const ConfigType = new GraphQLObjectType({
     featuredMentors: { type: GraphQLList(GraphQLID) },
     featuredMentorPanels: { type: GraphQLList(GraphQLID) },
     activeMentors: { type: GraphQLList(GraphQLID) },
-    urlClassifier: { type: GraphQLString },
     urlGraphql: { type: GraphQLString },
     urlVideo: { type: GraphQLString },
     urlVideoIdleTips: { type: GraphQLString },
