@@ -75,9 +75,7 @@ describe('subjects', () => {
   });
 
   it('can paginate list of subjects', async () => {
-    const first = await request(
-      'https://api-dev.mentorpal.org/graphql/graphql'
-    )
+    const first = await request('https://api-dev.mentorpal.org/graphql/graphql')
       .post('/graphql')
       .send({
         query: `query {

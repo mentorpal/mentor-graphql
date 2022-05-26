@@ -9,9 +9,11 @@ import request from 'supertest';
 
 describe('query users', () => {
   it('query all users', async () => {
-    const response = await request('https://api-dev.mentorpal.org/graphql/graphql').
-      post('/graphql').
-      send({
+    const response = await request(
+      'https://api-dev.mentorpal.org/graphql/graphql'
+    )
+      .post('/graphql')
+      .send({
         query: `
         query Users($filter: Object!, $limit: Int!, $cursor: String!, $sortBy: String!, $sortAscending: Boolean!){
           users (filter: $filter, limit: $limit,cursor: $cursor,sortBy: $sortBy,sortAscending: $sortAscending){
@@ -43,6 +45,6 @@ describe('query users', () => {
         },
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.users.edges.length).to.be.equal(10)
+    expect(response.body.data.users.edges.length).to.be.equal(10);
   });
 });

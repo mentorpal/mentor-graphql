@@ -10,7 +10,9 @@ import request from 'supertest';
 
 describe('userQuestions', () => {
   it(`throws an error if invalid id`, async () => {
-    const response = await request('https://api-dev.mentorpal.org/graphql/graphql')
+    const response = await request(
+      'https://api-dev.mentorpal.org/graphql/graphql'
+    )
       .post('/graphql')
       .send({
         query: `query {
@@ -27,7 +29,9 @@ describe('userQuestions', () => {
   });
 
   it('gets a list of userQuestions', async () => {
-    const response = await request('https://api-dev.mentorpal.org/graphql/graphql')
+    const response = await request(
+      'https://api-dev.mentorpal.org/graphql/graphql'
+    )
       .post('/graphql')
       .send({
         query: `query {
@@ -44,14 +48,18 @@ describe('userQuestions', () => {
         }
       }`,
       });
-    expect(response.status).to.equal(200); 
+    expect(response.status).to.equal(200);
     expect(response.body.data.userQuestions.edges.length).to.be.greaterThan(10);
-    expect(response.body.data.userQuestions.edges[0].node._id.length).to.equal(24);
-    response.body.data.userQuestions.edges.forEach((edge:any) => {
+    expect(response.body.data.userQuestions.edges[0].node._id.length).to.equal(
+      24
+    );
+    response.body.data.userQuestions.edges.forEach((edge: any) => {
       expect(edge.node._id.length).to.equal(24);
     });
 
-    const question = await request('https://api-dev.mentorpal.org/graphql/graphql')
+    const question = await request(
+      'https://api-dev.mentorpal.org/graphql/graphql'
+    )
       .post('/graphql')
       .send({
         query: `query {
@@ -62,11 +70,15 @@ describe('userQuestions', () => {
       }`,
       });
     expect(question.status).to.equal(200);
-    expect(question.body.data.userQuestion.question.length).to.be.greaterThan(2);
+    expect(question.body.data.userQuestion.question.length).to.be.greaterThan(
+      2
+    );
   });
 
   it('filters userQuestions by feedback type', async () => {
-    const response = await request('https://api-dev.mentorpal.org/graphql/graphql')
+    const response = await request(
+      'https://api-dev.mentorpal.org/graphql/graphql'
+    )
       .post('/graphql')
       .send({
         query: `query {
@@ -86,13 +98,15 @@ describe('userQuestions', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.userQuestions.edges.length).to.be.greaterThan(10);
-    response.body.data.userQuestions.edges.forEach((edge:any) => {
+    response.body.data.userQuestions.edges.forEach((edge: any) => {
       expect(edge.node.feedback).to.equal('NEUTRAL');
     });
   });
 
   it('filters userQuestions by mentor', async () => {
-    const response = await request('https://api-dev.mentorpal.org/graphql/graphql')
+    const response = await request(
+      'https://api-dev.mentorpal.org/graphql/graphql'
+    )
       .post('/graphql')
       .send({
         query: `query {
@@ -116,6 +130,8 @@ describe('userQuestions', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.userQuestions.edges.length).to.be.greaterThan(1);
-    expect(response.body.data.userQuestions.edges[0].node.mentor._id).to.eql('6109d2a86e6fa01e5bf3219f');
+    expect(response.body.data.userQuestions.edges[0].node.mentor._id).to.eql(
+      '6109d2a86e6fa01e5bf3219f'
+    );
   });
 });

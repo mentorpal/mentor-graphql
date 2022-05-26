@@ -23,7 +23,11 @@ export function accessTokenDuration(): number {
     : 60 * 60 * 24 * 90;
 }
 
-export function mockSetCookie(name: string, value: string, days: number): string {
+export function mockSetCookie(
+  name: string,
+  value: string,
+  days: number
+): string {
   let expires = '';
   if (days) {
     const date = new Date();
