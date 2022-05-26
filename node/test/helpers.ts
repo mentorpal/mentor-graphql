@@ -23,7 +23,7 @@ export function accessTokenDuration(): number {
     : 60 * 60 * 24 * 90;
 }
 
-export function mockSetCookie(name: string, value: string, days: number) {
+export function mockSetCookie(name: string, value: string, days: number): string {
   let expires = '';
   if (days) {
     const date = new Date();
@@ -33,7 +33,7 @@ export function mockSetCookie(name: string, value: string, days: number) {
   const result = name + '=' + (value || '') + expires + '; path=/';
   return result;
 }
-export function mockGetCookie(cookieInfo: string, name: string) {
+export function mockGetCookie(cookieInfo: string, name: string): string | null {
   const nameEQ = name + '=';
   const ca = cookieInfo.split(';');
   for (let i = 0; i < ca.length; i++) {
@@ -60,7 +60,7 @@ export function getToken(userId: string, expiresIn?: number): string {
 export const USER_DEFAULT = '5ffdf41a1ee2c62320b49ea1';
 export async function gqlWithAuth(
   app: Express,
-  gql: any,
+  gql: string | Record<string, string>,
   user: string = USER_DEFAULT
 ): Promise<request.Response> {
   const token = getToken(user);
@@ -73,6 +73,7 @@ export async function gqlWithAuth(
 export async function appStart(
   fixtureMongoData = 'test/fixtures/mongodb/data-default.js'
 ): Promise<Express> {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   await mongoUnit.load(require(fixtureMongoData));
   const inst = await app.createApp();
   await app.appStart();
