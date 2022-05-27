@@ -11,7 +11,6 @@ phases:
       nodejs: 14
     commands:
       - n 16 # workaround https://github.com/aws/aws-codebuild-docker-images/issues/490
-      - NODE_ENV=dev npm ci
       - (cd node && NODE_ENV=dev npm ci)
 
   pre_build:
