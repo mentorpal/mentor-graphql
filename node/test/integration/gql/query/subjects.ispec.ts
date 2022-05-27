@@ -96,9 +96,7 @@ describe('subjects', () => {
       });
     expect(first.status).to.equal(200);
     expect(first.body.data.subjects.edges.length).to.eql(2);
-    const second = await request(
-      'https://api-qa.mentorpal.org/graphql/graphql'
-    )
+    const second = await request('https://api-qa.mentorpal.org/graphql/graphql')
       .post('/graphql')
       .send({
         query: `query {
