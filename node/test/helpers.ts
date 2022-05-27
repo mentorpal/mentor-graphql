@@ -69,7 +69,7 @@ export async function gqlWithAuth(
 ): Promise<request.Response> {
   const token = getToken(user);
   return await request(app)
-    .post('/graphql')
+    .post('/')
     .set('Authorization', `bearer ${token}`)
     .send(gql);
 }

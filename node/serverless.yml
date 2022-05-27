@@ -15,7 +15,6 @@ custom:
     prod: api.mentorpal.org
   customDomain:
     domainName: ${self:custom.domain.${opt:stage, 'dev'}}
-    basePath: 'graphql' # api root url becomes: api.mentorpal.org/graphql
     # certificateName: '*.mentorpal.org' didnt work
     # certificateName: 'c6107db7-c2ef-4e85-a21f-bee7d1ac008a' didnt work either
     stage: ${self:provider.stage}

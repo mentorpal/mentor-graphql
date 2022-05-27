@@ -128,7 +128,7 @@ export async function createApp(): Promise<Express> {
       );
     });
   });
-  app.use('/graphql', gqlMiddleware);
+  app.use('/', gqlMiddleware);
   app.use(express.static(path.join(__dirname, 'public'))); // todo remove if not used
 
   if (process.env.IS_SENTRY_ENABLED === 'true') {
