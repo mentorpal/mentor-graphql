@@ -121,7 +121,6 @@ describe('config', () => {
       urlVideoIdleTips: 'https://some/custom/url',
       urlVideoMentorpalWalkthrough: 'https://fakewalkthroughurl.com',
       classifierLambdaEndpoint: 'https://fakelambdaurl.com',
-      graphqlLambdaEndpoint: 'https://fakegraphqllambda.com',
       uploadLambdaEndpoint: 'https://faketransferlambdaurl.com',
       filterEmailMentorAddress: 'fakeemail@gmail.com',
       videoRecorderMaxLength: 300,
@@ -146,7 +145,6 @@ describe('config', () => {
             urlVideoIdleTips
             urlVideoMentorpalWalkthrough
             classifierLambdaEndpoint
-            graphqlLambdaEndpoint
             uploadLambdaEndpoint
             filterEmailMentorAddress
             videoRecorderMaxLength
