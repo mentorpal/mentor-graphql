@@ -7,24 +7,67 @@ The full terms of this copyright and license should always be found in the root 
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import express, { Request, Response, NextFunction, Express } from 'express';
+import passport from 'passport';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import mongoose from 'mongoose';
 import morgan, { TokenIndexer } from 'morgan';
 import path from 'path';
-import { logger } from 'utils/logging';
 import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
+import { logger } from './utils/logging';
+import requireEnv from './utils/require-env';
+import { User as UserSchema } from './models';
+
+function setupPassport() {
+  passport.use(
+    new BearerStrategy(function (token, done) {
+      const API_SECRET = requireEnv('API_SECRET');
+      if (token !== API_SECRET) {
+        return done('invalid api key');
+      } else {
+        return done(null, {});
+      }
+    })
+  );
+
+  passport.use(
+    new JwtStrategy(
+      {
+        secretOrKey: requireEnv('JWT_SECRET'),
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      },
+      async (token, done) => {
+        try {
+          if (token.expirationDate < new Date()) {
+            return done('token expired', null);
+          } else {
+            const user = await UserSchema.findById(token.id);
+            if (user) {
+              return done(null, user);
+            } else {
+              return done('token invalid', null);
+            }
+          }
+        } catch (error) {
+          return done(error);
+        }
+      }
+    )
+  );
+}
 
 export async function createApp(): Promise<Express> {
-  const gqlMiddleware = (await import('gql/middleware')).default;
+  const gqlMiddleware = (await import('./gql/middleware')).default;
   if (!process.env.NODE_ENV?.includes('prod')) {
     require('longjohn'); // full stack traces when testing
   }
-  const configureEnv = (await import('utils/configure-env')).default;
+  const configureEnv = (await import('./utils/configure-env')).default;
   configureEnv();
   if (process.env.APP_DISABLE_AUTO_START !== 'true') {
     await appStart();
   }
-  require('./auth');
+  setupPassport();
   const app = express();
   if (!process.env.NODE_ENV?.includes('test')) {
     app.use(
@@ -125,7 +168,7 @@ export async function createApp(): Promise<Express> {
 }
 
 export async function appStart(): Promise<void> {
-  const mongooseConnect = (await import('utils/mongoose-connect')).default;
+  const mongooseConnect = (await import('./utils/mongoose-connect')).default;
   await mongooseConnect(process.env.MONGO_URI);
 }
 

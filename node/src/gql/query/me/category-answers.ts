@@ -6,10 +6,10 @@ The full terms of this copyright and license should always be found in the root 
 */
 
 import { Types } from 'mongoose';
-import { User } from 'models/User';
-import { Mentor as MentorModel } from 'models';
 import { GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
-import { Status } from 'models/Answer';
+import { User } from '../../../models/User';
+import { Mentor as MentorModel } from '../../../models';
+import { Status } from '../../../models/Answer';
 
 const response = new GraphQLObjectType({
   name: 'response',

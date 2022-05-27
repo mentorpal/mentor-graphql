@@ -6,14 +6,14 @@ The full terms of this copyright and license should always be found in the root 
 */
 import axios from 'axios';
 import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
-import { User as UserSchema, Mentor as MentorSchema } from 'models';
+import { User as UserSchema, Mentor as MentorSchema } from '../../models';
 import {
   UserAccessTokenType,
   UserAccessToken,
   generateJwtToken,
   setTokenCookie,
   generateRefreshToken,
-} from 'gql/types/user-access-token';
+} from '../types/user-access-token';
 
 export interface GoogleResponse {
   id: string;

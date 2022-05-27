@@ -15,10 +15,10 @@ import {
   Mentor as MentorModel,
   Question as QuestionModel,
   UploadTask as UploadTaskModel,
-} from 'models';
-import { Status } from 'models/Answer';
-import { Mentor } from 'models/Mentor';
-import { User, UserRole } from 'models/User';
+} from '../../../models';
+import { Status } from '../../../models/Answer';
+import { Mentor } from '../../../models/Mentor';
+import { User, UserRole } from '../../../models/User';
 
 export const uploadTaskDelete = {
   type: GraphQLBoolean,

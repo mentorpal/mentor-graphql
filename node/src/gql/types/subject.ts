@@ -11,8 +11,8 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-import { Subject as SubjectModel } from 'models';
-import { Subject } from 'models/Subject';
+import { Subject as SubjectModel } from '../../models';
+import { Subject } from '../../models/Subject';
 import DateType from './date';
 import QuestionType from './question';
 

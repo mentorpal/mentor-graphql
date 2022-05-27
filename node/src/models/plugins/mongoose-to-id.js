@@ -6,7 +6,7 @@ The full terms of this copyright and license should always be found in the root 
 */
 import isHex from 'is-hex';
 import mongoose from 'mongoose';
-import { logger } from 'utils/logging';
+import { logger } from '../../utils/logging';
 
 /**
  * Checks if a given object is of type ObjectId.

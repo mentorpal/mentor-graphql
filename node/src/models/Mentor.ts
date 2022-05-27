@@ -9,7 +9,7 @@ import {
   Answer as AnswerModel,
   Subject as SubjectModel,
   Question as QuestionModel,
-} from 'models';
+} from './index';
 import {
   PaginatedResolveResult,
   PaginateOptions,
@@ -20,12 +20,12 @@ import { Answer, Status } from './Answer';
 import { QuestionType } from './Question';
 import { Subject, SubjectQuestion, Topic } from './Subject';
 import { User } from './User';
-import { MentorExportJson } from 'gql/query/mentor-export';
+import { MentorExportJson } from '../gql/query/mentor-export';
 import {
   MentorImportJson,
   ReplacedMentorDataChanges,
-} from 'gql/mutation/me/mentor-import';
-import { idOrNew } from 'gql/mutation/me/helpers';
+} from '../gql/mutation/me/mentor-import';
+import { idOrNew } from '../gql/mutation/me/helpers';
 import UserQuestion from './UserQuestion';
 
 export enum MentorType {

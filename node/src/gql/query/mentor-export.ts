@@ -13,16 +13,16 @@ import {
   GraphQLString,
   GraphQLBoolean,
 } from 'graphql';
-import AnswerType from 'gql/types/answer';
-import SubjectType from 'gql/types/subject';
-import QuestionType from 'gql/types/question';
-import UserQuestionType from 'gql/types/user-question';
-import { Mentor as MentorModel } from 'models';
-import { Answer } from 'models/Answer';
-import { Subject } from 'models/Subject';
-import { Question } from 'models/Question';
-import { Mentor } from 'models/Mentor';
-import { UserQuestion } from 'models/UserQuestion';
+import AnswerType from '../types/answer';
+import SubjectType from '../types/subject';
+import QuestionType from '../types/question';
+import UserQuestionType from '../types/user-question';
+import { Mentor as MentorModel } from '../../models';
+import { Answer } from '../../models/Answer';
+import { Subject } from '../../models/Subject';
+import { Question } from '../../models/Question';
+import { Mentor } from '../../models/Mentor';
+import { UserQuestion } from '../../models/UserQuestion';
 
 export interface MentorExportJson {
   id: string;

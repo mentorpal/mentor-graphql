@@ -6,62 +6,30 @@ The full terms of this copyright and license should always be found in the root 
 */
 import * as Sentry from '@sentry/node';
 import { createApp, appStop } from './app';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const debug = require('debug')('mentor-admin:server');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const http = require('http');
 import process from 'process';
 import logger from './utils/logging';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const serverless = require('serverless-http');
+
+logger.info('starting server');
+logger.info(`node env: '${process.env.NODE_ENV}'`);
+logger.debug('node version ' + process.version);
 
 /**
- * Normalize a port into a number, string, or false.
+ * We want to call init only once during cold start.
+ * The init may not finish when handler starts executing.
+ * If the init fails it should be retried on next handler invocation.
+ * The Lambda runtime manages this case. If any errors occur
+ * in the initialisation code outside the handler,
+ * the function container is terminated and a new one is
+ * started up in a fresh state.
+ *
+ * @returns
  */
-function normalizePort(val: string): string | boolean | number {
-  const port = parseInt(val, 10);
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-  return false;
-}
-
-async function serverStart() {
-  logger.info('starting server');
-  logger.info(`node env: '${process.env.NODE_ENV}'`);
+const init = async () => {
+  // Perform all async calls here.
   const app = await createApp();
-  const port = normalizePort(process.env.PORT || '3001');
-  app.set('port', port);
-  const server = http.createServer(app);
-  server.on('error', (error: { code: string; syscall: string }) => {
-    if (error.syscall !== 'listen') {
-      throw error;
-    }
-    const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
-    // handle specific listen errors with friendly messages
-    switch (error.code) {
-      case 'EACCES':
-        logger.error(bind + ' requires elevated privileges');
-        process.exit(1);
-      case 'EADDRINUSE':
-        logger.error(bind + ' is already in use');
-        process.exit(1);
-      default:
-        throw error;
-    }
-  });
-  server.on('listening', () => {
-    const addr = server.address();
-    const bind =
-      typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-    debug('Listening on ' + bind);
-  });
-  server.listen(port);
-  logger.info('node version ' + process.version);
-
+  // not sure this is correct with serverless-http:
   // see https://nodejs.org/api/process.html#process_warning_using_uncaughtexception_correctly
   process.on('uncaughtException', (err: Error) => {
     logger.error('Uncaught exception!');
@@ -85,6 +53,16 @@ async function serverStart() {
       Sentry.captureException(reason);
     }
   });
-}
 
-serverStart();
+  return app;
+};
+
+const initPromise = init();
+
+module.exports.handler = async (event: any, context: any) => {
+  // Ensure init has completed before proceeding
+  const app = await initPromise;
+  const handler = serverless(app);
+  const result = await handler(event, context);
+  return result;
+};

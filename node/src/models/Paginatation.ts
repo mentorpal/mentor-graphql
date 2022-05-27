@@ -7,6 +7,7 @@ The full terms of this copyright and license should always be found in the root 
 import { ExtractMethods, Model, Schema } from 'mongoose';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const mongoPaging = require('mongo-cursor-pagination');
+
 mongoPaging.config.COLLATION = { locale: 'en', strength: 2 };
 mongoPaging.config.MAX_LIMIT = 5000;
 

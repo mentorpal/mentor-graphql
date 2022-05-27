@@ -11,9 +11,9 @@ import {
   GraphQLBoolean,
   GraphQLList,
 } from 'graphql';
-import { questionField } from 'gql/query/question';
-import { AnswerMedia } from 'models/Answer';
-import { toAbsoluteUrl } from 'utils/static-urls';
+import { questionField } from '../query/question';
+import { AnswerMedia } from '../../models/Answer';
+import { toAbsoluteUrl } from '../../utils/static-urls';
 import DateType from './date';
 
 export const AnswerMediaType = new GraphQLObjectType({

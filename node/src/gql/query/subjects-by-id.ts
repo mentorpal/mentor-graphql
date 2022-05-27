@@ -10,9 +10,9 @@ import {
   GraphQLList,
   GraphQLNonNull,
 } from 'graphql';
-import { Subject as SubjectModel } from 'models';
-import { Subject } from 'models/Subject';
-import SubjectType from 'gql/types/subject';
+import { Subject as SubjectModel } from '../../models';
+import { Subject } from '../../models/Subject';
+import SubjectType from '../types/subject';
 
 export const subjectsById = {
   type: GraphQLList(SubjectType),

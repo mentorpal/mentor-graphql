@@ -5,7 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLObjectType } from 'graphql';
-import { revokeToken, UserAccessTokenType } from 'gql/types/user-access-token';
+import { revokeToken, UserAccessTokenType } from '../types/user-access-token';
 
 export const logout = {
   type: UserAccessTokenType,

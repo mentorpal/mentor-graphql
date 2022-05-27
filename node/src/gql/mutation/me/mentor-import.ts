@@ -14,10 +14,10 @@ import {
   GraphQLString,
   GraphQLFloat,
 } from 'graphql';
-import { MentorType } from 'gql/types/mentor';
-import { Mentor as MentorModel } from 'models';
-import { Mentor } from 'models/Mentor';
-import { AnswerMedia, AnswerMediaProps, Status } from 'models/Answer';
+import { MentorType } from '../../types/mentor';
+import { Mentor as MentorModel } from '../../../models';
+import { Mentor } from '../../../models/Mentor';
+import { AnswerMedia, AnswerMediaProps, Status } from '../../../models/Answer';
 import { SubjectUpdateInput, SubjectUpdateInputType } from './subject-update';
 import {
   QuestionUpdateInput,
@@ -26,8 +26,8 @@ import {
 import {
   ExportedMentorInfo,
   ExportedMentorInfoInputType,
-} from 'gql/query/mentor-export';
-import { UserQuestion } from 'models/UserQuestion';
+} from '../../query/mentor-export';
+import { UserQuestion } from '../../../models/UserQuestion';
 
 export interface MentorImportJson {
   id: string;

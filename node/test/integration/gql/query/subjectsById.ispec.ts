@@ -4,24 +4,25 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
+import { expect } from 'chai';
+import request from 'supertest';
 
-import { Types } from 'mongoose';
-import { User } from '../../../models/User';
-import { Mentor as MentorModel } from '../../../models';
-import { MentorType } from '../../types/mentor';
-
-export const mentor = {
-  type: MentorType,
-  resolve: async (_: any, args: any, context: { user: User }) => {
-    // eslint-disable-line  @typescript-eslint/no-explicit-any
-    if (!context.user) {
-      throw new Error('Only authenticated users');
-    }
-    const mentor = await MentorModel.findOne({
-      user: Types.ObjectId(`${context.user._id}`),
-    });
-    return mentor;
-  },
-};
-
-export default mentor;
+describe('subjectsById', () => {
+  it('gets a list of subjects by ids', async () => {
+    const ids = ['6270c833ac7270cb911d5c43', '626a455a6272f6e57687bd85'];
+    const response = await request(
+      'https://api-dev.mentorpal.org/graphql/graphql'
+    )
+      .post('/graphql')
+      .send({
+        query: `query SubjectsById($ids: [ID]!) {
+          subjectsById(ids: $ids) {
+            _id
+          }
+        }`,
+        variables: { ids },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.subjectsById.length).to.equal(2);
+  });
+});

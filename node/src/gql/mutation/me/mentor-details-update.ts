@@ -12,9 +12,9 @@ import {
   GraphQLInputObjectType,
   GraphQLID,
 } from 'graphql';
-import { Mentor as MentorModel } from 'models';
-import { Mentor } from 'models/Mentor';
-import { User, UserRole } from 'models/User';
+import { Mentor as MentorModel } from '../../../models';
+import { Mentor } from '../../../models/Mentor';
+import { User, UserRole } from '../../../models/User';
 
 export interface UpdateMentorDetails {
   name: string;

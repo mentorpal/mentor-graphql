@@ -10,8 +10,8 @@ import {
   GraphQLNonNull,
   GraphQLID,
 } from 'graphql';
-import { Answer as AnswerModel } from 'models';
-import { AnswerMedia } from 'models/Answer';
+import { Answer as AnswerModel } from '../../../models';
+import { AnswerMedia } from '../../../models/Answer';
 import { AnswerMediaInputType } from './upload-answer';
 
 export const mediaUpdate = {

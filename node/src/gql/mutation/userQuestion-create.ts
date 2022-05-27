@@ -12,13 +12,13 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-import { UserQuestion as UserQuestionModel } from 'models';
+import { UserQuestion as UserQuestionModel } from '../../models';
 import {
   UserQuestion,
   Feedback,
   ClassifierAnswerType,
-} from 'models/UserQuestion';
-import { UserQuestionType } from 'gql/types/user-question';
+} from '../../models/UserQuestion';
+import { UserQuestionType } from '../types/user-question';
 
 export interface UserQuestionCreateInput {
   question: string;

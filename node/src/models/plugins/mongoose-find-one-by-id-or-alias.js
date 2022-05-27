@@ -6,7 +6,7 @@ The full terms of this copyright and license should always be found in the root 
 */
 import mongoose from 'mongoose';
 import isHex from 'is-hex';
-import { logger } from 'utils/logging';
+import { logger } from '../../utils/logging';
 
 /**
  * Find one record given a key which may be the _id for the record or an alias

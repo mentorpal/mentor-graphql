@@ -5,7 +5,6 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 
-import { Mentor as MentorModel } from 'models';
 import {
   GraphQLList,
   GraphQLObjectType,
@@ -13,7 +12,8 @@ import {
   GraphQLID,
   GraphQLNonNull,
 } from 'graphql';
-import { Status } from 'models/Answer';
+import { Mentor as MentorModel } from '../../models';
+import { Status } from '../../models/Answer';
 
 const categoryAnswerResponse = new GraphQLObjectType({
   name: 'categoryAnswerResponse',

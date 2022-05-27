@@ -14,10 +14,13 @@ import {
   GraphQLBoolean,
 } from 'graphql';
 
-import { Subject as SubjectModel, Question as QuestionModel } from 'models';
-import { Question } from 'models/Question';
-import { Subject, SubjectQuestionProps } from 'models/Subject';
-import SubjectType from 'gql/types/subject';
+import {
+  Subject as SubjectModel,
+  Question as QuestionModel,
+} from '../../../models';
+import { Question } from '../../../models/Question';
+import { Subject, SubjectQuestionProps } from '../../../models/Subject';
+import SubjectType from '../../types/subject';
 import {
   QuestionUpdateInput,
   QuestionUpdateInputType,

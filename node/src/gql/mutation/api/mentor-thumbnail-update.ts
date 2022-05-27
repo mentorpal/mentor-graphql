@@ -11,7 +11,7 @@ import {
   GraphQLNonNull,
   GraphQLID,
 } from 'graphql';
-import { Mentor as MentorModel } from 'models';
+import { Mentor as MentorModel } from '../../../models';
 
 export const mentorThumbnailUpdate = {
   type: GraphQLBoolean,

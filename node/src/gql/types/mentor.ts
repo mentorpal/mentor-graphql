@@ -11,14 +11,14 @@ import {
   GraphQLID,
   GraphQLBoolean,
 } from 'graphql';
-import { Mentor as MentorModel } from 'models';
-import { Status } from 'models/Answer';
-import { Mentor } from 'models/Mentor';
+import { Mentor as MentorModel } from '../../models';
+import { Status } from '../../models/Answer';
+import { Mentor } from '../../models/Mentor';
+import { QuestionType } from '../../models/Question';
 import DateType from './date';
 import AnswerType from './answer';
 import SubjectType, { SubjectQuestionType, TopicType } from './subject';
-import { QuestionType } from 'models/Question';
-import { toAbsoluteUrl } from 'utils/static-urls';
+import { toAbsoluteUrl } from '../../utils/static-urls';
 
 export const MentorType = new GraphQLObjectType({
   name: 'Mentor',

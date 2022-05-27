@@ -16,10 +16,10 @@ import {
   Mentor as MentorModel,
   Question as QuestionModel,
   UploadTask as UploadTaskModel,
-} from 'models';
-import { AnswerMediaProps } from 'models/Answer';
-import { Mentor } from 'models/Mentor';
-import { TaskInfoInputType, TaskInfoProps } from 'models/TaskInfo';
+} from '../../../models';
+import { AnswerMediaProps } from '../../../models/Answer';
+import { Mentor } from '../../../models/Mentor';
+import { TaskInfoInputType, TaskInfoProps } from '../../../models/TaskInfo';
 import { AnswerMediaInputType } from './upload-answer';
 
 export interface UploadTask {

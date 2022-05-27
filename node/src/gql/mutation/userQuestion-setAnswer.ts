@@ -15,10 +15,10 @@ import {
   UserQuestion as UserQuestionModel,
   Answer as AnswerModel,
   Question as QuestionModel,
-} from 'models';
-import { UserQuestion } from 'models/UserQuestion';
-import { UserQuestionType } from 'gql/types/user-question';
-import { Answer } from 'models/Answer';
+} from '../../models';
+import { Answer } from '../../models/Answer';
+import { UserQuestion } from '../../models/UserQuestion';
+import { UserQuestionType } from '../types/user-question';
 
 export const userQuestionSetAnswer = {
   type: UserQuestionType,

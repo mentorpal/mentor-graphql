@@ -12,10 +12,10 @@ import {
   GraphQLInputObjectType,
   GraphQLList,
 } from 'graphql';
-import { Mentor as MentorModel } from 'models';
-import { Mentor } from 'models/Mentor';
-import { Subject } from 'models/Subject';
-import { User, UserRole } from 'models/User';
+import { Mentor as MentorModel } from '../../../models';
+import { Mentor } from '../../../models/Mentor';
+import { Subject } from '../../../models/Subject';
+import { User, UserRole } from '../../../models/User';
 
 export interface UpdateMentorSubjects {
   defaultSubject: Subject['_id'];

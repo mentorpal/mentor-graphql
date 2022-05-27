@@ -10,9 +10,12 @@ import {
   GraphQLNonNull,
   GraphQLID,
 } from 'graphql';
-import { Mentor as MentorModel, ImportTask as ImportTaskModel } from 'models';
-import { Mentor } from 'models/Mentor';
-import { User, UserRole } from 'models/User';
+import {
+  Mentor as MentorModel,
+  ImportTask as ImportTaskModel,
+} from '../../../models';
+import { Mentor } from '../../../models/Mentor';
+import { User, UserRole } from '../../../models/User';
 
 export const importTaskDelete = {
   type: GraphQLBoolean,
