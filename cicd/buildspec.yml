@@ -1,0 +1,37 @@
+version: 0.2
+
+env:
+  variables:
+    SENTRY_ORG: 'usc-ict-ls'
+    SENTRY_PROJECT: 'mentor-graphql'
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+    commands:
+      - n 16 # workaround https://github.com/aws/aws-codebuild-docker-images/issues/490
+      - NODE_ENV=dev npm ci
+      - (cd node && NODE_ENV=dev npm ci)
+
+  pre_build:
+    on-failure: ABORT # or CONTINUE
+    commands:
+      - cd node
+      # commands from now on run in ./node folder
+      - npm run test:format
+      - npm run test:license
+      - npm run test:lint
+      - npm run test:types
+      # - npm run test:audit
+      - npm run test
+
+  build:
+    commands:
+    # this is just to compile ts; serverless will run its own build at deploy
+      - npm run build
+
+artifacts:
+  files:
+    - '**/*'
+  enable-symlinks: yes

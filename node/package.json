@@ -12,6 +12,7 @@
     "deps:update": "npx ncu -u",
     "deploy:dev": "sls deploy -s dev --region us-east-1",
     "deploy:qa": "sls deploy -s qa --region us-east-1",
+    "deploy:prod": "sls deploy -s prod --region us-west-2",
     "format": "prettier --write '**/*.{js,jsx,json,ts,tsx}'",
     "lint:fix": "eslint src --ext ts --ext js --fix",
     "start": "tsc --traceResolution && node dist/server.js",
