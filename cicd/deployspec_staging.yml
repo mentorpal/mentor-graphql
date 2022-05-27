@@ -21,6 +21,8 @@ phases:
       - ls
       - cd node
       - npm run deploy:qa
+      - echo running integration tests against deployed lambda
+      - npm run test:integration
 
       # TODO
       # - echo sentry release: ${SENTRY_RELEASE}

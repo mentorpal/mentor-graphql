@@ -11,7 +11,7 @@ describe('subjectsById', () => {
   it('gets a list of subjects by ids', async () => {
     const ids = ['6270c833ac7270cb911d5c43', '626a455a6272f6e57687bd85'];
     const response = await request(
-      'https://api-dev.mentorpal.org/graphql/graphql'
+      'https://api-qa.mentorpal.org/graphql/graphql'
     )
       .post('/graphql')
       .send({

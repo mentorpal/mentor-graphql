@@ -11,7 +11,7 @@ import request from 'supertest';
 describe('userQuestions', () => {
   it(`throws an error if invalid id`, async () => {
     const response = await request(
-      'https://api-dev.mentorpal.org/graphql/graphql'
+      'https://api-qa.mentorpal.org/graphql/graphql'
     )
       .post('/graphql')
       .send({
@@ -30,7 +30,7 @@ describe('userQuestions', () => {
 
   it('gets a list of userQuestions', async () => {
     const response = await request(
-      'https://api-dev.mentorpal.org/graphql/graphql'
+      'https://api-qa.mentorpal.org/graphql/graphql'
     )
       .post('/graphql')
       .send({
@@ -58,7 +58,7 @@ describe('userQuestions', () => {
     });
 
     const question = await request(
-      'https://api-dev.mentorpal.org/graphql/graphql'
+      'https://api-qa.mentorpal.org/graphql/graphql'
     )
       .post('/graphql')
       .send({
@@ -77,7 +77,7 @@ describe('userQuestions', () => {
 
   it('filters userQuestions by feedback type', async () => {
     const response = await request(
-      'https://api-dev.mentorpal.org/graphql/graphql'
+      'https://api-qa.mentorpal.org/graphql/graphql'
     )
       .post('/graphql')
       .send({
@@ -105,7 +105,7 @@ describe('userQuestions', () => {
 
   it('filters userQuestions by mentor', async () => {
     const response = await request(
-      'https://api-dev.mentorpal.org/graphql/graphql'
+      'https://api-qa.mentorpal.org/graphql/graphql'
     )
       .post('/graphql')
       .send({

@@ -10,7 +10,7 @@ import request from 'supertest';
 describe('query users', () => {
   it('query all users', async () => {
     const response = await request(
-      'https://api-dev.mentorpal.org/graphql/graphql'
+      'https://api-qa.mentorpal.org/graphql/graphql'
     )
       .post('/graphql')
       .send({
