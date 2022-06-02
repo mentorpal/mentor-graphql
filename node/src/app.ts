@@ -105,7 +105,12 @@ export async function createApp(): Promise<Express> {
 
   const corsOptions = {
     credentials: true,
-    origin: ['http://local.mentorpal.org:8000', 'http://localhost:8000'],
+    origin: [
+      'https://v2.mentorpal.org',
+      'https://careerfair.mentorpal.org',
+      'http://local.mentorpal.org:8000',
+      'http://localhost:8000',
+    ],
   };
   app.use(cors(corsOptions));
   app.use(express.json({ limit: '2mb' }));
