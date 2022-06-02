@@ -4,6 +4,7 @@ env:
   variables:
     SENTRY_ORG: 'usc-ict-ls'
     SENTRY_PROJECT: 'mentor-graphql'
+    STATIC_URL_BASE: 'https://static-careerfair.mentorpal.org/'
 
 phases:
   install:
