@@ -37,6 +37,7 @@ custom:
       MONGO_URI: '${ssm:/mentorpal/graphql/dev/mongo_uri}'
       NODE_ENV: 'careerfair-dev'
       STATIC_URL_BASE: 'https://static-v2.mentorpal.org/'
+      GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
     qa:
       LOG_LEVEL: 'debug'
       IS_SENTRY_ENABLED: true
@@ -46,6 +47,7 @@ custom:
       MONGO_URI: '${ssm:/mentorpal/graphql/qa/mongo_uri}'
       NODE_ENV: 'careerfair-v2'
       STATIC_URL_BASE: 'https://static-v2.mentorpal.org/'
+      GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
     prod:
       LOG_LEVEL: 'info'
       IS_SENTRY_ENABLED: true
@@ -55,6 +57,7 @@ custom:
       MONGO_URI: '${ssm:/mentorpal/graphql/prod/mongo_uri}'
       NODE_ENV: 'careerfair'
       STATIC_URL_BASE: 'https://static-careerfair.mentorpal.org/'
+      GOOGLE_CLIENT_ID: ${ssm:/mentorpal/prod/shared/GOOGLE_CLIENT_ID, ''}
 
 provider:
   name: aws
@@ -91,6 +94,7 @@ provider:
     SENTRY_DSN_MENTOR_GRAPHQL: '${ssm:/mentorpal/graphql/sentry_dsn}'
     MONGO_URI: ${self:custom.stages.${self:provider.stage}.MONGO_URI}
     STATIC_URL_BASE: ${self:custom.stages.${self:provider.stage}.STATIC_URL_BASE}
+    GOOGLE_CLIENT_ID: ${self:custom.stages.${self:provider.stage}.GOOGLE_CLIENT_ID}
 
   stackTags:
     ENVIRONMENT: ${self:provider.stage}
