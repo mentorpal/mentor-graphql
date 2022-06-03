@@ -36,7 +36,7 @@ custom:
       # WEBACL_ARN: '${ssm:/mentorpal/mentor-graphql/qa/firewall/WEBACL_ARN}'
       MONGO_URI: '${ssm:/mentorpal/graphql/dev/mongo_uri}'
       NODE_ENV: 'careerfair-dev'
-
+      STATIC_URL_BASE: 'https://static-v2.mentorpal.org/'
     qa:
       LOG_LEVEL: 'debug'
       IS_SENTRY_ENABLED: true
@@ -45,6 +45,16 @@ custom:
       # WEBACL_ARN: '${ssm:/mentorpal/mentor-graphql/qa/firewall/WEBACL_ARN}'
       MONGO_URI: '${ssm:/mentorpal/graphql/qa/mongo_uri}'
       NODE_ENV: 'careerfair-v2'
+      STATIC_URL_BASE: 'https://static-v2.mentorpal.org/'
+    prod:
+      LOG_LEVEL: 'info'
+      IS_SENTRY_ENABLED: true
+      API_SECRET: ${ssm:/mentorpal/cf/shared/api_secret, ''}
+      JWT_SECRET: ${ssm:/mentorpal/cf/shared/jwt_secret, ''}
+      # WEBACL_ARN: '${ssm:/mentorpal/mentor-graphql/qa/firewall/WEBACL_ARN}'
+      MONGO_URI: '${ssm:/mentorpal/graphql/prod/mongo_uri}'
+      NODE_ENV: 'careerfair'
+      STATIC_URL_BASE: 'https://static-careerfair.mentorpal.org/'
 
 provider:
   name: aws
@@ -80,12 +90,12 @@ provider:
     IS_SENTRY_ENABLED: ${self:custom.stages.${self:provider.stage}.IS_SENTRY_ENABLED}
     SENTRY_DSN_MENTOR_GRAPHQL: '${ssm:/mentorpal/graphql/sentry_dsn}'
     MONGO_URI: ${self:custom.stages.${self:provider.stage}.MONGO_URI}
+    STATIC_URL_BASE: ${self:custom.stages.${self:provider.stage}.STATIC_URL_BASE}
 
   stackTags:
     ENVIRONMENT: ${self:provider.stage}
     PROJECT: ${self:service}-${self:provider.stage}
     REPOSITORY: mentor-graphql
-
 
 functions:
   app:
