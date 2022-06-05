@@ -68,6 +68,8 @@ export function setTokenCookie(res: Response, token: string): any {
     expires: new Date(Date.now() + validDays * 24 * 60 * 60 * 1000),
     // api endpoints are on another subdomain so need to allow all subdomains:
     domain: '.mentorpal.org',
+    sameSite: false,
+    secure: true,
   };
   res.cookie('refreshToken', token, cookieOptions);
 }
