@@ -62,9 +62,12 @@ export function setTokenCookie(res: Response, token: string): any {
   const validDays = process.env['ACCESS_TOKEN_VALIDITY_DAYS']
     ? parseInt(process.env['ACCESS_TOKEN_VALIDITY_DAYS'])
     : 90;
+  // https://www.npmjs.com/package/cookies#cookiesset-name--value---options--
   const cookieOptions = {
     httpOnly: true,
     expires: new Date(Date.now() + validDays * 24 * 60 * 60 * 1000),
+    // api endpoints are on another subdomain so need to allow all subdomains:
+    domain: '.mentorpal.org',
   };
   res.cookie('refreshToken', token, cookieOptions);
 }
