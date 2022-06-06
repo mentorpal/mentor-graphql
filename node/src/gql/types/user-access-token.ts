@@ -67,7 +67,7 @@ export function setTokenCookie(res: Response, token: string): any {
     httpOnly: true,
     expires: new Date(Date.now() + validDays * 24 * 60 * 60 * 1000),
     // api endpoints are on another subdomain so need to allow all subdomains:
-    domain: '.mentorpal.org',
+    domain: '*.mentorpal.org',
     // with these two the cookie never gets set:
     // sameSite: false,
     // secure: true,
