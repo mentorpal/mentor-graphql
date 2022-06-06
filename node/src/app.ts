@@ -19,6 +19,13 @@ import { logger } from './utils/logging';
 import requireEnv from './utils/require-env';
 import { User as UserSchema } from './models';
 
+const CORS_ORIGIN = process.env.CORS_ORIGIN || [
+  'https://v2.mentorpal.org',
+  'https://careerfair.mentorpal.org',
+  'http://local.mentorpal.org:8000',
+  'http://localhost:8000',
+];
+
 function setupPassport() {
   passport.use(
     new BearerStrategy(function (token, done) {
@@ -105,12 +112,7 @@ export async function createApp(): Promise<Express> {
 
   const corsOptions = {
     credentials: true,
-    origin: [
-      'https://v2.mentorpal.org',
-      'https://careerfair.mentorpal.org',
-      'http://local.mentorpal.org:8000',
-      'http://localhost:8000',
-    ],
+    origin: CORS_ORIGIN,
   };
   app.use(cors(corsOptions));
   app.use(express.json({ limit: '2mb' }));
