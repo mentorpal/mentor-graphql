@@ -5,7 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLString, GraphQLObjectType } from 'graphql';
-import { Response } from 'express';
+import { CookieOptions, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { randomBytes } from 'crypto';
 import { User } from '../../models/User';
@@ -63,14 +63,13 @@ export function setTokenCookie(res: Response, token: string): any {
     ? parseInt(process.env['ACCESS_TOKEN_VALIDITY_DAYS'])
     : 90;
   // https://www.npmjs.com/package/cookies#cookiesset-name--value---options--
-  const cookieOptions = {
+  const cookieOptions: CookieOptions = {
     httpOnly: true,
     expires: new Date(Date.now() + validDays * 24 * 60 * 60 * 1000),
     // api endpoints are on another subdomain so need to allow all subdomains:
-    domain: '*.mentorpal.org',
-    // with these two the cookie never gets set:
-    // sameSite: false,
-    // secure: true,
+    domain: 'mentorpal.org',
+    sameSite: 'strict' as CookieOptions['sameSite'],
+    secure: true,
   };
   res.cookie('refreshToken', token, cookieOptions);
 }

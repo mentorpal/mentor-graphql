@@ -112,4 +112,4 @@ functions:
       - http: 
           path: /{proxy+}
           method: ANY
-          cors: true
+          # cors: true
