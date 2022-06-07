@@ -26,8 +26,11 @@ function isApiReq(req: Request): boolean {
 async function refreshToken(req: Request, next: any) {
   // eslint-disable-line  @typescript-eslint/no-explicit-any
   try {
+    logger.debug('refreshing token');
     const token = req.cookies[process.env.REFRESH_TOKEN_NAME];
-    logger.debug(`refreshing access token using refresh token: ${token}`);
+    if (!token) {
+      logger.debug('refresh token not found');
+    }
     const { jwtToken, user } = await getRefreshedToken(token);
     if (user) {
       next(user, jwtToken);
