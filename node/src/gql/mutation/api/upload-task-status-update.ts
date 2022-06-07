@@ -71,7 +71,6 @@ export const uploadTaskStatusUpdate = {
       uploadTaskStatusInput: UploadTaskStatusUpdateInput;
     }
   ): Promise<boolean> => {
-    console.error(args.uploadTaskStatusInput);
     const { mentorId, questionId } = args;
     const {
       transcript,
@@ -190,7 +189,6 @@ export const uploadTaskStatusUpdate = {
         new: true,
       }
     );
-    console.log(`Updated task: ${JSON.stringify(updatedTask)}`);
     return Boolean(updatedTask);
   },
 };

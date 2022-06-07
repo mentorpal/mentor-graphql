@@ -71,7 +71,7 @@ export function setTokenCookie(res: Response, token: string): any {
     sameSite: 'strict' as CookieOptions['sameSite'],
     secure: true,
   };
-  res.cookie('refreshToken', token, cookieOptions);
+  res.cookie(process.env.REFRESH_TOKEN_NAME, token, cookieOptions);
 }
 
 function randomTokenString() {

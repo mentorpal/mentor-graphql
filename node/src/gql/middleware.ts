@@ -27,7 +27,7 @@ async function refreshToken(req: Request, next: any) {
   // eslint-disable-line  @typescript-eslint/no-explicit-any
   try {
     logger.debug('refreshing token');
-    const token = req.cookies.refreshToken;
+    const token = req.cookies[process.env.REFRESH_TOKEN_NAME];
     const { jwtToken, user } = await getRefreshedToken(token);
     if (user) {
       next(user, jwtToken);
@@ -36,7 +36,9 @@ async function refreshToken(req: Request, next: any) {
       next(null);
     }
   } catch (err) {
-    logger.warn(`failed to refresh token ${req.cookies.refreshToken}`);
+    logger.warn(
+      `failed to refresh token ${req.cookies[process.env.REFRESH_TOKEN_NAME]}`
+    );
     logger.error(err);
     next(null);
   }

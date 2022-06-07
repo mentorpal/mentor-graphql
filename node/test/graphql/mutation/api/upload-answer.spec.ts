@@ -126,7 +126,6 @@ describe('uploadAnswer', () => {
           },
         },
       });
-    console.log(response.body);
     expect(response.status).to.equal(200);
     expect(response.body.data.api.uploadAnswer).to.eql(true);
     const r2 = await request(app)
