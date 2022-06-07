@@ -15,13 +15,17 @@ export const logout = {
     context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
   ): Promise<void> => {
     try {
-      const token = context.req.cookies.refreshToken;
+      const token = context.req.cookies[process.env.REFRESH_TOKEN_NAME];
       await revokeToken(token);
       const cookieOptions = {
         httpOnly: true,
         expires: new Date(Date.now()),
       };
-      context.res.cookie('refreshToken', Date.now(), cookieOptions);
+      context.res.cookie(
+        process.env.REFRESH_TOKEN_NAME,
+        Date.now(),
+        cookieOptions
+      );
     } catch (error) {
       throw new Error(error);
     }

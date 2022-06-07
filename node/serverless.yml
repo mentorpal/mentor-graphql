@@ -39,6 +39,7 @@ custom:
       STATIC_URL_BASE: 'https://static-v2.mentorpal.org/'
       CORS_ORIGIN: 'http://local.mentorpal.org:8000'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
+      REFRESH_TOKEN_NAME: 'refreshTokenDev'
     qa:
       LOG_LEVEL: 'debug'
       IS_SENTRY_ENABLED: true
@@ -50,6 +51,7 @@ custom:
       STATIC_URL_BASE: 'https://static-v2.mentorpal.org/'
       CORS_ORIGIN: 'https://v2.mentorpal.org'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
+      REFRESH_TOKEN_NAME: 'refreshTokenQa'
     prod:
       LOG_LEVEL: 'info'
       IS_SENTRY_ENABLED: true
@@ -61,6 +63,7 @@ custom:
       STATIC_URL_BASE: 'https://static-careerfair.mentorpal.org/'
       CORS_ORIGIN: 'https://careerfair.mentorpal.org'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/prod/shared/GOOGLE_CLIENT_ID, ''}
+      REFRESH_TOKEN_NAME: 'refreshTokenProd'
 
 provider:
   name: aws
@@ -99,6 +102,7 @@ provider:
     STATIC_URL_BASE: ${self:custom.stages.${self:provider.stage}.STATIC_URL_BASE}
     CORS_ORIGIN: ${self:custom.stages.${self:provider.stage}.CORS_ORIGIN}
     GOOGLE_CLIENT_ID: ${self:custom.stages.${self:provider.stage}.GOOGLE_CLIENT_ID}
+    REFRESH_TOKEN_NAME: ${self:custom.stages.${self:provider.stage}.REFRESH_TOKEN_NAME}
 
   stackTags:
     ENVIRONMENT: ${self:provider.stage}
