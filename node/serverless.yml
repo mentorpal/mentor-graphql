@@ -111,6 +111,8 @@ provider:
 
 functions:
   app:
+    # lambda default timeout is 6 seconds, mentors can take 10+ seconds to load
+    timeout: 20
     handler: ./src/lambda.handler
     events: 
       - http: 
