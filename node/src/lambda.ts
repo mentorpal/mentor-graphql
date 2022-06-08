@@ -22,8 +22,8 @@ if (process.env.IS_SENTRY_ENABLED === 'true') {
     environment: process.env.NODE_ENV,
     // configure sample of errors to send for performance monitoring (1.0 for 100%)
     // @see https://docs.sentry.io/platforms/javascript/configuration/sampling/
-    ...(process.env.STAGE == 'prod' && {tracesSampleRate: 0.25 }),
-    ...(process.env.SENTRY_DEBUG && {debug: true }),
+    ...(process.env.STAGE == 'prod' && { tracesSampleRate: 0.25 }),
+    ...(process.env.SENTRY_DEBUG && { debug: true }),
     sendClientReports: false,
   });
 }
