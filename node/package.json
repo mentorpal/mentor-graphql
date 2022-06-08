@@ -29,8 +29,7 @@
   "author": "CVM",
   "license": "ISC",
   "dependencies": {
-    "@sentry/node": "^6.15.0",
-    "@sentry/tracing": "^6.15.0",
+    "@sentry/serverless": "^7.1.1",
     "@types/object-path": "^0.11.1",
     "axios": "^0.21.1",
     "base64url": "^3.0.1",

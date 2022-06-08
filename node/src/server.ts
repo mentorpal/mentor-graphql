@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import * as Sentry from '@sentry/node';
+import * as Sentry from '@sentry/serverless';
 import { createApp, appStop } from './app';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('mentor-admin:server');

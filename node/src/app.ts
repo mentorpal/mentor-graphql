@@ -13,8 +13,7 @@ import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import mongoose from 'mongoose';
 import morgan, { TokenIndexer } from 'morgan';
 import path from 'path';
-import * as Sentry from '@sentry/node';
-import * as Tracing from '@sentry/tracing';
+import * as Sentry from '@sentry/serverless';
 import { logger } from './utils/logging';
 import requireEnv from './utils/require-env';
 import { User as UserSchema } from './models';
@@ -91,18 +90,6 @@ export async function createApp(): Promise<Express> {
     );
   }
   if (process.env.IS_SENTRY_ENABLED === 'true') {
-    logger.info(`sentry enabled, calling init on ${process.env.NODE_ENV}`);
-    Sentry.init({
-      dsn: process.env.SENTRY_DSN_MENTOR_GRAPHQL,
-      environment: process.env.NODE_ENV,
-      integrations: [
-        new Sentry.Integrations.Http({ tracing: true }),
-        new Tracing.Integrations.Express({ app }),
-      ],
-      // configure sample of errors to send for performance monitoring (1.0 for 100%)
-      // @see https://docs.sentry.io/platforms/javascript/configuration/sampling/
-      tracesSampleRate: 0.25,
-    });
     // RequestHandler creates a separate execution context using domains, so that every
     // transaction/span/breadcrumb is attached to its own Hub instance
     app.use(Sentry.Handlers.requestHandler());

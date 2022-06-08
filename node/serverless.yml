@@ -93,7 +93,7 @@ provider:
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
     STAGE: ${self:provider.stage}
-    PYTHON_ENV: careerfair-${self:provider.stage}
+    NODE_ENV: careerfair-${self:provider.stage}
     API_SECRET: ${self:custom.stages.${self:provider.stage}.API_SECRET}
     JWT_SECRET: ${self:custom.stages.${self:provider.stage}.JWT_SECRET}
     IS_SENTRY_ENABLED: ${self:custom.stages.${self:provider.stage}.IS_SENTRY_ENABLED}
