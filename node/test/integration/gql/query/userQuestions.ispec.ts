@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import { expect } from 'chai';
 import request from 'supertest';
 
-const API_URL = process.env.API_URL || 'localhost:3001/graphql/graphql'
+const API_URL = process.env.API_URL || 'localhost:3001/graphql/graphql';
 
 describe('userQuestions', () => {
   it(`throws an error if invalid id`, async () => {
