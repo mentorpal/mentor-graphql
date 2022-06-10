@@ -105,9 +105,10 @@ provider:
     REFRESH_TOKEN_NAME: ${self:custom.stages.${self:provider.stage}.REFRESH_TOKEN_NAME}
 
   stackTags:
-    ENVIRONMENT: ${self:provider.stage}
-    PROJECT: ${self:service}-${self:provider.stage}
-    REPOSITORY: mentor-graphql
+    Environment: ${self:provider.stage}
+    Source: 'serverless-framework'
+    Project: 'mentorpal'
+    Component: 'mentor-graphql'
 
 functions:
   app:
