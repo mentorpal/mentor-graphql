@@ -35,6 +35,7 @@ export const MentorType = new GraphQLObjectType({
     allowContact: { type: GraphQLBoolean },
     lastTrainedAt: { type: DateType },
     isDirty: { type: GraphQLBoolean },
+    isPrivate: { type: GraphQLBoolean },
     mentorType: { type: GraphQLString },
     defaultSubject: { type: SubjectType },
     recordQueue: {
