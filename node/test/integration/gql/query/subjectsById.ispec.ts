@@ -7,12 +7,12 @@ The full terms of this copyright and license should always be found in the root 
 import { expect } from 'chai';
 import request from 'supertest';
 
+const API_URL = process.env.API_URL || 'localhost:3001/graphql/graphql'
+
 describe('subjectsById', () => {
   it('gets a list of subjects by ids', async () => {
     const ids = ['6270c833ac7270cb911d5c43', '626a455a6272f6e57687bd85'];
-    const response = await request(
-      'https://api-qa.mentorpal.org/graphql/graphql'
-    )
+    const response = await request(API_URL)
       .post('/graphql')
       .send({
         query: `query SubjectsById($ids: [ID]!) {

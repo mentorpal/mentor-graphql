@@ -8,11 +8,11 @@ import mongoose from 'mongoose';
 import { expect } from 'chai';
 import request from 'supertest';
 
+const API_URL = process.env.API_URL || 'localhost:3001/graphql/graphql'
+
 describe('userQuestions', () => {
   it(`throws an error if invalid id`, async () => {
-    const response = await request(
-      'https://api-qa.mentorpal.org/graphql/graphql'
-    )
+    const response = await request(API_URL)
       .post('/graphql')
       .send({
         query: `query {
@@ -29,9 +29,7 @@ describe('userQuestions', () => {
   });
 
   it('gets a list of userQuestions', async () => {
-    const response = await request(
-      'https://api-qa.mentorpal.org/graphql/graphql'
-    )
+    const response = await request(API_URL)
       .post('/graphql')
       .send({
         query: `query {
@@ -57,9 +55,7 @@ describe('userQuestions', () => {
       expect(edge.node._id.length).to.equal(24);
     });
 
-    const question = await request(
-      'https://api-qa.mentorpal.org/graphql/graphql'
-    )
+    const question = await request(API_URL)
       .post('/graphql')
       .send({
         query: `query {
@@ -76,9 +72,7 @@ describe('userQuestions', () => {
   });
 
   it('filters userQuestions by feedback type', async () => {
-    const response = await request(
-      'https://api-qa.mentorpal.org/graphql/graphql'
-    )
+    const response = await request(API_URL)
       .post('/graphql')
       .send({
         query: `query {
@@ -104,9 +98,7 @@ describe('userQuestions', () => {
   });
 
   it('filters userQuestions by mentor', async () => {
-    const response = await request(
-      'https://api-qa.mentorpal.org/graphql/graphql'
-    )
+    const response = await request(API_URL)
       .post('/graphql')
       .send({
         query: `query {

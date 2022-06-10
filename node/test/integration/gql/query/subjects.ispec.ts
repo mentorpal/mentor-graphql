@@ -7,11 +7,11 @@ The full terms of this copyright and license should always be found in the root 
 import { expect } from 'chai';
 import request from 'supertest';
 
+const API_URL = process.env.API_URL || 'localhost:3001/graphql/graphql'
+
 describe('subjects', () => {
   it('gets a list of subjects', async () => {
-    const response = await request(
-      'https://api-qa.mentorpal.org/graphql/graphql'
-    )
+    const response = await request(API_URL)
       .post('/graphql')
       .send({
         query: `query {
@@ -32,9 +32,7 @@ describe('subjects', () => {
 
   describe('can order list of subjects', () => {
     it('by name in ascending order', async () => {
-      const response = await request(
-        'https://api-qa.mentorpal.org/graphql/graphql'
-      )
+      const response = await request(API_URL)
         .post('/graphql')
         .send({
           query: `query {
@@ -53,9 +51,7 @@ describe('subjects', () => {
     });
 
     it('by name in descending order', async () => {
-      const response = await request(
-        'https://api-qa.mentorpal.org/graphql/graphql'
-      )
+      const response = await request(API_URL)
         .post('/graphql')
         .send({
           query: `query {
@@ -75,7 +71,7 @@ describe('subjects', () => {
   });
 
   it('can paginate list of subjects', async () => {
-    const first = await request('https://api-qa.mentorpal.org/graphql/graphql')
+    const first = await request(API_URL)
       .post('/graphql')
       .send({
         query: `query {
@@ -96,7 +92,7 @@ describe('subjects', () => {
       });
     expect(first.status).to.equal(200);
     expect(first.body.data.subjects.edges.length).to.eql(2);
-    const second = await request('https://api-qa.mentorpal.org/graphql/graphql')
+    const second = await request(API_URL)
       .post('/graphql')
       .send({
         query: `query {
@@ -117,9 +113,7 @@ describe('subjects', () => {
       });
     expect(second.status).to.equal(200);
     expect(second.body.data.subjects.edges.length).to.eql(2);
-    const backToFirst = await request(
-      'https://api-qa.mentorpal.org/graphql/graphql'
-    )
+    const backToFirst = await request(API_URL)
       .post('/graphql')
       .send({
         query: `query {

@@ -17,7 +17,7 @@
     "lint:fix": "eslint src --ext ts --ext js --fix",
     "start": "tsc --traceResolution && node dist/server.js",
     "test": "export ENV=test && export NODE_ENV=test && npx mocha -r tsconfig-paths/register -r ts-node/register -r source-map-support/register 'test/*.{spec,test}.{js,ts}' 'test/**/*.{spec,test}.{js,ts}' --timeout 10000 --full-trace --recursive --reporter spec --delay --exit",
-    "test:integration": "ENV=test NODE_ENV=test npx mocha -r tsconfig-paths/register -r ts-node/register -r source-map-support/register 'test/integration/**/*.ispec.ts' --timeout 10000 --full-trace --recursive --reporter spec",
+    "test:integration": "ENV=test NODE_ENV=test npx mocha -r tsconfig-paths/register -r ts-node/register -r source-map-support/register 'test/integration/**/*.ispec.ts' --timeout 15000 --full-trace --recursive --reporter spec",
     "test:all": "npm run test:format && npm run test:lint && npm run test:audit && npm run test:types && npm test",
     "test:audit": "npm audit --audit-level=moderate --production",
     "test:format": "prettier --check '**/*.{js,jsx,json,ts,tsx}'",
