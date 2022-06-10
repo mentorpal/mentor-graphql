@@ -15,4 +15,5 @@ phases:
   build:
     commands:
       - echo running integration tests against deployed qa api
+      - cd node
       - npm run test:integration
