@@ -177,6 +177,7 @@ describe('login', () => {
         `,
         variables: { accessToken: token },
       });
+    console.log(response.body);
     expect(response.status).to.equal(200);
     expect(response.body.data.login.accessToken).to.be.not.empty;
     expect(response.body.data.login.accessToken).to.be.not.equal(token);

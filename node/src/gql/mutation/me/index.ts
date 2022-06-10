@@ -16,6 +16,7 @@ import subjectAddOrUpdateQuestions from './subject-add-or-update-questions';
 import uploadTaskDelete from './upload-task-delete';
 import updateUserPermissions from './user-permissions-update';
 import importTaskDelete from './import-task-delete';
+import firstTimeTrackingUpdate from './first-time-tracking-update';
 
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeMutation',
@@ -30,6 +31,7 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
     uploadTaskDelete,
     updateUserPermissions,
     importTaskDelete,
+    firstTimeTrackingUpdate,
   }),
 });
 
