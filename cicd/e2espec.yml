@@ -1,9 +1,5 @@
 version: 0.2
 
-env:
-  variables:
-    API_URL: 'api-qa.mentorpal.org'
-
 phases:
   install:
     runtime-versions:
@@ -16,4 +12,4 @@ phases:
     commands:
       - echo running integration tests against deployed qa api
       - cd node
-      - npm run test:integration
+      - API_URL=api-qa.mentorpal.org npm run test:integration
