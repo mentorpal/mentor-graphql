@@ -28,18 +28,18 @@ export const firstTimeTrackingUpdateInputType = new GraphQLInputObjectType({
 export const firstTimeTrackingUpdate = {
   type: FirstTimeTrackingGqlType,
   args: {
-    update: { type: GraphQLNonNull(firstTimeTrackingUpdateInputType) },
+    updates: { type: GraphQLNonNull(firstTimeTrackingUpdateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
-      update: Partial<FirstTimeTracking>;
+      updates: Partial<FirstTimeTracking>;
     },
     context: { user: User }
   ): Promise<FirstTimeTracking> => {
     return await FirstTimeTrackingModel.findOneAndUpdate(
       { user: context.user._id },
-      { ...args.update },
+      { ...args.updates },
       { upsert: true, new: true }
     );
   },

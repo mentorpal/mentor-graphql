@@ -59,16 +59,16 @@ describe('First Time Setup', () => {
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `
-        mutation FirstTimeTrackingUpdate($update: FirstTimeTrackingUpdateInputType!) {
+        mutation FirstTimeTrackingUpdate($updates: FirstTimeTrackingUpdateInputType!) {
           me{
-            firstTimeTrackingUpdate(update: $update){
+            firstTimeTrackingUpdate(updates: $updates){
               myMentorSplash
             }
           }
         }
       `,
         variables: {
-          update: {
+          updates: {
             myMentorSplash: true,
           },
         },
