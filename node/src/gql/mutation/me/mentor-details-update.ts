@@ -23,6 +23,7 @@ export interface UpdateMentorDetails {
   email: string;
   allowContact: boolean;
   mentorType: string;
+  isPrivate: boolean;
 }
 
 export const UpdateMentorDetailsType = new GraphQLInputObjectType({
@@ -34,6 +35,7 @@ export const UpdateMentorDetailsType = new GraphQLInputObjectType({
     email: { type: GraphQLString },
     allowContact: { type: GraphQLBoolean },
     mentorType: { type: GraphQLString },
+    isPrivate: { type: GraphQLBoolean },
   }),
 });
 
