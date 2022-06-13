@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import FirstTimeTrackingGqlType from 'gql/types/first-time-tracking';
+import FirstTimeTrackingGqlType from '../../types/first-time-tracking';
 import {
   GraphQLObjectType,
   GraphQLNonNull,
@@ -13,7 +13,7 @@ import {
 } from 'graphql';
 import FirstTimeTrackingModel, {
   FirstTimeTracking,
-} from 'models/FirstTimeTracking';
+} from '../../../models/FirstTimeTracking';
 import { User } from '../../../models/User';
 
 export const firstTimeTrackingUpdateInputType = new GraphQLInputObjectType({
