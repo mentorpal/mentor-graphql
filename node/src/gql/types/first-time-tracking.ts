@@ -5,20 +5,11 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLBoolean, GraphQLID, GraphQLObjectType } from 'graphql';
-import { FirstTimeTracking } from 'models/FirstTimeTracking';
-import { User as UserModel } from '../../models';
-import UserType from './user';
 
 export const FirstTimeTrackingGqlType = new GraphQLObjectType({
   name: 'FirstTimeTracking',
   fields: () => ({
     _id: { type: GraphQLID },
-    user: {
-      type: UserType,
-      resolve: async function (tracking: FirstTimeTracking) {
-        return UserModel.findById(tracking.user);
-      },
-    },
     myMentorSplash: { type: GraphQLBoolean },
   }),
 });

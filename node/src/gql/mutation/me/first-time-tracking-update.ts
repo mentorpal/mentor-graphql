@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import UserType from 'gql/types/user';
+import FirstTimeTrackingGqlType from 'gql/types/first-time-tracking';
 import {
   GraphQLObjectType,
   GraphQLNonNull,
@@ -26,7 +26,7 @@ export const firstTimeTrackingUpdateInputType = new GraphQLInputObjectType({
 });
 
 export const firstTimeTrackingUpdate = {
-  type: UserType,
+  type: FirstTimeTrackingGqlType,
   args: {
     update: { type: GraphQLNonNull(firstTimeTrackingUpdateInputType) },
   },
@@ -39,7 +39,8 @@ export const firstTimeTrackingUpdate = {
   ): Promise<FirstTimeTracking> => {
     return await FirstTimeTrackingModel.findOneAndUpdate(
       { user: context.user._id },
-      { ...args.update }
+      { ...args.update },
+      { upsert: true, new: true }
     );
   },
 };

@@ -318,4 +318,11 @@ module.exports = {
       transcript: 'fake_transcript',
     },
   ],
+
+  firsttimetrackings: [
+    {
+      user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
+      myMentorSplash: false,
+    },
+  ],
 };

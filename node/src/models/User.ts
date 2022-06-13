@@ -5,7 +5,6 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose, { Schema, Document, Model } from 'mongoose';
-import { FirstTimeTracking } from './FirstTimeTracking';
 import {
   PaginatedResolveResult,
   PaginateOptions,
@@ -25,7 +24,6 @@ export interface User extends Document {
   email: string;
   userRole: string;
   mentorIds: string[];
-  firstTimeTracking: FirstTimeTracking;
   lastLoginAt: Date;
 }
 
@@ -43,10 +41,6 @@ export const UserSchema = new Schema<User, UserModel>(
       type: [Schema.Types.ObjectId],
       default: [],
     },
-    // firstTimeTracking: {
-    //   type: mongoose.Types.ObjectId,
-    //   ref: 'FirstTimeTracking',
-    // },
     lastLoginAt: { type: Date },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }

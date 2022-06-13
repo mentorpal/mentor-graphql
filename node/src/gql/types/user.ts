@@ -10,25 +10,35 @@ import {
   GraphQLID,
   GraphQLList,
 } from 'graphql';
-import { Mentor as MentorModel } from '../../models';
+import {
+  Mentor as MentorModel,
+  FirstTimeTracking as FirstTimeTrackingModel,
+} from '../../models';
 import { User } from '../../models/User';
 import { DateType } from './date';
+import FirstTimeTrackingGqlType from './first-time-tracking';
 import MentorType from './mentor';
 export const UserType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
-    _id: { type: GraphQLID },
-    name: { type: GraphQLString },
-    email: { type: GraphQLString },
-    userRole: { type: GraphQLString },
-    lastLoginAt: { type: DateType },
     defaultMentor: {
       type: MentorType,
       resolve: async (user: User) => {
         return MentorModel.findOne({ user: user._id });
       },
     },
+    _id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    email: { type: GraphQLString },
+    userRole: { type: GraphQLString },
+    lastLoginAt: { type: DateType },
     mentorIds: { type: GraphQLList(GraphQLID) },
+    firstTimeTracking: {
+      type: FirstTimeTrackingGqlType,
+      resolve: async (user: User) => {
+        return FirstTimeTrackingModel.findOne({ user: user._id });
+      },
+    },
   }),
 });
 
