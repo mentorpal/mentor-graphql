@@ -4,42 +4,45 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
+import FirstTimeTrackingGqlType from '../../types/first-time-tracking';
 import {
-  GraphQLString,
   GraphQLObjectType,
-  GraphQLID,
-  GraphQLList,
+  GraphQLNonNull,
+  GraphQLInputObjectType,
+  GraphQLBoolean,
 } from 'graphql';
-import {
-  Mentor as MentorModel,
-  FirstTimeTracking as FirstTimeTrackingModel,
-} from '../../models';
-import { User } from '../../models/User';
-import { DateType } from './date';
-import FirstTimeTrackingGqlType from './first-time-tracking';
-import MentorType from './mentor';
-export const UserType = new GraphQLObjectType({
-  name: 'User',
+import FirstTimeTrackingModel, {
+  FirstTimeTracking,
+} from '../../../models/FirstTimeTracking';
+import { User } from '../../../models/User';
+
+export const firstTimeTrackingUpdateInputType = new GraphQLInputObjectType({
+  name: 'FirstTimeTrackingUpdateInputType',
   fields: () => ({
-    defaultMentor: {
-      type: MentorType,
-      resolve: async (user: User) => {
-        return MentorModel.findOne({ user: user._id });
-      },
-    },
-    _id: { type: GraphQLID },
-    name: { type: GraphQLString },
-    email: { type: GraphQLString },
-    userRole: { type: GraphQLString },
-    lastLoginAt: { type: DateType },
-    mentorIds: { type: GraphQLList(GraphQLID) },
-    firstTimeTracking: {
-      type: FirstTimeTrackingGqlType,
-      resolve: async (user: User) => {
-        return FirstTimeTrackingModel.findOne({ user: user._id });
-      },
+    myMentorSplash: {
+      type: GraphQLBoolean,
     },
   }),
 });
 
-export default UserType;
+export const firstTimeTrackingUpdate = {
+  type: FirstTimeTrackingGqlType,
+  args: {
+    updates: { type: GraphQLNonNull(firstTimeTrackingUpdateInputType) },
+  },
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: {
+      updates: Partial<FirstTimeTracking>;
+    },
+    context: { user: User }
+  ): Promise<FirstTimeTracking> => {
+    return await FirstTimeTrackingModel.findOneAndUpdate(
+      { user: context.user._id },
+      { ...args.updates },
+      { upsert: true, new: true }
+    );
+  },
+};
+
+export default firstTimeTrackingUpdate;
