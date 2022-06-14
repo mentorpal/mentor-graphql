@@ -36,8 +36,8 @@ custom:
       # WEBACL_ARN: '${ssm:/mentorpal/mentor-graphql/qa/firewall/WEBACL_ARN}'
       MONGO_URI: '${ssm:/mentorpal/graphql/dev/mongo_uri}'
       NODE_ENV: 'careerfair-dev'
-      STATIC_URL_BASE: 'https://static-v2.mentorpal.org/'
-      CORS_ORIGIN: 'http://local.mentorpal.org:8000'
+      STATIC_URL_BASE: 'https://static-newdev.mentorpal.org/'
+      CORS_ORIGIN: 'https://newdev.mentorpal.org'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenDev'
     qa:
