@@ -7,6 +7,7 @@ The full terms of this copyright and license should always be found in the root 
 import { GraphQLObjectType, GraphQLID, GraphQLScalarType } from 'graphql';
 import { Types } from 'mongoose';
 import { HasFindOne } from '../types/mongoose-type-helpers';
+import { User } from '../../models/User';
 
 export interface ArgsConfig {
   [name: string]: {
@@ -30,6 +31,8 @@ export function findOne<T>(config: {
   argsConfig?: ArgsConfig;
   disableAutoIdArg?: boolean;
   disableExceptionOnNotFound?: boolean;
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  checkIfInvalid?: (val: any, context: any) => void;
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 }): any {
   const {
@@ -55,7 +58,11 @@ export function findOne<T>(config: {
   return {
     type,
     args: argsConfEffective,
-    resolve: async (parent: any, args: any): Promise<T> => {
+    resolve: async (
+      parent: any,
+      args: any,
+      context: { user: User }
+    ): Promise<T> => {
       const mArgs = Object.getOwnPropertyNames(args).reduce(
         (acc: any, cur: string) => {
           if (cur === 'id') {
@@ -79,6 +86,9 @@ export function findOne<T>(config: {
         throw new Error(
           `${typeName} not found for args "${JSON.stringify(args)}"`
         );
+      }
+      if (config.checkIfInvalid !== undefined) {
+        config.checkIfInvalid(item, context);
       }
       return item;
     },

@@ -11,6 +11,7 @@ import { Express } from 'express';
 import { describe } from 'mocha';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
+import { getToken } from '../../helpers';
 
 describe('answer', () => {
   let app: Express;
@@ -106,6 +107,120 @@ describe('answer', () => {
         "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
       markdownTranscript:
         "**My** [*name*](http://clint.com) __is__ Clint __Anderson and I'm a__ **Nuclear Electrician's Mate**",
+    });
+  });
+
+
+  it(`throws an error if mentor is private and user is not logged in`, async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query Answer($mentor: ID!, $question: ID!) {
+          answer(mentor: $mentor, question: $question) {
+            _id
+          }
+        }`,
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111114',
+          question: '511111111111111111111111',
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'mentor is private and you do not have permission to access'
+    );
+  });
+
+  it(`throws an error if mentor is private and user is not owner or super user`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query Answer($mentor: ID!, $question: ID!) {
+          answer(mentor: $mentor, question: $question) {
+            _id
+          }
+        }`,
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111114',
+          question: '511111111111111111111111',
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'mentor is private and you do not have permission to access'
+    );
+  });
+
+  it(`gets answer for private mentor if content manager`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea4');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query Answer($mentor: ID!, $question: ID!) {
+          answer(mentor: $mentor, question: $question) {
+            _id
+          }
+        }`,
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111114',
+          question: '511111111111111111111111',
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.not.have.deep.nested.property('errors[0].message');
+    expect(response.body.data.answer).to.eql({
+      _id: '511111111111111111111119',
+    });
+  });
+
+  it(`gets answer for private mentor if admin`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query Answer($mentor: ID!, $question: ID!) {
+          answer(mentor: $mentor, question: $question) {
+            _id
+          }
+        }`,
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111114',
+          question: '511111111111111111111111',
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.not.have.deep.nested.property('errors[0].message');
+    expect(response.body.data.answer).to.eql({
+      _id: '511111111111111111111119',
+    });
+  });
+
+  it(`gets answer for private mentor if owner`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea6');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query Answer($mentor: ID!, $question: ID!) {
+          answer(mentor: $mentor, question: $question) {
+            _id
+          }
+        }`,
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111114',
+          question: '511111111111111111111111',
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.not.have.deep.nested.property('errors[0].message');
+    expect(response.body.data.answer).to.eql({
+      _id: '511111111111111111111119',
     });
   });
 });

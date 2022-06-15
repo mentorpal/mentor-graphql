@@ -17,12 +17,14 @@ import AnswerType from '../types/answer';
 import SubjectType from '../types/subject';
 import QuestionType from '../types/question';
 import UserQuestionType from '../types/user-question';
-import { Mentor as MentorModel } from '../../models';
-import { Answer } from '../../models/Answer';
-import { Subject } from '../../models/Subject';
-import { Question } from '../../models/Question';
-import { Mentor } from '../../models/Mentor';
-import { UserQuestion } from '../../models/UserQuestion';
+import { Mentor as MentorModel } from 'models';
+import { Answer } from 'models/Answer';
+import { Subject } from 'models/Subject';
+import { Question } from 'models/Question';
+import { Mentor } from 'models/Mentor';
+import { UserQuestion } from 'models/UserQuestion';
+import { User } from 'models/User';
+import { hasAccessToMentor } from 'utils/mentor-check-private';
 
 export interface MentorExportJson {
   id: string;
@@ -91,8 +93,15 @@ export const exportMentor = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: string }
+    args: { mentor: string },
+    context: { user: User }
   ): Promise<MentorExportJson> => {
+    const mentor = await MentorModel.findById(args.mentor);
+    if (mentor && !hasAccessToMentor(mentor, context.user)) {
+      throw new Error(
+        `mentor is private and you do not have permission to access`
+      );
+    }
     return await MentorModel.export(args.mentor);
   },
 };
