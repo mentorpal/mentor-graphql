@@ -70,6 +70,10 @@ module.exports = {
         ObjectId('5ffdf41a1ee2c62320b49eb2'),
       ],
       user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
+      recordQueue: [
+        ObjectId('511111111111111111111112'),
+        ObjectId('511111111111111111111111'),
+      ],
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62111111112'),
@@ -83,6 +87,10 @@ module.exports = {
         ObjectId('5ffdf41a1ee2c62320b49eb3'),
       ],
       user: ObjectId('5ffdf41a1ee2c62320b49ea3'),
+      recordQueue: [
+        ObjectId('511111111111111111111112'),
+        ObjectId('511111111111111111111111'),
+      ],
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62111111113'),

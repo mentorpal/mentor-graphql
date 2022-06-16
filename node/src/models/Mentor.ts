@@ -17,7 +17,7 @@ import {
   pluginPagination,
 } from './Paginatation';
 import { Answer, Status } from './Answer';
-import { QuestionType } from './Question';
+import { Question, QuestionType } from './Question';
 import { Subject, SubjectQuestion, Topic } from './Subject';
 import { User } from './User';
 import { MentorExportJson } from '../gql/query/mentor-export';
@@ -42,6 +42,7 @@ export interface Mentor extends Document {
   allowContact: boolean;
   defaultSubject: Subject['_id'];
   subjects: Subject['_id'][];
+  recordQueue: Question['_id'][];
   lastTrainedAt: Date;
   isDirty: boolean;
   mentorType: string;
@@ -108,6 +109,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
       default: '',
     },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
+    recordQueue: { type: [{ type: Schema.Types.ObjectId, ref: 'Question' }] },
     lastTrainedAt: { type: Date },
     isDirty: { type: Boolean, default: true },
     mentorType: {

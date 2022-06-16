@@ -4,16 +4,28 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-
-import { Types } from 'mongoose';
+import {
+  GraphQLObjectType,
+  GraphQLID,
+  GraphQLList,
+  GraphQLNonNull,
+} from 'graphql';
 import { User } from '../../../models/User';
 import { Mentor as MentorModel } from '../../../models';
-import { MentorType } from '../../types/mentor';
-import { GraphQLObjectType } from 'graphql';
+import { Types } from 'mongoose';
 
-export const mentor = {
-  type: MentorType,
-  resolve: async (_: GraphQLObjectType, args: any, context: { user: User }) => {
+export const addQuestionToRecordQueue = {
+  type: GraphQLList(GraphQLID),
+  args: {
+    questionId: { type: GraphQLNonNull(GraphQLID) },
+  },
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: {
+      questionId: string;
+    },
+    context: { user: User }
+  ): Promise<string[]> => {
     // eslint-disable-line  @typescript-eslint/no-explicit-any
     if (!context.user) {
       throw new Error('Only authenticated users');
@@ -21,8 +33,19 @@ export const mentor = {
     const mentor = await MentorModel.findOne({
       user: Types.ObjectId(`${context.user._id}`),
     });
-    return mentor;
+    if (!mentor) {
+      throw new Error('Failed to find mentor for user');
+    }
+    const newRecordQueue = mentor.recordQueue;
+    newRecordQueue.push(args.questionId);
+
+    const newMentor = await MentorModel.findOneAndUpdate(
+      { user: Types.ObjectId(`${context.user._id}`) },
+      { recordQueue: newRecordQueue },
+      { new: true }
+    );
+    return newMentor.recordQueue;
   },
 };
 
-export default mentor;
+export default addQuestionToRecordQueue;
