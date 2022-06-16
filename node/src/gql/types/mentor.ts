@@ -11,7 +11,7 @@ import {
   GraphQLID,
   GraphQLBoolean,
 } from 'graphql';
-import { Mentor as MentorModel } from '../../models';
+import { Mentor as MentorModel, Question as QuestionModel } from '../../models';
 import { Status } from '../../models/Answer';
 import { Mentor } from '../../models/Mentor';
 import { QuestionType } from '../../models/Question';
@@ -19,6 +19,7 @@ import DateType from './date';
 import AnswerType from './answer';
 import SubjectType, { SubjectQuestionType, TopicType } from './subject';
 import { toAbsoluteUrl } from '../../utils/static-urls';
+import { QuestionType as QuestionGQLType } from './question';
 
 export const MentorType = new GraphQLObjectType({
   name: 'Mentor',
@@ -36,6 +37,12 @@ export const MentorType = new GraphQLObjectType({
     isDirty: { type: GraphQLBoolean },
     mentorType: { type: GraphQLString },
     defaultSubject: { type: SubjectType },
+    recordQueue: {
+      type: GraphQLList(QuestionGQLType),
+      resolve: async (mentor: Mentor) => {
+        return await QuestionModel.find({ _id: { $in: mentor.recordQueue } });
+      },
+    },
     thumbnail: {
       type: GraphQLString,
       resolve: function (mentor: Mentor) {

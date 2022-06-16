@@ -127,6 +127,35 @@ describe('mentor', () => {
     });
   });
 
+  it('can get recordQueue from mentor', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111112") {
+          recordQueue{
+            _id
+            question
+            type
+          }
+        }
+      }
+    `,
+      });
+    expect(response.body.data.mentor.recordQueue).to.eql([
+      {
+        _id: '511111111111111111111111',
+        question: "Don't talk and stay still.",
+        type: 'UTTERANCE',
+      },
+      {
+        _id: '511111111111111111111112',
+        question: 'Who are you and what do you do?',
+        type: 'QUESTION',
+      },
+    ]);
+  });
+
   it('mentor/topics gets all topics for mentor in alphabetical order', async () => {
     const response = await request(app)
       .post('/graphql')

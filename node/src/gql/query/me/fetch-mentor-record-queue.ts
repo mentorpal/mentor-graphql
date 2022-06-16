@@ -8,12 +8,15 @@ The full terms of this copyright and license should always be found in the root 
 import { Types } from 'mongoose';
 import { User } from '../../../models/User';
 import { Mentor as MentorModel } from '../../../models';
-import { MentorType } from '../../types/mentor';
-import { GraphQLObjectType } from 'graphql';
+import { GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
-export const mentor = {
-  type: MentorType,
-  resolve: async (_: GraphQLObjectType, args: any, context: { user: User }) => {
+export const fetchMentorRecordQueue = {
+  type: GraphQLList(GraphQLString),
+  resolve: async (
+    _: GraphQLObjectType,
+    args: any,
+    context: { user: User }
+  ): Promise<string[]> => {
     // eslint-disable-line  @typescript-eslint/no-explicit-any
     if (!context.user) {
       throw new Error('Only authenticated users');
@@ -21,8 +24,11 @@ export const mentor = {
     const mentor = await MentorModel.findOne({
       user: Types.ObjectId(`${context.user._id}`),
     });
-    return mentor;
+    if (!mentor) {
+      throw new Error('Failed to find mentor for user');
+    }
+    return mentor.recordQueue;
   },
 };
 
-export default mentor;
+export default fetchMentorRecordQueue;
