@@ -12,9 +12,10 @@ import {
   GraphQLList,
 } from 'graphql';
 import { questionField } from '../query/question';
-import { AnswerMedia } from '../../models/Answer';
+import { AnswerMedia, Answer } from '../../models/Answer';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 import DateType from './date';
+import removeMarkdown from 'remove-markdown';
 
 export const AnswerMediaType = new GraphQLObjectType({
   name: 'AnswerMedia',
@@ -37,7 +38,18 @@ export const AnswerType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     question: questionField,
     hasEditedTranscript: { type: GraphQLBoolean },
-    transcript: { type: GraphQLString },
+    transcript: {
+      type: GraphQLString,
+      resolve: function (answer: Answer) {
+        return removeMarkdown(answer.transcript || '');
+      },
+    },
+    markdownTranscript: {
+      type: GraphQLString,
+      resolve: function (answer: Answer) {
+        return answer.transcript;
+      },
+    },
     status: { type: GraphQLString },
     hasUntransferredMedia: { type: GraphQLBoolean },
     media: { type: GraphQLList(AnswerMediaType) },

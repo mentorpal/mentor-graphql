@@ -81,4 +81,24 @@ describe('answer', () => {
       _id: '511111111111111111111112',
     });
   });
+
+  it(`gets markdown version and regular version of transcript`, async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query Answer($mentor: ID!, $question: ID!) {
+          answer(mentor: $mentor, question: $question) {
+            _id
+            transcript
+            markdownTranscript
+          }
+        }`,
+        variables: {
+          mentor: '5ffdf41a1ee2c62111111122',
+          question: '511111111111111111111112',
+        },
+      });
+    expect(response.status).to.equal(200);
+    console.log(JSON.stringify(response.body));
+  });
 });
