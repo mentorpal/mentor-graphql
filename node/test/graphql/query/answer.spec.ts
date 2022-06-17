@@ -99,6 +99,13 @@ describe('answer', () => {
         },
       });
     expect(response.status).to.equal(200);
-    console.log(JSON.stringify(response.body));
+    console.log(JSON.stringify(response.body.data.answer));
+    expect(response.body.data.answer).to.eql({
+      _id: '511111111111111111111174',
+      transcript:
+        "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+      markdownTranscript:
+        "**My** [*name*](http://clint.com) __is__ Clint __Anderson and I'm a__ **Nuclear Electrician's Mate**",
+    });
   });
 });
