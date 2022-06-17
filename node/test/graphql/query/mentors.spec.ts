@@ -54,6 +54,12 @@ describe('mentors', () => {
       edges: [
         {
           node: {
+            _id: '5ffdf41a1ee2c62111111119',
+            name: 'Aaron Klunder',
+          },
+        },
+        {
+          node: {
             _id: '5ffdf41a1ee2c62111111113',
             name: 'Dan Davis',
           },
