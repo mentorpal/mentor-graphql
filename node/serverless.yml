@@ -95,6 +95,7 @@ provider:
     STAGE: ${self:provider.stage}
     NODE_ENV: careerfair-${self:provider.stage}
     API_SECRET: ${self:custom.stages.${self:provider.stage}.API_SECRET}
+    LOG_LEVEL: ${self:custom.stages.${self:provider.stage}.LOG_LEVEL}
     JWT_SECRET: ${self:custom.stages.${self:provider.stage}.JWT_SECRET}
     IS_SENTRY_ENABLED: ${self:custom.stages.${self:provider.stage}.IS_SENTRY_ENABLED}
     SENTRY_DSN_MENTOR_GRAPHQL: ${ssm:/mentorpal/graphql/sentry_dsn}
