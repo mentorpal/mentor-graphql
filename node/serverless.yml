@@ -33,7 +33,7 @@ custom:
       API_SECRET: ${ssm:/mentorpal/newdev/shared/api_secret, ''}
       JWT_SECRET: ${ssm:/mentorpal/newdev/shared/jwt_secret, ''}
       ALERT_SNS_ARN: ${ssm:/mentorpal/v2/shared/sns_alert_topic_arn, ''}
-      MONGO_URI: '${ssm:/mentorpal/graphql/dev/mongo_uri}'
+      MONGO_URI: ${ssm:/mentorpal/graphql/dev/mongo_uri, ''}
       NODE_ENV: 'careerfair-dev'
       STATIC_URL_BASE: 'https://static-newdev.mentorpal.org/'
       CORS_ORIGIN: 'https://newdev.mentorpal.org'
@@ -45,7 +45,7 @@ custom:
       IS_SENTRY_ENABLED: true
       API_SECRET: ${ssm:/mentorpal/v2/shared/api_secret, ''}
       JWT_SECRET: ${ssm:/mentorpal/v2/shared/jwt_secret, ''}
-      MONGO_URI: '${ssm:/mentorpal/graphql/qa/mongo_uri}'
+      MONGO_URI: ${ssm:/mentorpal/graphql/qa/mongo_uri, ''}
       NODE_ENV: 'careerfair-v2'
       STATIC_URL_BASE: 'https://static-v2.mentorpal.org/'
       CORS_ORIGIN: 'https://v2.mentorpal.org'
@@ -57,7 +57,7 @@ custom:
       IS_SENTRY_ENABLED: true
       API_SECRET: ${ssm:/mentorpal/cf/shared/api_secret, ''}
       JWT_SECRET: ${ssm:/mentorpal/cf/shared/jwt_secret, ''}
-      MONGO_URI: '${ssm:/mentorpal/graphql/prod/mongo_uri}'
+      MONGO_URI: ${ssm:/mentorpal/graphql/prod/mongo_uri, ''}
       NODE_ENV: 'careerfair'
       STATIC_URL_BASE: 'https://static-careerfair.mentorpal.org/'
       CORS_ORIGIN: 'https://careerfair.mentorpal.org'
@@ -97,7 +97,7 @@ provider:
     API_SECRET: ${self:custom.stages.${self:provider.stage}.API_SECRET}
     JWT_SECRET: ${self:custom.stages.${self:provider.stage}.JWT_SECRET}
     IS_SENTRY_ENABLED: ${self:custom.stages.${self:provider.stage}.IS_SENTRY_ENABLED}
-    SENTRY_DSN_MENTOR_GRAPHQL: '${ssm:/mentorpal/graphql/sentry_dsn}'
+    SENTRY_DSN_MENTOR_GRAPHQL: ${ssm:/mentorpal/graphql/sentry_dsn}
     MONGO_URI: ${self:custom.stages.${self:provider.stage}.MONGO_URI}
     STATIC_URL_BASE: ${self:custom.stages.${self:provider.stage}.STATIC_URL_BASE}
     CORS_ORIGIN: ${self:custom.stages.${self:provider.stage}.CORS_ORIGIN}
@@ -123,8 +123,9 @@ functions:
       - http: 
           path: /{proxy+}
           method: ANY
-          # cors: true
+          cors: true
 
+# fails to deploy first time because CF tries to create it before apigw 
 resources:
   Resources:
     FirewallAssociation:

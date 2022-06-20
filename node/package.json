@@ -10,9 +10,9 @@
   "scripts": {
     "build": "tsc",
     "deps:update": "npx ncu -u",
-    "deploy:dev": "sls deploy -s dev --region us-east-1",
-    "deploy:qa": "sls deploy -s qa --region us-east-1",
-    "deploy:prod": "sls deploy -s prod --region us-west-2",
+    "deploy:dev": "NODE_OPTIONS=--max_old_space_size=4000 sls deploy -s dev --region us-east-1",
+    "deploy:qa": "NODE_OPTIONS=--max_old_space_size=4000 sls deploy -s qa --region us-east-1",
+    "deploy:prod": "NODE_OPTIONS=--max_old_space_size=4000 sls deploy -s prod --region us-west-2",
     "format": "prettier --write '**/*.{js,jsx,json,ts,tsx}'",
     "lint:fix": "eslint src --ext ts --ext js --fix",
     "start": "tsc --traceResolution && node dist/server.js",
