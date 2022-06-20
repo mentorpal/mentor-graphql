@@ -7,7 +7,7 @@ The full terms of this copyright and license should always be found in the root 
 import winston from 'winston';
 
 export const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL_GRAPHQL || 'info',
+  level: process.env.LOG_LEVEL_GRAPHQL || 'debug',
   format: winston.format.json(),
   transports: [
     new winston.transports.Console(
