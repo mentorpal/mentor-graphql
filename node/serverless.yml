@@ -39,7 +39,7 @@ custom:
       CORS_ORIGIN: 'https://newdev.mentorpal.org'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenDev'
-      WEBACL_ARN: '${ssm:/mentorpal/newdev/api_firewall_arn}'
+      WEBACL_ARN: ${ssm:/mentorpal/newdev/api_firewall_arn, ''}
     qa:
       LOG_LEVEL: 'debug'
       IS_SENTRY_ENABLED: true
@@ -51,7 +51,7 @@ custom:
       CORS_ORIGIN: 'https://v2.mentorpal.org'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenQa'
-      WEBACL_ARN: '${ssm:/mentorpal/v2/api_firewall_arn}'
+      WEBACL_ARN: ${ssm:/mentorpal/v2/api_firewall_arn, ''}
     prod:
       LOG_LEVEL: 'info'
       IS_SENTRY_ENABLED: true
@@ -63,7 +63,7 @@ custom:
       CORS_ORIGIN: 'https://careerfair.mentorpal.org'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/prod/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenProd'
-      # WEBACL_ARN: '${ssm:/mentorpal/cf/api_firewall_arn}'
+      WEBACL_ARN: ${ssm:/mentorpal/cf/api_firewall_arn, ''}
 
 provider:
   name: aws
