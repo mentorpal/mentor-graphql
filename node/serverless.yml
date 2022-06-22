@@ -124,8 +124,7 @@ functions:
       - http: 
           path: /{proxy+}
           method: ANY
-          # this makes withCreddentials requests fail, because apigw responds with '*':
-          # cors: true
+          cors: true
 
 # fails to deploy first time because CF tries to create it before apigw 
 resources:
