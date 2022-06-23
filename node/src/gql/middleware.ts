@@ -11,6 +11,7 @@ import schema from './schema';
 import { User } from '../models/User';
 import { getRefreshedToken } from './types/user-access-token';
 import { logger } from '../utils/logging';
+import * as Sentry from '@sentry/serverless';
 
 const extensions = ({ context }: any) => {
   // eslint-disable-line  @typescript-eslint/no-explicit-any
@@ -62,6 +63,15 @@ export default graphqlHTTP((req: Request, res: Response) => {
           req: req,
         },
         extensions,
+        customFormatErrorFn: (error) => {
+          if (process.env.IS_SENTRY_ENABLED === 'true') {
+            Sentry.captureException(error);
+          }
+          return {
+            message: error.message,
+            locations: error.locations,
+          };
+        },
       });
     };
     /**

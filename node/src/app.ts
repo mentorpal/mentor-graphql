@@ -92,7 +92,7 @@ export async function createApp(): Promise<Express> {
   if (process.env.IS_SENTRY_ENABLED === 'true') {
     // RequestHandler creates a separate execution context using domains, so that every
     // transaction/span/breadcrumb is attached to its own Hub instance
-    app.use(Sentry.Handlers.requestHandler());
+    app.use(Sentry.Handlers.requestHandler() as express.RequestHandler);
     // TracingHandler creates a trace for every incoming request
     app.use(Sentry.Handlers.tracingHandler());
   }
@@ -126,8 +126,7 @@ export async function createApp(): Promise<Express> {
   app.use(express.static(path.join(__dirname, 'public'))); // todo remove if not used
 
   if (process.env.IS_SENTRY_ENABLED === 'true') {
-    // The error handler must be before any other error middleware and after all controllers
-    app.use(Sentry.Handlers.errorHandler());
+    app.use(Sentry.Handlers.errorHandler() as express.ErrorRequestHandler);
   }
 
   app.use(function (
