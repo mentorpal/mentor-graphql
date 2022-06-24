@@ -25,13 +25,13 @@ if (process.env.IS_SENTRY_ENABLED === 'true') {
     ...(process.env.STAGE == 'prod' && { tracesSampleRate: 0.25 }),
     ...(process.env.SENTRY_DEBUG && { debug: true }),
     sendClientReports: false,
-    beforeSend: (event)=>{
-      if(event.request){
-        delete event.request.cookies
-        delete event.request.headers["cookies"]
+    beforeSend: (event) => {
+      if (event.request) {
+        delete event.request.cookies;
+        delete event.request.headers['cookies'];
       }
-      return event
-    }
+      return event;
+    },
   });
 }
 
