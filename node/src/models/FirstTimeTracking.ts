@@ -24,7 +24,7 @@ export const FirstTimeTrackingSchema = new Schema<
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
 
-FirstTimeTrackingSchema.index({ mentor: -1 }, { unique: true });
+FirstTimeTrackingSchema.index({ user: -1 }, { unique: true });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface FirstTimeTrackingModel extends Model<FirstTimeTracking> {}

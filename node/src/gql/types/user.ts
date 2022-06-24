@@ -24,7 +24,7 @@ export const UserType = new GraphQLObjectType({
     defaultMentor: {
       type: MentorType,
       resolve: async (user: User) => {
-        return MentorModel.findOne({ user: user._id });
+        return await MentorModel.findOne({ user: user._id });
       },
     },
     _id: { type: GraphQLID },
@@ -36,7 +36,11 @@ export const UserType = new GraphQLObjectType({
     firstTimeTracking: {
       type: FirstTimeTrackingGqlType,
       resolve: async (user: User) => {
-        return FirstTimeTrackingModel.findOne({ user: user._id });
+        return await FirstTimeTrackingModel.findOneAndUpdate(
+          { user: user._id },
+          {},
+          { upsert: true, new: true }
+        );
       },
     },
   }),
