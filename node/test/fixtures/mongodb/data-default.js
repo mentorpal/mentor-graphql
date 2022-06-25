@@ -14,6 +14,9 @@ module.exports = {
       name: 'Clinton Anderson',
       email: 'clint@anderson.com',
       userRole: 'ADMIN',
+      firstTimeTracking: {
+        myMentorSplash: false,
+      },
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49ea2'),
@@ -364,13 +367,6 @@ module.exports = {
         status: 'IN_PROGRESS',
       },
       transcript: 'fake_transcript',
-    },
-  ],
-
-  firsttimetrackings: [
-    {
-      user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
-      myMentorSplash: false,
     },
   ],
 };
