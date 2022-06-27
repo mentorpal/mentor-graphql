@@ -13,6 +13,7 @@ describe('query users', () => {
   it('query all users', async () => {
     const response = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `
         query Users($filter: Object!, $limit: Int!, $cursor: String!, $sortBy: String!, $sortAscending: Boolean!){
