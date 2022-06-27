@@ -32,6 +32,7 @@ describe('userQuestions', () => {
   it('gets a list of userQuestions', async () => {
     const response = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
         userQuestions {
@@ -58,6 +59,7 @@ describe('userQuestions', () => {
 
     const question = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
           userQuestion(id: "${response.body.data.userQuestions.edges[0].node._id}") {
@@ -75,6 +77,7 @@ describe('userQuestions', () => {
   it('filters userQuestions by feedback type', async () => {
     const response = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
         userQuestions(filter: { feedback: "NEUTRAL" }) {
@@ -101,6 +104,7 @@ describe('userQuestions', () => {
   it('filters userQuestions by mentor', async () => {
     const response = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
         userQuestions(filter: { mentor: "${mongoose.Types.ObjectId(
