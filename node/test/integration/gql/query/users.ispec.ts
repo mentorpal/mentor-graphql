@@ -7,7 +7,7 @@ The full terms of this copyright and license should always be found in the root 
 import { expect } from 'chai';
 import request from 'supertest';
 
-const API_URL = process.env.API_URL || 'localhost:3001/graphql/graphql';
+const API_URL = process.env.API_URL || 'localhost:3001/graphql';
 
 describe('query users', () => {
   it('query all users', async () => {

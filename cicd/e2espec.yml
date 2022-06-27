@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    API_URL: 'https://api-qa.mentorpal.org/graphql/graphql'
+    API_URL: 'https://api-qa.mentorpal.org/graphql'
 
 phases:
   install:
