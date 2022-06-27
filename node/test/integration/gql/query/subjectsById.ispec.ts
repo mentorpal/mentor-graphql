@@ -14,6 +14,7 @@ describe('subjectsById', () => {
     const ids = ['6270c833ac7270cb911d5c43', '626a455a6272f6e57687bd85'];
     const response = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query SubjectsById($ids: [ID]!) {
           subjectsById(ids: $ids) {

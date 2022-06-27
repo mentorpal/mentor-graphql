@@ -14,6 +14,7 @@ describe('userQuestions', () => {
   it(`throws an error if invalid id`, async () => {
     const response = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
           userQuestion(id: "111111111111111111111111") {

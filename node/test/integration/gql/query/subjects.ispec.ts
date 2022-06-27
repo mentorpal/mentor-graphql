@@ -13,6 +13,7 @@ describe('subjects', () => {
   it('gets a list of subjects', async () => {
     const response = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
         subjects {
