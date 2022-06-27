@@ -26,7 +26,7 @@ export const ConfigType = new GraphQLObjectType({
     activeMentors: { type: GraphQLList(GraphQLID) },
     urlGraphql: { type: GraphQLString },
     urlVideo: { type: GraphQLString },
-    urlDocSetup: {type: GraphQLString },
+    urlDocSetup: { type: GraphQLString },
     urlVideoIdleTips: { type: GraphQLString },
     urlVideoMentorpalWalkthrough: { type: GraphQLString },
     classifierLambdaEndpoint: { type: GraphQLString },

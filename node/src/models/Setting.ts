@@ -78,7 +78,8 @@ export function getDefaultConfig(): Config {
     classifierLambdaEndpoint: '',
     graphqlLambdaEndpoint: '',
     uploadLambdaEndpoint: '',
-    urlDocSetup: 'https://docs.google.com/document/d/1av1pWamFrXQ1KabMU02LtAutrTt3ppblneQeilFBU3s/edit?usp=sharing',
+    urlDocSetup:
+      'https://docs.google.com/document/d/1av1pWamFrXQ1KabMU02LtAutrTt3ppblneQeilFBU3s/edit?usp=sharing',
     urlVideoIdleTips: 'https://youtu.be/xSu1BhuFt8A',
     filterEmailMentorAddress: 'careerfair.ai@gmail.com',
     urlVideoMentorpalWalkthrough: 'https://youtu.be/EGdSl4Q8NAY',
