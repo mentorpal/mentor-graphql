@@ -49,7 +49,7 @@ describe('First Time Setup', () => {
         },
       });
     expect(response.body.data.users.edges[0].node).to.eql({
-      firstTimeTracking: { myMentorSplash: false, tooltips: true },
+      firstTimeTracking: { myMentorSplash: false, tooltips: false },
     });
   });
 

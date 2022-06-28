@@ -30,7 +30,7 @@ const defaultFirstTimeTracking = {
 
 export const FirstTimeTrackingSchema = new Schema<FirstTimeTracking>({
   myMentorSplash: { type: Boolean, default: false },
-  tooltips: {type: Boolean, default: false},
+  tooltips: { type: Boolean, default: false },
 });
 
 export interface User extends Document {
