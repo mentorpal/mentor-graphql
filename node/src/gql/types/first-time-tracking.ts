@@ -11,6 +11,7 @@ export const FirstTimeTrackingGqlType = new GraphQLObjectType({
   fields: {
     _id: { type: GraphQLID },
     myMentorSplash: { type: GraphQLBoolean },
+    tooltips: {type:GraphQLBoolean},
   },
 });
 

@@ -20,6 +20,9 @@ export const firstTimeTrackingUpdateInputType = new GraphQLInputObjectType({
     myMentorSplash: {
       type: GraphQLBoolean,
     },
+    tooltips: {
+      type: GraphQLBoolean,
+    },
   }),
 });
 
@@ -40,6 +43,7 @@ export const firstTimeTrackingUpdate = {
       {
         firstTimeTracking: {
           myMentorSplash: args.updates.myMentorSplash,
+          tooltips: args.updates.tooltips,
         },
       },
       { new: true }

@@ -37,7 +37,8 @@ describe('First Time Setup', () => {
             edges {
               node {
                 firstTimeTracking{
-                  myMentorSplash
+                  myMentorSplash,
+                  tooltips,
                 }
               }
             }
@@ -48,7 +49,7 @@ describe('First Time Setup', () => {
         },
       });
     expect(response.body.data.users.edges[0].node).to.eql({
-      firstTimeTracking: { myMentorSplash: false },
+      firstTimeTracking: { myMentorSplash: false, tooltips: true },
     });
   });
 
@@ -62,7 +63,8 @@ describe('First Time Setup', () => {
         mutation FirstTimeTrackingUpdate($updates: FirstTimeTrackingUpdateInputType!) {
           me{
             firstTimeTrackingUpdate(updates: $updates){
-              myMentorSplash
+              myMentorSplash,
+              tooltips
             }
           }
         }
@@ -70,11 +72,13 @@ describe('First Time Setup', () => {
         variables: {
           updates: {
             myMentorSplash: true,
+            tooltips: true,
           },
         },
       });
     expect(response.body.data.me.firstTimeTrackingUpdate).to.eql({
       myMentorSplash: true,
+      tooltips: true,
     });
   });
 });
