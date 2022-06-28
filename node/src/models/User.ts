@@ -18,6 +18,18 @@ export const UserRole = {
   ADMIN: 'ADMIN',
 };
 
+export interface FirstTimeTracking extends Document {
+  myMentorSplash: boolean;
+}
+
+const defaultFirstTimeTracking = {
+  myMentorSplash: false,
+};
+
+export const FirstTimeTrackingSchema = new Schema<FirstTimeTracking>({
+  myMentorSplash: { type: Boolean, default: false },
+});
+
 export interface User extends Document {
   googleId: string;
   name: string;
@@ -25,6 +37,7 @@ export interface User extends Document {
   userRole: string;
   mentorIds: string[];
   lastLoginAt: Date;
+  firstTimeTracking: FirstTimeTracking;
 }
 
 export const UserSchema = new Schema<User, UserModel>(
@@ -42,6 +55,10 @@ export const UserSchema = new Schema<User, UserModel>(
       default: [],
     },
     lastLoginAt: { type: Date },
+    firstTimeTracking: {
+      type: FirstTimeTrackingSchema,
+      default: defaultFirstTimeTracking,
+    },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );

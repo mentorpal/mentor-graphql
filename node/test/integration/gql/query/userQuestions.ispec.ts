@@ -8,12 +8,13 @@ import mongoose from 'mongoose';
 import { expect } from 'chai';
 import request from 'supertest';
 
-const API_URL = process.env.API_URL || 'localhost:3001/graphql/graphql';
+const API_URL = process.env.API_URL || 'localhost:3001/graphql';
 
 describe('userQuestions', () => {
   it(`throws an error if invalid id`, async () => {
     const response = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
           userQuestion(id: "111111111111111111111111") {
@@ -31,6 +32,7 @@ describe('userQuestions', () => {
   it('gets a list of userQuestions', async () => {
     const response = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
         userQuestions {
@@ -57,6 +59,7 @@ describe('userQuestions', () => {
 
     const question = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
           userQuestion(id: "${response.body.data.userQuestions.edges[0].node._id}") {
@@ -74,6 +77,7 @@ describe('userQuestions', () => {
   it('filters userQuestions by feedback type', async () => {
     const response = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
         userQuestions(filter: { feedback: "NEUTRAL" }) {
@@ -100,6 +104,7 @@ describe('userQuestions', () => {
   it('filters userQuestions by mentor', async () => {
     const response = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
         userQuestions(filter: { mentor: "${mongoose.Types.ObjectId(

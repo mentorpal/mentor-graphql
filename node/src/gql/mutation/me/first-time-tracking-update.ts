@@ -11,10 +11,8 @@ import {
   GraphQLInputObjectType,
   GraphQLBoolean,
 } from 'graphql';
-import FirstTimeTrackingModel, {
-  FirstTimeTracking,
-} from '../../../models/FirstTimeTracking';
-import { User } from '../../../models/User';
+import { FirstTimeTracking } from '../../../models/User';
+import UserModel, { User } from '../../../models/User';
 
 export const firstTimeTrackingUpdateInputType = new GraphQLInputObjectType({
   name: 'FirstTimeTrackingUpdateInputType',
@@ -37,11 +35,19 @@ export const firstTimeTrackingUpdate = {
     },
     context: { user: User }
   ): Promise<FirstTimeTracking> => {
-    return await FirstTimeTrackingModel.findOneAndUpdate(
-      { user: context.user._id },
-      { ...args.updates },
-      { upsert: true, new: true }
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { _id: context.user._id },
+      {
+        firstTimeTracking: {
+          myMentorSplash: args.updates.myMentorSplash,
+        },
+      },
+      { new: true }
     );
+    if (!updatedUser) {
+      throw new Error(`Failed to find user for id ${context.user._id}`);
+    }
+    return updatedUser.firstTimeTracking;
   },
 };
 
