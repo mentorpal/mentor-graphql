@@ -118,6 +118,7 @@ describe('config', () => {
       activeMentors: ['somementor'],
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
+      urlDocSetup: 'https://some/custom/url',
       urlVideoIdleTips: 'https://some/custom/url',
       urlVideoMentorpalWalkthrough: 'https://fakewalkthroughurl.com',
       classifierLambdaEndpoint: 'https://fakelambdaurl.com',
@@ -143,6 +144,7 @@ describe('config', () => {
             cmi5Endpoint
             cmi5Fetch
             googleClientId
+            urlDocSetup
             urlVideoIdleTips
             urlVideoMentorpalWalkthrough
             classifierLambdaEndpoint
