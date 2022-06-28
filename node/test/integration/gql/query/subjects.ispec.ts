@@ -7,12 +7,13 @@ The full terms of this copyright and license should always be found in the root 
 import { expect } from 'chai';
 import request from 'supertest';
 
-const API_URL = process.env.API_URL || 'localhost:3001/graphql/graphql';
+const API_URL = process.env.API_URL || 'localhost:3001/graphql';
 
 describe('subjects', () => {
   it('gets a list of subjects', async () => {
     const response = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
         subjects {
@@ -34,6 +35,7 @@ describe('subjects', () => {
     it('by name in ascending order', async () => {
       const response = await request(API_URL)
         .post('/graphql')
+        .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
         .send({
           query: `query {
           subjects(sortBy: "name", sortAscending: true) {
@@ -53,6 +55,7 @@ describe('subjects', () => {
     it('by name in descending order', async () => {
       const response = await request(API_URL)
         .post('/graphql')
+        .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
         .send({
           query: `query {
           subjects(sortBy: "name", sortAscending: false) {
@@ -73,6 +76,7 @@ describe('subjects', () => {
   it('can paginate list of subjects', async () => {
     const first = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
         subjects(limit: 2) {
@@ -94,6 +98,7 @@ describe('subjects', () => {
     expect(first.body.data.subjects.edges.length).to.eql(2);
     const second = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
         subjects(limit: 2, cursor: "next__${first.body.data.subjects.pageInfo.endCursor}") {
@@ -115,6 +120,7 @@ describe('subjects', () => {
     expect(second.body.data.subjects.edges.length).to.eql(2);
     const backToFirst = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
         subjects(limit: 2, cursor: "prev__${second.body.data.subjects.pageInfo.startCursor}") {

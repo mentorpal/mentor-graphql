@@ -8,10 +8,10 @@ import { GraphQLBoolean, GraphQLID, GraphQLObjectType } from 'graphql';
 
 export const FirstTimeTrackingGqlType = new GraphQLObjectType({
   name: 'FirstTimeTracking',
-  fields: () => ({
+  fields: {
     _id: { type: GraphQLID },
     myMentorSplash: { type: GraphQLBoolean },
-  }),
+  },
 });
 
 export default FirstTimeTrackingGqlType;

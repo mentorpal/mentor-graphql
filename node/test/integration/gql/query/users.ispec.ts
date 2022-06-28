@@ -7,12 +7,13 @@ The full terms of this copyright and license should always be found in the root 
 import { expect } from 'chai';
 import request from 'supertest';
 
-const API_URL = process.env.API_URL || 'localhost:3001/graphql/graphql';
+const API_URL = process.env.API_URL || 'localhost:3001/graphql';
 
 describe('query users', () => {
   it('query all users', async () => {
     const response = await request(API_URL)
       .post('/graphql')
+      .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `
         query Users($filter: Object!, $limit: Int!, $cursor: String!, $sortBy: String!, $sortAscending: Boolean!){

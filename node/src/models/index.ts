@@ -24,8 +24,6 @@ import RefreshToken from './RefreshToken';
 export { default as RefreshToken } from './RefreshToken';
 import ImportTask from './ImportTask';
 export { default as ImportTask } from './ImportTask';
-import FirstTimeTracking from './FirstTimeTracking';
-export { default as FirstTimeTracking } from './FirstTimeTracking';
 
 export default {
   Answer,
@@ -38,5 +36,4 @@ export default {
   UserQuestion,
   RefreshToken,
   ImportTask,
-  FirstTimeTracking,
 };
