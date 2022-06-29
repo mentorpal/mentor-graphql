@@ -49,7 +49,7 @@ module.exports = {
       userRole: 'ADMIN',
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ea6'),
+      _id: ObjectId('5ffdf41a1ee2c62320b49ea7'),
       name: 'Private Mentor',
       email: 'private@mentor.com',
       userRole: 'USER',
@@ -133,7 +133,7 @@ module.exports = {
       name: 'Private Mentor',
       firstName: 'Private',
       isPrivate: true,
-      user: ObjectId('5ffdf41a1ee2c62320b49ea6'),
+      user: ObjectId('5ffdf41a1ee2c62320b49ea7'),
       subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
     },
   ],

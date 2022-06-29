@@ -8,6 +8,9 @@ import { Mentor } from 'models/Mentor';
 import { User, UserRole } from 'models/User';
 
 export function hasAccessToMentor(mentor: Mentor, user: User): boolean {
+  if (!mentor) {
+    return false;
+  }
   if (mentor.isPrivate) {
     if (!user) {
       return false;

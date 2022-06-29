@@ -22,7 +22,9 @@ export const answer = {
     args: { mentor: string; question: string },
     context: { user: User }
   ): Promise<Answer> => {
+    console.log(args.mentor)
     const mentor = await MentorModel.findById(args.mentor);
+    // console.log(JSON.stringify(mentor, null, ' '))
     if (!hasAccessToMentor(mentor, context.user)) {
       throw new Error(
         `mentor is private and you do not have permission to access`

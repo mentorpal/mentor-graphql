@@ -186,7 +186,7 @@ describe('answers', () => {
   });
 
   it('gets answers from private mentor if owner', async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea6');
+    const token = getToken('5ffdf41a1ee2c62320b49ea7');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
