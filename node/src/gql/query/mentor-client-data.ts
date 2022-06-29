@@ -18,12 +18,12 @@ import {
   Subject as SubjectModel,
   Answer as AnswerModel,
   Question as QuestionModel,
-} from 'models';
-import { AnswerMedia, Status } from 'models/Answer';
-import { QuestionType } from 'models/Question';
-import { SubjectQuestion, Topic } from 'models/Subject';
-import { User } from 'models/User';
-import { hasAccessToMentor } from 'utils/mentor-check-private';
+} from '../../models';
+import { AnswerMedia, Status } from '../../models/Answer';
+import { QuestionType } from '../../models/Question';
+import { SubjectQuestion, Topic } from '../../models/Subject';
+import { User } from '../../models/User';
+import { hasAccessToMentor } from '../../utils/mentor-check-private';
 
 export interface MentorClientData {
   _id: string;

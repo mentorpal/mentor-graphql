@@ -17,10 +17,10 @@ import {
   Subject as SubjectModel,
   Question as QuestionModel,
   Answer as AnswerModel,
-} from 'models';
-import { Subject } from 'models/Subject';
-import { Question } from 'models/Question';
-import { Answer } from 'models/Answer';
+} from '../../models';
+import { Subject } from '../../models/Subject';
+import { Question } from '../../models/Question';
+import { Answer } from '../../models/Answer';
 import {
   AnswerUpdateInput,
   MentorImportJson,
@@ -32,8 +32,8 @@ import AnswerType from '../types/answer';
 import { SubjectUpdateInput } from '../mutation/me/subject-update';
 import { QuestionUpdateInput } from '../mutation/me/question-update';
 import { isId } from '../mutation/me/helpers';
-import { User } from 'models/User';
-import { hasAccessToMentor } from 'utils/mentor-check-private';
+import { User } from '../../models/User';
+import { hasAccessToMentor } from '../../utils/mentor-check-private';
 
 enum EditType {
   NONE = 'NONE',

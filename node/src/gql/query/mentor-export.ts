@@ -17,14 +17,14 @@ import AnswerType from '../types/answer';
 import SubjectType from '../types/subject';
 import QuestionType from '../types/question';
 import UserQuestionType from '../types/user-question';
-import { Mentor as MentorModel } from 'models';
-import { Answer } from 'models/Answer';
-import { Subject } from 'models/Subject';
-import { Question } from 'models/Question';
-import { Mentor } from 'models/Mentor';
-import { UserQuestion } from 'models/UserQuestion';
-import { User } from 'models/User';
-import { hasAccessToMentor } from 'utils/mentor-check-private';
+import { Mentor as MentorModel } from '../../models';
+import { Answer } from '../../models/Answer';
+import { Subject } from '../../models/Subject';
+import { Question } from '../../models/Question';
+import { Mentor } from '../../models/Mentor';
+import { UserQuestion } from '../../models/UserQuestion';
+import { User } from '../../models/User';
+import { hasAccessToMentor } from '../../utils/mentor-check-private';
 
 export interface MentorExportJson {
   id: string;

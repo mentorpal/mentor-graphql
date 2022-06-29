@@ -15,7 +15,7 @@ import { Document } from 'mongoose';
 import base64url from 'base64url';
 import objectPath from 'object-path';
 import { ObjectType } from './object';
-import { User } from 'models/User';
+import { User } from '../../models/User';
 
 export const PageInfoType = new GraphQLObjectType({
   name: 'PageInfo',
