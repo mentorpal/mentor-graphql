@@ -16,7 +16,7 @@ module.exports = {
       userRole: 'ADMIN',
       firstTimeTracking: {
         myMentorSplash: false,
-        tooltips: false,
+        tooltips: true,
       },
     },
     {

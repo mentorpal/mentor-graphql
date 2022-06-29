@@ -49,11 +49,11 @@ describe('First Time Setup', () => {
         },
       });
     expect(response.body.data.users.edges[0].node).to.eql({
-      firstTimeTracking: { myMentorSplash: false, tooltips: false },
+      firstTimeTracking: { myMentorSplash: false, tooltips: true },
     });
   });
 
-  it(`can update myMentorSplash`, async () => {
+  it(`can update myMentorSplash and tooltips`, async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
@@ -72,13 +72,13 @@ describe('First Time Setup', () => {
         variables: {
           updates: {
             myMentorSplash: true,
-            tooltips: true,
+            tooltips: false,
           },
         },
       });
     expect(response.body.data.me.firstTimeTrackingUpdate).to.eql({
       myMentorSplash: true,
-      tooltips: true,
+      tooltips: false,
     });
   });
 });
