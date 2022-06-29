@@ -61,7 +61,6 @@ describe('Remove questions from record queue', () => {
             }
           }`,
       });
-    console.log(JSON.stringify(response1.body.data.me.fetchMentorRecordQueue));
     expect(response1.body.data.me.fetchMentorRecordQueue).to.eql([
       '511111111111111111111112',
       '511111111111111111111111',
@@ -80,7 +79,6 @@ describe('Remove questions from record queue', () => {
           questionId: '511111111111111111111112',
         },
       });
-    console.log(response2.body.data.me.removeQuestionFromRecordQueue);
     expect(response2.body.data.me.removeQuestionFromRecordQueue).to.not.contain(
       '511111111111111111111112'
     );

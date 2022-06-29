@@ -83,7 +83,7 @@ describe('answer', () => {
     });
   });
 
-  it.skip(`gets markdown version and regular version of transcript`, async () => {
+  it(`gets markdown version and regular version of transcript`, async () => {
     const response = await request(app)
       .post('/graphql')
       .send({
@@ -95,7 +95,7 @@ describe('answer', () => {
           }
         }`,
         variables: {
-          mentor: '5ffdf41a1ee2c62111111122',
+          mentor: '5ffdf41a1ee2c62111111119',
           question: '511111111111111111111112',
         },
       });

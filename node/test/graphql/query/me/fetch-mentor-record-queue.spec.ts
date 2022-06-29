@@ -54,7 +54,6 @@ describe('query me/mentor/fetchMentorRecordQueue', () => {
             }
           }`,
       });
-    console.log(JSON.stringify(response.body.data.me.fetchMentorRecordQueue));
     expect(response.body.data.me.fetchMentorRecordQueue).to.eql([
       '511111111111111111111112',
       '511111111111111111111111',
