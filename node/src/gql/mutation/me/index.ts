@@ -8,6 +8,7 @@ import { GraphQLObjectType } from 'graphql';
 import { User } from '../../../models/User';
 import mentorImport from './mentor-import';
 import updateMentorDetails from './mentor-details-update';
+import updateMentorPrivacy from './mentor-update-privacy';
 import updateMentorSubjects from './mentor-subjects-update';
 import updateAnswer from './answer-update';
 import updateQuestion from './question-update';
@@ -25,6 +26,7 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
   fields: () => ({
     mentorImport,
     updateMentorDetails,
+    updateMentorPrivacy,
     updateMentorSubjects,
     updateAnswer,
     updateQuestion,

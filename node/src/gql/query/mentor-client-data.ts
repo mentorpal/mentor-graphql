@@ -18,10 +18,12 @@ import {
   Subject as SubjectModel,
   Answer as AnswerModel,
   Question as QuestionModel,
-} from '../../models';
-import { AnswerMedia, Status } from '../../models/Answer';
-import { QuestionType } from '../../models/Question';
-import { SubjectQuestion, Topic } from '../../models/Subject';
+} from 'models';
+import { AnswerMedia, Status } from 'models/Answer';
+import { QuestionType } from 'models/Question';
+import { SubjectQuestion, Topic } from 'models/Subject';
+import { User } from 'models/User';
+import { hasAccessToMentor } from 'utils/mentor-check-private';
 
 export interface MentorClientData {
   _id: string;
@@ -90,11 +92,17 @@ export const mentorData = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: string; subject?: string }
+    args: { mentor: string; subject?: string },
+    context: { user: User }
   ): Promise<MentorClientData> => {
     const mentor = await MentorModel.findById(args.mentor);
     if (!mentor) {
       throw new Error(`mentor ${args.mentor} not found`);
+    }
+    if (!hasAccessToMentor(mentor, context.user)) {
+      throw new Error(
+        `mentor is private and you do not have permission to access`
+      );
     }
     const subjectIds = args.subject
       ? [args.subject]

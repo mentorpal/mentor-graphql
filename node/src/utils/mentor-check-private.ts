@@ -4,20 +4,22 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Answer as AnswerModel, Mentor as MentorModel } from 'models';
-import { Answer } from 'models/Answer';
-import { User } from 'models/User';
-import { hasAccessToMentor } from 'utils/mentor-check-private';
-import AnswerType from '../types/answer';
-import findAll from './find-all';
+import { Mentor } from 'models/Mentor';
+import { User, UserRole } from 'models/User';
 
-export const answers = findAll({
-  nodeType: AnswerType,
-  model: AnswerModel,
-  filterInvalid: async (answer: Answer, context: { user: User }) => {
-    const mentor = await MentorModel.findById(answer.mentor);
-    return !hasAccessToMentor(mentor, context.user);
-  },
-});
-
-export default answers;
+export function hasAccessToMentor(mentor: Mentor, user: User): boolean {
+  if (!mentor) {
+    return false;
+  }
+  if (mentor.isPrivate) {
+    if (!user) {
+      return false;
+    }
+    return (
+      `${mentor.user}` === `${user._id}` ||
+      user.userRole === UserRole.ADMIN ||
+      user.userRole === UserRole.CONTENT_MANAGER
+    );
+  }
+  return true;
+}

@@ -45,6 +45,7 @@ export interface Mentor extends Document {
   recordQueue: Question['_id'][];
   lastTrainedAt: Date;
   isDirty: boolean;
+  isPrivate: boolean;
   mentorType: string;
   user: User['_id'];
 }
@@ -112,6 +113,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     recordQueue: { type: [{ type: Schema.Types.ObjectId, ref: 'Question' }] },
     lastTrainedAt: { type: Date },
     isDirty: { type: Boolean, default: true },
+    isPrivate: { type: Boolean, default: false },
     mentorType: {
       type: String,
       enum: [MentorType.VIDEO, MentorType.CHAT],

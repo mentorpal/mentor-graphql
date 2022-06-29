@@ -5,12 +5,15 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLString } from 'graphql';
-import { Mentor } from '../../models';
+import { Mentor as MentorModel } from 'models';
+import { Mentor } from 'models/Mentor';
+import { User } from 'models/User';
+import { hasAccessToMentor } from 'utils/mentor-check-private';
 import { MentorType } from '../types/mentor';
 import findOne from './find-one';
 
 export const mentor = findOne({
-  model: Mentor,
+  model: MentorModel,
   type: MentorType,
   typeName: 'mentor',
   argsConfig: {
@@ -18,6 +21,13 @@ export const mentor = findOne({
       description: 'id of the user',
       type: GraphQLString,
     },
+  },
+  checkIfInvalid: (mentor: Mentor, context: { user: User }) => {
+    if (!hasAccessToMentor(mentor, context.user)) {
+      throw new Error(
+        `mentor is private and you do not have permission to access`
+      );
+    }
   },
 });
 
