@@ -12,10 +12,10 @@ import {
   GraphQLID,
   GraphQLNonNull,
 } from 'graphql';
-import { User } from 'models/User';
-import { hasAccessToMentor } from 'utils/mentor-check-private';
-import { Mentor as MentorModel } from 'models';
-import { Status } from 'models/Answer';
+import { User } from '../../models/User';
+import { hasAccessToMentor } from '../../utils/mentor-check-private';
+import { Mentor as MentorModel } from '../../models';
+import { Status } from '../../models/Answer';
 
 const categoryAnswerResponse = new GraphQLObjectType({
   name: 'categoryAnswerResponse',

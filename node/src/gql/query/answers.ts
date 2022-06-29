@@ -4,10 +4,10 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Answer as AnswerModel, Mentor as MentorModel } from 'models';
-import { Answer } from 'models/Answer';
-import { User } from 'models/User';
-import { hasAccessToMentor } from 'utils/mentor-check-private';
+import { Answer as AnswerModel, Mentor as MentorModel } from '../../models';
+import { Answer } from '../../models/Answer';
+import { User } from '../../models/User';
+import { hasAccessToMentor } from '../../utils/mentor-check-private';
 import AnswerType from '../types/answer';
 import findAll from './find-all';
 
