@@ -56,6 +56,11 @@ license: LICENSE LICENSE_HEADER
 	cd node \
 	&& npm run license:fix
 
+.PHONY: license-deploy
+license-deploy: LICENSE LICENSE_HEADER
+	cd node \
+	&& npm run license:deploy
+
 .PHONY: test-license
 test-license: LICENSE LICENSE_HEADER
 	cd node \
