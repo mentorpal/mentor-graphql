@@ -57,12 +57,12 @@ license: LICENSE LICENSE_HEADER
 	&& npm run license:fix
 
 .PHONY: license-deploy
-license-deploy: LICENSE LICENSE_HEADER
+license-deploy: node_modules/license-check-and-add LICENSE LICENSE_HEADER
 	cd node \
 	&& npm run license:deploy
 
 .PHONY: test-license
-test-license: LICENSE LICENSE_HEADER
+test-license: node_modules/license-check-and-add LICENSE LICENSE_HEADER
 	cd node \
 	&& npm run test:license
 
