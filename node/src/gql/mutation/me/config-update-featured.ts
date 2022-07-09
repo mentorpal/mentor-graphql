@@ -4,7 +4,6 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { ConfigType } from 'gql/types/config';
 import {
   GraphQLObjectType,
   GraphQLNonNull,
@@ -14,6 +13,7 @@ import {
 } from 'graphql';
 import SettingModel, { Config } from '../../../models/Setting';
 import { User, UserRole } from '../../../models/User';
+import { ConfigType } from '../../../gql/types/config';
 
 export interface ConfigUpdateFeaturedInput {
   mentorsDefault: string[];
