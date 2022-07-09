@@ -119,7 +119,7 @@ describe('updateConfigFeatured', () => {
 
   it('CONTENT_MANAGER can update config', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea5'); //mentor with role "Content Manager"
-    const response = await request(app)
+    let response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
@@ -143,6 +143,33 @@ describe('updateConfigFeatured', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateConfigFeatured).to.eql({
       activeMentors: [],
+      featuredMentorPanels: ['5ffdf41a1ee2c62111111111'],
+      featuredMentors: ['5ffdf41a1ee2c62111111119'],
+      mentorsDefault: [],
+    });
+    response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateConfigFeatured($config: ConfigUpdateFeaturedInputType!) {
+        me {
+          updateConfigFeatured(config: $config) {
+            mentorsDefault
+            featuredMentors
+            featuredMentorPanels
+            activeMentors
+          }
+        }
+      }`,
+        variables: {
+          config: {
+            activeMentors: ['5ffdf41a1ee2c62111111119'],
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateConfigFeatured).to.eql({
+      activeMentors: ['5ffdf41a1ee2c62111111119'],
       featuredMentorPanels: ['5ffdf41a1ee2c62111111111'],
       featuredMentors: ['5ffdf41a1ee2c62111111119'],
       mentorsDefault: [],
