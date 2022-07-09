@@ -12,8 +12,8 @@ import {
   GraphQLList,
   GraphQLID,
 } from 'graphql';
-import SettingModel, { Config } from 'models/Setting';
-import { User, UserRole } from 'models/User';
+import SettingModel, { Config } from '../../../models/Setting';
+import { User, UserRole } from '../../../models/User';
 
 export interface ConfigUpdateFeaturedInput {
   mentorsDefault: string[];

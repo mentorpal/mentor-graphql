@@ -13,8 +13,8 @@ import {
   GraphQLInputObjectType,
 } from 'graphql';
 import MentorPanelType from 'gql/types/mentor-panel';
-import MentorPanelModel, { MentorPanel } from 'models/MentorPanel';
-import { User, UserRole } from 'models/User';
+import MentorPanelModel, { MentorPanel } from '../../../models/MentorPanel';
+import { User, UserRole } from '../../../models/User';
 
 interface AddOrUpdateMentorPanelInput {
   subject: string;
