@@ -665,6 +665,9 @@ MentorSchema.statics.getAnswers = async function ({
   const questionIds = sQuestions.map(
     (sq: { question: { _id: string } }) => sq.question._id
   );
+  const questions: Question[] = await QuestionModel.find({
+    _id: { $in: questionIds },
+  });
   const answers: Answer[] = await AnswerModel.find({
     mentor: userMentor._id,
     question: { $in: questionIds },
@@ -684,16 +687,42 @@ MentorSchema.statics.getAnswers = async function ({
         mentor: userMentor._id,
         question: qid,
         transcript: '',
-        status: Status.INCOMPLETE,
+        status: Status.NONE,
         webMedia: undefined,
         mobileMedia: undefined,
         vttMedia: undefined,
       }
     );
   });
-  return status
-    ? answerResult.filter((a: Answer) => a.status === status)
-    : answerResult;
+  if (status) {
+    if (status === Status.INCOMPLETE) {
+      return answerResult.filter(
+        (a: Answer) =>
+          a.status === Status.INCOMPLETE ||
+          (a.status === Status.NONE &&
+            ((questions.find((q) => `${q._id}` === `${a.question}`)?.name !==
+              QuestionType.UTTERANCE &&
+              !a.transcript) ||
+              (userMentor.mentorType === MentorType.VIDEO &&
+                (!a.webMedia?.url || !a.mobileMedia?.url))))
+      );
+    } else if (status === Status.COMPLETE) {
+      return answerResult.filter(
+        (a: Answer) =>
+          a.status === Status.COMPLETE ||
+          (a.status === Status.NONE &&
+            (questions.find((q) => `${q._id}` === `${a.question}`)?.name ===
+              QuestionType.UTTERANCE ||
+              a.transcript) &&
+            (userMentor.mentorType === MentorType.CHAT ||
+              (a.webMedia?.url && a.mobileMedia?.url)))
+      );
+    } else {
+      return answerResult.filter((a: Answer) => a.status === status);
+    }
+  } else {
+    return answerResult;
+  }
 };
 
 MentorSchema.index({ name: -1, _id: -1 });

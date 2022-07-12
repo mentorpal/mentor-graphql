@@ -438,21 +438,21 @@ describe('mentor', () => {
             question: 'Who are you and what do you do?',
           },
           transcript: '',
-          status: 'INCOMPLETE',
+          status: 'NONE',
         },
         {
           question: {
             question: 'How old are you?',
           },
           transcript: '',
-          status: 'INCOMPLETE',
+          status: 'NONE',
         },
         {
           question: {
             question: 'Do you like your job?',
           },
           transcript: '',
-          status: 'INCOMPLETE',
+          status: 'NONE',
         },
         {
           question: {
@@ -622,7 +622,7 @@ describe('mentor', () => {
             question: 'Do you like your job?',
           },
           transcript: '',
-          status: 'INCOMPLETE',
+          status: 'NONE',
         },
       ],
     });

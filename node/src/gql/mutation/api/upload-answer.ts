@@ -98,7 +98,7 @@ export const answerUpload = {
     // any = Boolean, String, Answer
     const updates: Record<string, string | boolean | AnswerMediaProps> = {
       ...args.answer,
-      status: Status.INCOMPLETE, // with partial updates we cant tell here
+      status: Status.NONE, // with partial updates we cant tell here
       hasEditedTranscript: hasEditedTranscript,
       transcript:
         args.answer.transcript != undefined

@@ -150,7 +150,7 @@ describe('uploadAnswer', () => {
     expect(updatedAnswer).to.eql({
       transcript:
         "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-      status: 'INCOMPLETE',
+      status: 'NONE',
       question: {
         _id: '511111111111111111111112',
       },
@@ -284,7 +284,7 @@ describe('uploadAnswer', () => {
     expect(updatedAnswer).to.eql({
       transcript:
         "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
-      status: 'INCOMPLETE',
+      status: 'NONE',
       webMedia: {
         type: 'video',
         tag: 'web',

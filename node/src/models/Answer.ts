@@ -27,7 +27,7 @@ export interface AnswerMediaProps {
   url: string;
   needsTransfer: boolean;
 }
-export interface AnswerMedia extends AnswerMediaProps, Document { }
+export interface AnswerMedia extends AnswerMediaProps, Document {}
 
 export const AnswerMediaSchema = new Schema({
   type: { type: String },
@@ -80,6 +80,6 @@ AnswerSchema.index({ question: -1, mentor: -1 }, { unique: true });
 pluginPagination(AnswerSchema);
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface AnswerModel extends Model<Answer> { }
+export interface AnswerModel extends Model<Answer> {}
 
 export default mongoose.model<Answer, AnswerModel>('Answer', AnswerSchema);
