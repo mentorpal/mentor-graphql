@@ -5,70 +5,46 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import {
-  GraphQLString,
   GraphQLObjectType,
   GraphQLBoolean,
   GraphQLNonNull,
-  GraphQLInputObjectType,
   GraphQLID,
 } from 'graphql';
 import { Mentor as MentorModel } from '../../../models';
 import { Mentor } from '../../../models/Mentor';
 import { User, UserRole } from '../../../models/User';
 
-export interface UpdateMentorDetails {
-  name: string;
-  firstName: string;
-  title: string;
-  email: string;
-  allowContact: boolean;
-  mentorType: string;
-  isPrivate: boolean;
-}
-
-export const UpdateMentorDetailsType = new GraphQLInputObjectType({
-  name: 'UpdateMentorDetailsType',
-  fields: () => ({
-    name: { type: GraphQLString },
-    firstName: { type: GraphQLString },
-    title: { type: GraphQLString },
-    email: { type: GraphQLString },
-    allowContact: { type: GraphQLBoolean },
-    mentorType: { type: GraphQLString },
-    isPrivate: { type: GraphQLBoolean },
-  }),
-});
-
-export const updateMentorDetails = {
+export const updateMentorPrivacy = {
   type: GraphQLBoolean,
   args: {
-    mentor: { type: GraphQLNonNull(UpdateMentorDetailsType) },
-    mentorId: { type: GraphQLID },
+    mentorId: { type: GraphQLNonNull(GraphQLID) },
+    isPrivate: { type: GraphQLNonNull(GraphQLBoolean) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: UpdateMentorDetails; mentorId: string },
+    args: { mentorId: string; isPrivate: boolean },
     context: { user: User }
   ): Promise<boolean> => {
-    let mentor: Mentor = await MentorModel.findOne({
+    const mentor: Mentor = await MentorModel.findById(args.mentorId);
+    if (!mentor) {
+      throw new Error('invalid mentor id given');
+    }
+    const userMentor: Mentor = await MentorModel.findOne({
       user: context.user._id,
     });
-    if (!mentor) {
-      throw new Error('you do not have a mentor');
-    }
-    if (args.mentorId && `${mentor._id}` !== `${args.mentorId}`) {
-      if (
-        context.user.userRole !== UserRole.ADMIN &&
-        context.user.userRole !== UserRole.CONTENT_MANAGER
-      ) {
-        throw new Error('you do not have permission to edit this mentor');
-      }
-      mentor = await MentorModel.findById(args.mentorId);
+    if (
+      `${userMentor._id}` !== `${args.mentorId}` &&
+      context.user.userRole !== UserRole.ADMIN &&
+      context.user.userRole !== UserRole.CONTENT_MANAGER
+    ) {
+      throw new Error('you do not have permission to edit this mentor');
     }
     const updated = await MentorModel.findByIdAndUpdate(
-      mentor._id,
+      args.mentorId,
       {
-        $set: args.mentor,
+        $set: {
+          isPrivate: args.isPrivate,
+        },
       },
       {
         new: true,
@@ -79,4 +55,4 @@ export const updateMentorDetails = {
   },
 };
 
-export default updateMentorDetails;
+export default updateMentorPrivacy;

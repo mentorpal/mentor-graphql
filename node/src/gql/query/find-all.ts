@@ -16,6 +16,8 @@ import mongoose from 'mongoose';
 export function findAll<T extends PaginatedResolveResult>(config: {
   nodeType: GraphQLObjectType;
   model: HasPaginate<T>;
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  filterInvalid?: (val: any, context: any) => Promise<boolean> | boolean;
 }): any {
   const { nodeType, model } = config;
   return makeConnection({
@@ -48,7 +50,7 @@ export function findAll<T extends PaginatedResolveResult>(config: {
         }
       }
 
-      return await model.paginate({
+      const result = await model.paginate({
         query: filter,
         limit: Number(args.limit) || 100,
         paginatedField: args.sortBy || '_id',
@@ -56,6 +58,18 @@ export function findAll<T extends PaginatedResolveResult>(config: {
         next: next,
         previous: prev,
       });
+      if (config.filterInvalid !== undefined) {
+        const asyncResults = await Promise.all(
+          result.results.map((r) =>
+            config.filterInvalid(r, resolveArgs.context)
+          )
+        );
+        return {
+          ...result,
+          results: result.results.filter((r, i) => !asyncResults[i]),
+        };
+      }
+      return result;
     },
   });
 }

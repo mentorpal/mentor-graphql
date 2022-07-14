@@ -5,8 +5,10 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLObjectType, GraphQLNonNull, GraphQLID } from 'graphql';
-import { Answer as AnswerModel } from '../../models';
+import { Answer as AnswerModel, Mentor as MentorModel } from '../../models';
 import { Answer } from '../../models/Answer';
+import { User } from '../../models/User';
+import { hasAccessToMentor } from '../../utils/mentor-check-private';
 import AnswerType from '../types/answer';
 
 export const answer = {
@@ -17,8 +19,17 @@ export const answer = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: string; question: string }
+    args: { mentor: string; question: string },
+    context: { user: User }
   ): Promise<Answer> => {
+    console.log(args.mentor);
+    const mentor = await MentorModel.findById(args.mentor);
+    // console.log(JSON.stringify(mentor, null, ' '))
+    if (!hasAccessToMentor(mentor, context.user)) {
+      throw new Error(
+        `mentor is private and you do not have permission to access`
+      );
+    }
     return await AnswerModel.findOne({
       mentor: args.mentor,
       question: args.question,

@@ -16,6 +16,7 @@ module.exports = {
       userRole: 'ADMIN',
       firstTimeTracking: {
         myMentorSplash: false,
+        tooltips: true,
       },
     },
     {
@@ -47,6 +48,12 @@ module.exports = {
       name: 'Aaron Klunder',
       email: 'aaron@klunder.com',
       userRole: 'ADMIN',
+    },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ea7'),
+      name: 'Private Mentor',
+      email: 'private@mentor.com',
+      userRole: 'USER',
     },
   ],
 
@@ -120,6 +127,14 @@ module.exports = {
       name: 'Dan Davis',
       firstName: 'Dan',
       user: ObjectId('5ffdf41a1ee2c62320b49ea2'),
+      subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
+    },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62111111114'),
+      name: 'Private Mentor',
+      firstName: 'Private',
+      isPrivate: true,
+      user: ObjectId('5ffdf41a1ee2c62320b49ea7'),
       subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
     },
   ],
@@ -262,10 +277,11 @@ module.exports = {
       type: 'QUESTION',
     },
   ],
+
   answers: [
     {
       _id: ObjectId('511111111111111111111174'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111122'),
+      mentor: ObjectId('5ffdf41a1ee2c62111111119'),
       question: ObjectId('511111111111111111111112'),
       hasEditedTranscript: true,
       transcript:
@@ -338,6 +354,25 @@ module.exports = {
         type: 'video',
         tag: 'mobile',
         url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
+      },
+    },
+    {
+      _id: ObjectId('511111111111111111111119'),
+      mentor: ObjectId('5ffdf41a1ee2c62111111114'),
+      question: ObjectId('511111111111111111111111'),
+      hasEditedTranscript: true,
+      transcript: '[being still]',
+      video: 'https://idle/url',
+      status: 'COMPLETE',
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: 'videos/5ffdf41a1ee2c62111111114/511111111111111111111111/web.mp4',
+      },
+      mobileMedia: {
+        type: 'video',
+        tag: 'mobile',
+        url: 'videos/5ffdf41a1ee2c62111111114/511111111111111111111111/mobile.mp4',
       },
     },
   ],

@@ -9,6 +9,7 @@ import { expect } from 'chai';
 import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
+import { getToken } from '../../helpers';
 
 describe('query categoryAnswers', () => {
   let app: Express;
@@ -47,5 +48,119 @@ describe('query categoryAnswers', () => {
         questionText: 'What is Aaron like?',
       },
     ]);
+  });
+
+  it(`throws an error if mentor is private and user is not logged in`, async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `
+          query CategoryAnswers($mentor: ID!, $category: String!){
+            categoryAnswers(mentor: $mentor, category: $category) {
+              answerText
+              questionText
+            }
+          }`,
+        variables: {
+          category: 'category',
+          mentor: '5ffdf41a1ee2c62111111114',
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'mentor is private and you do not have permission to access'
+    );
+  });
+
+  it(`throws an error if mentor is private and user is not owner or super user`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `
+          query CategoryAnswers($mentor: ID!, $category: String!){
+            categoryAnswers(mentor: $mentor, category: $category) {
+              answerText
+              questionText
+            }
+          }`,
+        variables: {
+          category: 'category',
+          mentor: '5ffdf41a1ee2c62111111114',
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'mentor is private and you do not have permission to access'
+    );
+  });
+
+  it(`gets answer for private mentor if content manager`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea4');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `
+          query CategoryAnswers($mentor: ID!, $category: String!){
+            categoryAnswers(mentor: $mentor, category: $category) {
+              answerText
+              questionText
+            }
+          }`,
+        variables: {
+          category: 'category',
+          mentor: '5ffdf41a1ee2c62111111114',
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.not.have.deep.nested.property('errors[0].message');
+  });
+
+  it(`gets answer for private mentor if admin`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `
+          query CategoryAnswers($mentor: ID!, $category: String!){
+            categoryAnswers(mentor: $mentor, category: $category) {
+              answerText
+              questionText
+            }
+          }`,
+        variables: {
+          category: 'category',
+          mentor: '5ffdf41a1ee2c62111111114',
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.not.have.deep.nested.property('errors[0].message');
+  });
+
+  it(`gets answer for private mentor if owner`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea7');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `
+          query CategoryAnswers($mentor: ID!, $category: String!){
+            categoryAnswers(mentor: $mentor, category: $category) {
+              answerText
+              questionText
+            }
+          }`,
+        variables: {
+          category: 'category',
+          mentor: '5ffdf41a1ee2c62111111114',
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.not.have.deep.nested.property('errors[0].message');
   });
 });

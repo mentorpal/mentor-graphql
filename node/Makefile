@@ -5,6 +5,7 @@ SERVICE_NAME?=$(shell v='$(DIR)'; echo "$${v\#\#*/}")
 DIR=$(shell pwd)
 ENV?=dev
 DOCKER_IMAGE?=mentor-graphql
+LICENSE_CONFIG?="license-config.json"
 
 .PHONY: clean-dist
 clean-dist: 
@@ -64,6 +65,9 @@ node_modules/prettier:
 node_modules/typescript:
 	npm ci
 
+node_modules/license-check-and-add:
+	npm ci
+
 run-env-%:
 	export ENV=$* \
 	&& export NODE_PATH=$(DIR) \
@@ -91,3 +95,7 @@ test-lint: node_modules/eslint
 .PHONY: test-lint
 test-types: node_modules/typescript
 	npm run test:types
+
+.PHONY: license-deploy
+license-deploy: node_modules/license-check-and-add
+	LICENSE_CONFIG=${LICENSE_CONFIG} npm run license:deploy

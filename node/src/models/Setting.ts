@@ -12,6 +12,7 @@ export interface Config {
   cmi5Fetch: string;
   urlGraphql: string;
   urlVideo: string;
+  urlDocSetup: string;
   urlVideoIdleTips: string;
   urlVideoMentorpalWalkthrough: string;
   classifierLambdaEndpoint: string;
@@ -40,6 +41,7 @@ export const ConfigKeys: ConfigKey[] = [
   'cmi5Fetch',
   'urlGraphql',
   'urlVideo',
+  'urlDocSetup',
   'urlVideoIdleTips',
   'urlVideoMentorpalWalkthrough',
   'classifierLambdaEndpoint',
@@ -76,6 +78,8 @@ export function getDefaultConfig(): Config {
     classifierLambdaEndpoint: '',
     graphqlLambdaEndpoint: '',
     uploadLambdaEndpoint: '',
+    urlDocSetup:
+      'https://docs.google.com/document/d/1av1pWamFrXQ1KabMU02LtAutrTt3ppblneQeilFBU3s/edit?usp=sharing',
     urlVideoIdleTips: 'https://youtu.be/xSu1BhuFt8A',
     filterEmailMentorAddress: 'careerfair.ai@gmail.com',
     urlVideoMentorpalWalkthrough: 'https://youtu.be/EGdSl4Q8NAY',

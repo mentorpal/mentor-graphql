@@ -11,7 +11,7 @@ import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 import { getToken } from '../../helpers';
 
-describe('mentors', () => {
+describe('answers', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -25,267 +25,228 @@ describe('mentors', () => {
     await mongoUnit.drop();
   });
 
-  it('gets a list of public mentors if not logged in', async () => {
+  it('gets a list of answers from public mentors if not logged in', async () => {
     const response = await request(app)
       .post('/graphql')
       .send({
         query: `query {
-        mentors {
+        answers {
           edges {
             node {
               _id
-              name
             }
-          }
-          pageInfo {
-            hasNextPage
-            endCursor
           }
         }
       }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentors).to.eql({
+    expect(response.body.data.answers).to.eql({
       edges: [
         {
           node: {
-            _id: '5ffdf41a1ee2c62111111119',
-            name: 'Aaron Klunder',
+            _id: '511111111111111111111174',
           },
         },
         {
           node: {
-            _id: '5ffdf41a1ee2c62111111113',
-            name: 'Dan Davis',
+            _id: '511111111111111111111114',
           },
         },
         {
           node: {
-            _id: '5ffdf41a1ee2c62111111112',
-            name: 'Julianne Nordhagen',
+            _id: '511111111111111111111113',
           },
         },
         {
           node: {
-            _id: '5ffdf41a1ee2c62111111111',
-            name: 'Clinton Anderson',
-          },
-        },
-        {
-          node: {
-            _id: '5ffdf41a1ee2c62111111110',
-            name: 'Jacob Ferguson',
+            _id: '511111111111111111111112',
           },
         },
       ],
-      pageInfo: {
-        hasNextPage: false,
-        endCursor: null,
-      },
     });
   });
 
-  it('does not get private mentors if not owner or super user', async () => {
+  it('does not get answers from private mentors if not owner or super user', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea2');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `query {
-        mentors {
-          edges {
-            node {
-              name
+          answers {
+            edges {
+              node {
+                _id
+              }
             }
           }
-        }
-      }`,
+        }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentors).to.eql({
+    expect(response.body.data.answers).to.eql({
       edges: [
         {
           node: {
-            name: 'Aaron Klunder',
+            _id: '511111111111111111111174',
           },
         },
         {
           node: {
-            name: 'Dan Davis',
+            _id: '511111111111111111111114',
           },
         },
         {
           node: {
-            name: 'Julianne Nordhagen',
+            _id: '511111111111111111111113',
           },
         },
         {
           node: {
-            name: 'Clinton Anderson',
-          },
-        },
-        {
-          node: {
-            name: 'Jacob Ferguson',
+            _id: '511111111111111111111112',
           },
         },
       ],
     });
   });
 
-  it('gets private mentor if content manager', async () => {
+  it('gets answers from private mentor if content manager', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea4');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `query {
-        mentors {
-          edges {
-            node {
-              name
+          answers {
+            edges {
+              node {
+                _id
+              }
             }
           }
-        }
-      }`,
+        }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentors).to.eql({
+    expect(response.body.data.answers).to.eql({
       edges: [
         {
           node: {
-            name: 'Aaron Klunder',
+            _id: '511111111111111111111174',
           },
         },
         {
           node: {
-            name: 'Private Mentor',
+            _id: '511111111111111111111119',
           },
         },
         {
           node: {
-            name: 'Dan Davis',
+            _id: '511111111111111111111114',
           },
         },
         {
           node: {
-            name: 'Julianne Nordhagen',
+            _id: '511111111111111111111113',
           },
         },
         {
           node: {
-            name: 'Clinton Anderson',
-          },
-        },
-        {
-          node: {
-            name: 'Jacob Ferguson',
+            _id: '511111111111111111111112',
           },
         },
       ],
     });
   });
 
-  it('gets private mentor if admin', async () => {
+  it('gets answers from private mentor if admin', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `query {
-        mentors {
-          edges {
-            node {
-              name
+          answers {
+            edges {
+              node {
+                _id
+              }
             }
           }
-        }
-      }`,
+        }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentors).to.eql({
+    expect(response.body.data.answers).to.eql({
       edges: [
         {
           node: {
-            name: 'Aaron Klunder',
+            _id: '511111111111111111111174',
           },
         },
         {
           node: {
-            name: 'Private Mentor',
+            _id: '511111111111111111111119',
           },
         },
         {
           node: {
-            name: 'Dan Davis',
+            _id: '511111111111111111111114',
           },
         },
         {
           node: {
-            name: 'Julianne Nordhagen',
+            _id: '511111111111111111111113',
           },
         },
         {
           node: {
-            name: 'Clinton Anderson',
-          },
-        },
-        {
-          node: {
-            name: 'Jacob Ferguson',
+            _id: '511111111111111111111112',
           },
         },
       ],
     });
   });
 
-  it('gets private mentor if owner', async () => {
+  it('gets answers from private mentor if owner', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea7');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `query {
-        mentors {
-          edges {
-            node {
-              name
+          answers {
+            edges {
+              node {
+                _id
+              }
             }
           }
-        }
-      }`,
+        }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentors).to.eql({
+    expect(response.body.data.answers).to.eql({
       edges: [
         {
           node: {
-            name: 'Aaron Klunder',
+            _id: '511111111111111111111174',
           },
         },
         {
           node: {
-            name: 'Private Mentor',
+            _id: '511111111111111111111119',
           },
         },
         {
           node: {
-            name: 'Dan Davis',
+            _id: '511111111111111111111114',
           },
         },
         {
           node: {
-            name: 'Julianne Nordhagen',
+            _id: '511111111111111111111113',
           },
         },
         {
           node: {
-            name: 'Clinton Anderson',
-          },
-        },
-        {
-          node: {
-            name: 'Jacob Ferguson',
+            _id: '511111111111111111111112',
           },
         },
       ],

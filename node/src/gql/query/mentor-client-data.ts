@@ -5,6 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import {
+  GraphQLBoolean,
   GraphQLID,
   GraphQLList,
   GraphQLNonNull,
@@ -21,6 +22,8 @@ import {
 import { AnswerMedia, Status } from '../../models/Answer';
 import { QuestionType } from '../../models/Question';
 import { SubjectQuestion, Topic } from '../../models/Subject';
+import { User } from '../../models/User';
+import { hasAccessToMentor } from '../../utils/mentor-check-private';
 
 export interface MentorClientData {
   _id: string;
@@ -28,6 +31,7 @@ export interface MentorClientData {
   email: string;
   title: string;
   mentorType: string;
+  allowContact: boolean;
   topicQuestions: TopicQuestions[];
   utterances: AnswerClientData[];
 }
@@ -53,6 +57,7 @@ export const MentorClientDataType = new GraphQLObjectType({
     name: { type: GraphQLString },
     email: { type: GraphQLString },
     title: { type: GraphQLString },
+    allowContact: { type: GraphQLBoolean },
     mentorType: { type: GraphQLString },
     topicQuestions: { type: GraphQLList(TopicQuestionsType) },
     utterances: { type: GraphQLList(AnswerClientDataType) },
@@ -87,11 +92,17 @@ export const mentorData = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: string; subject?: string }
+    args: { mentor: string; subject?: string },
+    context: { user: User }
   ): Promise<MentorClientData> => {
     const mentor = await MentorModel.findById(args.mentor);
     if (!mentor) {
       throw new Error(`mentor ${args.mentor} not found`);
+    }
+    if (!hasAccessToMentor(mentor, context.user)) {
+      throw new Error(
+        `mentor is private and you do not have permission to access`
+      );
     }
     const subjectIds = args.subject
       ? [args.subject]
@@ -148,6 +159,7 @@ export const mentorData = {
       title: mentor.title,
       email: mentor.email,
       mentorType: mentor.mentorType,
+      allowContact: mentor.allowContact,
       topicQuestions: Object.keys(topicQuestions).map((key) => {
         const t = topics.find((t) => `${t.id}` === key);
         const tq = questions.filter((q) =>
