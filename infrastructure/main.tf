@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
-    bucket         = "mentorpal-graphql-tf-state-us-east-1"
-    region         = "us-east-1"
-    key            = "terraform.tfstate"
+    bucket = "mentorpal-graphql-tf-state-us-east-1"
+    region = "us-east-1"
+    key    = "terraform.tfstate"
   }
 }
 
