@@ -16,6 +16,7 @@ import {
 } from './Paginatation';
 
 export enum Status {
+  NONE = 'NONE',
   INCOMPLETE = 'INCOMPLETE',
   COMPLETE = 'COMPLETE',
 }
@@ -63,8 +64,8 @@ export const AnswerSchema = new Schema<Answer, AnswerModel>(
     transcript: { type: String },
     status: {
       type: String,
-      enum: [Status.INCOMPLETE, Status.COMPLETE],
-      default: Status.INCOMPLETE,
+      enum: [Status.NONE, Status.INCOMPLETE, Status.COMPLETE],
+      default: Status.NONE,
     },
     webMedia: { type: AnswerMediaSchema },
     mobileMedia: { type: AnswerMediaSchema },

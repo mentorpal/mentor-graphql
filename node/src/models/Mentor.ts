@@ -665,6 +665,9 @@ MentorSchema.statics.getAnswers = async function ({
   const questionIds = sQuestions.map(
     (sq: { question: { _id: string } }) => sq.question._id
   );
+  const questions: Question[] = await QuestionModel.find({
+    _id: { $in: questionIds },
+  });
   const answers: Answer[] = await AnswerModel.find({
     mentor: userMentor._id,
     question: { $in: questionIds },
@@ -684,17 +687,59 @@ MentorSchema.statics.getAnswers = async function ({
         mentor: userMentor._id,
         question: qid,
         transcript: '',
-        status: Status.INCOMPLETE,
+        status: Status.NONE,
         webMedia: undefined,
         mobileMedia: undefined,
         vttMedia: undefined,
       }
     );
   });
-  return status
-    ? answerResult.filter((a: Answer) => a.status === status)
-    : answerResult;
+  if (status) {
+    if (status === Status.INCOMPLETE) {
+      return answerResult.filter(
+        (a: Answer) =>
+          !isAnswerComplete(
+            a,
+            questions.find((q) => `${q._id}` === `${a.question}`),
+            userMentor
+          )
+      );
+    } else if (status === Status.COMPLETE) {
+      return answerResult.filter((a: Answer) =>
+        isAnswerComplete(
+          a,
+          questions.find((q) => `${q._id}` === `${a.question}`),
+          userMentor
+        )
+      );
+    } else {
+      return answerResult.filter((a: Answer) => a.status === status);
+    }
+  } else {
+    return answerResult;
+  }
 };
+
+export function isAnswerComplete(
+  answer: Answer,
+  question: Question,
+  mentor: Mentor
+): boolean {
+  if (answer.status === Status.COMPLETE) {
+    return true;
+  }
+  if (answer.status === Status.NONE) {
+    if (mentor.mentorType === MentorType.CHAT) {
+      return Boolean(answer.transcript);
+    } else if (mentor.mentorType === MentorType.VIDEO) {
+      return (
+        (Boolean(answer.transcript) || question?.name === '_IDLE_') &&
+        Boolean(answer.webMedia?.url || answer.mobileMedia?.url)
+      );
+    }
+  }
+  return false;
+}
 
 MentorSchema.index({ name: -1, _id: -1 });
 MentorSchema.index({ firstName: -1, _id: -1 });

@@ -19,10 +19,11 @@ import {
   Answer as AnswerModel,
   Question as QuestionModel,
 } from '../../models';
-import { AnswerMedia, Status } from '../../models/Answer';
+import { AnswerMedia } from '../../models/Answer';
 import { QuestionType } from '../../models/Question';
 import { SubjectQuestion, Topic } from '../../models/Subject';
 import { User } from '../../models/User';
+import { isAnswerComplete } from '../../models/Mentor';
 import { hasAccessToMentor } from '../../utils/mentor-check-private';
 
 export interface MentorClientData {
@@ -125,11 +126,17 @@ export const mentorData = {
         { mentor: null },
       ],
     });
-    const answers = await AnswerModel.find({
+    let answers = await AnswerModel.find({
       mentor: mentor._id,
-      status: Status.COMPLETE,
       question: { $in: questions.map((q) => q.id) },
     });
+    answers = answers.filter((a) =>
+      isAnswerComplete(
+        a,
+        questions.find((q) => `${q._id}` === `${a.question}`),
+        mentor
+      )
+    );
 
     const qIds = answers.map((a) => `${a.question}`);
     const sQs = sQuestions.filter((sq) => qIds.includes(`${sq.question}`));
@@ -147,11 +154,17 @@ export const mentorData = {
     const utteranceQuestions = await QuestionModel.find({
       type: QuestionType.UTTERANCE,
     });
-    const utterances = await AnswerModel.find({
+    let utterances = await AnswerModel.find({
       mentor: mentor._id,
-      status: Status.COMPLETE,
       question: { $in: utteranceQuestions.map((q) => q.id) },
     });
+    utterances = utterances.filter((a) =>
+      isAnswerComplete(
+        a,
+        questions.find((q) => `${q._id}` === `${a.question}`),
+        mentor
+      )
+    );
 
     return {
       _id: mentor._id,
