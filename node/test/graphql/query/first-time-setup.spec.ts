@@ -81,4 +81,56 @@ describe('First Time Setup', () => {
       tooltips: false,
     });
   });
+
+  it(`can do partial updates`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `
+        mutation FirstTimeTrackingUpdate($updates: FirstTimeTrackingUpdateInputType!) {
+          me{
+            firstTimeTrackingUpdate(updates: $updates){
+              myMentorSplash,
+              tooltips
+            }
+          }
+        }
+      `,
+        variables: {
+          updates: {
+            myMentorSplash: true,
+          },
+        },
+      });
+    expect(response.body.data.me.firstTimeTrackingUpdate).to.eql({
+      myMentorSplash: true,
+      tooltips: true,
+    });
+    // Make sure the DB actually updated
+    const response2 = await request(app)
+      .post('/graphql')
+      .send({
+        query: `
+        query Users($filter: Object!){
+          users (filter: $filter){
+            edges {
+              node {
+                firstTimeTracking{
+                  myMentorSplash,
+                  tooltips,
+                }
+              }
+            }
+          }
+        }`,
+        variables: {
+          filter: { _id: '5ffdf41a1ee2c62320b49ea1' },
+        },
+      });
+    expect(response2.body.data.users.edges[0].node).to.eql({
+      firstTimeTracking: { myMentorSplash: true, tooltips: true },
+    });
+  });
 });

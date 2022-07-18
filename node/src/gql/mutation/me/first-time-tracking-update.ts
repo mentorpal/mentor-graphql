@@ -38,20 +38,23 @@ export const firstTimeTrackingUpdate = {
     },
     context: { user: User }
   ): Promise<FirstTimeTracking> => {
-    const updatedUser = await UserModel.findOneAndUpdate(
+    const user = await UserModel.findOneAndUpdate(
       { _id: context.user._id },
-      {
-        firstTimeTracking: {
-          myMentorSplash: args.updates.myMentorSplash,
-          tooltips: args.updates.tooltips,
-        },
-      },
       { new: true }
     );
-    if (!updatedUser) {
+    if (!user) {
       throw new Error(`Failed to find user for id ${context.user._id}`);
     }
-    return updatedUser.firstTimeTracking;
+    if (args.updates.myMentorSplash !== undefined) {
+      user.firstTimeTracking.myMentorSplash = args.updates.myMentorSplash;
+      user.markModified('firstTimeTracking');
+    }
+    if (args.updates.tooltips !== undefined) {
+      user.firstTimeTracking.tooltips = args.updates.tooltips;
+      user.markModified('firstTimeTracking');
+    }
+    user.save();
+    return user.firstTimeTracking;
   },
 };
 
