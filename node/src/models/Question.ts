@@ -7,7 +7,7 @@ The full terms of this copyright and license should always be found in the root 
 import { toUpdateProps } from '../gql/mutation/me/helpers';
 import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
 import mongoose, { Document, Model, Schema } from 'mongoose';
-import { Mentor } from './Mentor';
+import { Mentor, MentorType } from './Mentor';
 import {
   PaginatedResolveResult,
   PaginateOptions,
@@ -48,7 +48,7 @@ export const QuestionSchema = new Schema<Question, QuestionModel>(
     },
     mentorType: {
       type: String,
-      // enum: [MentorType.VIDEO, MentorType.CHAT],
+      enum: [MentorType.VIDEO, MentorType.CHAT],
     },
     minVideoLength: { type: Number },
   },
