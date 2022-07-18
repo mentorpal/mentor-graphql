@@ -25,12 +25,12 @@ export interface FirstTimeTracking extends Document {
 
 const defaultFirstTimeTracking = {
   myMentorSplash: false,
-  tooltips: true,
+  tooltips: false,
 };
 
 export const FirstTimeTrackingSchema = new Schema<FirstTimeTracking>({
   myMentorSplash: { type: Boolean, default: false },
-  tooltips: { type: Boolean, default: true },
+  tooltips: { type: Boolean, default: false },
 });
 
 export interface User extends Document {
