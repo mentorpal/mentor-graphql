@@ -19,11 +19,11 @@ import {
   Answer as AnswerModel,
   Question as QuestionModel,
 } from '../../models';
-import { AnswerMedia, Status } from '../../models/Answer';
+import { AnswerMedia } from '../../models/Answer';
 import { QuestionType } from '../../models/Question';
 import { SubjectQuestion, Topic } from '../../models/Subject';
 import { User } from '../../models/User';
-import { MentorType } from '../../models/Mentor';
+import { isAnswerComplete } from '../../models/Mentor';
 import { hasAccessToMentor } from '../../utils/mentor-check-private';
 
 export interface MentorClientData {
@@ -130,15 +130,12 @@ export const mentorData = {
       mentor: mentor._id,
       question: { $in: questions.map((q) => q.id) },
     });
-    answers = answers.filter(
-      (a) =>
-        a.status === Status.COMPLETE ||
-        (a.status === Status.NONE &&
-          (questions.find((q) => `${q._id}` === `${a.question}`)?.name ===
-            QuestionType.UTTERANCE ||
-            a.transcript) &&
-          (mentor.mentorType === MentorType.CHAT ||
-            (a.webMedia?.url && a.mobileMedia?.url)))
+    answers = answers.filter((a) =>
+      isAnswerComplete(
+        a,
+        questions.find((q) => `${q._id}` === `${a.question}`),
+        mentor
+      )
     );
 
     const qIds = answers.map((a) => `${a.question}`);
@@ -161,15 +158,12 @@ export const mentorData = {
       mentor: mentor._id,
       question: { $in: utteranceQuestions.map((q) => q.id) },
     });
-    utterances = utterances.filter(
-      (a) =>
-        a.status === Status.COMPLETE ||
-        (a.status === Status.NONE &&
-          (questions.find((q) => `${q._id}` === `${a.question}`)?.name ===
-            QuestionType.UTTERANCE ||
-            a.transcript) &&
-          (mentor.mentorType === MentorType.CHAT ||
-            (a.webMedia?.url && a.mobileMedia?.url)))
+    utterances = utterances.filter((a) =>
+      isAnswerComplete(
+        a,
+        questions.find((q) => `${q._id}` === `${a.question}`),
+        mentor
+      )
     );
 
     return {

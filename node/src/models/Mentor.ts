@@ -698,24 +698,19 @@ MentorSchema.statics.getAnswers = async function ({
     if (status === Status.INCOMPLETE) {
       return answerResult.filter(
         (a: Answer) =>
-          a.status === Status.INCOMPLETE ||
-          (a.status === Status.NONE &&
-            ((questions.find((q) => `${q._id}` === `${a.question}`)?.name !==
-              QuestionType.UTTERANCE &&
-              !a.transcript) ||
-              (userMentor.mentorType === MentorType.VIDEO &&
-                (!a.webMedia?.url || !a.mobileMedia?.url))))
+          !isAnswerComplete(
+            a,
+            questions.find((q) => `${q._id}` === `${a.question}`),
+            userMentor
+          )
       );
     } else if (status === Status.COMPLETE) {
-      return answerResult.filter(
-        (a: Answer) =>
-          a.status === Status.COMPLETE ||
-          (a.status === Status.NONE &&
-            (questions.find((q) => `${q._id}` === `${a.question}`)?.name ===
-              QuestionType.UTTERANCE ||
-              a.transcript) &&
-            (userMentor.mentorType === MentorType.CHAT ||
-              (a.webMedia?.url && a.mobileMedia?.url)))
+      return answerResult.filter((a: Answer) =>
+        isAnswerComplete(
+          a,
+          questions.find((q) => `${q._id}` === `${a.question}`),
+          userMentor
+        )
       );
     } else {
       return answerResult.filter((a: Answer) => a.status === status);
@@ -724,6 +719,27 @@ MentorSchema.statics.getAnswers = async function ({
     return answerResult;
   }
 };
+
+export function isAnswerComplete(
+  answer: Answer,
+  question: Question,
+  mentor: Mentor
+): boolean {
+  if (answer.status === Status.COMPLETE) {
+    return true;
+  }
+  if (answer.status === Status.NONE) {
+    if (mentor.mentorType === MentorType.CHAT) {
+      return Boolean(answer.transcript);
+    } else if (mentor.mentorType === MentorType.VIDEO) {
+      return (
+        (Boolean(answer.transcript) || question?.name === '_IDLE_') &&
+        Boolean(answer.webMedia?.url || answer.mobileMedia?.url)
+      );
+    }
+  }
+  return false;
+}
 
 MentorSchema.index({ name: -1, _id: -1 });
 MentorSchema.index({ firstName: -1, _id: -1 });
