@@ -138,6 +138,8 @@ export const uploadTaskStatusUpdate = {
         transcript:
           webTaskArg.transcript || uploadTask.transcodeWebTask?.transcript,
         media: webTaskArg.media || uploadTask.transcodeWebTask?.media,
+        payload:
+          webTaskArg.payload || uploadTask.transcodeWebTask?.payload || '',
       };
     }
     if (mobileTaskArg) {
@@ -151,6 +153,10 @@ export const uploadTaskStatusUpdate = {
           mobileTaskArg.transcript ||
           uploadTask.transcodeMobileTask?.transcript,
         media: mobileTaskArg.media || uploadTask.transcodeMobileTask?.media,
+        payload:
+          mobileTaskArg.payload ||
+          uploadTask.transcodeMobileTask?.payload ||
+          '',
       };
     }
     if (transcribeTaskArg) {
@@ -163,6 +169,8 @@ export const uploadTaskStatusUpdate = {
         transcript:
           transcribeTaskArg.transcript || uploadTask.transcribeTask?.transcript,
         media: transcribeTaskArg.media || uploadTask.transcribeTask?.media,
+        payload:
+          transcribeTaskArg.payload || uploadTask.transcribeTask?.payload || '',
       };
     }
     if (trimUploadTaskArg) {
@@ -175,6 +183,8 @@ export const uploadTaskStatusUpdate = {
         transcript:
           trimUploadTaskArg.transcript || uploadTask.trimUploadTask?.transcript,
         media: trimUploadTaskArg.media || uploadTask.trimUploadTask?.media,
+        payload:
+          trimUploadTaskArg.payload || uploadTask.trimUploadTask?.payload || '',
       };
     }
     const updatedTask = await UploadTaskModel.findOneAndUpdate(

@@ -20,6 +20,7 @@ export interface TaskInfoProps {
   status: string;
   transcript: string;
   media: AnswerMediaProps;
+  payload: string;
 }
 
 export interface TaskInfo extends TaskInfoProps, Document {}
@@ -30,6 +31,7 @@ export const TaskInfoSchema = new Schema({
   status: { type: String },
   transcript: { type: String },
   media: { type: AnswerMediaSchema },
+  payload: { type: String, default: '' },
 });
 
 export const TaskInfoInputType = new GraphQLInputObjectType({
@@ -40,6 +42,7 @@ export const TaskInfoInputType = new GraphQLInputObjectType({
     status: { type: GraphQLString },
     transcript: { type: GraphQLString },
     media: { type: AnswerMediaInputType },
+    payload: { type: GraphQLString },
   },
 });
 
@@ -51,5 +54,6 @@ export const TaskInfoType = new GraphQLObjectType({
     status: { type: GraphQLString },
     media: { type: AnswerMediaType },
     transcript: { type: GraphQLString },
+    payload: { type: GraphQLString },
   },
 });

@@ -400,6 +400,7 @@ module.exports = {
         task_name: 'transcribe',
         task_id: 'transcribe_task_id',
         status: 'IN_PROGRESS',
+        payload: 'text payload',
       },
       transcript: 'fake_transcript',
     },

@@ -132,6 +132,7 @@ describe('uploadTaskUpdate', () => {
             transcodeWebTask: {
               task_name: 'transcode',
               status: 'IN_PROGRESS',
+              payload: 'pushing text payload',
             },
           },
         },
@@ -158,6 +159,7 @@ describe('uploadTaskUpdate', () => {
                 transcodeWebTask{
                   task_name
                   status
+                  payload
                 }
               }
             }
@@ -177,6 +179,7 @@ describe('uploadTaskUpdate', () => {
         transcodeWebTask: {
           task_name: 'transcode',
           status: 'IN_PROGRESS',
+          payload: 'pushing text payload',
         },
       },
     ]);
@@ -387,6 +390,7 @@ describe('uploadTaskUpdate', () => {
               task_name: 'transcribe',
               task_id: '1235',
               status: 'DONE',
+              payload: 'transcode web payload',
             },
           },
         },
@@ -405,16 +409,19 @@ describe('uploadTaskUpdate', () => {
                   task_name
                   task_id
                   status
+                  payload
                 }
                 transcodeMobileTask{
                   task_name
                   task_id
                   status
+                  payload
                 }
                 transcribeTask{
                   task_name
                   task_id
                   status
+                  payload
                 }
               }
             }
@@ -427,12 +434,14 @@ describe('uploadTaskUpdate', () => {
           task_name: 'transcribe',
           task_id: '1235',
           status: 'DONE',
+          payload: 'transcode web payload',
         },
         transcodeMobileTask: null,
         transcribeTask: {
           task_name: 'transcribe',
           task_id: 'transcribe_task_id',
           status: 'IN_PROGRESS',
+          payload: 'text payload',
         },
       },
     ]);
@@ -454,6 +463,7 @@ describe('uploadTaskUpdate', () => {
               task_name: 'transcode-mobile',
               task_id: '54312',
               status: 'DONE',
+              payload: 'transcode mobile payload',
             },
           },
         },
@@ -471,16 +481,19 @@ describe('uploadTaskUpdate', () => {
                 task_name
                 task_id
                 status
+                payload
               }
               transcodeMobileTask{
                 task_name
                 task_id
                 status
+                payload
               }
               transcribeTask{
                 task_name
                 task_id
                 status
+                payload
               }
             }
           }
@@ -493,16 +506,19 @@ describe('uploadTaskUpdate', () => {
           task_name: 'transcribe',
           task_id: '1235',
           status: 'DONE',
+          payload: 'transcode web payload',
         },
         transcodeMobileTask: {
           task_name: 'transcode-mobile',
           task_id: '54312',
           status: 'DONE',
+          payload: 'transcode mobile payload',
         },
         transcribeTask: {
           task_name: 'transcribe',
           task_id: 'transcribe_task_id',
           status: 'IN_PROGRESS',
+          payload: 'text payload',
         },
       },
     ]);
@@ -523,6 +539,7 @@ describe('uploadTaskUpdate', () => {
           uploadTaskStatusInput: {
             transcribeTask: {
               status: 'DONE',
+              payload: 'transcribe text payload',
             },
           },
         },
@@ -540,16 +557,19 @@ describe('uploadTaskUpdate', () => {
                   task_name
                   task_id
                   status
+                  payload
                 }
                 transcodeMobileTask{
                   task_name
                   task_id
                   status
+                  payload
                 }
                 transcribeTask{
                   task_name
                   task_id
                   status
+                  payload
                 }
               }
             }
@@ -562,16 +582,19 @@ describe('uploadTaskUpdate', () => {
           task_name: 'transcribe',
           task_id: '1235',
           status: 'DONE',
+          payload: 'transcode web payload',
         },
         transcodeMobileTask: {
           task_name: 'transcode-mobile',
           task_id: '54312',
           status: 'DONE',
+          payload: 'transcode mobile payload',
         },
         transcribeTask: {
           task_name: 'transcribe',
           task_id: 'transcribe_task_id',
           status: 'DONE',
+          payload: 'transcribe text payload',
         },
       },
     ]);

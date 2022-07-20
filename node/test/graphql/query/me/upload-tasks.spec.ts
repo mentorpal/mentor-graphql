@@ -70,6 +70,9 @@ describe('query me/uploadTasks', () => {
                   question
                 }
                 transcript
+                transcribeTask{
+                  payload
+                }
                 originalMedia {
                   type
                   tag
@@ -90,6 +93,9 @@ describe('query me/uploadTasks', () => {
           question: 'Who are you and what do you do?',
         },
         transcript: 'fake_transcript',
+        transcribeTask: {
+          payload: 'text payload',
+        },
         originalMedia: null,
       },
     ]);
@@ -112,6 +118,9 @@ describe('query me/uploadTasks', () => {
                   question
                 }
                 transcript
+                transcribeTask{
+                  payload
+                }
                 originalMedia {
                   type
                   tag
@@ -144,6 +153,9 @@ describe('query me/uploadTasks', () => {
                   question
                 }
                 transcript
+                transcribeTask{
+                  payload
+                }
                 originalMedia {
                   type
                   tag
@@ -164,6 +176,9 @@ describe('query me/uploadTasks', () => {
           question: 'Who are you and what do you do?',
         },
         transcript: 'fake_transcript',
+        transcribeTask: {
+          payload: 'text payload',
+        },
         originalMedia: null,
       },
     ]);
@@ -186,6 +201,9 @@ describe('query me/uploadTasks', () => {
                   question
                 }
                 transcript
+                transcribeTask{
+                  payload
+                }
                 originalMedia {
                   type
                   tag
@@ -206,6 +224,9 @@ describe('query me/uploadTasks', () => {
           question: 'Who are you and what do you do?',
         },
         transcript: 'fake_transcript',
+        transcribeTask: {
+          payload: 'text payload',
+        },
         originalMedia: null,
       },
     ]);
