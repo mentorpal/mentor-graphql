@@ -18,15 +18,24 @@ import {
 } from './Paginatation';
 import { Answer, Status } from './Answer';
 import { Question, QuestionType } from './Question';
-import { Subject, SubjectQuestion, Topic } from './Subject';
+import {
+  Subject,
+  SubjectQuestion,
+  SubjectQuestionProps,
+  Topic,
+} from './Subject';
 import { User } from './User';
 import { MentorExportJson } from '../gql/query/mentor-export';
 import {
+  AnswerUpdateInput,
   MentorImportJson,
   ReplacedMentorDataChanges,
 } from '../gql/mutation/me/mentor-import';
 import { idOrNew } from '../gql/mutation/me/helpers';
-import UserQuestion from './UserQuestion';
+import UserQuestion, {
+  UserQuestion as UserQuestionInterface,
+} from './UserQuestion';
+import { QuestionUpdateInput } from 'gql/mutation/me/question-update';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -201,6 +210,131 @@ MentorSchema.statics.export = async function (
   };
 };
 
+async function createOrFetchQuestionDocAddToArray(
+  questionDocsMatchedWithImportedQuestions: Question[],
+  questionUpdateAndCreationDocs: QuestionUpdateInput[],
+  importedQDoc: QuestionUpdateInput,
+  mentorId: string,
+  existingSubjectQuestionDocs: Question[]
+) {
+  let updatedOrCreatedQuestion;
+  const isNewMentorSpecificQuestion =
+    importedQDoc.mentor && `${importedQDoc.mentor}` !== `${mentorId}`;
+  if (isNewMentorSpecificQuestion) {
+    const qCopy: QuestionUpdateInput = JSON.parse(JSON.stringify(importedQDoc));
+    qCopy._id = idOrNew(qCopy._id);
+    qCopy.mentor = mentorId;
+    questionUpdateAndCreationDocs.push(qCopy);
+    updatedOrCreatedQuestion = qCopy;
+  } else {
+    // Try to find pre-existing queston document by id or text
+    const questionDocument = existingSubjectQuestionDocs.length
+      ? existingSubjectQuestionDocs.find(
+          (existingQ) =>
+            `${existingQ._id}` === `${importedQDoc._id}` ||
+            (existingQ.question === importedQDoc.question && !existingQ.mentor)
+        )
+      : questionDocsMatchedWithImportedQuestions.find(
+          (existingQ) =>
+            `${existingQ._id}` === `${importedQDoc._id}` ||
+            (existingQ.question === importedQDoc.question && !existingQ.mentor)
+        );
+    // question document must either not be mentor specific or be specific to the mentor being replaced, else this mentor can't see the question.
+    const questionDocumentExists =
+      questionDocument &&
+      (!questionDocument.mentor ||
+        `${questionDocument.mentor}` === `${mentorId}`);
+    if (questionDocumentExists) {
+      // question document already exists in DB, no need to add to do any mutation here
+      updatedOrCreatedQuestion = questionDocument;
+    } else {
+      // No pre-existing question documents found by text or id, so make this new question mentor specific.
+      importedQDoc.mentor = mentorId;
+      importedQDoc._id = idOrNew(importedQDoc._id);
+      questionUpdateAndCreationDocs.push(importedQDoc);
+      updatedOrCreatedQuestion = importedQDoc;
+    }
+  }
+  return {
+    questionUpdateAndCreationDocs,
+    updatedOrCreatedQuestion,
+  };
+}
+
+async function updateCreateAnswerDocumentAndUserQuestion(
+  importedAnswers: AnswerUpdateInput[],
+  jsonUserQuestions: UserQuestionInterface[],
+  originalQuestionId: string,
+  newCreatedQuestionId: string,
+  mentorId: string
+) {
+  const importedAnswerDocumentForQuestion = importedAnswers.find(
+    (importedAnswer) => importedAnswer.question._id === originalQuestionId
+  );
+  if (importedAnswerDocumentForQuestion) {
+    // With the new question document created, handle creating the new answer documents for that question
+    if (importedAnswerDocumentForQuestion.webMedia) {
+      importedAnswerDocumentForQuestion.webMedia.needsTransfer = true;
+    }
+    if (importedAnswerDocumentForQuestion.mobileMedia) {
+      importedAnswerDocumentForQuestion.mobileMedia.needsTransfer = true;
+    }
+    if (importedAnswerDocumentForQuestion.vttMedia) {
+      importedAnswerDocumentForQuestion.vttMedia.needsTransfer = true;
+    }
+    // TODO: Perform this as a batch update
+    const newAnswerDocument = await AnswerModel.findOneAndUpdate(
+      {
+        question: newCreatedQuestionId,
+        mentor: mentorId,
+      },
+      {
+        transcript: importedAnswerDocumentForQuestion.transcript,
+        status: importedAnswerDocumentForQuestion.status,
+        webMedia: importedAnswerDocumentForQuestion.webMedia,
+        mobileMedia: importedAnswerDocumentForQuestion.mobileMedia,
+        vttMedia: importedAnswerDocumentForQuestion.vttMedia,
+        hasUntransferredMedia: true,
+      },
+      {
+        upsert: true,
+        new: true,
+      }
+    );
+    // Anytime an answer document is created, update related imported userQuestions that contain the imported answer document in either classifierAnswer or graderAnswer with the new answer document
+    const importedUserQuestions = jsonUserQuestions.filter(
+      (importedUserQuestion) =>
+        importedUserQuestion.classifierAnswer?.question?._id ==
+          importedAnswerDocumentForQuestion.question._id ||
+        importedUserQuestion.graderAnswer?.question?._id ==
+          importedAnswerDocumentForQuestion.question._id
+    );
+    if (importedUserQuestions.length) {
+      for (const importedUserQuestion of importedUserQuestions) {
+        const replaceClassifierAnswer =
+          importedUserQuestion.classifierAnswer?.question?._id ==
+          importedAnswerDocumentForQuestion.question._id;
+        const replaceGraderAnswer =
+          importedUserQuestion.graderAnswer?.question?._id ==
+          importedAnswerDocumentForQuestion.question._id;
+        if (replaceClassifierAnswer) {
+          importedUserQuestion.classifierAnswer = newAnswerDocument;
+        }
+        if (replaceGraderAnswer) {
+          importedUserQuestion.graderAnswer = newAnswerDocument;
+        }
+
+        // Updating jsonUserQuestions by reference
+        for (let userQuestion of jsonUserQuestions) {
+          if (userQuestion._id == importedUserQuestion._id) {
+            userQuestion = importedUserQuestion;
+          }
+        }
+      }
+    }
+  }
+}
+
 MentorSchema.statics.import = async function (
   m: string | Mentor,
   json: MentorImportJson,
@@ -297,23 +431,51 @@ MentorSchema.statics.import = async function (
       )
     );
 
-    /**
-     * We work through one subject at a time, and that subjects questions/answers one at a time.
-     */
-
     // Start the mentor with no subjects, and we add them on as we go.
     mentor = await this.findOneAndUpdate(
       { _id: mentor._id },
       { subjects: [] },
       { new: true }
     );
+
+    // This is our 'batch' call to get all the question docs we need at start
+    const existingQuestionDocsMatchedWithImportedQuestions =
+      await QuestionModel.find({
+        $or: [
+          {
+            _id: json.questions.map((importedQuestion) =>
+              idOrNew(importedQuestion._id)
+            ),
+          },
+          {
+            $and: [
+              {
+                question: {
+                  $in: json.questions.map(
+                    (importedQuestion) => importedQuestion.question
+                  ),
+                },
+              },
+              { mentor: { $exists: false } },
+            ],
+          },
+        ],
+      });
+
     for (const s of json.subjects) {
-      let existingSubject = await SubjectModel.findOne({ _id: idOrNew(s._id) });
+      let questionUpdateAndCreationDocs: QuestionUpdateInput[] = [];
+      const subjectQuestionsToAddTosubject: SubjectQuestionProps[] = [];
+
+      const existingSubject = await SubjectModel.findOne({
+        _id: idOrNew(s._id),
+      });
       const existingSubjectQuestionDocs = existingSubject
         ? await QuestionModel.find({
             _id: { $in: existingSubject.questions.map((q) => `${q.question}`) },
           })
         : [];
+
+      // for each subject question from the imported subject
       for (const q of s.questions) {
         const originalQId = JSON.parse(JSON.stringify(q.question._id));
         const importedQDoc = json.questions.find(
@@ -327,49 +489,17 @@ MentorSchema.statics.import = async function (
           );
           continue;
         }
+
         let updatedOrCreatedQuestion;
-        const isNewMentorSpecificQuestion =
-          importedQDoc.mentor && `${importedQDoc.mentor}` !== `${mentor._id}`;
-        if (isNewMentorSpecificQuestion) {
-          const qCopy = JSON.parse(JSON.stringify(importedQDoc));
-          delete qCopy._id;
-          qCopy.mentor = mentor._id;
-          updatedOrCreatedQuestion = await QuestionModel.updateOrCreate(qCopy);
-        } else {
-          // Try to find pre-existing queston document by id or text
-          const questionDocument = existingSubjectQuestionDocs.length
-            ? existingSubjectQuestionDocs.find(
-                (existingQ) =>
-                  `${existingQ._id}` === `${importedQDoc._id}` ||
-                  (existingQ.question === importedQDoc.question &&
-                    !existingQ.mentor)
-              )
-            : await QuestionModel.findOne({
-                $or: [
-                  { _id: idOrNew(importedQDoc._id) },
-                  {
-                    $and: [
-                      { question: importedQDoc.question },
-                      { mentor: { $exists: false } },
-                    ],
-                  },
-                ],
-              });
-          // question document must either not be mentor specific or be specific to the mentor being replaced, else this mentor can't see the question.
-          const questionDocumentExists =
-            questionDocument &&
-            (!questionDocument.mentor ||
-              `${questionDocument.mentor}` === `${mentor._id}`);
-          if (questionDocumentExists) {
-            updatedOrCreatedQuestion = questionDocument;
-          } else {
-            // No pre-existing question documents found by text or id, so make this new question mentor specific.
-            importedQDoc.mentor = typeof m === 'string' ? m : m._id;
-            updatedOrCreatedQuestion = await QuestionModel.updateOrCreate(
-              importedQDoc
-            );
-          }
-        }
+        ({ questionUpdateAndCreationDocs, updatedOrCreatedQuestion } =
+          await createOrFetchQuestionDocAddToArray(
+            existingQuestionDocsMatchedWithImportedQuestions,
+            questionUpdateAndCreationDocs,
+            importedQDoc,
+            mentor._id,
+            existingSubjectQuestionDocs
+          ));
+
         const newQId = updatedOrCreatedQuestion._id;
 
         // If this is a pre-existing subject, then just add the question document to it
@@ -379,114 +509,53 @@ MentorSchema.statics.import = async function (
               (existingQ) => `${existingQ.question._id}` === `${newQId}`
             );
           if (!existingSubjectAlreadyHasQuestion) {
-            try {
-              existingSubject = await SubjectModel.findOneAndUpdate(
-                { _id: existingSubject._id },
-                {
-                  questions: [
-                    ...existingSubject.questions,
-                    {
-                      question: updatedOrCreatedQuestion._id,
-                      category: q.category?.id,
-                      topics: q.topics?.map((t) => t.id),
-                    },
-                  ],
-                },
-                {
-                  new: true,
-                }
-              );
-            } catch (err) {
-              throw new Error(`Failed to update existing subject model with `);
-            }
+            subjectQuestionsToAddTosubject.push({
+              question: newQId,
+              category: q.category?.id,
+              topics: q.topics?.map((t) => t.id),
+            });
           }
         } else {
           // Subject does not exist, so we update the imported json with the new question id
-          q.question._id = updatedOrCreatedQuestion._id;
+          q.question._id = newQId;
         }
 
-        const importedAnswerDocumentForQuestion = json.answers.find(
-          (importedAnswer) => importedAnswer.question._id === originalQId
+        await updateCreateAnswerDocumentAndUserQuestion(
+          json.answers,
+          json.userQuestions,
+          originalQId,
+          newQId,
+          mentor._id
         );
-        if (importedAnswerDocumentForQuestion) {
-          // With the new question document created, handle creating the new answer documents for that question
-          if (importedAnswerDocumentForQuestion.webMedia) {
-            importedAnswerDocumentForQuestion.webMedia.needsTransfer = true;
-          }
-          if (importedAnswerDocumentForQuestion.mobileMedia) {
-            importedAnswerDocumentForQuestion.mobileMedia.needsTransfer = true;
-          }
-          if (importedAnswerDocumentForQuestion.vttMedia) {
-            importedAnswerDocumentForQuestion.vttMedia.needsTransfer = true;
-          }
-          const newAnswerDocument = await AnswerModel.findOneAndUpdate(
-            {
-              question: updatedOrCreatedQuestion._id,
-              mentor: mentor._id,
-            },
-            {
-              transcript: importedAnswerDocumentForQuestion.transcript,
-              status: importedAnswerDocumentForQuestion.status,
-              webMedia: importedAnswerDocumentForQuestion.webMedia,
-              mobileMedia: importedAnswerDocumentForQuestion.mobileMedia,
-              vttMedia: importedAnswerDocumentForQuestion.vttMedia,
-              hasUntransferredMedia: true,
-            },
-            {
+      }
+      // Batch write all questions
+      await QuestionModel.bulkWrite(
+        questionUpdateAndCreationDocs.map((questionDoc) => {
+          return {
+            updateOne: {
+              filter: { _id: questionDoc._id },
+              update: questionDoc,
               upsert: true,
-              new: true,
-            }
-          );
+            },
+          };
+        })
+      );
 
-          // Anytime an answer document is created, update related imported userQuestions that contain the imported answer document in either classifierAnswer or graderAnswer with the new answer document
-          const importedUserQuestions = json.userQuestions.filter(
-            (importedUserQuestion) =>
-              importedUserQuestion.classifierAnswer?.question?._id ==
-                importedAnswerDocumentForQuestion.question._id ||
-              importedUserQuestion.graderAnswer?.question?._id ==
-                importedAnswerDocumentForQuestion.question._id
-          );
-          if (importedUserQuestions.length) {
-            for (const importedUserQuestion of importedUserQuestions) {
-              const replaceClassifierAnswer =
-                importedUserQuestion.classifierAnswer?.question?._id ==
-                importedAnswerDocumentForQuestion.question._id;
-              const replaceGraderAnswer =
-                importedUserQuestion.graderAnswer?.question?._id ==
-                importedAnswerDocumentForQuestion.question._id;
-              if (replaceClassifierAnswer) {
-                importedUserQuestion.classifierAnswer = newAnswerDocument;
-              }
-              if (replaceGraderAnswer) {
-                importedUserQuestion.graderAnswer = newAnswerDocument;
-              }
-
-              // Updating JSON with updated version of userQuestion
-              for (let userQuestion of json.userQuestions) {
-                if (userQuestion._id == importedUserQuestion._id) {
-                  userQuestion = importedUserQuestion;
-                }
-              }
-            }
-          }
-        }
-      }
       // Create userQuestion documents now that they all contain existing answer documents
-      for (const userQuestion of json.userQuestions) {
-        await UserQuestion.findOneAndUpdate(
-          {
-            _id: idOrNew(userQuestion._id),
-          },
-          {
-            ...userQuestion,
-            mentor: mentor._id,
-          },
-          {
-            upsert: true,
-            new: true,
-          }
-        );
-      }
+      await UserQuestion.bulkWrite(
+        json.userQuestions.map((userQuestion) => {
+          return {
+            updateOne: {
+              filter: { _id: idOrNew(userQuestion._id) },
+              update: {
+                ...userQuestion,
+                mentor: mentor._id,
+              },
+              upsert: true,
+            },
+          };
+        })
+      );
 
       if (!existingSubject) {
         const newSubject = await SubjectModel.findOneAndUpdate(
@@ -523,6 +592,20 @@ MentorSchema.statics.import = async function (
           }
         );
       } else {
+        // Add the question to the existing subject
+        await SubjectModel.findOneAndUpdate(
+          { _id: existingSubject._id },
+          {
+            questions: [
+              ...existingSubject.questions,
+              ...subjectQuestionsToAddTosubject,
+            ],
+          },
+          {
+            new: true,
+          }
+        );
+
         // Check if the mentor already has the existing subject
         const mentorAlreadyHasSubject = mentor.subjects.find(
           (subj) => subj._id === existingSubject._id
