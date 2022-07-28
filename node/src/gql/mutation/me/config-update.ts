@@ -10,36 +10,55 @@ import {
   GraphQLInputObjectType,
   GraphQLList,
   GraphQLID,
+  GraphQLString,
+  GraphQLBoolean,
+  GraphQLInt,
 } from 'graphql';
 import SettingModel, { Config } from '../../../models/Setting';
 import { User, UserRole } from '../../../models/User';
-import { ConfigType } from '../../../gql/types/config';
+import { ConfigType } from '../../types/config';
 
-export interface ConfigUpdateFeaturedInput {
+export interface ConfigUpdateInput {
   mentorsDefault: string[];
   activeMentors: string[];
   featuredMentors: string[];
   featuredMentorPanels: string[];
+  styleHeaderLogo: string;
+  styleHeaderColor: string;
+  styleHeaderTextColor: string;
+  disclaimerTitle: string;
+  disclaimerText: string;
+  disclaimerDisabled: boolean;
+  displayGuestPrompt: boolean;
+  videoRecorderMaxLength: number;
 }
 
-export const ConfigUpdateFeaturedInputType = new GraphQLInputObjectType({
-  name: 'ConfigUpdateFeaturedInputType',
+export const ConfigUpdateInputType = new GraphQLInputObjectType({
+  name: 'ConfigUpdateInputType',
   fields: () => ({
     mentorsDefault: { type: GraphQLList(GraphQLID) },
     activeMentors: { type: GraphQLList(GraphQLID) },
     featuredMentors: { type: GraphQLList(GraphQLID) },
     featuredMentorPanels: { type: GraphQLList(GraphQLID) },
+    styleHeaderLogo: { type: GraphQLString },
+    styleHeaderColor: { type: GraphQLString },
+    styleHeaderTextColor: { type: GraphQLString },
+    disclaimerTitle: { type: GraphQLString },
+    disclaimerText: { type: GraphQLString },
+    disclaimerDisabled: { type: GraphQLBoolean },
+    displayGuestPrompt: { type: GraphQLBoolean },
+    videoRecorderMaxLength: { type: GraphQLInt },
   }),
 });
 
-export const updateConfigFeatured = {
+export const updateConfig = {
   type: ConfigType,
   args: {
-    config: { type: GraphQLNonNull(ConfigUpdateFeaturedInputType) },
+    config: { type: GraphQLNonNull(ConfigUpdateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { config: ConfigUpdateFeaturedInput },
+    args: { config: ConfigUpdateInput },
     context: { user: User }
   ): Promise<Config> => {
     if (
@@ -53,4 +72,4 @@ export const updateConfigFeatured = {
   },
 };
 
-export default updateConfigFeatured;
+export default updateConfig;

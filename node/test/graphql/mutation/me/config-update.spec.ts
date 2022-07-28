@@ -11,7 +11,7 @@ import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 import { getToken } from 'test/helpers';
 
-describe('updateConfigFeatured', () => {
+describe('updateConfig', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -29,9 +29,9 @@ describe('updateConfigFeatured', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `mutation UpdateConfigFeatured($config: ConfigUpdateFeaturedInputType!) {
+        query: `mutation UpdateConfigFeatured($config: ConfigUpdateInputType!) {
           me {
-            updateConfigFeatured(config: $config) {
+            updateConfig(config: $config) {
               mentorsDefault
               featuredMentors
               featuredMentorPanels
@@ -53,9 +53,9 @@ describe('updateConfigFeatured', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `mutation UpdateConfigFeatured($config: ConfigUpdateFeaturedInputType) {
+        query: `mutation UpdateConfigFeatured($config: ConfigUpdateInputType) {
           me {
-            updateConfigFeatured(config: $config) {
+            updateConfig(config: $config) {
               mentorsDefault
               featuredMentors
               featuredMentorPanels
@@ -74,9 +74,9 @@ describe('updateConfigFeatured', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation UpdateConfigFeatured($config: ConfigUpdateFeaturedInputType!) {
+        query: `mutation UpdateConfigFeatured($config: ConfigUpdateInputType!) {
           me {
-            updateConfigFeatured(config: $config) {
+            updateConfig(config: $config) {
               mentorsDefault
               featuredMentors
               featuredMentorPanels
@@ -99,9 +99,9 @@ describe('updateConfigFeatured', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateConfigFeatured($config: ConfigUpdateFeaturedInputType!) {
+        query: `mutation UpdateConfigFeatured($config: ConfigUpdateInputType!) {
           me {
-            updateConfigFeatured(config: $config) {
+            updateConfig(config: $config) {
               mentorsDefault
               featuredMentors
               featuredMentorPanels
@@ -117,15 +117,15 @@ describe('updateConfigFeatured', () => {
     );
   });
 
-  it('CONTENT_MANAGER can update config', async () => {
+  it('CONTENT_MANAGER can update config featured mentors', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea5'); //mentor with role "Content Manager"
     let response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateConfigFeatured($config: ConfigUpdateFeaturedInputType!) {
+        query: `mutation UpdateConfigFeatured($config: ConfigUpdateInputType!) {
           me {
-            updateConfigFeatured(config: $config) {
+            updateConfig(config: $config) {
               mentorsDefault
               featuredMentors
               featuredMentorPanels
@@ -141,7 +141,7 @@ describe('updateConfigFeatured', () => {
         },
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.updateConfigFeatured).to.eql({
+    expect(response.body.data.me.updateConfig).to.eql({
       activeMentors: [],
       featuredMentorPanels: ['5ffdf41a1ee2c62111111111'],
       featuredMentors: ['5ffdf41a1ee2c62111111119'],
@@ -151,9 +151,9 @@ describe('updateConfigFeatured', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateConfigFeatured($config: ConfigUpdateFeaturedInputType!) {
+        query: `mutation UpdateConfigFeatured($config: ConfigUpdateInputType!) {
         me {
-          updateConfigFeatured(config: $config) {
+          updateConfig(config: $config) {
             mentorsDefault
             featuredMentors
             featuredMentorPanels
@@ -168,7 +168,7 @@ describe('updateConfigFeatured', () => {
         },
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.updateConfigFeatured).to.eql({
+    expect(response.body.data.me.updateConfig).to.eql({
       activeMentors: ['5ffdf41a1ee2c62111111119'],
       featuredMentorPanels: ['5ffdf41a1ee2c62111111111'],
       featuredMentors: ['5ffdf41a1ee2c62111111119'],
@@ -176,15 +176,15 @@ describe('updateConfigFeatured', () => {
     });
   });
 
-  it('ADMIN can update config', async () => {
+  it('ADMIN can update config featured mentors', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1'); //mentor with role "Admin"
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateConfigFeatured($config: ConfigUpdateFeaturedInputType!) {
+        query: `mutation UpdateConfigFeatured($config: ConfigUpdateInputType!) {
           me {
-            updateConfigFeatured(config: $config) {
+            updateConfig(config: $config) {
               mentorsDefault
               featuredMentors
               featuredMentorPanels
@@ -200,11 +200,95 @@ describe('updateConfigFeatured', () => {
         },
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.updateConfigFeatured).to.eql({
+    expect(response.body.data.me.updateConfig).to.eql({
       activeMentors: [],
       featuredMentorPanels: ['5ffdf41a1ee2c62111111111'],
       featuredMentors: ['5ffdf41a1ee2c62111111119'],
       mentorsDefault: [],
+    });
+  });
+
+  it('CONTENT_MANAGER can update config styles', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea5'); //mentor with role "Content Manager"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateConfigFeatured($config: ConfigUpdateInputType!) {
+          me {
+            updateConfig(config: $config) {
+              mentorsDefault
+              featuredMentors
+              featuredMentorPanels
+              activeMentors
+              styleHeaderLogo
+              styleHeaderColor
+              styleHeaderTextColor
+            }
+          }
+        }`,
+        variables: {
+          config: {
+            styleHeaderLogo: 'test',
+            styleHeaderColor: 'test',
+            styleHeaderTextColor: 'test',
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateConfig).to.eql({
+      activeMentors: [],
+      featuredMentorPanels: [],
+      featuredMentors: [],
+      mentorsDefault: [],
+      styleHeaderLogo: 'test',
+      styleHeaderColor: 'test',
+      styleHeaderTextColor: 'test',
+    });
+  });
+
+  it('CONTENT_MANAGER can update config disclaimer', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea5'); //mentor with role "Content Manager"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateConfigFeatured($config: ConfigUpdateInputType!) {
+          me {
+            updateConfig(config: $config) {
+              mentorsDefault
+              featuredMentors
+              featuredMentorPanels
+              activeMentors
+              styleHeaderLogo
+              styleHeaderColor
+              styleHeaderTextColor
+              disclaimerTitle
+              disclaimerText
+              disclaimerDisabled
+            }
+          }
+        }`,
+        variables: {
+          config: {
+            disclaimerTitle: 'test',
+            disclaimerText: 'test',
+            disclaimerDisabled: false,
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateConfig).to.eql({
+      activeMentors: [],
+      featuredMentorPanels: [],
+      featuredMentors: [],
+      mentorsDefault: [],
+      styleHeaderLogo: '',
+      styleHeaderColor: '',
+      styleHeaderTextColor: '',
+      disclaimerTitle: 'test',
+      disclaimerText: 'test',
+      disclaimerDisabled: false,
     });
   });
 });
