@@ -75,11 +75,10 @@ export interface MentorModel extends Model<Mentor> {
     options?: PaginateOptions
   ): Promise<PaginatedResolveResult<Mentor>>;
   getSubjects(mentor: string | Mentor): Subject[];
-  getTopics({
-    mentor,
-    defaultSubject,
-    subjectId,
-  }: GetMentorDataParams): Topic[];
+  getTopics(
+    { mentor, defaultSubject, subjectId }: GetMentorDataParams,
+    subjects?: Subject[]
+  ): Topic[];
   getQuestions({
     mentor,
     defaultSubject,
@@ -654,11 +653,10 @@ MentorSchema.statics.getSubjects = async function (
 // Return topics for all subjects or for one subject
 //  - one subject: sorted in subject order
 //  - all subjects: sorted alphabetically
-MentorSchema.statics.getTopics = async function ({
-  mentor,
-  defaultSubject,
-  subjectId,
-}: GetMentorDataParams): Promise<Topic[]> {
+MentorSchema.statics.getTopics = async function (
+  { mentor, defaultSubject, subjectId }: GetMentorDataParams,
+  subjects?: Subject[]
+): Promise<Topic[]> {
   const userMentor: Mentor =
     typeof mentor === 'string' ? await this.findById(mentor) : mentor;
   if (!userMentor) {
@@ -668,12 +666,14 @@ MentorSchema.statics.getTopics = async function ({
   subjectId = defaultSubject ? userMentor.defaultSubject : subjectId;
   if (subjectId) {
     if (userMentor.subjects.includes(subjectId)) {
-      const subject = await SubjectModel.findById(subjectId);
-      topics.push(...subject.topics);
+      const s = subjects
+        ? subjects.find((s) => `${s._id}` === `${subjectId}`)
+        : await SubjectModel.findById(subjectId);
+      topics.push(...s.topics);
     }
   } else {
-    const subjects: Subject[] = await this.getSubjects(userMentor);
-    for (const s of subjects) {
+    const ss = subjects || (await this.getSubjects(userMentor));
+    for (const s of ss) {
       topics.push(...s.topics);
     }
     topics.sort((a, b) => {

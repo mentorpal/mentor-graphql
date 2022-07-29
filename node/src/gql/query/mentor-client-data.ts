@@ -21,7 +21,7 @@ import {
 } from '../../models';
 import { AnswerMedia } from '../../models/Answer';
 import { QuestionType } from '../../models/Question';
-import { SubjectQuestion, Topic } from '../../models/Subject';
+import { SubjectQuestion } from '../../models/Subject';
 import { User } from '../../models/User';
 import { isAnswerComplete } from '../../models/Mentor';
 import { hasAccessToMentor } from '../../utils/mentor-check-private';
@@ -111,10 +111,12 @@ export const mentorData = {
       ? [mentor.defaultSubject]
       : mentor.subjects;
     const subjects = await SubjectModel.find({ _id: { $in: subjectIds } });
-    const topics: Topic[] = [];
+    const topics = await MentorModel.getTopics(
+      { mentor, defaultSubject: true, subjectId: args.subject },
+      subjects
+    );
     const sQuestions: SubjectQuestion[] = [];
     for (const subject of subjects) {
-      topics.push(...subject.topics);
       sQuestions.push(...subject.questions);
     }
     const questions = await QuestionModel.find({
@@ -141,11 +143,11 @@ export const mentorData = {
     const qIds = answers.map((a) => `${a.question}`);
     const sQs = sQuestions.filter((sq) => qIds.includes(`${sq.question}`));
     const topicQuestions: Record<string, string[]> = {};
+    for (const topic of topics) {
+      topicQuestions[topic.id] = [];
+    }
     for (const sQuestion of sQs) {
       for (const topic of sQuestion.topics) {
-        if (!topicQuestions[topic]) {
-          topicQuestions[topic] = [];
-        }
         if (!topicQuestions[topic].includes(`${sQuestion.question}`)) {
           topicQuestions[topic].push(`${sQuestion.question}`);
         }
@@ -173,16 +175,18 @@ export const mentorData = {
       email: mentor.email,
       mentorType: mentor.mentorType,
       allowContact: mentor.allowContact,
-      topicQuestions: Object.keys(topicQuestions).map((key) => {
-        const t = topics.find((t) => `${t.id}` === key);
-        const tq = questions.filter((q) =>
-          topicQuestions[key]?.includes(`${q.id}`)
-        );
-        return {
-          topic: t.name,
-          questions: tq.map((q) => q.question).sort(),
-        };
-      }),
+      topicQuestions: Object.keys(topicQuestions)
+        .filter((key) => topicQuestions[key].length > 0)
+        .map((key) => {
+          const t = topics.find((t) => `${t.id}` === key);
+          const tq = questions.filter((q) =>
+            topicQuestions[key]?.includes(`${q.id}`)
+          );
+          return {
+            topic: t.name,
+            questions: tq.map((q) => q.question).sort(),
+          };
+        }),
       utterances: utterances.map((u) => ({
         _id: u.id,
         name: utteranceQuestions.find((q) => `${q.id}` === `${u.question}`)

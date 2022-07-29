@@ -109,7 +109,7 @@ describe('mentorClientData', () => {
       .post('/graphql')
       .send({
         query: `query {
-          mentorClientData(mentor: "5ffdf41a1ee2c62111111111", subject: "5ffdf41a1ee2c62320b49eb2") {
+          mentorClientData(mentor: "5ffdf41a1ee2c62111111111", subject: "5ffdf41a1ee2c62320b49eb1") {
             _id
             name
             title
