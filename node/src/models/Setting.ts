@@ -14,6 +14,7 @@ export interface Config {
   urlVideo: string;
   urlDocSetup: string;
   urlVideoIdleTips: string;
+  subjectRecordPriority: string[];
   urlVideoMentorpalWalkthrough: string;
   classifierLambdaEndpoint: string;
   uploadLambdaEndpoint: string;
@@ -43,6 +44,7 @@ export const ConfigKeys: ConfigKey[] = [
   'urlVideo',
   'urlDocSetup',
   'urlVideoIdleTips',
+  'subjectRecordPriority',
   'urlVideoMentorpalWalkthrough',
   'classifierLambdaEndpoint',
   'graphqlLambdaEndpoint',
@@ -81,6 +83,7 @@ export function getDefaultConfig(): Config {
     urlDocSetup:
       'https://docs.google.com/document/d/1av1pWamFrXQ1KabMU02LtAutrTt3ppblneQeilFBU3s/edit?usp=sharing',
     urlVideoIdleTips: 'https://youtu.be/xSu1BhuFt8A',
+    subjectRecordPriority: [],
     filterEmailMentorAddress: 'careerfair.ai@gmail.com',
     urlVideoMentorpalWalkthrough: 'https://youtu.be/EGdSl4Q8NAY',
     videoRecorderMaxLength: 300, //seconds

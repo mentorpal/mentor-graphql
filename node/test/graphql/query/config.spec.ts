@@ -120,6 +120,7 @@ describe('config', () => {
       urlVideo: '/video/v2',
       urlDocSetup: 'https://some/custom/url',
       urlVideoIdleTips: 'https://some/custom/url',
+      subjectRecordPriority: ['subj_id_1'],
       urlVideoMentorpalWalkthrough: 'https://fakewalkthroughurl.com',
       classifierLambdaEndpoint: 'https://fakelambdaurl.com',
       graphqlLambdaEndpoint: 'https://fakegraphqllambda.com',
@@ -146,6 +147,7 @@ describe('config', () => {
             googleClientId
             urlDocSetup
             urlVideoIdleTips
+            subjectRecordPriority
             urlVideoMentorpalWalkthrough
             classifierLambdaEndpoint
             graphqlLambdaEndpoint
