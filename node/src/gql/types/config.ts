@@ -28,7 +28,7 @@ export const ConfigType = new GraphQLObjectType({
     urlVideo: { type: GraphQLString },
     urlDocSetup: { type: GraphQLString },
     urlVideoIdleTips: { type: GraphQLString },
-    subjectRecordPriority: { type: GraphQLList(GraphQLString) },
+    subjectRecordPriority: { type: GraphQLList(GraphQLID) },
     urlVideoMentorpalWalkthrough: { type: GraphQLString },
     classifierLambdaEndpoint: { type: GraphQLString },
     graphqlLambdaEndpoint: { type: GraphQLString },
