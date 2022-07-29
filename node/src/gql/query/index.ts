@@ -29,6 +29,7 @@ import users from './users';
 import uploadTask from './upload-task';
 import importTask from './import-task';
 import categoryAnswers from './category-answers';
+import mentorsById from './mentors-by-id';
 
 export default new GraphQLObjectType({
   name: 'Query',
@@ -57,5 +58,6 @@ export default new GraphQLObjectType({
     users,
     uploadTask,
     importTask,
+    mentorsById,
   },
 });
