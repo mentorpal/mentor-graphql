@@ -386,6 +386,13 @@ module.exports = {
       feedback: 'NEUTRAL',
     },
     {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ee3'),
+      mentor: ObjectId('5ffdf41a1ee2c62111111111'),
+      classifierAnswer: ObjectId('511111111111111111111115'),
+      question: 'who are you?',
+      feedback: 'NEUTRAL',
+    },
+    {
       _id: ObjectId('5ffdf41a1ee2c62320b49ee2'),
       question: 'how are you?',
       feedback: 'BAD',

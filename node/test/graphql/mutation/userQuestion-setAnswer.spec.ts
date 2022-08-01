@@ -54,6 +54,45 @@ describe('userQuestionSetAnswer', () => {
     );
   });
 
+  it(`if question and mentorId provided, finds/creates new answer doc`, async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
+        userQuestionSetAnswer(id: "5ffdf41a1ee2c62320b49ee3", question: "511111111111111111111114", mentorId: "5ffdf41a1ee2c62111111119") {
+          graderAnswer {
+            question{
+              _id
+            }
+          }
+        }
+      }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.userQuestionSetAnswer.graderAnswer).to.eql({
+      question: { _id: '511111111111111111111114' },
+    });
+    const queryAnswer = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query{
+          answer(question:"511111111111111111111114", mentor:"5ffdf41a1ee2c62111111119"){
+            question{
+              _id
+              question
+            }
+          }
+        }`,
+      });
+    expect(queryAnswer.status).to.equal(200);
+    expect(queryAnswer.body.data.answer).to.eql({
+      question: {
+        _id: '511111111111111111111114',
+        question: 'Do you like your job?',
+      },
+    });
+  });
+
   it(`adds graderAnswer to userQuestion and adds paraphrase to question`, async () => {
     const response = await request(app)
       .post('/graphql')
@@ -87,7 +126,7 @@ describe('userQuestionSetAnswer', () => {
     });
   });
 
-  it(`removes graderAnswer from userQuestion and removes paraphrase from question`, async () => {
+  it(`if no answer provided, removes graderAnswer from userQuestion and removes paraphrase from question`, async () => {
     await request(app)
       .post('/graphql')
       .send({

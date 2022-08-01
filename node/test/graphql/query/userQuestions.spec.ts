@@ -48,6 +48,11 @@ describe('userQuestions', () => {
       edges: [
         {
           node: {
+            _id: '5ffdf41a1ee2c62320b49ee3',
+          },
+        },
+        {
+          node: {
             _id: '5ffdf41a1ee2c62320b49ee2',
           },
         },
@@ -88,6 +93,12 @@ describe('userQuestions', () => {
       edges: [
         {
           node: {
+            _id: '5ffdf41a1ee2c62320b49ee3',
+            feedback: 'NEUTRAL',
+          },
+        },
+        {
+          node: {
             _id: '5ffdf41a1ee2c62320b49ee1',
             feedback: 'NEUTRAL',
           },
@@ -126,6 +137,14 @@ describe('userQuestions', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.userQuestions).to.eql({
       edges: [
+        {
+          node: {
+            _id: '5ffdf41a1ee2c62320b49ee3',
+            mentor: {
+              _id: '5ffdf41a1ee2c62111111111',
+            },
+          },
+        },
         {
           node: {
             _id: '5ffdf41a1ee2c62320b49ee1',

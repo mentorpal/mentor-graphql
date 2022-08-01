@@ -25,10 +25,12 @@ export const userQuestionSetAnswer = {
   args: {
     id: { type: GraphQLNonNull(GraphQLID) },
     answer: { type: GraphQLString },
+    question: { type: GraphQLString },
+    mentorId: { type: GraphQLID },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { id: string; answer: string }
+    args: { id: string; answer: string; question: string; mentorId: string }
   ): Promise<UserQuestion> => {
     // Remove old answer as a paraphrase from question
     const oldUserQuestion: UserQuestion = await UserQuestionModel.findById(
@@ -37,7 +39,7 @@ export const userQuestionSetAnswer = {
     if (!oldUserQuestion) {
       throw new Error('invalid id');
     }
-    if (`${oldUserQuestion.graderAnswer}` === `${args.answer}`) {
+    if (args.answer && `${oldUserQuestion.graderAnswer}` === `${args.answer}`) {
       // no changes needed
       return oldUserQuestion;
     }
@@ -51,21 +53,28 @@ export const userQuestionSetAnswer = {
         },
       });
     }
-
+    let answerId = args.answer;
+    // If no args.answer, create new answer document with question id
+    if (!answerId && args.question && args.mentorId) {
+      const newAnswer = await AnswerModel.findOneAndUpdate(
+        { question: args.question, mentor: args.mentorId },
+        { question: args.question },
+        { upsert: true, new: true }
+      );
+      answerId = newAnswer._id;
+    }
     // Add new answer as a paraphrase to question
     const userQuestion: UserQuestion =
       await UserQuestionModel.findByIdAndUpdate(
         args.id,
         {
-          graderAnswer: args.answer
-            ? mongoose.Types.ObjectId(args.answer)
-            : null,
+          graderAnswer: answerId ? mongoose.Types.ObjectId(answerId) : null,
         },
         {
           new: true,
         }
       );
-    const answer: Answer = await AnswerModel.findById(args.answer);
+    const answer: Answer = await AnswerModel.findById(answerId);
     if (answer) {
       await QuestionModel.findByIdAndUpdate(answer.question, {
         $addToSet: {
