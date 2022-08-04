@@ -64,4 +64,25 @@ describe('Add questions to record queue', () => {
       '5ffdf41a1ee2c32324b49eb2'
     );
   });
+
+  it('sets record queue', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation SetRecordQueue($questionIds: [ID]!) {
+          me {
+            setRecordQueue(questionIds: $questionIds)
+          }
+        }`,
+        variables: {
+          questionIds: ['5ffdf41a1ee2c32324b49123', '5ffdf41a1ee2c32324b49124'],
+        },
+      });
+    expect(response.body.data.me.setRecordQueue).to.eql([
+      '5ffdf41a1ee2c32324b49123',
+      '5ffdf41a1ee2c32324b49124',
+    ]);
+  });
 });

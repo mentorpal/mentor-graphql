@@ -22,6 +22,7 @@ import importTaskDelete from './import-task-delete';
 import firstTimeTrackingUpdate from './first-time-tracking-update';
 import addQuestionToRecordQueue from './add-question-to-record-queue';
 import removeQuestionFromRecordQueue from './remove-question-from-record-queue';
+import setRecordQueue from './set-record-queue';
 
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeMutation',
@@ -42,6 +43,7 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
     firstTimeTrackingUpdate,
     addQuestionToRecordQueue,
     removeQuestionFromRecordQueue,
+    setRecordQueue,
   }),
 });
 
