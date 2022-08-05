@@ -402,7 +402,7 @@ MentorSchema.statics.import = async function (
         );
         // remove questions from imported subject
         const importedSubject = json.subjects.find(
-          (subj) => subj._id == subject._id
+          (subj) => `${subj._id}` == `${subject._id}`
         );
         if (importedSubject) {
           importedSubject.questions = importedSubject.questions.filter(
