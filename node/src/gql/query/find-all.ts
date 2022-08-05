@@ -17,7 +17,7 @@ export function findAll<T extends PaginatedResolveResult>(config: {
   nodeType: GraphQLObjectType;
   model: HasPaginate<T>;
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  filterInvalid?: (val: any, context: any) => Promise<boolean> | boolean;
+  filterInvalid?: (val: PaginatedResolveResult, context: any) => Promise<T> | T;
 }): any {
   const { nodeType, model } = config;
   return makeConnection({
@@ -59,15 +59,7 @@ export function findAll<T extends PaginatedResolveResult>(config: {
         previous: prev,
       });
       if (config.filterInvalid !== undefined) {
-        const asyncResults = await Promise.all(
-          result.results.map((r) =>
-            config.filterInvalid(r, resolveArgs.context)
-          )
-        );
-        return {
-          ...result,
-          results: result.results.filter((r, i) => !asyncResults[i]),
-        };
+        return config.filterInvalid(result, resolveArgs.context);
       }
       return result;
     },

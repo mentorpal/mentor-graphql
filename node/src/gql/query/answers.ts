@@ -4,6 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
+import { PaginatedResolveResult } from '../types/connection';
 import { Answer as AnswerModel, Mentor as MentorModel } from '../../models';
 import { Answer } from '../../models/Answer';
 import { User } from '../../models/User';
@@ -14,9 +15,27 @@ import findAll from './find-all';
 export const answers = findAll({
   nodeType: AnswerType,
   model: AnswerModel,
-  filterInvalid: async (answer: Answer, context: { user: User }) => {
-    const mentor = await MentorModel.findById(answer.mentor);
-    return !hasAccessToMentor(mentor, context.user);
+  filterInvalid: async (
+    paginationResults: PaginatedResolveResult,
+    context: { user: User }
+  ) => {
+    const mentorIds = Array.from(
+      new Set(paginationResults.results.map((a: Answer) => a.mentor))
+    );
+    const mentors = await MentorModel.find({ _id: { $in: mentorIds } });
+    const newAnswerResults: Answer[] = paginationResults.results.filter(
+      (a: Answer) => {
+        const mentor = mentors.find((m) => `${m._id}` === `${a.mentor}`);
+        if (!mentor) {
+          return false;
+        }
+        return hasAccessToMentor(mentor, context.user);
+      }
+    );
+    return {
+      ...paginationResults,
+      results: newAnswerResults,
+    };
   },
 });
 
