@@ -9,42 +9,43 @@ import {
   GraphQLID,
   GraphQLList,
   GraphQLNonNull,
-  GraphQLString
 } from 'graphql';
 
 import { Mentor as MentorModel, Answer as AnswerModel } from '../../models';
-import { Question } from '../../models/Question';
-import QuestionType from '../types/question';
-import MentorNoAnswerType from '../types/mentor-data-no-answers'
-import { Mentor } from 'models/Mentor';
-import { Answer } from 'models/Answer';
+import { Mentor } from '../../models/Mentor';
+import { Answer } from '../../models/Answer';
+import { MentorType } from '../types/mentor';
+import { AnswerType } from '../types/answer';
 
+export interface MentorAndAnswerDataInterface {
+  mentor: Mentor;
+  answers: Answer[];
+}
 
-export const MentorDataType = new GraphQLObjectType({
-  name: 'MentorData',
+export const MentorAndAnswerDataType = new GraphQLObjectType({
+  name: 'MentorAndAnswerData',
   fields: () => ({
-    mentor: {type: MentorNoAnswerType},
+    mentor: { type: MentorType },
+    answers: { type: GraphQLList(AnswerType) },
   }),
 });
 
-export interface MentorDataInterface{
-  mentor: Mentor,
-  answers: Answer[]
-}
-
-
-export const mentorData = {
-  type: GraphQLList(QuestionType),
+export const mentorAndAnswerData = {
+  type: MentorAndAnswerDataType,
   args: {
-    id: { type: GraphQLNonNull(GraphQLID) },
+    mentorId: { type: GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { id: string }
-  ): Promise<MentorDataInterface> => {
-    const mentor = await MentorModel.find({ _id: args.id });
-    const answers = await 
+    args: { mentorId: string }
+  ): Promise<MentorAndAnswerDataInterface> => {
+    const mentor = await MentorModel.findOne({ _id: args.mentorId });
+    const answers = await AnswerModel.find({ mentor: args.mentorId });
+    return {
+      mentor: mentor,
+      answers: answers,
+    };
   },
 };
 
-export default mentorData;
+export default mentorAndAnswerData;
