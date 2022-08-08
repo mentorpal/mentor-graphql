@@ -43,7 +43,10 @@ export const AnswerType = new GraphQLObjectType({
       resolve: async function (answer: Answer) {
         // Check if the answers question has already been resolved
         if (isValidObjectId(`${answer.question}`)) {
-          return await QuestionModel.findOne({ _id: answer.question });
+          const questionDoc = await QuestionModel.findOne({
+            _id: answer.question,
+          });
+          return questionDoc;
         }
         return answer.question;
       },

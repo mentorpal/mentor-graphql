@@ -737,6 +737,7 @@ MentorSchema.statics.getAnswers = async function ({
   if (!userMentor) {
     throw new Error(`mentor ${mentor} not found`);
   }
+  // Gets all questions that exist in all subjects
   const sQuestions = await this.getQuestions({
     mentor: userMentor,
     defaultSubject: defaultSubject,
@@ -768,10 +769,11 @@ MentorSchema.statics.getAnswers = async function ({
     return acc;
   }, {});
   const answerResult = questionIds.map((qid: string) => {
+    const questionDoc = questions.find((q) => qid == `${q._id}`);
     return (
       answersByQid[`${qid}`] || {
         mentor: userMentor._id,
-        question: questions.find((q) => qid === `${q._id}`) || qid,
+        question: questionDoc || qid,
         transcript: '',
         status: Status.NONE,
         webMedia: undefined,
