@@ -11,11 +11,13 @@ import {
   GraphQLBoolean,
   GraphQLList,
 } from 'graphql';
-import { questionField } from '../query/question';
 import { AnswerMedia, Answer } from '../../models/Answer';
+import { Question as QuestionModel } from '../../models';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 import DateType from './date';
 import removeMarkdown from 'remove-markdown';
+import QuestionType from './question';
+import { isValidObjectId } from 'mongoose';
 
 export const AnswerMediaType = new GraphQLObjectType({
   name: 'AnswerMedia',
@@ -36,7 +38,19 @@ export const AnswerType = new GraphQLObjectType({
   name: 'Answer',
   fields: () => ({
     _id: { type: GraphQLID },
-    question: questionField,
+    question: {
+      type: QuestionType,
+      resolve: async function (answer: Answer) {
+        // Check if the answers question has already been resolved
+        if (isValidObjectId(`${answer.question}`)) {
+          const questionDoc = await QuestionModel.findOne({
+            _id: answer.question,
+          });
+          return questionDoc;
+        }
+        return answer.question;
+      },
+    },
     hasEditedTranscript: { type: GraphQLBoolean },
     transcript: {
       type: GraphQLString,

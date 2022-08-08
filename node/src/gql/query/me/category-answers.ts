@@ -46,9 +46,10 @@ export const categoryAnswers = {
     });
     return answers.map((a) => {
       return {
-        questionText: questions.find(
-          (q) => JSON.stringify(q.question._id) == JSON.stringify(a.question)
-        )?.question.question,
+        questionText:
+          a.question.question ||
+          questions.find((q) => `${q.question._id}` === `${a.question}`)
+            ?.question.question,
         answerText: a.transcript,
       };
     });

@@ -38,7 +38,7 @@ export const AnswerMediaSchema = new Schema({
 
 export interface Answer extends Document {
   mentor: Mentor['_id'];
-  question: Question['_id'];
+  question: Question['_id'] | Question;
   hasEditedTranscript: boolean;
   transcript: string;
   status: Status;
