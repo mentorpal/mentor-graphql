@@ -761,14 +761,17 @@ MentorSchema.statics.getAnswers = async function ({
     );
   });
   const answersByQid = answers.reduce((acc: Record<string, Answer>, cur) => {
-    acc[`${cur.question}`] = cur;
+    const questionId = `${cur.question}`;
+    const questionDoc = questions.find((q) => questionId === `${q._id}`);
+    cur.question = questionDoc || questionId;
+    acc[questionId] = cur;
     return acc;
   }, {});
   const answerResult = questionIds.map((qid: string) => {
     return (
       answersByQid[`${qid}`] || {
         mentor: userMentor._id,
-        question: qid,
+        question: questions.find((q) => qid === `${q._id}`) || qid,
         transcript: '',
         status: Status.NONE,
         webMedia: undefined,
