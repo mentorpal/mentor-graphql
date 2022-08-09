@@ -435,27 +435,6 @@ describe('mentor', () => {
       answers: [
         {
           question: {
-            question: 'Who are you and what do you do?',
-          },
-          transcript: '',
-          status: 'NONE',
-        },
-        {
-          question: {
-            question: 'How old are you?',
-          },
-          transcript: '',
-          status: 'NONE',
-        },
-        {
-          question: {
-            question: 'Do you like your job?',
-          },
-          transcript: '',
-          status: 'NONE',
-        },
-        {
-          question: {
             question: 'What is Aaron like?',
           },
           status: 'COMPLETE',
@@ -597,37 +576,6 @@ describe('mentor', () => {
     });
   });
 
-  it('mentor/answers gets answers for questions in topic, including incomplete', async () => {
-    const response = await request(app)
-      .post('/graphql')
-      .send({
-        query: `query {
-        mentor(id: "5ffdf41a1ee2c62111111111") {
-          answers(topic: "5ffdf41a1ee2c62320b49ec3") {
-            question {
-              question
-            }
-            transcript
-            status
-          }
-        }
-      }
-    `,
-      });
-    expect(response.status).to.equal(200);
-    expect(response.body.data.mentor).to.eql({
-      answers: [
-        {
-          question: {
-            question: 'Do you like your job?',
-          },
-          transcript: '',
-          status: 'NONE',
-        },
-      ],
-    });
-  });
-
   it('mentor/utterances gets all utterances, including incomplete', async () => {
     const response = await request(app)
       .post('/graphql')
@@ -681,37 +629,7 @@ describe('mentor', () => {
       answers: [
         {
           question: {
-            question: 'Who are you and what do you do?',
-          },
-        },
-        {
-          question: {
-            question: 'How old are you?',
-          },
-        },
-        {
-          question: {
-            question: 'Do you like your job?',
-          },
-        },
-        {
-          question: {
             question: 'Julia?',
-          },
-        },
-        {
-          question: {
-            question: 'What is Aaron like?',
-          },
-        },
-        {
-          question: {
-            question: "Don't talk and stay still.",
-          },
-        },
-        {
-          question: {
-            question: 'Is STEM fun?',
           },
         },
       ],

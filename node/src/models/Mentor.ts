@@ -768,19 +768,13 @@ MentorSchema.statics.getAnswers = async function ({
     acc[questionId] = cur;
     return acc;
   }, {});
-  const answerResult = questionIds.map((qid: string) => {
-    const questionDoc = questions.find((q) => qid == `${q._id}`);
-    return (
-      answersByQid[`${qid}`] || {
-        mentor: userMentor._id,
-        question: questionDoc || qid,
-        transcript: '',
-        status: Status.NONE,
-        webMedia: undefined,
-        mobileMedia: undefined,
-        vttMedia: undefined,
-      }
-    );
+
+  const answerResult: Answer[] = [];
+  questionIds.forEach((qid: string) => {
+    const answerDoc = answersByQid[`${qid}`];
+    if (answerDoc) {
+      answerResult.push(answerDoc);
+    }
   });
   if (status) {
     if (status === Status.INCOMPLETE) {
