@@ -675,7 +675,6 @@ describe('mentor', () => {
       }
     `,
       });
-    console.log(JSON.stringify(response.body));
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       name: 'Julianne Nordhagen',
