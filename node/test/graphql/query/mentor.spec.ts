@@ -418,7 +418,7 @@ describe('mentor', () => {
         query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
           name
-          answers {
+          answers(ephemeralizeAnswerDocs: true) {
             question {
               question
             }
@@ -603,7 +603,7 @@ describe('mentor', () => {
       .send({
         query: `query {
         mentor(id: "5ffdf41a1ee2c62111111111") {
-          answers(topic: "5ffdf41a1ee2c62320b49ec3") {
+          answers(topic: "5ffdf41a1ee2c62320b49ec3", ephemeralizeAnswerDocs: true) {
             question {
               question
             }
@@ -666,7 +666,7 @@ describe('mentor', () => {
         query: `query {
         mentor(id: "5ffdf41a1ee2c62111111112") {
           name
-          answers {
+          answers(ephemeralizeAnswerDocs: true) {
             question {
               question
             }
@@ -675,6 +675,7 @@ describe('mentor', () => {
       }
     `,
       });
+    console.log(JSON.stringify(response.body));
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       name: 'Julianne Nordhagen',

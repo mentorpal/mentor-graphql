@@ -67,6 +67,7 @@ export interface GetMentorDataParams {
   type?: QuestionType;
   status?: Status;
   categoryId?: string;
+  ephemeralizeAnswerDocs?: boolean;
 }
 
 export interface MentorModel extends Model<Mentor> {
@@ -95,6 +96,7 @@ export interface MentorModel extends Model<Mentor> {
     status,
     type,
     categoryId,
+    ephemeralizeAnswerDocs,
   }: GetMentorDataParams): Answer[];
   export(mentor: string): Promise<MentorExportJson>;
   import(
@@ -731,6 +733,7 @@ MentorSchema.statics.getAnswers = async function ({
   status,
   type,
   categoryId,
+  ephemeralizeAnswerDocs,
 }: GetMentorDataParams) {
   const userMentor: Mentor =
     typeof mentor === 'string' ? await this.findById(mentor) : mentor;
@@ -768,10 +771,15 @@ MentorSchema.statics.getAnswers = async function ({
     acc[questionId] = cur;
     return acc;
   }, {});
-  const answerResult = questionIds.map((qid: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const answerResult: any[] = [];
+  questionIds.forEach((qid: string) => {
     const questionDoc = questions.find((q) => qid == `${q._id}`);
-    return (
-      answersByQid[`${qid}`] || {
+    const answerDoc = answersByQid[`${qid}`];
+    if (answerDoc) {
+      answerResult.push(answerDoc);
+    } else if (ephemeralizeAnswerDocs) {
+      answerResult.push({
         mentor: userMentor._id,
         question: questionDoc || qid,
         transcript: '',
@@ -779,8 +787,8 @@ MentorSchema.statics.getAnswers = async function ({
         webMedia: undefined,
         mobileMedia: undefined,
         vttMedia: undefined,
-      }
-    );
+      });
+    }
   });
   if (status) {
     if (status === Status.INCOMPLETE) {

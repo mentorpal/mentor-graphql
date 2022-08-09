@@ -106,11 +106,13 @@ export const MentorType = new GraphQLObjectType({
         subject: { type: GraphQLID },
         topic: { type: GraphQLID },
         status: { type: GraphQLString },
+        ephemeralizeAnswerDocs: { type: GraphQLBoolean },
       },
       resolve: async function (
         mentor: Mentor,
         args: {
           useDefaultSubject: boolean;
+          ephemeralizeAnswerDocs: boolean; // for any question that doesn't have an answer doc, return an ephamarel answer doc
           subject: string;
           topic: string;
           status: string;
@@ -119,6 +121,7 @@ export const MentorType = new GraphQLObjectType({
         return await MentorModel.getAnswers({
           mentor: mentor,
           defaultSubject: args.useDefaultSubject,
+          ephemeralizeAnswerDocs: args.ephemeralizeAnswerDocs,
           subjectId: args.subject,
           topicId: args.topic,
           status: args.status as Status,
