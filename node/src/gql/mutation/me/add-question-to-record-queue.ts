@@ -11,7 +11,7 @@ import {
   GraphQLNonNull,
 } from 'graphql';
 import { User } from '../../../models/User';
-import { Mentor as MentorModel } from '../../../models';
+import { Mentor as MentorModel, Answer as AnswerModel } from '../../../models';
 import { Types } from 'mongoose';
 
 export const addQuestionToRecordQueue = {
@@ -36,6 +36,12 @@ export const addQuestionToRecordQueue = {
     if (!mentor) {
       throw new Error('Failed to find mentor for user');
     }
+    // Create answer document if one doesn't exist for this question
+    await AnswerModel.findOneAndUpdate(
+      { mentor: mentor._id, question: args.questionId },
+      {},
+      { upsert: true }
+    );
     const newRecordQueue = mentor.recordQueue;
     newRecordQueue.push(args.questionId);
 
