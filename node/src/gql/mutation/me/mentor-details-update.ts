@@ -24,6 +24,8 @@ export interface UpdateMentorDetails {
   allowContact: boolean;
   mentorType: string;
   isPrivate: boolean;
+  hasVirtualBackground: boolean;
+  virtualBackgroundUrl: string;
 }
 
 export const UpdateMentorDetailsType = new GraphQLInputObjectType({
@@ -36,6 +38,8 @@ export const UpdateMentorDetailsType = new GraphQLInputObjectType({
     allowContact: { type: GraphQLBoolean },
     mentorType: { type: GraphQLString },
     isPrivate: { type: GraphQLBoolean },
+    hasVirtualBackground: { type: GraphQLBoolean },
+    virtualBackgroundUrl: { type: GraphQLString },
   }),
 });
 

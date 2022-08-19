@@ -386,6 +386,26 @@ describe('mentor', () => {
     ]);
   });
 
+  it('can get virtual background info', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+                    mentor(id: "5ffdf41a1ee2c62111111111") {
+                      hasVirtualBackground
+                      virtualBackgroundUrl
+                  }
+                }
+        `,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor).to.eql({
+      // Default values
+      hasVirtualBackground: false,
+      virtualBackgroundUrl: '',
+    });
+  });
+
   it('mentor/questions fails to get questions in subject mentor does not have', async () => {
     const response = await request(app)
       .post('/graphql')
