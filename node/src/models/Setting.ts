@@ -26,6 +26,7 @@ export interface Config {
   featuredMentors: string[];
   featuredMentorPanels: string[];
   virtualBackgroundUrls: string[];
+  defaultVirtualBackground: string;
   activeMentors: string[];
   styleHeaderLogo: string;
   styleHeaderColor: string;
@@ -57,6 +58,7 @@ export const ConfigKeys: ConfigKey[] = [
   'featuredMentors',
   'featuredMentorPanels',
   'virtualBackgroundUrls',
+  'defaultVirtualBackground',
   'activeMentors',
   'styleHeaderLogo',
   'styleHeaderColor',
@@ -94,6 +96,7 @@ export function getDefaultConfig(): Config {
     featuredMentors: [],
     featuredMentorPanels: [],
     virtualBackgroundUrls: [],
+    defaultVirtualBackground: '',
     activeMentors: [],
     styleHeaderLogo: '',
     styleHeaderColor: '',
