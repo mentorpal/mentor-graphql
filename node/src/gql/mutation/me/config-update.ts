@@ -23,6 +23,7 @@ export interface ConfigUpdateInput {
   activeMentors: string[];
   featuredMentors: string[];
   featuredMentorPanels: string[];
+  virtualBackgroundUrls: string[];
   styleHeaderLogo: string;
   styleHeaderColor: string;
   styleHeaderTextColor: string;
@@ -40,6 +41,7 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     activeMentors: { type: GraphQLList(GraphQLID) },
     featuredMentors: { type: GraphQLList(GraphQLID) },
     featuredMentorPanels: { type: GraphQLList(GraphQLID) },
+    virtualBackgroundUrls: { type: GraphQLList(GraphQLString) },
     styleHeaderLogo: { type: GraphQLString },
     styleHeaderColor: { type: GraphQLString },
     styleHeaderTextColor: { type: GraphQLString },

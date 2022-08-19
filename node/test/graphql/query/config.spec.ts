@@ -115,6 +115,7 @@ describe('config', () => {
       mentorsDefault: ['somementor'],
       featuredMentors: ['somementor'],
       featuredMentorPanels: ['somementorpanel'],
+      virtualBackgroundUrls: ['https://some/custom/url'],
       activeMentors: ['somementor'],
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
@@ -157,6 +158,7 @@ describe('config', () => {
             mentorsDefault
             featuredMentors
             featuredMentorPanels
+            virtualBackgroundUrls
             activeMentors
             urlGraphql
             urlVideo
