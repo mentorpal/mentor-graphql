@@ -36,6 +36,8 @@ export const MentorType = new GraphQLObjectType({
     lastTrainedAt: { type: DateType },
     isDirty: { type: GraphQLBoolean },
     isPrivate: { type: GraphQLBoolean },
+    hasVirtualBackground: { type: GraphQLBoolean },
+    virtualBackgroundUrl: { type: GraphQLString },
     mentorType: { type: GraphQLString },
     defaultSubject: { type: SubjectType },
     recordQueue: {

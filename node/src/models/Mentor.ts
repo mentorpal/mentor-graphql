@@ -55,6 +55,8 @@ export interface Mentor extends Document {
   lastTrainedAt: Date;
   isDirty: boolean;
   isPrivate: boolean;
+  hasVirtualBackground: boolean;
+  virtualBackgroundUrl: string;
   mentorType: string;
   user: User['_id'];
 }
@@ -122,6 +124,8 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     lastTrainedAt: { type: Date },
     isDirty: { type: Boolean, default: true },
     isPrivate: { type: Boolean, default: false },
+    hasVirtualBackground: { type: Boolean, default: false },
+    virtualBackgroundUrl: { type: String, default: '' },
     mentorType: {
       type: String,
       enum: [MentorType.VIDEO, MentorType.CHAT],

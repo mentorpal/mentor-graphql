@@ -97,6 +97,8 @@ describe('updateMentorDetails', () => {
             title: 'Updated title',
             email: 'Updated email',
             mentorType: 'Updated mentorType',
+            hasVirtualBackground: true,
+            virtualBackgroundUrl: 'https://www.fakeurl.com/',
           },
         },
       });
@@ -118,6 +120,8 @@ describe('updateMentorDetails', () => {
                 title
                 email
                 mentorType
+                hasVirtualBackground
+                virtualBackgroundUrl
               }
             }
           }`,
@@ -130,6 +134,8 @@ describe('updateMentorDetails', () => {
       title: 'Updated title',
       email: 'Updated email',
       mentorType: 'Updated mentorType',
+      hasVirtualBackground: true,
+      virtualBackgroundUrl: 'https://www.fakeurl.com/',
     });
   });
 
