@@ -16,11 +16,13 @@ import importTaskCreate from './import-task-create';
 import importTaskUpdate from './import-task-update';
 import mentorImport from './mentor-import';
 import subjectUpdate from './subject-update';
+import mentorVbgUpdate from './mentor-vbg-update';
 
 export const Api: GraphQLObjectType = new GraphQLObjectType({
   name: 'ApiMutation',
   fields: () => ({
     mentorThumbnailUpdate,
+    mentorVbgUpdate,
     mediaUpdate,
     uploadAnswer,
     uploadTaskUpdate,
