@@ -37,7 +37,14 @@ export const MentorType = new GraphQLObjectType({
     isDirty: { type: GraphQLBoolean },
     isPrivate: { type: GraphQLBoolean },
     hasVirtualBackground: { type: GraphQLBoolean },
-    virtualBackgroundUrl: { type: GraphQLString },
+    virtualBackgroundUrl: {
+      type: GraphQLString,
+      resolve: function (mentor: Mentor) {
+        return mentor.virtualBackgroundUrl
+          ? toAbsoluteUrl(mentor.virtualBackgroundUrl)
+          : '';
+      },
+    },
     mentorType: { type: GraphQLString },
     defaultSubject: { type: SubjectType },
     recordQueue: {
