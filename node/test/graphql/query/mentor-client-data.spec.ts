@@ -118,6 +118,8 @@ describe('mentorClientData', () => {
               topic
               questions
             }
+            hasVirtualBackground,
+            virtualBackgroundUrl,
             utterances {
               _id
               name
@@ -143,6 +145,8 @@ describe('mentorClientData', () => {
       title: "Nuclear Electrician's Mate",
       mentorType: 'VIDEO',
       topicQuestions: [],
+      hasVirtualBackground: true,
+      virtualBackgroundUrl: 'https://www.fakeurl.com',
       utterances: [
         {
           _id: '511111111111111111111112',

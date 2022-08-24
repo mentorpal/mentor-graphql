@@ -401,8 +401,8 @@ describe('mentor', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       // Default values
-      hasVirtualBackground: false,
-      virtualBackgroundUrl: '',
+      hasVirtualBackground: true,
+      virtualBackgroundUrl: 'https://www.fakeurl.com/',
     });
   });
 
