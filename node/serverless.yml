@@ -126,12 +126,38 @@ functions:
           method: ANY
           cors: true
 
-# fails to deploy first time because CF tries to create it before apigw 
 resources:
+  Conditions:
+    CreateCloudWatchAlarm:
+      Fn::Or:
+        - Fn::Equals: ['${self:provider.stage}', 'qa']
+        - Fn::Equals: ['${self:provider.stage}', 'prod']
   Resources:
+    # fails to deploy first time because CF tries to create it before apigw 
     FirewallAssociation:
       Type: AWS::WAFv2::WebACLAssociation
       Properties:
         ResourceArn:
           Fn::Sub: 'arn:aws:apigateway:${AWS::Region}::/restapis/${ApiGatewayRestApi}/stages/${self:provider.stage}'
         WebACLArn: '${self:custom.stages.${self:provider.stage}.WEBACL_ARN}'
+
+    ApiErrors:
+      Type: AWS::CloudWatch::Alarm
+      Condition: CreateCloudWatchAlarm
+      Properties:
+        ActionsEnabled: true
+        AlarmName: 'graphql processor API Gateway 5xx errors ${self:provider.stage}'
+        AlarmDescription: 'graphql processor API Gateway 5xx errors ${self:provider.stage}'
+        Namespace: AWS/ApiGateway
+        MetricName: 5XXError
+        Statistic: Sum
+        Threshold: 0
+        ComparisonOperator: 'GreaterThanThreshold'
+        EvaluationPeriods: 1
+        Period: 60
+        TreatMissingData: 'notBreaching'
+        Dimensions:
+          - Name: ApiName
+            Value: '${self:provider.stage}-${self:service}'
+        AlarmActions:
+          - ${self:custom.stages.${self:provider.stage}.ALERT_SNS_ARN}
