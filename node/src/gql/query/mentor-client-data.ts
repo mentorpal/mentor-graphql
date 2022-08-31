@@ -25,6 +25,7 @@ import { SubjectQuestion } from '../../models/Subject';
 import { User } from '../../models/User';
 import { isAnswerComplete } from '../../models/Mentor';
 import { hasAccessToMentor } from '../../utils/mentor-check-private';
+import { toAbsoluteUrl } from '../../utils/static-urls';
 
 export interface MentorClientData {
   _id: string;
@@ -178,7 +179,9 @@ export const mentorData = {
       title: mentor.title,
       email: mentor.email,
       hasVirtualBackground: mentor.hasVirtualBackground,
-      virtualBackgroundUrl: mentor.virtualBackgroundUrl,
+      virtualBackgroundUrl: mentor.virtualBackgroundUrl
+        ? toAbsoluteUrl(mentor.virtualBackgroundUrl)
+        : '',
       mentorType: mentor.mentorType,
       allowContact: mentor.allowContact,
       topicQuestions: Object.keys(topicQuestions)

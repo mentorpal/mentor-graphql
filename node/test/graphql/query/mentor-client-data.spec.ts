@@ -146,7 +146,7 @@ describe('mentorClientData', () => {
       mentorType: 'VIDEO',
       topicQuestions: [],
       hasVirtualBackground: true,
-      virtualBackgroundUrl: 'https://www.fakeurl.com',
+      virtualBackgroundUrl: 'https://www.fakeurl.com/',
       utterances: [
         {
           _id: '511111111111111111111112',
