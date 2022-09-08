@@ -25,6 +25,7 @@ export interface AnswerMediaProps {
   type: string;
   tag: string;
   url: string;
+  transparentVideoUrl: string;
   needsTransfer: boolean;
 }
 export interface AnswerMedia extends AnswerMediaProps, Document {}
@@ -33,6 +34,7 @@ export const AnswerMediaSchema = new Schema({
   type: { type: String },
   tag: { type: String },
   url: { type: String },
+  transparentVideoUrl: { type: String },
   needsTransfer: { type: Boolean, default: false },
 });
 

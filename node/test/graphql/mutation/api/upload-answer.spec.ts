@@ -174,6 +174,7 @@ describe('uploadAnswer', () => {
               type: 'video',
               tag: 'web',
               url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+              transparentVideoUrl: `${process.env.STATIC_URL_BASE}/video.webm`,
             },
           },
         },
@@ -197,6 +198,7 @@ describe('uploadAnswer', () => {
               type: 'video',
               tag: 'web',
               url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+              transparentVideoUrl: `${process.env.STATIC_URL_BASE}/video.webm`,
             },
           },
         },
@@ -215,6 +217,7 @@ describe('uploadAnswer', () => {
                 type
                 tag
                 url
+                transparentVideoUrl
               }
               question {
                 _id
@@ -231,6 +234,7 @@ describe('uploadAnswer', () => {
       type: 'video',
       tag: 'web',
       url: `${process.env.STATIC_URL_BASE}/video.mp4`,
+      transparentVideoUrl: `${process.env.STATIC_URL_BASE}/video.webm`,
     });
   });
 

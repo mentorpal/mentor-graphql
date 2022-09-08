@@ -31,6 +31,12 @@ export const AnswerMediaType = new GraphQLObjectType({
         return toAbsoluteUrl(media.url);
       },
     },
+    transparentVideoUrl: {
+      type: GraphQLString,
+      resolve: function (media: AnswerMedia) {
+        return toAbsoluteUrl(media.transparentVideoUrl);
+      },
+    },
   },
 });
 

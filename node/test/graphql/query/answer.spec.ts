@@ -70,6 +70,10 @@ describe('answer', () => {
         query: `query Answer($mentor: ID!, $question: ID!) {
           answer(mentor: $mentor, question: $question) {
             _id
+            webMedia{
+              url
+              transparentVideoUrl
+            }
           }
         }`,
         variables: {
@@ -80,6 +84,11 @@ describe('answer', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.answer).to.eql({
       _id: '511111111111111111111112',
+      webMedia: {
+        url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+        transparentVideoUrl:
+          'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.webm',
+      },
     });
   });
 

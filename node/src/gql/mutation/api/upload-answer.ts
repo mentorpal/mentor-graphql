@@ -35,6 +35,7 @@ export const AnswerMediaInputType = new GraphQLInputObjectType({
     type: { type: GraphQLString },
     tag: { type: GraphQLString },
     url: { type: GraphQLString },
+    transparentVideoUrl: { type: GraphQLString },
     needsTransfer: { type: GraphQLBoolean },
   },
 });
