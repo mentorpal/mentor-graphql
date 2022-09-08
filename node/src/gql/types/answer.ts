@@ -27,8 +27,18 @@ export const AnswerMediaType = new GraphQLObjectType({
     needsTransfer: { type: GraphQLBoolean },
     url: {
       type: GraphQLString,
-      resolve: function (media: AnswerMedia) {
-        return toAbsoluteUrl(media.url);
+      args: {
+        browserSupportsVbg: { type: GraphQLBoolean },
+      },
+      resolve: function (
+        media: AnswerMedia,
+        args: {
+          browserSupportsVbg: boolean;
+        }
+      ) {
+        return args.browserSupportsVbg && media.transparentVideoUrl
+          ? toAbsoluteUrl(media.transparentVideoUrl)
+          : toAbsoluteUrl(media.url);
       },
     },
     transparentVideoUrl: {
