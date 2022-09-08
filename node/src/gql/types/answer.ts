@@ -38,13 +38,17 @@ export const AnswerMediaType = new GraphQLObjectType({
       ) {
         return args.browserSupportsVbg && media.transparentVideoUrl
           ? toAbsoluteUrl(media.transparentVideoUrl)
-          : toAbsoluteUrl(media.url);
+          : media.url
+          ? toAbsoluteUrl(media.url)
+          : '';
       },
     },
     transparentVideoUrl: {
       type: GraphQLString,
       resolve: function (media: AnswerMedia) {
-        return toAbsoluteUrl(media.transparentVideoUrl);
+        return media.transparentVideoUrl
+          ? toAbsoluteUrl(media.transparentVideoUrl)
+          : '';
       },
     },
   },
