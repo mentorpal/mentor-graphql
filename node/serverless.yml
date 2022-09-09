@@ -45,6 +45,7 @@ custom:
       IS_SENTRY_ENABLED: true
       API_SECRET: ${ssm:/mentorpal/v2/shared/api_secret, ''}
       JWT_SECRET: ${ssm:/mentorpal/v2/shared/jwt_secret, ''}
+      ALERT_SNS_ARN: ''
       MONGO_URI: ${ssm:/mentorpal/graphql/qa/mongo_uri, ''}
       NODE_ENV: 'careerfair-v2'
       STATIC_URL_BASE: 'https://static-v2.mentorpal.org/'
@@ -57,6 +58,7 @@ custom:
       IS_SENTRY_ENABLED: true
       API_SECRET: ${ssm:/mentorpal/cf/shared/api_secret, ''}
       JWT_SECRET: ${ssm:/mentorpal/cf/shared/jwt_secret, ''}
+      ALERT_SNS_ARN: ''
       MONGO_URI: ${ssm:/mentorpal/graphql/prod/mongo_uri, ''}
       NODE_ENV: 'careerfair'
       STATIC_URL_BASE: 'https://static-careerfair.mentorpal.org/'
