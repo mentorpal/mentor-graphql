@@ -7,7 +7,7 @@ The full terms of this copyright and license should always be found in the root 
 
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import { Mentor } from './Mentor';
-import { GraphQLString, GraphQLObjectType, GraphQLList } from 'graphql';
+import { GraphQLString, GraphQLObjectType } from 'graphql';
 
 export interface GraphQLUpdateProps {
   status: string;
@@ -29,44 +29,23 @@ export const GraphQLUpdateType = new GraphQLObjectType({
   },
 });
 
-export interface AnswerMediaMigrateUpdateProps {
-  question: string;
+export interface s3VideoMigrateProps {
   status: string;
   errorMessage: string;
 }
-
-export interface s3VideoMigrateProps {
-  status: string;
-  answerMediaMigrations: AnswerMediaMigrateUpdateProps[];
-}
-
-export const AnswerMediaMigrationSchema = new Schema({
-  question: { type: String },
-  status: { type: String },
-  errorMessage: { type: String },
-});
-
-export const AnswerMediaMigrationType = new GraphQLObjectType({
-  name: 'AnswerMediaMigration',
-  fields: {
-    question: { type: GraphQLString },
-    status: { type: GraphQLString },
-    errorMessage: { type: GraphQLString },
-  },
-});
 
 export interface s3VideoMigrateInfo extends s3VideoMigrateProps, Document {}
 
 export const s3VideoMigrateSchema = new Schema({
   status: { type: String },
-  answerMediaMigrations: { type: [AnswerMediaMigrationSchema] },
+  errorMessage: { type: String },
 });
 
 export const S3VideoMigrateType = new GraphQLObjectType({
   name: 'S3VideoMigrate',
   fields: {
     status: { type: GraphQLString },
-    answerMediaMigrations: { type: GraphQLList(AnswerMediaMigrationType) },
+    errorMessage: { type: GraphQLString },
   },
 });
 

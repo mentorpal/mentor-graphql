@@ -11,7 +11,6 @@ import {
   GraphQLNonNull,
   GraphQLID,
   GraphQLInputObjectType,
-  GraphQLList,
 } from 'graphql';
 import { ImportTask as ImportTaskModel } from '../../../models';
 import {
@@ -27,20 +26,11 @@ export const GraphQLUpdateInputType = new GraphQLInputObjectType({
   },
 });
 
-export const AnswerMediaMigrationInputType = new GraphQLInputObjectType({
-  name: 'AnswerMediaMigrationInputType',
-  fields: {
-    question: { type: GraphQLString },
-    status: { type: GraphQLString },
-    errorMessage: { type: GraphQLString },
-  },
-});
-
 export const S3VideoMigrationInputType = new GraphQLInputObjectType({
   name: 'S3VideoMigrationInputType',
   fields: {
-    status: { type: GraphQLNonNull(GraphQLString) },
-    answerMediaMigrations: { type: GraphQLList(AnswerMediaMigrationInputType) },
+    status: { type: GraphQLString },
+    errorMessage: { type: GraphQLString },
   },
 });
 
