@@ -76,6 +76,12 @@ describe('uploadAnswers', () => {
                 _id
               }
               transcript
+              webMedia{
+                url
+              }
+              mobileMedia{
+                url
+              }
             }
           }
       }`,

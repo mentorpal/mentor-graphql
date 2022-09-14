@@ -44,6 +44,11 @@ export interface UploadAnswers {
   questionId: string;
 }
 
+interface BulkWriteAnswer {
+  questionId: string;
+  updates: Record<string, string | boolean | AnswerMediaProps>;
+}
+
 export const updateAnswers = {
   type: GraphQLBoolean,
   args: {
@@ -70,20 +75,13 @@ export const updateAnswers = {
     if (!mentor) {
       throw new Error(`no mentor found for id '${args.mentorId}'`);
     }
-    const bulkWriteAnswers: Record<
-      string,
-      string | Record<string, string | boolean | AnswerMediaProps>
-    >[] = [];
+    const bulkWriteAnswers: BulkWriteAnswer[] = [];
 
     for (let i = 0; i < args.answers.length; i++) {
       const inputAnswer = args.answers[i];
       if (!(await QuestionModel.exists({ _id: inputAnswer.questionId }))) {
         throw new Error(`no question found for id '${inputAnswer.questionId}'`);
       }
-
-      const argWebMedia = inputAnswer.webMedia;
-      const argMobileMedia = inputAnswer.mobileMedia;
-      const argVttMedia = inputAnswer.vttMedia;
       const answer = await AnswerModel.findOne({
         mentor: mentor._id,
         question: inputAnswer.questionId,
@@ -95,11 +93,15 @@ export const updateAnswers = {
           ? answer.hasEditedTranscript
           : false;
 
+      const argWebMedia = inputAnswer.webMedia;
+      const argMobileMedia = inputAnswer.mobileMedia;
+      const argVttMedia = inputAnswer.vttMedia;
+
       // any = Boolean, String, Answer
       const updates: Record<string, string | boolean | AnswerMediaProps> = {
-        webMedia: inputAnswer.webMedia,
-        mobileMedia: inputAnswer.mobileMedia,
-        vttMedia: inputAnswer.vttMedia,
+        ...(argWebMedia ? { webMedia: argWebMedia } : {}),
+        ...(argMobileMedia ? { mobileMedia: argMobileMedia } : {}),
+        ...(argVttMedia ? { vttMedia: argVttMedia } : {}),
         status: Status.NONE, // with partial updates we cant tell here
         hasEditedTranscript: hasEditedTranscript,
         transcript:
@@ -133,13 +135,14 @@ export const updateAnswers = {
     }
     await AnswerModel.bulkWrite(
       bulkWriteAnswers.map((answerToUpdate) => {
+        const updates = answerToUpdate.updates;
         return {
           updateOne: {
             filter: {
               mentor: mentor._id,
               question: answerToUpdate['questionId'],
             },
-            update: answerToUpdate['updates'],
+            update: { $set: updates },
             upsert: false,
           },
         };
