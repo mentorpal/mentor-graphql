@@ -19,9 +19,9 @@ const importTaskCreate = `mutation ImportTaskCreate($mentor: ID!,
       }
 }`;
 
-const importTaskUpdate = `mutation ImportTaskUpdate($mentor: ID!, $graphQLUpdate: GraphQLUpdateInputType, $s3VideoMigrateUpdate: S3VideoMigrationInputType){
+const importTaskUpdate = `mutation ImportTaskUpdate($mentor: ID!, $graphQLUpdate: GraphQLUpdateInputType, $s3VideoMigrateUpdate: S3VideoMigrationInputType, $migrationErrors: [String]){
   api{
-      importTaskUpdate(mentor: $mentor, graphQLUpdate: $graphQLUpdate, s3VideoMigrateUpdate: $s3VideoMigrateUpdate)
+      importTaskUpdate(mentor: $mentor, graphQLUpdate: $graphQLUpdate, s3VideoMigrateUpdate: $s3VideoMigrateUpdate, migrationErrors: $migrationErrors)
   }
 }`;
 
@@ -102,6 +102,7 @@ describe('mediaUpdate', () => {
             status: 'DONE',
             errorMessage: '',
           },
+          migrationErrors: ['one fail'],
         },
       });
     expect(response3.body.data.api.importTaskUpdate).to.eql(true);
@@ -120,6 +121,7 @@ describe('mediaUpdate', () => {
             status
             errorMessage
           }
+          migrationErrors
         }
       }`,
         variables: {
@@ -129,6 +131,7 @@ describe('mediaUpdate', () => {
     expect(response4.body.data.importTask).to.eql({
       graphQLUpdate: { status: 'FAILED', errorMessage: 'error message' },
       s3VideoMigrate: { status: 'DONE', errorMessage: '' },
+      migrationErrors: ['one fail'],
     });
   });
 });

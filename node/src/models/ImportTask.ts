@@ -53,6 +53,7 @@ export interface ImportTask extends Document {
   mentor: Mentor['_id'];
   graphQLUpdate: GraphQLUpdateInfo;
   s3VideoMigrate: s3VideoMigrateInfo;
+  migrationErrors: string[];
 }
 
 export const ImportTaskSchema = new Schema<ImportTask, ImportTaskModel>(
@@ -60,6 +61,7 @@ export const ImportTaskSchema = new Schema<ImportTask, ImportTaskModel>(
     mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
     graphQLUpdate: { type: GraphQLUpdateSchema },
     s3VideoMigrate: { type: s3VideoMigrateSchema },
+    migrationErrors: { type: [String] },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );

@@ -9,6 +9,8 @@ import {
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
+  GraphQLList,
+  GraphQLString,
 } from 'graphql';
 import { ImportTask as ImportTaskModel } from '../../../models';
 import {
@@ -26,6 +28,7 @@ export const importTaskUpdate = {
     mentor: { type: GraphQLNonNull(GraphQLID) },
     graphQLUpdate: { type: GraphQLUpdateInputType },
     s3VideoMigrateUpdate: { type: S3VideoMigrationInputType },
+    migrationErrors: { type: GraphQLList(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,
@@ -33,6 +36,7 @@ export const importTaskUpdate = {
       mentor: string;
       graphQLUpdate: GraphQLUpdateProps;
       s3VideoMigrateUpdate: s3VideoMigrateProps;
+      migrationErrors: string[];
     }
   ): Promise<boolean> => {
     const importTask = await ImportTaskModel.findOne({ mentor: args.mentor });
@@ -56,6 +60,7 @@ export const importTaskUpdate = {
       {
         graphQLUpdate: importTask.graphQLUpdate,
         s3VideoMigrate: importTask.s3VideoMigrate,
+        migrationErrors: args.migrationErrors || [],
       }
     );
     return Boolean(save);
