@@ -35,7 +35,7 @@ async function refreshToken(req: Request, next: any) {
     if (user) {
       next(user, jwtToken);
     } else {
-      logger.warn('couldn\'t get user');
+      logger.warn("couldn't get user");
       next(null);
     }
   } catch (err) {
