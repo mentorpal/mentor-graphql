@@ -35,12 +35,12 @@ async function refreshToken(req: Request, next: any) {
     if (user) {
       next(user, jwtToken);
     } else {
-      logger.warn('failed to get user');
+      logger.warn('couldn\'t get user');
       next(null);
     }
   } catch (err) {
     logger.warn(
-      `failed to refresh token ${req.cookies[process.env.REFRESH_TOKEN_NAME]}`
+      `couldn't refresh token ${req.cookies[process.env.REFRESH_TOKEN_NAME]}`
     );
     logger.error(err);
     next(null);
