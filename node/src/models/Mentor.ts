@@ -667,7 +667,10 @@ MentorSchema.statics.getTopics = async function (
     throw new Error(`mentor ${mentor} not found`);
   }
   const topics: Topic[] = [];
-  subjectId = defaultSubject ? userMentor.defaultSubject : subjectId;
+  subjectId =
+    defaultSubject && userMentor.defaultSubject
+      ? userMentor.defaultSubject
+      : subjectId;
   if (subjectId) {
     if (userMentor.subjects.includes(subjectId)) {
       const s = subjects
