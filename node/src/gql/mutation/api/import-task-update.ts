@@ -9,15 +9,15 @@ import {
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
+  GraphQLList,
+  GraphQLString,
 } from 'graphql';
 import { ImportTask as ImportTaskModel } from '../../../models';
 import {
-  AnswerMediaMigrateUpdateProps,
   GraphQLUpdateProps,
   s3VideoMigrateProps,
 } from '../../../models/ImportTask';
 import {
-  AnswerMediaMigrationInputType,
   GraphQLUpdateInputType,
   S3VideoMigrationInputType,
 } from './import-task-create';
@@ -28,7 +28,7 @@ export const importTaskUpdate = {
     mentor: { type: GraphQLNonNull(GraphQLID) },
     graphQLUpdate: { type: GraphQLUpdateInputType },
     s3VideoMigrateUpdate: { type: S3VideoMigrationInputType },
-    answerMediaMigrateUpdate: { type: AnswerMediaMigrationInputType },
+    migrationErrors: { type: GraphQLList(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,
@@ -36,7 +36,7 @@ export const importTaskUpdate = {
       mentor: string;
       graphQLUpdate: GraphQLUpdateProps;
       s3VideoMigrateUpdate: s3VideoMigrateProps;
-      answerMediaMigrateUpdate: AnswerMediaMigrateUpdateProps;
+      migrationErrors: string[];
     }
   ): Promise<boolean> => {
     const importTask = await ImportTaskModel.findOne({ mentor: args.mentor });
@@ -50,53 +50,17 @@ export const importTaskUpdate = {
     }
 
     if (args.s3VideoMigrateUpdate) {
-      if (args.s3VideoMigrateUpdate.status) {
-        importTask.s3VideoMigrate.status = args.s3VideoMigrateUpdate.status;
-      }
-      if (args.s3VideoMigrateUpdate.answerMediaMigrations) {
-        importTask.s3VideoMigrate.answerMediaMigrations =
-          args.s3VideoMigrateUpdate.answerMediaMigrations;
-      }
+      importTask.s3VideoMigrate.status = args.s3VideoMigrateUpdate.status;
+      importTask.s3VideoMigrate.errorMessage =
+        args.s3VideoMigrateUpdate.errorMessage;
     }
-
-    if (args.answerMediaMigrateUpdate) {
-      const question = args.answerMediaMigrateUpdate.question;
-      const answerMigrationTasks =
-        importTask.s3VideoMigrate.answerMediaMigrations;
-      const answerMigrationTaskIndex = answerMigrationTasks.findIndex(
-        (task) => task.question === question
-      );
-      if (answerMigrationTaskIndex === -1) {
-        throw new Error(
-          `Failed to find answer media migration task for question id: ${question}`
-        );
-      }
-      importTask.s3VideoMigrate.answerMediaMigrations[
-        answerMigrationTaskIndex
-      ].status = args.answerMediaMigrateUpdate.status;
-      importTask.s3VideoMigrate.answerMediaMigrations[
-        answerMigrationTaskIndex
-      ].errorMessage = args.answerMediaMigrateUpdate.errorMessage;
-    }
-
-    // automatically sets the status for the migration depending on the status of all the media transfers
-    importTask.s3VideoMigrate.status = !importTask.s3VideoMigrate
-      .answerMediaMigrations.length
-      ? importTask.s3VideoMigrate.status
-      : Boolean(
-          importTask.s3VideoMigrate.answerMediaMigrations.find(
-            (migration) =>
-              migration.status !== 'DONE' && migration.status !== 'FAILED'
-          )
-        )
-      ? 'IN_PROGRESS'
-      : 'DONE';
 
     const save = await ImportTaskModel.findOneAndUpdate(
       { mentor: args.mentor },
       {
         graphQLUpdate: importTask.graphQLUpdate,
         s3VideoMigrate: importTask.s3VideoMigrate,
+        migrationErrors: args.migrationErrors || [],
       }
     );
     return Boolean(save);
