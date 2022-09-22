@@ -11,12 +11,17 @@ import {
   GraphQLID,
   GraphQLBoolean,
 } from 'graphql';
-import { Mentor as MentorModel, Question as QuestionModel } from '../../models';
+import {
+  Mentor as MentorModel,
+  Question as QuestionModel,
+  Keyword as KeywordModel,
+} from '../../models';
 import { Status } from '../../models/Answer';
 import { Mentor } from '../../models/Mentor';
 import { QuestionType } from '../../models/Question';
 import DateType from './date';
 import AnswerType from './answer';
+import KeywordType from './keyword';
 import SubjectType, { SubjectQuestionType, TopicType } from './subject';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 import { QuestionType as QuestionGQLType } from './question';
@@ -26,7 +31,6 @@ export const MentorType = new GraphQLObjectType({
   fields: () => ({
     createdAt: { type: DateType },
     updatedAt: { type: DateType },
-
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
     firstName: { type: GraphQLString },
@@ -47,6 +51,12 @@ export const MentorType = new GraphQLObjectType({
     },
     mentorType: { type: GraphQLString },
     defaultSubject: { type: SubjectType },
+    keywords: {
+      type: GraphQLList(KeywordType),
+      resolve: async (mentor: Mentor) => {
+        return await KeywordModel.find({ _id: { $in: mentor.keywords } });
+      },
+    },
     recordQueue: {
       type: GraphQLList(QuestionGQLType),
       resolve: async (mentor: Mentor) => {

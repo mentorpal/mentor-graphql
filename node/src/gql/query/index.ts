@@ -7,8 +7,11 @@ The full terms of this copyright and license should always be found in the root 
 import { GraphQLObjectType } from 'graphql';
 import answer from './answer';
 import answers from './answers';
+import categoryAnswers from './category-answers';
 import config from './config';
 import health from './health';
+import keyword from './keyword';
+import keywords from './keywords';
 import me from './me';
 import mentor from './mentor';
 import mentors from './mentors';
@@ -17,6 +20,8 @@ import mentorPanels from './mentor-panels';
 import mentorExport from './mentor-export';
 import mentorImportPreview from './mentor-import-preview';
 import mentorClientData from './mentor-client-data';
+import mentorsByKeyword from './mentors-by-keyword';
+import mentorsById from './mentors-by-id';
 import question from './question';
 import questions from './questions';
 import questionsById from './questions-by-id';
@@ -28,16 +33,17 @@ import userQuestions from './user-questions';
 import users from './users';
 import uploadTask from './upload-task';
 import importTask from './import-task';
-import categoryAnswers from './category-answers';
-import mentorsById from './mentors-by-id';
 
 export default new GraphQLObjectType({
   name: 'Query',
   fields: {
     answer,
     answers,
+    categoryAnswers,
     config,
     health,
+    keyword,
+    keywords,
     me,
     mentor,
     mentors,
@@ -46,7 +52,8 @@ export default new GraphQLObjectType({
     mentorExport,
     mentorImportPreview,
     mentorClientData,
-    categoryAnswers,
+    mentorsById,
+    mentorsByKeyword,
     question,
     questions,
     questionsById,
@@ -58,6 +65,5 @@ export default new GraphQLObjectType({
     users,
     uploadTask,
     importTask,
-    mentorsById,
   },
 });
