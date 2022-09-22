@@ -47,6 +47,7 @@ export interface Mentor extends Document {
   name: string;
   firstName: string;
   title: string;
+  goal: string;
   email: string;
   thumbnail: string;
   allowContact: boolean;
@@ -113,6 +114,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     name: { type: String },
     firstName: { type: String },
     title: { type: String },
+    goal: { type: String },
     email: { type: String },
     thumbnail: { type: String, default: '' },
     allowContact: { type: Boolean, default: false },

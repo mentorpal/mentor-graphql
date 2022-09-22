@@ -5,60 +5,48 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import {
-  GraphQLString,
   GraphQLObjectType,
   GraphQLBoolean,
-  GraphQLNonNull,
-  GraphQLInputObjectType,
   GraphQLID,
+  GraphQLInputObjectType,
+  GraphQLList,
+  GraphQLString,
 } from 'graphql';
-import { Mentor as MentorModel } from '../../../models';
+import {
+  Mentor as MentorModel,
+  Keyword as KeywordModel,
+} from '../../../models';
 import { Mentor } from '../../../models/Mentor';
 import { User, UserRole } from '../../../models/User';
 
-export interface UpdateMentorDetails {
+export interface UpdateKeyword {
   name: string;
-  firstName: string;
-  title: string;
-  goal: string;
-  email: string;
-  allowContact: boolean;
-  mentorType: string;
-  isPrivate: boolean;
-  hasVirtualBackground: boolean;
-  virtualBackgroundUrl: string;
+  type: string;
 }
 
-export const UpdateMentorDetailsType = new GraphQLInputObjectType({
-  name: 'UpdateMentorDetailsType',
+export const UpdateKeywordType = new GraphQLInputObjectType({
+  name: 'UpdateKeywordType',
   fields: () => ({
     name: { type: GraphQLString },
-    firstName: { type: GraphQLString },
-    title: { type: GraphQLString },
-    goal: { type: GraphQLString },
-    email: { type: GraphQLString },
-    allowContact: { type: GraphQLBoolean },
-    mentorType: { type: GraphQLString },
-    isPrivate: { type: GraphQLBoolean },
-    hasVirtualBackground: { type: GraphQLBoolean },
-    virtualBackgroundUrl: { type: GraphQLString },
+    type: { type: GraphQLString },
   }),
 });
 
-export const updateMentorDetails = {
+export const updateMentorKeywords = {
   type: GraphQLBoolean,
   args: {
-    mentor: { type: GraphQLNonNull(UpdateMentorDetailsType) },
     mentorId: { type: GraphQLID },
+    keywords: { type: GraphQLList(UpdateKeywordType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: UpdateMentorDetails; mentorId: string },
+    args: { mentorId: string; keywords: UpdateKeyword[] },
     context: { user: User }
   ): Promise<boolean> => {
     let mentor: Mentor = await MentorModel.findOne({
       user: context.user._id,
     });
+    // Check mentor permissions
     if (!mentor) {
       throw new Error('you do not have a mentor');
     }
@@ -71,10 +59,32 @@ export const updateMentorDetails = {
       }
       mentor = await MentorModel.findById(args.mentorId);
     }
+
+    // Batch write all keywords
+    if (args.keywords && args.keywords.length > 0) {
+      await KeywordModel.bulkWrite(
+        args.keywords.map((k) => {
+          return {
+            updateOne: {
+              filter: { name: k.name },
+              update: k,
+              upsert: true,
+            },
+          };
+        })
+      );
+    }
+
+    // Update mentor keywords
+    const keywords = await KeywordModel.find({
+      name: { $in: args.keywords.map((k) => k.name) },
+    });
     const updated = await MentorModel.findByIdAndUpdate(
       mentor._id,
       {
-        $set: args.mentor,
+        $set: {
+          keywords: keywords.map((k) => k._id),
+        },
       },
       {
         new: true,
@@ -85,4 +95,4 @@ export const updateMentorDetails = {
   },
 };
 
-export default updateMentorDetails;
+export default updateMentorKeywords;
