@@ -35,7 +35,7 @@ import { idOrNew } from '../gql/mutation/me/helpers';
 import UserQuestion, {
   UserQuestion as UserQuestionInterface,
 } from './UserQuestion';
-import { QuestionUpdateInput } from 'gql/mutation/me/question-update';
+import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
 import { Keyword } from './Keyword';
 
 export enum MentorType {
