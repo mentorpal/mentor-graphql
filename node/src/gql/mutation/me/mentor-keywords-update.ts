@@ -88,7 +88,6 @@ export const updateMentorKeywords = {
       },
       {
         new: true,
-        upsert: true,
       }
     );
     return Boolean(updated);
