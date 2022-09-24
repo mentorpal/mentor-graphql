@@ -13,6 +13,45 @@ import {
 import { HasPaginate } from '../types/mongoose-type-helpers';
 import mongoose from 'mongoose';
 
+// Part of our custom query language:
+// Conditional OR and AND are converted to mongoose friendly $or and $and, recursively
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+function convertFilterConditionals(object: any) {
+  if (!object) {
+    return object;
+  }
+  if ('OR' in object) {
+    if ('$or' in object) {
+      object['$or'].push(...object['OR']);
+    } else {
+      object['$or'] = object['OR'];
+    }
+    delete object['OR'];
+  }
+  if ('AND' in object) {
+    if ('$and' in object) {
+      object['$and'].push(...object['AND']);
+    } else {
+      object['$and'] = object['AND'];
+    }
+    object['$and'] = object['AND'];
+    delete object['AND'];
+  }
+  const keys = Object.keys(object);
+  for (let i = 0; i < keys.length; i++) {
+    const value = object[keys[i]];
+    if (typeof value === 'object') {
+      object[keys[i]] = convertFilterConditionals(value);
+    } else if (Array.isArray(value)) {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      object[keys[i]] = value.map((val: any) => {
+        return convertFilterConditionals(val);
+      });
+    }
+  }
+  return object;
+}
+
 export function findAll<T extends PaginatedResolveResult>(config: {
   nodeType: GraphQLObjectType;
   model: HasPaginate<T>;
@@ -24,9 +63,7 @@ export function findAll<T extends PaginatedResolveResult>(config: {
     nodeType,
     resolve: async (resolveArgs: PaginatedResolveArgs) => {
       const { args } = resolveArgs;
-      const filter = Object.assign({}, args.filter || {}, {
-        $or: [{ deleted: false }, { deleted: null }],
-      });
+      let filter = Object.assign({}, args.filter || {});
       Object.keys(filter).map((key) => {
         if (typeof filter[key] === 'string') {
           try {
@@ -36,6 +73,17 @@ export function findAll<T extends PaginatedResolveResult>(config: {
           } catch (err) {}
         }
       });
+      filter = convertFilterConditionals(filter);
+      // Enforce that the document has not been deleted
+      if (Object.keys(filter).length > 0) {
+        filter = {
+          $and: [filter, { $or: [{ deleted: false }, { deleted: null }] }],
+        };
+      } else {
+        filter = {
+          $or: [{ deleted: false }, { deleted: null }],
+        };
+      }
 
       const cursor = args.cursor;
       let next = null;
