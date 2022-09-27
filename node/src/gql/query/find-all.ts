@@ -24,9 +24,7 @@ export function findAll<T extends PaginatedResolveResult>(config: {
     nodeType,
     resolve: async (resolveArgs: PaginatedResolveArgs) => {
       const { args } = resolveArgs;
-      const filter = Object.assign({}, args.filter || {}, {
-        $or: [{ deleted: false }, { deleted: null }],
-      });
+      let filter = Object.assign({}, args.filter || {});
       Object.keys(filter).map((key) => {
         if (typeof filter[key] === 'string') {
           try {
@@ -50,6 +48,15 @@ export function findAll<T extends PaginatedResolveResult>(config: {
         }
       }
 
+      if (Object.keys(filter).length > 0) {
+        filter = {
+          $and: [filter, { $or: [{ deleted: false }, { deleted: null }] }],
+        };
+      } else {
+        filter = {
+          $or: [{ deleted: false }, { deleted: null }],
+        };
+      }
       const result = await model.paginate({
         query: filter,
         limit: Number(args.limit) || 100,
