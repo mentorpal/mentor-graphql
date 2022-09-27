@@ -160,43 +160,4 @@ describe('userQuestions', () => {
       },
     });
   });
-
-  it('can filter userQuestions with conditional statements', async () => {
-    const response = await request(app)
-      .post('/graphql')
-      .send({
-        query: `query{
-          userQuestions(filter:{OR:[{feedback:"BAD"},{classifierAnswerType:"OFF_TOPIC"}]}){
-            edges{
-              node{
-                _id
-                feedback
-                classifierAnswerType
-              }
-            }
-            pageInfo{
-              startCursor
-              endCursor
-            }
-          }
-        }`,
-      });
-    expect(response.status).to.equal(200);
-    expect(response.body.data.userQuestions.edges).to.eql([
-      {
-        node: {
-          _id: '5ffdf41a1ee2c62320b49ee3',
-          feedback: 'NEUTRAL',
-          classifierAnswerType: 'OFF_TOPIC',
-        },
-      },
-      {
-        node: {
-          _id: '5ffdf41a1ee2c62320b49ee2',
-          feedback: 'BAD',
-          classifierAnswerType: null,
-        },
-      },
-    ]);
-  });
 });
