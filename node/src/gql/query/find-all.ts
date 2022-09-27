@@ -19,23 +19,21 @@ function convertStringsToObjectIds(filter: any) {
   if (!filter) {
     return filter;
   }
-  const keys = Object.keys(filter);
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
-    const value = filter[key];
-    if (Array.isArray(value)) {
-      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-      for (let i = 0; i < value.length; i++) {
-        filter[key] = convertStringsToObjectIds(value);
-      }
-    } else if (typeof value === 'object') {
-      console.log('is object', value);
-      filter[key] = convertStringsToObjectIds(value);
-    } else if (typeof value === 'string') {
-      console.log('is string', value);
-      try {
-        filter[key] = mongoose.Types.ObjectId(value);
-      } catch (err) {}
+  if (typeof filter === 'string') {
+    try {
+      return mongoose.Types.ObjectId(filter);
+    } catch (err) {
+      return filter;
+    }
+  } else if (Array.isArray(filter)) {
+    for (let i = 0; i < filter.length; i++) {
+      const value2 = filter[i];
+      filter[i] = convertStringsToObjectIds(value2);
+    }
+  } else if (typeof filter === 'object') {
+    const keys = Object.keys(filter);
+    for (let i = 0; i < keys.length; i++) {
+      filter[keys[i]] = convertStringsToObjectIds(filter[keys[i]]);
     }
   }
   return filter;
@@ -68,7 +66,6 @@ export function findAll<T extends PaginatedResolveResult>(config: {
           next = cursor;
         }
       }
-
       if (Object.keys(filter).length > 0) {
         filter = {
           $and: [filter, { $or: [{ deleted: false }, { deleted: null }] }],
