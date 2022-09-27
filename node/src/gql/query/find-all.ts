@@ -13,6 +13,34 @@ import {
 import { HasPaginate } from '../types/mongoose-type-helpers';
 import mongoose from 'mongoose';
 
+// Recursively attempts to convert strings to object ids
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+function convertStringsToObjectIds(filter: any) {
+  if (!filter) {
+    return filter;
+  }
+  const keys = Object.keys(filter);
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    const value = filter[key];
+    if (Array.isArray(value)) {
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      for (let i = 0; i < value.length; i++) {
+        filter[key] = convertStringsToObjectIds(value);
+      }
+    } else if (typeof value === 'object') {
+      console.log('is object', value);
+      filter[key] = convertStringsToObjectIds(value);
+    } else if (typeof value === 'string') {
+      console.log('is string', value);
+      try {
+        filter[key] = mongoose.Types.ObjectId(value);
+      } catch (err) {}
+    }
+  }
+  return filter;
+}
+
 export function findAll<T extends PaginatedResolveResult>(config: {
   nodeType: GraphQLObjectType;
   model: HasPaginate<T>;
@@ -25,15 +53,8 @@ export function findAll<T extends PaginatedResolveResult>(config: {
     resolve: async (resolveArgs: PaginatedResolveArgs) => {
       const { args } = resolveArgs;
       let filter = Object.assign({}, args.filter || {});
-      Object.keys(filter).map((key) => {
-        if (typeof filter[key] === 'string') {
-          try {
-            filter[key] = {
-              $in: [filter[key], mongoose.Types.ObjectId(filter[key])],
-            };
-          } catch (err) {}
-        }
-      });
+
+      filter = convertStringsToObjectIds(filter);
 
       const cursor = args.cursor;
       let next = null;
