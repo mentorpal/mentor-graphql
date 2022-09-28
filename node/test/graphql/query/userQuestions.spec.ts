@@ -160,4 +160,76 @@ describe('userQuestions', () => {
       },
     });
   });
+
+  it('can filter userQuestions using operators', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `
+        query UserQuestions($filter: Object!, $limit: Int!, $cursor: String!, $sortBy: String!, $sortAscending: Boolean!){
+          userQuestions(filter: $filter, limit: $limit,cursor: $cursor,sortBy: $sortBy,sortAscending: $sortAscending){
+             edges {
+                    cursor
+                    node {
+                      classifierAnswer {
+                        _id
+                        transcript
+                        question {
+                          _id
+                          question
+                        }
+                      }
+                      graderAnswer {
+                        _id
+                        transcript
+                        question {
+                          _id
+                          question
+                        }
+                      }
+                    }
+                  }
+                  pageInfo {
+                    startCursor
+                    endCursor
+                    hasPreviousPage
+                    hasNextPage
+                  }
+          }
+        }
+      `,
+        variables: {
+          filter: {
+            classifierAnswer: {
+              $nin: ['511111111111111111111174'],
+            },
+          },
+          limit: 20,
+          cursor: '',
+          sortBy: 'createdAt',
+          sortAscending: false,
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.userQuestions.edges).to.eql([
+      {
+        cursor: 'W251bGwsIjVmZmRmNDFhMWVlMmM2MjMyMGI0OWVlMiJd',
+        node: { classifierAnswer: null, graderAnswer: null },
+      },
+      {
+        cursor: 'W251bGwsIjVmZmRmNDFhMWVlMmM2MjMyMGI0OWVlMSJd',
+        node: {
+          classifierAnswer: {
+            _id: '511111111111111111111112',
+            transcript: '[being still]',
+            question: {
+              _id: '511111111111111111111111',
+              question: "Don't talk and stay still.",
+            },
+          },
+          graderAnswer: null,
+        },
+      },
+    ]);
+  });
 });
