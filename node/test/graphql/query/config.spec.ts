@@ -136,6 +136,10 @@ describe('config', () => {
       disclaimerTitle: '',
       disclaimerText: '',
       disclaimerDisabled: true,
+      featuredKeywordTypes: [],
+      featuredSubjects: [],
+      defaultSubject: '',
+      questionSortOrder: 0,
     };
     await SettingModel.saveConfig(config);
     const response = await request(app)
@@ -171,6 +175,10 @@ describe('config', () => {
             disclaimerTitle
             disclaimerText
             disclaimerDisabled
+            featuredKeywordTypes
+            featuredSubjects
+            defaultSubject
+            questionSortOrder
           }
         }`,
       });
