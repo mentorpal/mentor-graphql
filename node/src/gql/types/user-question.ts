@@ -9,6 +9,7 @@ import {
   GraphQLObjectType,
   GraphQLID,
   GraphQLFloat,
+  GraphQLBoolean,
 } from 'graphql';
 import { Answer as AnswerModel, Mentor as MentorModel } from '../../models';
 import { UserQuestion } from '../../models/UserQuestion';
@@ -44,6 +45,7 @@ export const UserQuestionType = new GraphQLObjectType({
     },
     createdAt: { type: DateType },
     updatedAt: { type: DateType },
+    dismissed: { type: GraphQLBoolean },
   }),
 });
 

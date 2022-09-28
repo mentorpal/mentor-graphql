@@ -61,6 +61,11 @@ describe('userQuestions', () => {
             _id: '5ffdf41a1ee2c62320b49ee1',
           },
         },
+        {
+          node: {
+            _id: '5ffdf41a1ee2c62320b49e33',
+          },
+        },
       ],
       pageInfo: {
         hasNextPage: false,
@@ -227,6 +232,13 @@ describe('userQuestions', () => {
               question: "Don't talk and stay still.",
             },
           },
+          graderAnswer: null,
+        },
+      },
+      {
+        cursor: 'W251bGwsIjVmZmRmNDFhMWVlMmM2MjMyMGI0OWUzMyJd',
+        node: {
+          classifierAnswer: null,
           graderAnswer: null,
         },
       },

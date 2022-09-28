@@ -125,6 +125,7 @@ describe('userQuestionCreate', () => {
             }
             classifierAnswerType
             confidence
+            dismissed
           }
         }`,
       });
@@ -139,6 +140,7 @@ describe('userQuestionCreate', () => {
       },
       classifierAnswerType: 'CLASSIFIER',
       confidence: 1,
+      dismissed: false,
     });
   });
 });
