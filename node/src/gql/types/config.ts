@@ -44,6 +44,10 @@ export const ConfigType = new GraphQLObjectType({
     disclaimerTitle: { type: GraphQLString },
     disclaimerText: { type: GraphQLString },
     disclaimerDisabled: { type: GraphQLBoolean },
+    featuredKeywordTypes: { type: GraphQLList(GraphQLString) },
+    featuredSubjects: { type: GraphQLList(GraphQLID) },
+    defaultSubject: { type: GraphQLID },
+    questionSortOrder: { type: GraphQLInt },
   }),
 });
 

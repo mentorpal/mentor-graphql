@@ -6,6 +6,11 @@ The full terms of this copyright and license should always be found in the root 
 */
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
+export enum QuestionSortOrder {
+  Alphabetical = 0,
+  ReverseAlphabetical = 1,
+}
+
 export interface Config {
   cmi5Enabled: boolean;
   cmi5Endpoint: string;
@@ -25,6 +30,9 @@ export interface Config {
   mentorsDefault: string[];
   featuredMentors: string[];
   featuredMentorPanels: string[];
+  featuredKeywordTypes: string[];
+  featuredSubjects: string[];
+  defaultSubject: string;
   virtualBackgroundUrls: string[];
   defaultVirtualBackground: string;
   activeMentors: string[];
@@ -35,6 +43,7 @@ export interface Config {
   disclaimerTitle: string;
   disclaimerText: string;
   disclaimerDisabled: boolean;
+  questionSortOrder: number;
 }
 
 type ConfigKey = keyof Config;
@@ -49,23 +58,28 @@ export const ConfigKeys: ConfigKey[] = [
   'subjectRecordPriority',
   'urlVideoMentorpalWalkthrough',
   'classifierLambdaEndpoint',
-  'graphqlLambdaEndpoint',
   'uploadLambdaEndpoint',
+  'graphqlLambdaEndpoint',
   'filterEmailMentorAddress',
   'videoRecorderMaxLength',
   'googleClientId',
   'mentorsDefault',
   'featuredMentors',
   'featuredMentorPanels',
+  'featuredKeywordTypes',
+  'featuredSubjects',
+  'defaultSubject',
   'virtualBackgroundUrls',
   'defaultVirtualBackground',
   'activeMentors',
   'styleHeaderLogo',
   'styleHeaderColor',
   'styleHeaderTextColor',
+  'displayGuestPrompt',
   'disclaimerTitle',
   'disclaimerText',
   'disclaimerDisabled',
+  'questionSortOrder',
 ];
 
 export interface Setting {
@@ -81,20 +95,23 @@ export function getDefaultConfig(): Config {
     cmi5Fetch: '',
     urlGraphql: '/graphql',
     urlVideo: '/video',
-    classifierLambdaEndpoint: '',
-    graphqlLambdaEndpoint: '',
-    uploadLambdaEndpoint: '',
     urlDocSetup:
       'https://docs.google.com/document/d/1av1pWamFrXQ1KabMU02LtAutrTt3ppblneQeilFBU3s/edit?usp=sharing',
     urlVideoIdleTips: 'https://youtu.be/xSu1BhuFt8A',
     subjectRecordPriority: [],
-    filterEmailMentorAddress: 'careerfair.ai@gmail.com',
     urlVideoMentorpalWalkthrough: 'https://youtu.be/EGdSl4Q8NAY',
+    classifierLambdaEndpoint: '',
+    uploadLambdaEndpoint: '',
+    graphqlLambdaEndpoint: '',
+    filterEmailMentorAddress: 'careerfair.ai@gmail.com',
     videoRecorderMaxLength: 300, //seconds
     googleClientId: process.env.GOOGLE_CLIENT_ID || '',
     mentorsDefault: [],
     featuredMentors: [],
     featuredMentorPanels: [],
+    featuredKeywordTypes: [],
+    featuredSubjects: [],
+    defaultSubject: '',
     virtualBackgroundUrls: [],
     defaultVirtualBackground: '',
     activeMentors: [],
@@ -105,6 +122,7 @@ export function getDefaultConfig(): Config {
     disclaimerTitle: '',
     disclaimerText: '',
     disclaimerDisabled: true,
+    questionSortOrder: QuestionSortOrder.Alphabetical,
   };
 }
 
