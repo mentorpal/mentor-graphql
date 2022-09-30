@@ -67,7 +67,7 @@ export const updateMentorKeywords = {
           return {
             updateOne: {
               filter: { name: k.name },
-              update: k,
+              update: { $set: k },
               upsert: true,
             },
           };
