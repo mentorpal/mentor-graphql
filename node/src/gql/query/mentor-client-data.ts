@@ -19,11 +19,11 @@ import {
   Answer as AnswerModel,
   Question as QuestionModel,
 } from '../../models';
-import { AnswerMedia } from '../../models/Answer';
-import { QuestionType } from '../../models/Question';
-import { SubjectQuestion } from '../../models/Subject';
+import { Answer, AnswerMedia } from '../../models/Answer';
+import { Question, QuestionType } from '../../models/Question';
+import { Subject, SubjectQuestion, Topic } from '../../models/Subject';
 import { User } from '../../models/User';
-import { isAnswerComplete } from '../../models/Mentor';
+import { isAnswerComplete, Mentor } from '../../models/Mentor';
 import { hasAccessToMentor } from '../../utils/mentor-check-private';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 
@@ -90,122 +90,222 @@ export const TopicQuestionsType = new GraphQLObjectType({
   }),
 });
 
+export interface AllMentorTopicsHold {
+  mentor: string;
+  topics: Topic[];
+}
+
+function extractMentorInfoFromBatch(
+  mentor: Mentor,
+  subjectArg: string,
+  allAnswers: Answer[],
+  allSubjects: Subject[],
+  allTopics: AllMentorTopicsHold[],
+  allQuestions: Question[],
+  allUtterances: Answer[],
+  allUtteranceQuestions: Question[]
+) {
+  const answersForThisMentor = allAnswers.filter(
+    (answer) => `${answer.mentor}` == `${mentor._id}`
+  );
+  const utterancesThisMentor = allUtterances.filter(
+    (utterance) => `${utterance.mentor}` == `${mentor._id}`
+  );
+  const subjectIdsForThisMentor: string[] = subjectArg
+    ? [subjectArg]
+    : mentor.defaultSubject
+    ? [mentor.defaultSubject]
+    : mentor.subjects;
+  const subjectsForThisMentor = allSubjects.filter((subject) =>
+    subjectIdsForThisMentor.find(
+      (subjectIdForMentor) => `${subjectIdForMentor}` == `${subject._id}`
+    )
+  );
+  const subjectQuestionDocsThisMentor = subjectsForThisMentor.reduce(
+    (subjectIds: SubjectQuestion[], acc) => {
+      subjectIds.push(...acc.questions);
+      return subjectIds;
+    },
+    []
+  );
+  const subjectQuestionIdsThisMentor: string[] =
+    subjectQuestionDocsThisMentor.map((subjectQDoc) => subjectQDoc._id);
+  const questionDocsThisMentor: Question[] = allQuestions.filter((question) =>
+    subjectQuestionIdsThisMentor.find(
+      (subjectQId) => `${subjectQId}` == `${question._id}`
+    )
+  );
+  const topics = allTopics.find(
+    (topicHold) => `${topicHold.mentor}` == `${mentor._id}`
+  ).topics;
+  const qIds = answersForThisMentor.map((a) => `${a.question}`);
+  const sQs = subjectQuestionDocsThisMentor.filter((sq) =>
+    qIds.includes(`${sq.question}`)
+  );
+  const topicQuestions: Record<string, string[]> = {};
+  for (const topic of topics) {
+    topicQuestions[topic.id] = [];
+  }
+  for (const sQuestion of sQs) {
+    for (const topic of sQuestion.topics) {
+      if (!topicQuestions[topic].includes(`${sQuestion.question}`)) {
+        topicQuestions[topic].push(`${sQuestion.question}`);
+      }
+    }
+  }
+  return {
+    _id: mentor._id,
+    name: mentor.name,
+    title: mentor.title,
+    email: mentor.email,
+    hasVirtualBackground: mentor.hasVirtualBackground,
+    virtualBackgroundUrl: mentor.virtualBackgroundUrl
+      ? toAbsoluteUrl(mentor.virtualBackgroundUrl)
+      : '',
+    mentorType: mentor.mentorType,
+    allowContact: mentor.allowContact,
+    topicQuestions: Object.keys(topicQuestions)
+      .filter((key) => topicQuestions[key].length > 0)
+      .map((key) => {
+        const t = topics.find((t) => `${t.id}` === key);
+        const tq = questionDocsThisMentor.filter((q) =>
+          topicQuestions[key]?.includes(`${q.id}`)
+        );
+        return {
+          topic: t.name,
+          questions: tq.map((q) => q.question).sort(),
+        };
+      }),
+    utterances: utterancesThisMentor.map((u) => ({
+      _id: u.id,
+      name: allUtteranceQuestions.find((q) => `${q.id}` === `${u.question}`)
+        ?.name,
+      transcript: u.transcript,
+      webMedia: u.webMedia,
+      mobileMedia: u.mobileMedia,
+      vttMedia: u.vttMedia,
+    })),
+  };
+}
+
 export const mentorData = {
-  type: MentorClientDataType,
+  type: GraphQLList(MentorClientDataType),
   args: {
-    mentor: { type: GraphQLNonNull(GraphQLID) },
+    mentors: { type: GraphQLNonNull(GraphQLList(GraphQLID)) },
     subject: { type: GraphQLID },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: string; subject?: string },
+    args: { mentors: string[]; subject?: string },
     context: { user: User }
-  ): Promise<MentorClientData> => {
-    const mentor = await MentorModel.findById(args.mentor);
-    if (!mentor) {
-      throw new Error(`mentor ${args.mentor} not found`);
+  ): Promise<MentorClientData[]> => {
+    const mentors = await MentorModel.find({ _id: { $in: args.mentors } });
+    if (mentors.length !== args.mentors.length) {
+      throw new Error('mentor not found');
     }
-    if (!hasAccessToMentor(mentor, context.user)) {
-      throw new Error(
-        `mentor is private and you do not have permission to access`
-      );
-    }
-    const subjectIds = args.subject
+    mentors.forEach((mentor) => {
+      if (!hasAccessToMentor(mentor, context.user)) {
+        throw new Error(
+          `mentor is private and you do not have permission to access`
+        );
+      }
+    });
+
+    const idsForAllMentors: string[] = mentors.map((mentor) => mentor._id);
+    const subjectIdsForAllMentors = args.subject
       ? [args.subject]
-      : mentor.defaultSubject
-      ? [mentor.defaultSubject]
-      : mentor.subjects;
-    const subjects = await SubjectModel.find({ _id: { $in: subjectIds } });
-    const topics = await MentorModel.getTopics(
-      { mentor, defaultSubject: true, subjectId: args.subject },
-      subjects
+      : mentors.reduce((subjectAcc: string[], mentor) => {
+          if (mentor.defaultSubject) {
+            subjectAcc.push(mentor.defaultSubject);
+          } else {
+            subjectAcc.push(...mentor.subjects);
+          }
+          return subjectAcc;
+        }, []);
+
+    const subjectsForAllMentors = await SubjectModel.find({
+      _id: { $in: subjectIdsForAllMentors },
+    });
+
+    const topicsForAllMentors: AllMentorTopicsHold[] = await Promise.all(
+      mentors.map(async (mentor) => {
+        const subjectIdsForThisMentor: string[] = args.subject
+          ? [args.subject]
+          : mentor.defaultSubject
+          ? [mentor.defaultSubject]
+          : mentor.subjects;
+        const subjectsForThisMentor = subjectsForAllMentors.filter((subject) =>
+          subjectIdsForThisMentor.find(
+            (subjectIdForMentor) => `${subjectIdForMentor}` == `${subject._id}`
+          )
+        );
+        const mentorTopics = await MentorModel.getTopics(
+          { mentor, defaultSubject: true, subjectId: args.subject },
+          subjectsForThisMentor
+        );
+        return { mentor: mentor._id, topics: mentorTopics };
+      })
     );
-    const sQuestions: SubjectQuestion[] = [];
-    for (const subject of subjects) {
-      sQuestions.push(...subject.questions);
-    }
-    const questions = await QuestionModel.find({
-      _id: { $in: sQuestions.map((sq) => sq.question) },
+
+    const subjectQuestionsForAllMentors = subjectsForAllMentors.reduce(
+      (subjectQAcc: SubjectQuestion[], subject) => {
+        subjectQAcc.push(...subject.questions);
+        return subjectQAcc;
+      },
+      []
+    );
+
+    const questionDocsForAllMentors = await QuestionModel.find({
+      _id: { $in: subjectQuestionsForAllMentors.map((sq) => sq.question) },
       type: QuestionType.QUESTION,
       $or: [
-        { mentor: mentor._id },
+        { mentor: { $in: idsForAllMentors } },
         { mentor: { $exists: false } },
         { mentor: null },
       ],
     });
-    let answers = await AnswerModel.find({
-      mentor: mentor._id,
-      question: { $in: questions.map((q) => q.id) },
+
+    let answersForAllMentors = await AnswerModel.find({
+      mentor: { $in: idsForAllMentors },
+      question: { $in: questionDocsForAllMentors.map((q) => q.id) },
     });
-    answers = answers.filter((a) =>
+    answersForAllMentors = answersForAllMentors.filter((a) =>
       isAnswerComplete(
         a,
-        questions.find((q) => `${q._id}` === `${a.question}`),
-        mentor
+        questionDocsForAllMentors.find((q) => `${q._id}` === `${a.question}`),
+        mentors.find((mentor) => mentor._id == a.mentor)
       )
     );
 
-    const qIds = answers.map((a) => `${a.question}`);
-    const sQs = sQuestions.filter((sq) => qIds.includes(`${sq.question}`));
-    const topicQuestions: Record<string, string[]> = {};
-    for (const topic of topics) {
-      topicQuestions[topic.id] = [];
-    }
-    for (const sQuestion of sQs) {
-      for (const topic of sQuestion.topics) {
-        if (!topicQuestions[topic].includes(`${sQuestion.question}`)) {
-          topicQuestions[topic].push(`${sQuestion.question}`);
-        }
-      }
-    }
-    const utteranceQuestions = await QuestionModel.find({
+    const allUtteranceQuestions = await QuestionModel.find({
       type: QuestionType.UTTERANCE,
     });
-    let utterances = await AnswerModel.find({
-      mentor: mentor._id,
-      question: { $in: utteranceQuestions.map((q) => q.id) },
+    let utterancesForAllMentors = await AnswerModel.find({
+      mentor: { $in: idsForAllMentors },
+      question: { $in: allUtteranceQuestions.map((q) => q.id) },
     });
-    utterances = utterances.filter((a) =>
+    utterancesForAllMentors = utterancesForAllMentors.filter((a) =>
       isAnswerComplete(
         a,
-        questions.find((q) => `${q._id}` === `${a.question}`),
-        mentor
+        questionDocsForAllMentors.find((q) => `${q._id}` === `${a.question}`),
+        mentors.find((mentor) => mentor._id == a.mentor)
       )
     );
 
-    return {
-      _id: mentor._id,
-      name: mentor.name,
-      title: mentor.title,
-      email: mentor.email,
-      hasVirtualBackground: mentor.hasVirtualBackground,
-      virtualBackgroundUrl: mentor.virtualBackgroundUrl
-        ? toAbsoluteUrl(mentor.virtualBackgroundUrl)
-        : '',
-      mentorType: mentor.mentorType,
-      allowContact: mentor.allowContact,
-      topicQuestions: Object.keys(topicQuestions)
-        .filter((key) => topicQuestions[key].length > 0)
-        .map((key) => {
-          const t = topics.find((t) => `${t.id}` === key);
-          const tq = questions.filter((q) =>
-            topicQuestions[key]?.includes(`${q.id}`)
-          );
-          return {
-            topic: t.name,
-            questions: tq.map((q) => q.question).sort(),
-          };
-        }),
-      utterances: utterances.map((u) => ({
-        _id: u.id,
-        name: utteranceQuestions.find((q) => `${q.id}` === `${u.question}`)
-          ?.name,
-        transcript: u.transcript,
-        webMedia: u.webMedia,
-        mobileMedia: u.mobileMedia,
-        vttMedia: u.vttMedia,
-      })),
-    };
+    const results: MentorClientData[] = mentors.map((mentor) =>
+      extractMentorInfoFromBatch(
+        mentor,
+        args.subject || '',
+        answersForAllMentors,
+        subjectsForAllMentors,
+        topicsForAllMentors,
+        questionDocsForAllMentors,
+        utterancesForAllMentors,
+        allUtteranceQuestions
+      )
+    );
+
+    return results;
   },
 };
 

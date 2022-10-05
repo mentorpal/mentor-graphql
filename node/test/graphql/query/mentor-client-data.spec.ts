@@ -30,7 +30,7 @@ describe('mentorClientData', () => {
       .post('/graphql')
       .send({
         query: `query {
-          mentorClientData(mentor: "111111111111111111111111") {
+          mentorClientData(mentors: ["111111111111111111111111"]) {
             _id
           }
         }`,
@@ -38,7 +38,7 @@ describe('mentorClientData', () => {
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'mentor 111111111111111111111111 not found'
+      'mentor not found'
     );
   });
 
@@ -47,7 +47,7 @@ describe('mentorClientData', () => {
       .post('/graphql')
       .send({
         query: `query {
-          mentorClientData(mentor: "5ffdf41a1ee2c62111111111") {
+          mentorClientData(mentors: ["5ffdf41a1ee2c62111111111"]) {
             _id
             name
             email
@@ -76,32 +76,34 @@ describe('mentorClientData', () => {
       }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentorClientData).to.eql({
-      _id: '5ffdf41a1ee2c62111111111',
-      name: 'Clinton Anderson',
-      email: 'clint@email.com',
-      title: "Nuclear Electrician's Mate",
-      mentorType: 'VIDEO',
-      topicQuestions: [],
-      utterances: [
-        {
-          _id: '511111111111111111111112',
-          name: 'idle',
-          transcript: '[being still]',
+    expect(response.body.data.mentorClientData).to.eql([
+      {
+        _id: '5ffdf41a1ee2c62111111111',
+        name: 'Clinton Anderson',
+        email: 'clint@email.com',
+        title: "Nuclear Electrician's Mate",
+        mentorType: 'VIDEO',
+        topicQuestions: [],
+        utterances: [
+          {
+            _id: '511111111111111111111112',
+            name: 'idle',
+            transcript: '[being still]',
 
-          webMedia: {
-            type: 'video',
-            tag: 'web',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+            webMedia: {
+              type: 'video',
+              tag: 'web',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+            },
+            mobileMedia: {
+              type: 'video',
+              tag: 'mobile',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+            },
           },
-          mobileMedia: {
-            type: 'video',
-            tag: 'mobile',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-          },
-        },
-      ],
-    });
+        ],
+      },
+    ]);
   });
 
   it('gets mentorClientData for given subject', async () => {
@@ -109,7 +111,7 @@ describe('mentorClientData', () => {
       .post('/graphql')
       .send({
         query: `query {
-          mentorClientData(mentor: "5ffdf41a1ee2c62111111111", subject: "5ffdf41a1ee2c62320b49eb1") {
+          mentorClientData(mentors: ["5ffdf41a1ee2c62111111111"], subject: "5ffdf41a1ee2c62320b49eb1") {
             _id
             name
             title
@@ -139,33 +141,35 @@ describe('mentorClientData', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentorClientData).to.eql({
-      _id: '5ffdf41a1ee2c62111111111',
-      name: 'Clinton Anderson',
-      title: "Nuclear Electrician's Mate",
-      mentorType: 'VIDEO',
-      topicQuestions: [],
-      hasVirtualBackground: true,
-      virtualBackgroundUrl: 'https://www.fakeurl.com/',
-      utterances: [
-        {
-          _id: '511111111111111111111112',
-          name: 'idle',
-          transcript: '[being still]',
+    expect(response.body.data.mentorClientData).to.eql([
+      {
+        _id: '5ffdf41a1ee2c62111111111',
+        name: 'Clinton Anderson',
+        title: "Nuclear Electrician's Mate",
+        mentorType: 'VIDEO',
+        topicQuestions: [],
+        hasVirtualBackground: true,
+        virtualBackgroundUrl: 'https://www.fakeurl.com/',
+        utterances: [
+          {
+            _id: '511111111111111111111112',
+            name: 'idle',
+            transcript: '[being still]',
 
-          webMedia: {
-            type: 'video',
-            tag: 'web',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+            webMedia: {
+              type: 'video',
+              tag: 'web',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+            },
+            mobileMedia: {
+              type: 'video',
+              tag: 'mobile',
+              url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+            },
           },
-          mobileMedia: {
-            type: 'video',
-            tag: 'mobile',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-          },
-        },
-      ],
-    });
+        ],
+      },
+    ]);
   });
 
   it('gets mentorClientData for all subjects', async () => {
@@ -173,7 +177,7 @@ describe('mentorClientData', () => {
       .post('/graphql')
       .send({
         query: `query {
-          mentorClientData(mentor: "5ffdf41a1ee2c62111111113") {
+          mentorClientData(mentors: ["5ffdf41a1ee2c62111111113"]) {
             _id
             name
             title
@@ -201,13 +205,15 @@ describe('mentorClientData', () => {
       }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentorClientData).to.eql({
-      _id: '5ffdf41a1ee2c62111111113',
-      name: 'Dan Davis',
-      title: null,
-      mentorType: 'VIDEO',
-      topicQuestions: [],
-      utterances: [],
-    });
+    expect(response.body.data.mentorClientData).to.eql([
+      {
+        _id: '5ffdf41a1ee2c62111111113',
+        name: 'Dan Davis',
+        title: null,
+        mentorType: 'VIDEO',
+        topicQuestions: [],
+        utterances: [],
+      },
+    ]);
   });
 });

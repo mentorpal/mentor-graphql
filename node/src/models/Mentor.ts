@@ -79,11 +79,11 @@ export interface MentorModel extends Model<Mentor> {
     query?: PaginateQuery<Mentor>,
     options?: PaginateOptions
   ): Promise<PaginatedResolveResult<Mentor>>;
-  getSubjects(mentor: string | Mentor): Subject[];
+  getSubjects(mentor: string | Mentor): Promise<Subject[]>;
   getTopics(
     { mentor, defaultSubject, subjectId }: GetMentorDataParams,
     subjects?: Subject[]
-  ): Topic[];
+  ): Promise<Topic[]>;
   getQuestions({
     mentor,
     defaultSubject,
