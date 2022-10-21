@@ -30,20 +30,21 @@ async function refreshToken(req: Request, next: any) {
     const token = req.cookies[process.env.REFRESH_TOKEN_NAME];
     if (!token) {
       logger.debug('refresh token not found');
+      return next(null);
     }
     const { jwtToken, user } = await getRefreshedToken(token);
     if (user) {
-      next(user, jwtToken);
+      return next(user, jwtToken);
     } else {
       logger.warn("couldn't get user");
-      next(null);
+      return next(null);
     }
   } catch (err) {
     logger.warn(
       `couldn't refresh token ${req.cookies[process.env.REFRESH_TOKEN_NAME]}`
     );
     logger.error(err);
-    next(null);
+    return next(null);
   }
 }
 
