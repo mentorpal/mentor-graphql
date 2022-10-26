@@ -15,27 +15,17 @@ export interface Config {
   cmi5Enabled: boolean;
   cmi5Endpoint: string;
   cmi5Fetch: string;
+
+  classifierLambdaEndpoint: string;
+  uploadLambdaEndpoint: string;
+  graphqlLambdaEndpoint: string;
+
   urlGraphql: string;
   urlVideo: string;
   urlDocSetup: string;
   urlVideoIdleTips: string;
-  subjectRecordPriority: string[];
   urlVideoMentorpalWalkthrough: string;
-  classifierLambdaEndpoint: string;
-  uploadLambdaEndpoint: string;
-  graphqlLambdaEndpoint: string;
-  filterEmailMentorAddress: string;
-  videoRecorderMaxLength: number;
-  googleClientId: string;
-  mentorsDefault: string[];
-  featuredMentors: string[];
-  featuredMentorPanels: string[];
-  featuredKeywordTypes: string[];
-  featuredSubjects: string[];
-  defaultSubject: string;
-  virtualBackgroundUrls: string[];
-  defaultVirtualBackground: string;
-  activeMentors: string[];
+
   styleHeaderLogo: string;
   styleHeaderColor: string;
   styleHeaderTextColor: string;
@@ -43,6 +33,22 @@ export interface Config {
   disclaimerTitle: string;
   disclaimerText: string;
   disclaimerDisabled: boolean;
+
+  mentorsDefault: string[];
+  defaultSubject: string;
+  activeMentors: string[];
+  activeMentorPanels: string[];
+  featuredMentors: string[];
+  featuredMentorPanels: string[];
+  featuredSubjects: string[];
+  featuredKeywordTypes: string[];
+
+  subjectRecordPriority: string[];
+  filterEmailMentorAddress: string;
+  videoRecorderMaxLength: number;
+  googleClientId: string;
+  virtualBackgroundUrls: string[];
+  defaultVirtualBackground: string;
   questionSortOrder: number;
 }
 
@@ -72,6 +78,7 @@ export const ConfigKeys: ConfigKey[] = [
   'virtualBackgroundUrls',
   'defaultVirtualBackground',
   'activeMentors',
+  'activeMentorPanels',
   'styleHeaderLogo',
   'styleHeaderColor',
   'styleHeaderTextColor',
@@ -115,6 +122,7 @@ export function getDefaultConfig(): Config {
     virtualBackgroundUrls: [],
     defaultVirtualBackground: '',
     activeMentors: [],
+    activeMentorPanels: [],
     styleHeaderLogo: '',
     styleHeaderColor: '',
     styleHeaderTextColor: '',

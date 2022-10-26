@@ -26,6 +26,7 @@ export const ConfigType = new GraphQLObjectType({
     virtualBackgroundUrls: { type: GraphQLList(GraphQLString) },
     defaultVirtualBackground: { type: GraphQLString },
     activeMentors: { type: GraphQLList(GraphQLID) },
+    activeMentorPanels: { type: GraphQLList(GraphQLID) },
     urlGraphql: { type: GraphQLString },
     urlVideo: { type: GraphQLString },
     urlDocSetup: { type: GraphQLString },
