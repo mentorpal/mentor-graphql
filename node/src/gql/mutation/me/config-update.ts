@@ -21,6 +21,7 @@ import { ConfigType } from '../../types/config';
 export interface ConfigUpdateInput {
   mentorsDefault: string[];
   activeMentors: string[];
+  activeMentorPanels: string[];
   featuredMentors: string[];
   featuredMentorPanels: string[];
   featuredKeywordTypes: string[];
@@ -44,6 +45,7 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
   fields: () => ({
     mentorsDefault: { type: GraphQLList(GraphQLID) },
     activeMentors: { type: GraphQLList(GraphQLID) },
+    activeMentorPanels: { type: GraphQLList(GraphQLID) },
     featuredMentors: { type: GraphQLList(GraphQLID) },
     featuredMentorPanels: { type: GraphQLList(GraphQLID) },
     featuredKeywordTypes: { type: GraphQLList(GraphQLString) },

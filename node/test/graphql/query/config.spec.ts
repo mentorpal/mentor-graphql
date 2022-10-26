@@ -118,6 +118,7 @@ describe('config', () => {
       virtualBackgroundUrls: ['https://some/custom/url'],
       defaultVirtualBackground: 'https://some/custom/url',
       activeMentors: ['somementor'],
+      activeMentorPanels: ['somementorpanel'],
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
       urlDocSetup: 'https://some/custom/url',
@@ -166,6 +167,7 @@ describe('config', () => {
             virtualBackgroundUrls
             defaultVirtualBackground
             activeMentors
+            activeMentorPanels
             urlGraphql
             urlVideo
             styleHeaderLogo
