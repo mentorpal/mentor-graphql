@@ -12,6 +12,7 @@ import updateConfig from './config-update';
 import updateMentorDetails from './mentor-details-update';
 import updateMentorPrivacy from './mentor-update-privacy';
 import updateMentorSubjects from './mentor-subjects-update';
+import updateMentorKeywords from './mentor-keywords-update';
 import updateAnswer from './answer-update';
 import updateQuestion from './question-update';
 import subjectUpdate from './subject-update';
@@ -23,6 +24,7 @@ import firstTimeTrackingUpdate from './first-time-tracking-update';
 import addQuestionToRecordQueue from './add-question-to-record-queue';
 import removeQuestionFromRecordQueue from './remove-question-from-record-queue';
 import setRecordQueue from './set-record-queue';
+import userQuestionSetDismissed from './userQuestion-setDismissed';
 
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeMutation',
@@ -33,6 +35,7 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
     updateMentorDetails,
     updateMentorPrivacy,
     updateMentorSubjects,
+    updateMentorKeywords,
     updateAnswer,
     updateQuestion,
     updateSubject: subjectUpdate,
@@ -44,6 +47,7 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
     addQuestionToRecordQueue,
     removeQuestionFromRecordQueue,
     setRecordQueue,
+    userQuestionSetDismissed,
   }),
 });
 

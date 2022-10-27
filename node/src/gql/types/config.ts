@@ -26,6 +26,7 @@ export const ConfigType = new GraphQLObjectType({
     virtualBackgroundUrls: { type: GraphQLList(GraphQLString) },
     defaultVirtualBackground: { type: GraphQLString },
     activeMentors: { type: GraphQLList(GraphQLID) },
+    activeMentorPanels: { type: GraphQLList(GraphQLID) },
     urlGraphql: { type: GraphQLString },
     urlVideo: { type: GraphQLString },
     urlDocSetup: { type: GraphQLString },
@@ -44,6 +45,10 @@ export const ConfigType = new GraphQLObjectType({
     disclaimerTitle: { type: GraphQLString },
     disclaimerText: { type: GraphQLString },
     disclaimerDisabled: { type: GraphQLBoolean },
+    featuredKeywordTypes: { type: GraphQLList(GraphQLString) },
+    featuredSubjects: { type: GraphQLList(GraphQLID) },
+    defaultSubject: { type: GraphQLID },
+    questionSortOrder: { type: GraphQLInt },
   }),
 });
 

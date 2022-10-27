@@ -35,7 +35,8 @@ import { idOrNew } from '../gql/mutation/me/helpers';
 import UserQuestion, {
   UserQuestion as UserQuestionInterface,
 } from './UserQuestion';
-import { QuestionUpdateInput } from 'gql/mutation/me/question-update';
+import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
+import { Keyword } from './Keyword';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -46,11 +47,13 @@ export interface Mentor extends Document {
   name: string;
   firstName: string;
   title: string;
+  goal: string;
   email: string;
   thumbnail: string;
   allowContact: boolean;
   defaultSubject: Subject['_id'];
   subjects: Subject['_id'][];
+  keywords: Keyword['_id'][];
   recordQueue: Question['_id'][];
   lastTrainedAt: Date;
   isDirty: boolean;
@@ -111,6 +114,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     name: { type: String },
     firstName: { type: String },
     title: { type: String },
+    goal: { type: String },
     email: { type: String },
     thumbnail: { type: String, default: '' },
     allowContact: { type: Boolean, default: false },
@@ -120,6 +124,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
       default: '',
     },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
+    keywords: { type: [{ type: Schema.Types.ObjectId, ref: 'Keyword' }] },
     recordQueue: { type: [{ type: Schema.Types.ObjectId, ref: 'Question' }] },
     lastTrainedAt: { type: Date },
     isDirty: { type: Boolean, default: true },

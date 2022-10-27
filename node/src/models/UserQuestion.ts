@@ -34,6 +34,7 @@ export interface UserQuestion extends Document {
   classifierAnswer: Answer['_id'];
   classifierAnswerType: string;
   graderAnswer: Answer['_id'];
+  dismissed: boolean;
 }
 
 export const UserQuestionSchema = new Schema<UserQuestion, UserQuestionModel>(
@@ -57,6 +58,10 @@ export const UserQuestionSchema = new Schema<UserQuestion, UserQuestionModel>(
       type: String,
       enum: [Feedback.GOOD, Feedback.BAD, Feedback.NEUTRAL],
       default: Feedback.NEUTRAL,
+    },
+    dismissed: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }

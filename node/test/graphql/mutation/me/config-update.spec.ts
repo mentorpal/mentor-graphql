@@ -260,6 +260,7 @@ describe('updateConfig', () => {
               featuredMentors
               featuredMentorPanels
               activeMentors
+              activeMentorPanels
               styleHeaderLogo
               styleHeaderColor
               styleHeaderTextColor
@@ -280,6 +281,7 @@ describe('updateConfig', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateConfig).to.eql({
       activeMentors: [],
+      activeMentorPanels: [],
       featuredMentorPanels: [],
       featuredMentors: [],
       mentorsDefault: [],
