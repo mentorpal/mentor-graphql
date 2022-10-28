@@ -661,9 +661,9 @@ MentorSchema.statics.getSubjects = async function (
 
 // Return topics for all subjects or for one subject
 //  - one subject: sorted in subject order
-//  - all subjects: sorted alphabetically
+
 MentorSchema.statics.getTopics = async function (
-  { mentor, defaultSubject, subjectId }: GetMentorDataParams,
+  { mentor, defaultSubject, subjectId: targetSubjectId }: GetMentorDataParams,
   subjects?: Subject[]
 ): Promise<Topic[]> {
   const userMentor: Mentor =
@@ -672,26 +672,43 @@ MentorSchema.statics.getTopics = async function (
     throw new Error(`mentor ${mentor} not found`);
   }
   const topics: Topic[] = [];
-  subjectId =
+  const mentorDefaultSubjectId =
     defaultSubject && userMentor.defaultSubject
       ? userMentor.defaultSubject
-      : subjectId;
-  if (subjectId) {
-    if (userMentor.subjects.includes(subjectId)) {
-      const s = subjects
-        ? subjects.find((s) => `${s._id}` === `${subjectId}`)
-        : await SubjectModel.findById(subjectId);
-      topics.push(...s.topics);
-    }
-  } else {
-    const ss = subjects || (await this.getSubjects(userMentor));
-    for (const s of ss) {
-      topics.push(...s.topics);
-    }
-    topics.sort((a, b) => {
-      return a.name.localeCompare(b.name);
-    });
+      : '';
+  const mentorDefaultSubjectDoc = mentorDefaultSubjectId
+    ? await SubjectModel.findById(mentorDefaultSubjectId)
+    : undefined;
+  const mentorDefaultSubjectTopics = mentorDefaultSubjectDoc
+    ? mentorDefaultSubjectDoc.topics
+    : [];
+
+  const targetSubjectDoc =
+    targetSubjectId && userMentor.subjects.includes(targetSubjectId)
+      ? await SubjectModel.findById(targetSubjectId)
+      : undefined;
+  const targetSubjectTopics = targetSubjectDoc ? targetSubjectDoc.topics : [];
+
+  topics.push(...targetSubjectTopics);
+  topics.push(...mentorDefaultSubjectTopics);
+
+  let ss = subjects || (await this.getSubjects(userMentor));
+  // remove targeted and mentors default subject from list, if they were used
+  ss = ss.filter(
+    (subject) =>
+      subject._id !== mentorDefaultSubjectId && subject._id !== targetSubjectId
+  );
+  // add all other subjects topics, but sorted in alphabetical order
+  const otherSubjectTopics: Topic[] = [];
+  for (const s of ss) {
+    otherSubjectTopics.push(...s.topics);
   }
+  otherSubjectTopics.sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  });
+
+  topics.push(...otherSubjectTopics);
+
   const topicsIds = [...new Set(topics.map((t) => `${t.id}`))];
   return topicsIds.map((tId) => topics.find((t) => `${t.id}` === tId));
 };

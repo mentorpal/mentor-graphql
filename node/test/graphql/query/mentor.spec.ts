@@ -208,6 +208,9 @@ describe('mentor', () => {
         {
           name: 'Advice',
         },
+        {
+          name: 'Idle',
+        },
       ],
     });
   });
@@ -234,6 +237,9 @@ describe('mentor', () => {
         {
           name: 'Advice',
         },
+        {
+          name: 'Idle',
+        },
       ],
     });
   });
@@ -253,7 +259,18 @@ describe('mentor', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
-      topics: [],
+      topics: [
+        // Alphabetical order topics results when subject not found
+        {
+          name: 'Advice',
+        },
+        {
+          name: 'Background',
+        },
+        {
+          name: 'Idle',
+        },
+      ],
     });
   });
 
