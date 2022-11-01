@@ -4,30 +4,30 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import api from './api';
-import me from './me';
-import login from './login';
-import loginGoogle from './login-google';
-import logout from './logout';
-import updateMentorTraining from './update-mentor-training';
-import userQuestionCreate from './userQuestion-create';
-import userQuestionSetFeedback from './userQuestion-setFeedback';
-import userQuestionSetAnswer from './userQuestion-setAnswer';
-import mentorPreviewed from './mentor-previewed';
+import { GraphQLObjectType, GraphQLNonNull, GraphQLID } from 'graphql';
+import { MentorType } from '../types/mentor';
+import { Mentor as MentorModel } from '../../models';
+import { Mentor } from '../../models/Mentor';
 
-export default new GraphQLObjectType({
-  name: 'Mutation',
-  fields: {
-    api,
-    me,
-    login,
-    loginGoogle,
-    logout,
-    updateMentorTraining,
-    userQuestionCreate,
-    userQuestionSetFeedback,
-    userQuestionSetAnswer,
-    mentorPreviewed,
+export const mentorPreviewed = {
+  type: MentorType,
+  args: {
+    id: { type: GraphQLNonNull(GraphQLID) },
   },
-});
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { id: string }
+  ): Promise<Mentor> => {
+    return await MentorModel.findByIdAndUpdate(
+      args.id,
+      {
+        lastPreviewedAt: new Date(),
+      },
+      {
+        new: true,
+      }
+    );
+  },
+};
+
+export default mentorPreviewed;

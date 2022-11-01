@@ -56,6 +56,7 @@ export interface Mentor extends Document {
   keywords: Keyword['_id'][];
   recordQueue: Question['_id'][];
   lastTrainedAt: Date;
+  lastPreviewedAt: Date;
   isDirty: boolean;
   isPrivate: boolean;
   hasVirtualBackground: boolean;
@@ -127,6 +128,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     keywords: { type: [{ type: Schema.Types.ObjectId, ref: 'Keyword' }] },
     recordQueue: { type: [{ type: Schema.Types.ObjectId, ref: 'Question' }] },
     lastTrainedAt: { type: Date },
+    lastPreviewedAt: { type: Date },
     isDirty: { type: Boolean, default: true },
     isPrivate: { type: Boolean, default: false },
     hasVirtualBackground: { type: Boolean, default: false },
