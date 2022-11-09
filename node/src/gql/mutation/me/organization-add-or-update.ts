@@ -14,17 +14,47 @@ import {
   GraphQLInputObjectType,
 } from 'graphql';
 import { v4 as uuid } from 'uuid';
-import OrganizationType from '../../../gql/types/mentor-panel';
+import OrganizationType from '../../../gql/types/organization';
 import OrganizationModel, { Organization } from '../../../models/Organization';
 import { User, UserRole } from '../../../models/User';
 import { canEditOrganization } from '../../../utils/check-permissions';
-import { ConfigUpdateInput, ConfigUpdateInputType } from './config-update';
+import { idOrNew } from './helpers';
+
+const reservedSubdomains = [
+  // dev
+  'devmentorpal',
+  'dev',
+  'newdev',
+  'api-dev',
+  'dev-video',
+  'static-dev',
+  'static-newdev',
+  // qa
+  'qamentorpal',
+  'qa',
+  'v2',
+  'api-qa',
+  'qa-video',
+  'sbert-qa',
+  'static-v2',
+  // prod
+  'mentorpal',
+  'prod',
+  'careerfair',
+  'api',
+  'video',
+  'sbert',
+  'static-careerfair',
+  // other
+  'local',
+  'uscquestions',
+  'static-uscquestions',
+];
 
 interface AddOrUpdateOrganizationInput {
   name: string;
   subdomain: string;
   isPrivate: string;
-  config: ConfigUpdateInput;
   members: OrganizationMentorInput[];
 }
 interface OrganizationMentorInput {
@@ -35,8 +65,8 @@ interface OrganizationMentorInput {
 export const OrganizationMemberInputType = new GraphQLInputObjectType({
   name: 'OrganizationMemberInputType',
   fields: {
-    user: { type: GraphQLID },
-    role: { type: GraphQLString },
+    user: { type: GraphQLNonNull(GraphQLID) },
+    role: { type: GraphQLNonNull(GraphQLString) },
   },
 });
 export const AddOrUpdateOrganizationInputType = new GraphQLInputObjectType({
@@ -45,7 +75,6 @@ export const AddOrUpdateOrganizationInputType = new GraphQLInputObjectType({
     name: { type: GraphQLString },
     subdomain: { type: GraphQLString },
     isPrivate: { type: GraphQLBoolean },
-    config: { type: ConfigUpdateInputType },
     members: { type: GraphQLList(OrganizationMemberInputType) },
   },
 });
@@ -61,13 +90,11 @@ export const addOrUpdateOrganization = {
     args: { id: string; organization: AddOrUpdateOrganizationInput },
     context: { user: User }
   ): Promise<Organization> => {
-    const org = await OrganizationModel.findById(args.id);
+    const org = args.id ? await OrganizationModel.findById(args.id) : undefined;
     const id = org ? org.uuid : uuid();
     if (org) {
       if (!canEditOrganization(org, context.user)) {
-        throw new Error(
-          'you do not have permission to add or edit organization'
-        );
+        throw new Error('you do not have permission to edit organization');
       }
     } else {
       const userRole = context.user.userRole;
@@ -75,15 +102,41 @@ export const addOrUpdateOrganization = {
         userRole !== UserRole.SUPER_ADMIN &&
         userRole !== UserRole.SUPER_CONTENT_MANAGER
       ) {
-        throw new Error(
-          'you do not have permission to add or edit organization'
-        );
+        throw new Error('you do not have permission to create an organization');
+      }
+      if (!args.organization.name) {
+        throw new Error('you must have an organization name');
+      }
+      if (!args.organization.subdomain) {
+        throw new Error('you must have an organization subdomain');
       }
     }
+    const subdomain = args.organization.subdomain;
+    if (subdomain && !/^[a-z0-9]{3,20}$/.test(subdomain)) {
+      throw new Error(
+        'subdomain must be lower-case, alpha-numerical, and 3-20 characters'
+      );
+    }
+    if (reservedSubdomains.includes(subdomain)) {
+      throw new Error(
+        'subdomain is reserved, please pick a different subdomain'
+      );
+    }
+    const checkSubdomain = await OrganizationModel.findOne({
+      subdomain: subdomain,
+    });
+    if (checkSubdomain && `${checkSubdomain._id}` !== `${args.id}`) {
+      throw new Error(
+        'subdomain is already in use, please pick a different subdomain'
+      );
+    }
     return await OrganizationModel.findOneAndUpdate(
-      { _id: args.id },
+      { _id: idOrNew(args.id) },
       {
-        $set: { ...args.organization, uuid: id },
+        $set: {
+          ...args.organization,
+          uuid: id,
+        },
       },
       {
         new: true,

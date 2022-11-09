@@ -4,8 +4,8 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Mentor } from '../models/Mentor';
-import { Organization } from '../models/Organization';
+import { Mentor, OrgPermissionType } from '../models/Mentor';
+import OrganizationModel, { Organization } from '../models/Organization';
 import { User, UserRole } from '../models/User';
 
 function equals(a: string, b: string): boolean {
@@ -25,11 +25,19 @@ export function canEditContent(user: User): boolean {
   );
 }
 
-export function canViewMentor(mentor: Mentor, user: User): boolean {
+export function canViewMentor(
+  mentor: Mentor,
+  user: User,
+  org?: Organization
+): boolean {
   if (!mentor) {
     return false;
   }
+  const orgPerm = mentor.orgPermissions?.find((op) => equals(op.org, org?._id));
   if (mentor.isPrivate) {
+    if (orgPerm && orgPerm.permission === OrgPermissionType.SHARE) {
+      return true;
+    }
     if (!user) {
       return false;
     }
@@ -42,12 +50,73 @@ export function canViewMentor(mentor: Mentor, user: User): boolean {
       userRole === UserRole.SUPER_ADMIN
     );
   }
+  if (orgPerm && orgPerm.permission === OrgPermissionType.HIDDEN) {
+    return false;
+  }
   return true;
 }
 
-export function canEditMentor(mentor: Mentor, user: User): boolean {
+export async function canEditMentor(
+  mentor: Mentor,
+  user: User
+): Promise<boolean> {
   if (!mentor || !user) {
     return false;
+  }
+  const ops = mentor.orgPermissions?.filter(
+    (op) =>
+      op.permission === OrgPermissionType.MANAGE ||
+      op.permission === OrgPermissionType.ADMIN
+  );
+  if (ops) {
+    const orgs = await OrganizationModel.find({
+      _id: { $in: ops.map((op) => op.org) },
+    });
+    for (const org of orgs) {
+      if (
+        org.members.find(
+          (m) =>
+            equals(m.user, user._id) &&
+            (m.role === UserRole.ADMIN || m.role === UserRole.CONTENT_MANAGER)
+        )
+      ) {
+        return true;
+      }
+    }
+  }
+  const userRole = user.userRole;
+  return (
+    equals(mentor.user, user._id) ||
+    userRole === UserRole.CONTENT_MANAGER ||
+    userRole === UserRole.ADMIN ||
+    userRole === UserRole.SUPER_CONTENT_MANAGER ||
+    userRole === UserRole.SUPER_ADMIN
+  );
+}
+
+export async function canEditMentorPrivacy(
+  mentor: Mentor,
+  user: User
+): Promise<boolean> {
+  if (!mentor || !user) {
+    return false;
+  }
+  const ops = mentor.orgPermissions?.filter(
+    (op) => op.permission === OrgPermissionType.ADMIN
+  );
+  if (ops) {
+    const orgs = await OrganizationModel.find({
+      _id: { $in: ops.map((op) => op.org) },
+    });
+    for (const org of orgs) {
+      if (
+        org.members.find(
+          (m) => equals(m.user, user._id) && m.role === UserRole.ADMIN
+        )
+      ) {
+        return true;
+      }
+    }
   }
   const userRole = user.userRole;
   return (

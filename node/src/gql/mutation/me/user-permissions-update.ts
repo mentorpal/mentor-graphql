@@ -48,7 +48,6 @@ export const updateUserPermissions = {
     ) {
       throw new Error('only super admins can edit a super admins permissions');
     }
-
     return await UserSchema.findOneAndUpdate(
       {
         _id: args.userId,

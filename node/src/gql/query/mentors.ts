@@ -8,6 +8,7 @@ import { PaginatedResolveResult } from '../types/connection';
 import { Mentor as MentorModel } from '../../models';
 import { Mentor } from '../../models/Mentor';
 import { User } from '../../models/User';
+import { Organization } from '../../models/Organization';
 import { canViewMentor } from '../../utils/check-permissions';
 import { MentorType } from '../types/mentor';
 import findAll from './find-all';
@@ -17,10 +18,12 @@ export const mentors = findAll({
   model: MentorModel,
   filterInvalid: (
     paginationResults: PaginatedResolveResult,
-    context: { user: User }
+    context: { user: User; org: Organization }
   ) => {
     const mentors: Mentor[] = paginationResults.results;
-    const newMentorList = mentors.filter((m) => canViewMentor(m, context.user));
+    const newMentorList = mentors.filter((m) =>
+      canViewMentor(m, context.user, context.org)
+    );
     return {
       ...paginationResults,
       results: newMentorList,

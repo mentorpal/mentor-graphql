@@ -52,7 +52,7 @@ export const updateMentorKeywords = {
     if (!mentor) {
       throw new Error('invalid mentor');
     }
-    if (!canEditMentor(mentor, context.user)) {
+    if (!(await canEditMentor(mentor, context.user))) {
       throw new Error('you do not have permission to edit this mentor');
     }
     // Batch write all keywords

@@ -4,7 +4,6 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import {
   PaginatedResolveResult,
@@ -13,8 +12,7 @@ import {
   pluginPagination,
 } from './Paginatation';
 import { User, UserRole } from './User';
-import { Config, SettingSchema } from './Setting';
-import { toUpdateProps } from '../gql/mutation/me/helpers';
+import SettingModel, { Config, Setting, SettingSchema } from './Setting';
 
 export interface OrgMemberProps {
   user: User['_id'];
@@ -34,9 +32,9 @@ export interface OrganizationProps {
   uuid: string;
   name: string;
   subdomain: string;
-  members: OrgMemberProps[];
   isPrivate: boolean;
-  config: Config;
+  members: OrgMemberProps[];
+  config: Setting[];
 }
 export interface Organization extends OrganizationProps, Document {}
 export const OrganizationSchema = new Schema<Organization, OrganizationModel>(
@@ -44,9 +42,9 @@ export const OrganizationSchema = new Schema<Organization, OrganizationModel>(
     uuid: { type: String },
     name: { type: String },
     subdomain: { type: String },
-    members: { type: [OrgMemberSchema] },
-    isPrivate: { type: Boolean },
-    config: { type: SettingSchema },
+    isPrivate: { type: Boolean, default: false },
+    members: { type: [OrgMemberSchema], default: [] },
+    config: { type: [SettingSchema], default: [] },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
@@ -56,23 +54,56 @@ export interface OrganizationModel extends Model<Organization> {
     query?: PaginateQuery<Organization>,
     options?: PaginateOptions
   ): Promise<PaginatedResolveResult<Organization>>;
-  updateOrCreate(organization: Partial<Organization>): Promise<Organization>;
+  getConfig(org: string | Organization): Promise<Config>;
+  saveConfig(
+    org: string | Organization,
+    config: Partial<Config>
+  ): Promise<Config>;
 }
 
-OrganizationSchema.statics.updateOrCreate = async function (
-  organization: Partial<Organization>
+OrganizationSchema.statics.getConfig = async function (
+  o: string | Organization
 ) {
-  const { _id, props } = toUpdateProps<Organization>(organization);
-  return await this.findOneAndUpdate(
-    { _id: _id },
+  const org: Organization = typeof o === 'string' ? await this.findById(o) : o;
+  if (!org) {
+    throw new Error(`org ${o} not found`);
+  }
+  const defaultConfig = await SettingModel.getConfig();
+  return org.config
+    ? org.config.reduce((acc: Config, cur: Setting) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (acc as any)[cur.key] = cur.value;
+        return acc;
+      }, defaultConfig)
+    : defaultConfig;
+};
+
+OrganizationSchema.statics.saveConfig = async function (
+  o: string | Organization,
+  config: Partial<Config>
+) {
+  const org: Organization = typeof o === 'string' ? await this.findById(o) : o;
+  if (!org) {
+    throw new Error(`org ${o} not found`);
+  }
+  const updatedConfig = { ...org.config, ...config };
+  const configKeys = Object.entries(updatedConfig).map((kv) => ({
+    key: kv[0],
+    value: kv[1],
+  }));
+  const updatedOrg = await this.findOneAndUpdate(
+    { _id: org._id },
     {
-      $set: props,
+      $set: {
+        config: configKeys,
+      },
     },
     {
       new: true,
       upsert: true,
     }
   );
+  return await this.getConfig(updatedOrg);
 };
 
 OrganizationSchema.index({ question: -1, _id: -1 });

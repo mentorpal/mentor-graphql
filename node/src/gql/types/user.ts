@@ -15,6 +15,7 @@ import { User } from '../../models/User';
 import { DateType } from './date';
 import FirstTimeTrackingGqlType from './first-time-tracking';
 import MentorType from './mentor';
+
 export const UserType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({

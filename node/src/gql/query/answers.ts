@@ -7,6 +7,7 @@ The full terms of this copyright and license should always be found in the root 
 import { PaginatedResolveResult } from '../types/connection';
 import { Answer as AnswerModel, Mentor as MentorModel } from '../../models';
 import { Answer } from '../../models/Answer';
+import { Organization } from '../../models/Organization';
 import { User } from '../../models/User';
 import { canViewMentor } from '../../utils/check-permissions';
 import AnswerType from '../types/answer';
@@ -17,7 +18,7 @@ export const answers = findAll({
   model: AnswerModel,
   filterInvalid: async (
     paginationResults: PaginatedResolveResult,
-    context: { user: User }
+    context: { user: User; org: Organization }
   ) => {
     const mentorIds = Array.from(
       new Set(paginationResults.results.map((a: Answer) => a.mentor))
@@ -29,7 +30,7 @@ export const answers = findAll({
         if (!mentor) {
           return false;
         }
-        return canViewMentor(mentor, context.user);
+        return canViewMentor(mentor, context.user, context.org);
       }
     );
     return {

@@ -123,7 +123,7 @@ describe('organization', () => {
     );
   });
 
-  it('cannot view private organization if not authorized', async () => {
+  it('cannot view private organization if not super admin, super content manager, or member', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea6');
     const response = await request(app)
       .post('/graphql')

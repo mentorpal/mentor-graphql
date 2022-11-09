@@ -14,6 +14,7 @@ import updateMentorDetails from './mentor-details-update';
 import updateMentorPrivacy from './mentor-update-privacy';
 import updateMentorSubjects from './mentor-subjects-update';
 import updateMentorKeywords from './mentor-keywords-update';
+import updateOrgConfig from './organization-config-update';
 import updateAnswer from './answer-update';
 import updateQuestion from './question-update';
 import subjectUpdate from './subject-update';
@@ -38,6 +39,7 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
     updateMentorPrivacy,
     updateMentorSubjects,
     updateMentorKeywords,
+    updateOrgConfig,
     updateAnswer,
     updateQuestion,
     updateSubject: subjectUpdate,

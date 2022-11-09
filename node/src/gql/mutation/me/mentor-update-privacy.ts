@@ -9,27 +9,44 @@ import {
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
+  GraphQLList,
+  GraphQLInputObjectType,
+  GraphQLString,
 } from 'graphql';
 import { Mentor as MentorModel } from '../../../models';
 import { User } from '../../../models/User';
-import { canEditMentor } from '../../../utils/check-permissions';
+import { OrgPermissionProps } from '../../../models/Mentor';
+import { canEditMentorPrivacy } from '../../../utils/check-permissions';
+
+export const OrgPermissionInputType = new GraphQLInputObjectType({
+  name: 'OrgPermissionInputType',
+  fields: {
+    org: { type: GraphQLNonNull(GraphQLID) },
+    permission: { type: GraphQLNonNull(GraphQLString) },
+  },
+});
 
 export const updateMentorPrivacy = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     isPrivate: { type: GraphQLNonNull(GraphQLBoolean) },
+    orgPermissions: { type: GraphQLList(OrgPermissionInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentorId: string; isPrivate: boolean },
+    args: {
+      mentorId: string;
+      isPrivate: boolean;
+      orgPermissions: OrgPermissionProps;
+    },
     context: { user: User }
   ): Promise<boolean> => {
     const mentor = await MentorModel.findById(args.mentorId);
     if (!mentor) {
       throw new Error('invalid mentor id given');
     }
-    if (!canEditMentor(mentor, context.user)) {
+    if (!(await canEditMentorPrivacy(mentor, context.user))) {
       throw new Error('you do not have permission to edit this mentor');
     }
     const updated = await MentorModel.findByIdAndUpdate(
@@ -37,6 +54,7 @@ export const updateMentorPrivacy = {
       {
         $set: {
           isPrivate: args.isPrivate,
+          orgPermissions: args.orgPermissions || mentor.orgPermissions,
         },
       },
       {

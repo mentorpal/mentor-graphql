@@ -12,9 +12,10 @@ import {
   GraphQLBoolean,
 } from 'graphql';
 import {
-  Mentor as MentorModel,
-  Question as QuestionModel,
   Keyword as KeywordModel,
+  Mentor as MentorModel,
+  Organization as OrganizationModel,
+  Question as QuestionModel,
 } from '../../models';
 import { Status } from '../../models/Answer';
 import { Mentor } from '../../models/Mentor';
@@ -25,6 +26,15 @@ import KeywordType from './keyword';
 import SubjectType, { SubjectQuestionType, TopicType } from './subject';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 import { QuestionType as QuestionGQLType } from './question';
+
+export const OrgPermissionType = new GraphQLObjectType({
+  name: 'OrgPermissionType',
+  fields: () => ({
+    org: { type: GraphQLID },
+    orgName: { type: GraphQLString },
+    permission: { type: GraphQLString },
+  }),
+});
 
 export const MentorType = new GraphQLObjectType({
   name: 'Mentor',
@@ -53,6 +63,19 @@ export const MentorType = new GraphQLObjectType({
     },
     mentorType: { type: GraphQLString },
     defaultSubject: { type: SubjectType },
+    orgPermissions: {
+      type: GraphQLList(OrgPermissionType),
+      resolve: async (mentor: Mentor) => {
+        const orgs = await OrganizationModel.find({
+          _id: { $in: mentor.orgPermissions.map((op) => op.org) },
+        });
+        return mentor.orgPermissions.map((op) => ({
+          org: op.org,
+          orgName: orgs.find((o) => `${o._id}` === `${op.org}`)?.name || '',
+          permission: op.permission,
+        }));
+      },
+    },
     keywords: {
       type: GraphQLList(KeywordType),
       resolve: async (mentor: Mentor) => {

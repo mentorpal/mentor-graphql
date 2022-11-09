@@ -250,4 +250,198 @@ describe('updateMentorPrivacy', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateMentorPrivacy).to.eql(true);
   });
+
+  it('org ADMIN can update other mentors privacy if part of ADMIN org', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateMentorPrivacy($mentorId: ID!, $isPrivate: Boolean!) {
+          me {
+            updateMentorPrivacy(mentorId: $mentorId, isPrivate: $isPrivate)
+          }
+        }`,
+        variables: { mentorId: '5ffdf41a1ee2c62111111114', isPrivate: true },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.updateMentorPrivacy).to.eql(true);
+  });
+
+  it('updates mentor orgPermissions', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea7');
+    let mentor = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              mentor {
+                isPrivate
+                orgPermissions {
+                  org
+                  orgName
+                  permission
+                }
+              }
+            }
+          }`,
+      });
+    expect(mentor.status).to.equal(200);
+    expect(mentor.body.data.me.mentor).to.eql({
+      isPrivate: true,
+      orgPermissions: [
+        {
+          org: '511111111111111111111112',
+          orgName: 'CSUF',
+          permission: 'SHARE',
+        },
+        {
+          org: '511111111111111111111111',
+          orgName: 'USC',
+          permission: 'ADMIN',
+        },
+      ],
+    });
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateMentorPrivacy($mentorId: ID!, $isPrivate: Boolean!, $orgPermissions: [OrgPermissionInputType]) {
+          me {
+            updateMentorPrivacy(mentorId: $mentorId, isPrivate: $isPrivate, orgPermissions: $orgPermissions)
+          }
+        }`,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111114',
+          isPrivate: true,
+          orgPermissions: [
+            { org: '511111111111111111111111', permission: 'HIDDEN' },
+          ],
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'data.me.updateMentorPrivacy',
+      true
+    );
+    mentor = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              mentor {
+                isPrivate
+                orgPermissions {
+                  org
+                  orgName
+                  permission
+                }
+              }
+            }
+          }`,
+      });
+    expect(mentor.status).to.equal(200);
+    expect(mentor.body.data.me.mentor).to.eql({
+      isPrivate: true,
+      orgPermissions: [
+        {
+          org: '511111111111111111111111',
+          orgName: 'USC',
+          permission: 'HIDDEN',
+        },
+      ],
+    });
+  });
+
+  it('does not update mentor orgPermissions', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea7');
+    let mentor = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              mentor {
+                isPrivate
+                orgPermissions {
+                  org
+                  orgName
+                  permission
+                }
+              }
+            }
+          }`,
+      });
+    expect(mentor.status).to.equal(200);
+    expect(mentor.body.data.me.mentor).to.eql({
+      isPrivate: true,
+      orgPermissions: [
+        {
+          org: '511111111111111111111112',
+          orgName: 'CSUF',
+          permission: 'SHARE',
+        },
+        {
+          org: '511111111111111111111111',
+          orgName: 'USC',
+          permission: 'ADMIN',
+        },
+      ],
+    });
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateMentorPrivacy($mentorId: ID!, $isPrivate: Boolean!, $orgPermissions: [OrgPermissionInputType]) {
+          me {
+            updateMentorPrivacy(mentorId: $mentorId, isPrivate: $isPrivate, orgPermissions: $orgPermissions)
+          }
+        }`,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111114',
+          isPrivate: true,
+          orgPermissions: undefined,
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'data.me.updateMentorPrivacy',
+      true
+    );
+    mentor = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              mentor {
+                isPrivate
+                orgPermissions {
+                  org
+                  orgName
+                  permission
+                }
+              }
+            }
+          }`,
+      });
+    expect(mentor.status).to.equal(200);
+    expect(mentor.body.data.me.mentor).to.eql({
+      isPrivate: true,
+      orgPermissions: [
+        {
+          org: '511111111111111111111112',
+          orgName: 'CSUF',
+          permission: 'SHARE',
+        },
+        {
+          org: '511111111111111111111111',
+          orgName: 'USC',
+          permission: 'ADMIN',
+        },
+      ],
+    });
+  });
 });

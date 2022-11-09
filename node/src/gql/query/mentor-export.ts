@@ -22,6 +22,7 @@ import { Answer } from '../../models/Answer';
 import { Subject } from '../../models/Subject';
 import { Question } from '../../models/Question';
 import { Mentor } from '../../models/Mentor';
+import { Organization } from '../../models/Organization';
 import { UserQuestion } from '../../models/UserQuestion';
 import { User } from '../../models/User';
 import { canViewMentor } from '../../utils/check-permissions';
@@ -94,10 +95,10 @@ export const exportMentor = {
   resolve: async (
     _root: GraphQLObjectType,
     args: { mentor: string },
-    context: { user: User }
+    context: { user: User; org: Organization }
   ): Promise<MentorExportJson> => {
     const mentor = await MentorModel.findById(args.mentor);
-    if (mentor && !canViewMentor(mentor, context.user)) {
+    if (mentor && !canViewMentor(mentor, context.user, context.org)) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );

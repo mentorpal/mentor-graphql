@@ -139,6 +139,16 @@ module.exports = {
       user: ObjectId('5ffdf41a1ee2c62320b49ea2'),
       subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
       keywords: [ObjectId('511111111111111111111111')],
+      orgPermissions: [
+        {
+          org: ObjectId('511111111111111111111111'),
+          permission: 'HIDDEN',
+        },
+        {
+          org: ObjectId('511111111111111111111112'),
+          permission: 'MANAGE',
+        },
+      ],
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62111111114'),
@@ -148,6 +158,16 @@ module.exports = {
       user: ObjectId('5ffdf41a1ee2c62320b49ea7'),
       subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
       keywords: [ObjectId('511111111111111111111113')],
+      orgPermissions: [
+        {
+          org: ObjectId('511111111111111111111112'),
+          permission: 'SHARE',
+        },
+        {
+          org: ObjectId('511111111111111111111111'),
+          permission: 'ADMIN',
+        },
+      ],
     },
   ],
 

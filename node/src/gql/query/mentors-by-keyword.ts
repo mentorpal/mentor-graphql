@@ -14,6 +14,7 @@ import {
 
 import { Mentor as MentorModel } from '../../models';
 import { Mentor } from '../../models/Mentor';
+import { Organization } from '../../models/Organization';
 import { User } from '../../models/User';
 import { MentorType } from '../types/mentor';
 import { canViewMentor } from '../../utils/check-permissions';
@@ -34,11 +35,13 @@ export const mentorsByKeyword = {
       sortBy: string;
       sortAscending: boolean;
     },
-    context: { user: User }
+    context: { user: User; org: Organization }
   ): Promise<Mentor[]> => {
     const filter = args.subject ? { subjects: { $in: [args.subject] } } : {};
     let mentors = await MentorModel.find(filter);
-    mentors = mentors.filter((m) => canViewMentor(m, context.user));
+    mentors = mentors.filter((m) =>
+      canViewMentor(m, context.user, context.org)
+    );
     if (args.sortBy) {
       mentors = mentors.sort((a, b) => {
         return (

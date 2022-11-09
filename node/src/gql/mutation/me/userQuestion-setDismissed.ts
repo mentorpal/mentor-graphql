@@ -33,7 +33,7 @@ export const userQuestionSetDismissed = {
       throw new Error('No user question found');
     }
     const mentor = await MentorModel.findById(targetUserQuestion.mentor);
-    if (!canEditMentor(mentor, context.user)) {
+    if (!(await canEditMentor(mentor, context.user))) {
       throw new Error('you do not have permission to edit this mentor');
     }
     const update = await UserQuestionModel.findByIdAndUpdate(

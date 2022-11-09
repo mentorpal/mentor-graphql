@@ -21,6 +21,7 @@ import {
 import { Subject } from '../../models/Subject';
 import { Question } from '../../models/Question';
 import { Answer } from '../../models/Answer';
+import { Organization } from '../../models/Organization';
 import {
   AnswerUpdateInput,
   MentorImportJson,
@@ -143,10 +144,10 @@ export const mentorImportPreview = {
   resolve: async (
     _root: GraphQLObjectType,
     args: { mentor: string; json: MentorImportJson },
-    context: { user: User }
+    context: { user: User; org: Organization }
   ): Promise<MentorImportPreview> => {
     const mentor = await MentorModel.findById(args.mentor);
-    if (!canViewMentor(mentor, context.user)) {
+    if (!canViewMentor(mentor, context.user, context.org)) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );
