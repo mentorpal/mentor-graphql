@@ -21,8 +21,12 @@ import { ConfigType } from '../../types/config';
 export interface ConfigUpdateInput {
   mentorsDefault: string[];
   activeMentors: string[];
+  activeMentorPanels: string[];
   featuredMentors: string[];
   featuredMentorPanels: string[];
+  featuredKeywordTypes: string[];
+  featuredSubjects: string[];
+  defaultSubject: string;
   virtualBackgroundUrls: string[];
   defaultVirtualBackground: string;
   styleHeaderLogo: string;
@@ -33,6 +37,7 @@ export interface ConfigUpdateInput {
   disclaimerDisabled: boolean;
   displayGuestPrompt: boolean;
   videoRecorderMaxLength: number;
+  questionSortOrder: number;
 }
 
 export const ConfigUpdateInputType = new GraphQLInputObjectType({
@@ -40,8 +45,12 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
   fields: () => ({
     mentorsDefault: { type: GraphQLList(GraphQLID) },
     activeMentors: { type: GraphQLList(GraphQLID) },
+    activeMentorPanels: { type: GraphQLList(GraphQLID) },
     featuredMentors: { type: GraphQLList(GraphQLID) },
     featuredMentorPanels: { type: GraphQLList(GraphQLID) },
+    featuredKeywordTypes: { type: GraphQLList(GraphQLString) },
+    featuredSubjects: { type: GraphQLList(GraphQLID) },
+    defaultSubject: { type: GraphQLID },
     virtualBackgroundUrls: { type: GraphQLList(GraphQLString) },
     defaultVirtualBackground: { type: GraphQLString },
     styleHeaderLogo: { type: GraphQLString },
@@ -52,6 +61,7 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     disclaimerDisabled: { type: GraphQLBoolean },
     displayGuestPrompt: { type: GraphQLBoolean },
     videoRecorderMaxLength: { type: GraphQLInt },
+    questionSortOrder: { type: GraphQLInt },
   }),
 });
 

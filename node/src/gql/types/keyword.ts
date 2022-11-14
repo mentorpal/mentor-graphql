@@ -4,30 +4,15 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import api from './api';
-import me from './me';
-import login from './login';
-import loginGoogle from './login-google';
-import logout from './logout';
-import updateMentorTraining from './update-mentor-training';
-import userQuestionCreate from './userQuestion-create';
-import userQuestionSetFeedback from './userQuestion-setFeedback';
-import userQuestionSetAnswer from './userQuestion-setAnswer';
-import mentorPreviewed from './mentor-previewed';
+import { GraphQLString, GraphQLObjectType, GraphQLID } from 'graphql';
 
-export default new GraphQLObjectType({
-  name: 'Mutation',
-  fields: {
-    api,
-    me,
-    login,
-    loginGoogle,
-    logout,
-    updateMentorTraining,
-    userQuestionCreate,
-    userQuestionSetFeedback,
-    userQuestionSetAnswer,
-    mentorPreviewed,
-  },
+export const KeywordType = new GraphQLObjectType({
+  name: 'Keyword',
+  fields: () => ({
+    _id: { type: GraphQLID },
+    type: { type: GraphQLString },
+    name: { type: GraphQLString },
+  }),
 });
+
+export default KeywordType;

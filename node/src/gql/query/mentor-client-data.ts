@@ -117,7 +117,7 @@ export const mentorData = {
       : mentor.subjects;
     const subjects = await SubjectModel.find({ _id: { $in: subjectIds } });
     const topics = await MentorModel.getTopics(
-      { mentor, defaultSubject: true, subjectId: args.subject },
+      { mentor, defaultSubject: false, subjectId: args.subject },
       subjects
     );
     const sQuestions: SubjectQuestion[] = [];

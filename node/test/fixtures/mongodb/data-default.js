@@ -70,6 +70,7 @@ module.exports = {
         ObjectId('5ffdf41a1ee2c62320b49eb1'),
         ObjectId('5ffdf41a1ee2c62320b49eb2'),
       ],
+      keywords: [ObjectId('511111111111111111111111')],
       user: ObjectId('5ffdf41a1ee2c62320b49ea6'),
     },
     {
@@ -84,6 +85,7 @@ module.exports = {
         ObjectId('5ffdf41a1ee2c62320b49eb1'),
         ObjectId('5ffdf41a1ee2c62320b49eb2'),
       ],
+      keywords: [ObjectId('511111111111111111111111')],
       user: ObjectId('5ffdf41a1ee2c62320b49ea5'),
     },
     {
@@ -98,6 +100,10 @@ module.exports = {
       subjects: [
         ObjectId('5ffdf41a1ee2c62320b49eb1'),
         ObjectId('5ffdf41a1ee2c62320b49eb2'),
+      ],
+      keywords: [
+        ObjectId('511111111111111111111111'),
+        ObjectId('511111111111111111111114'),
       ],
       user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
       hasVirtualBackground: true,
@@ -118,6 +124,7 @@ module.exports = {
         ObjectId('5ffdf41a1ee2c62320b49eb2'),
         ObjectId('5ffdf41a1ee2c62320b49eb3'),
       ],
+      keywords: [ObjectId('511111111111111111111112')],
       user: ObjectId('5ffdf41a1ee2c62320b49ea3'),
       recordQueue: [
         ObjectId('511111111111111111111112'),
@@ -130,6 +137,7 @@ module.exports = {
       firstName: 'Dan',
       user: ObjectId('5ffdf41a1ee2c62320b49ea2'),
       subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
+      keywords: [ObjectId('511111111111111111111111')],
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62111111114'),
@@ -138,6 +146,7 @@ module.exports = {
       isPrivate: true,
       user: ObjectId('5ffdf41a1ee2c62320b49ea7'),
       subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
+      keywords: [ObjectId('511111111111111111111113')],
     },
   ],
 
@@ -392,12 +401,19 @@ module.exports = {
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49ee3'),
       mentor: ObjectId('5ffdf41a1ee2c62111111111'),
-      classifierAnswer: ObjectId('511111111111111111111115'),
+      classifierAnswer: ObjectId('511111111111111111111174'),
+      classifierAnswerType: 'OFF_TOPIC',
       question: 'who are you?',
       feedback: 'NEUTRAL',
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49ee2'),
+      question: 'how are you?',
+      feedback: 'BAD',
+    },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49e33'),
+      mentor: ObjectId('5ffdf41a1ee2c62111111113'),
       question: 'how are you?',
       feedback: 'BAD',
     },
@@ -414,6 +430,29 @@ module.exports = {
         payload: 'text payload',
       },
       transcript: 'fake_transcript',
+    },
+  ],
+
+  keywords: [
+    {
+      _id: ObjectId('511111111111111111111111'),
+      type: 'Gender',
+      name: 'Male',
+    },
+    {
+      _id: ObjectId('511111111111111111111112'),
+      type: 'Gender',
+      name: 'Female',
+    },
+    {
+      _id: ObjectId('511111111111111111111113'),
+      type: 'Gender',
+      name: 'Nonbinary',
+    },
+    {
+      _id: ObjectId('511111111111111111111114'),
+      type: 'Career',
+      name: 'STEM',
     },
   ],
 };

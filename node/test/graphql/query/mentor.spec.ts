@@ -208,6 +208,9 @@ describe('mentor', () => {
         {
           name: 'Advice',
         },
+        {
+          name: 'Idle',
+        },
       ],
     });
   });
@@ -234,6 +237,9 @@ describe('mentor', () => {
         {
           name: 'Advice',
         },
+        {
+          name: 'Idle',
+        },
       ],
     });
   });
@@ -253,7 +259,18 @@ describe('mentor', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
-      topics: [],
+      topics: [
+        // Alphabetical order topics results when subject not found
+        {
+          name: 'Advice',
+        },
+        {
+          name: 'Background',
+        },
+        {
+          name: 'Idle',
+        },
+      ],
     });
   });
 
@@ -899,5 +916,34 @@ describe('mentor', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.not.have.deep.nested.property('errors[0].message');
+  });
+
+  it('mentor/keywords gets all keywords for the mentor', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+          mentor(id: "5ffdf41a1ee2c62111111111") {
+            keywords {
+              name
+              type
+            }
+          }
+        }
+      `,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentor).to.eql({
+      keywords: [
+        {
+          type: 'Gender',
+          name: 'Male',
+        },
+        {
+          type: 'Career',
+          name: 'STEM',
+        },
+      ],
+    });
   });
 });

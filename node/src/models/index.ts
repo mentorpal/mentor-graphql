@@ -6,6 +6,8 @@ The full terms of this copyright and license should always be found in the root 
 */
 import Answer from './Answer';
 export { default as Answer } from './Answer';
+import Keyword from './Keyword';
+export { default as Keyword } from './Keyword';
 import Mentor from './Mentor';
 export { default as Mentor } from './Mentor';
 import MentorPanel from './MentorPanel';
@@ -27,6 +29,7 @@ export { default as ImportTask } from './ImportTask';
 
 export default {
   Answer,
+  Keyword,
   Mentor,
   MentorPanel,
   Question,

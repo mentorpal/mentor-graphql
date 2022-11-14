@@ -35,7 +35,8 @@ import { idOrNew } from '../gql/mutation/me/helpers';
 import UserQuestion, {
   UserQuestion as UserQuestionInterface,
 } from './UserQuestion';
-import { QuestionUpdateInput } from 'gql/mutation/me/question-update';
+import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
+import { Keyword } from './Keyword';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -46,13 +47,16 @@ export interface Mentor extends Document {
   name: string;
   firstName: string;
   title: string;
+  goal: string;
   email: string;
   thumbnail: string;
   allowContact: boolean;
   defaultSubject: Subject['_id'];
   subjects: Subject['_id'][];
+  keywords: Keyword['_id'][];
   recordQueue: Question['_id'][];
   lastTrainedAt: Date;
+  lastPreviewedAt: Date;
   isDirty: boolean;
   isPrivate: boolean;
   hasVirtualBackground: boolean;
@@ -111,6 +115,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     name: { type: String },
     firstName: { type: String },
     title: { type: String },
+    goal: { type: String },
     email: { type: String },
     thumbnail: { type: String, default: '' },
     allowContact: { type: Boolean, default: false },
@@ -120,8 +125,10 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
       default: '',
     },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
+    keywords: { type: [{ type: Schema.Types.ObjectId, ref: 'Keyword' }] },
     recordQueue: { type: [{ type: Schema.Types.ObjectId, ref: 'Question' }] },
     lastTrainedAt: { type: Date },
+    lastPreviewedAt: { type: Date },
     isDirty: { type: Boolean, default: true },
     isPrivate: { type: Boolean, default: false },
     hasVirtualBackground: { type: Boolean, default: false },
@@ -656,9 +663,9 @@ MentorSchema.statics.getSubjects = async function (
 
 // Return topics for all subjects or for one subject
 //  - one subject: sorted in subject order
-//  - all subjects: sorted alphabetically
+
 MentorSchema.statics.getTopics = async function (
-  { mentor, defaultSubject, subjectId }: GetMentorDataParams,
+  { mentor, defaultSubject, subjectId: targetSubjectId }: GetMentorDataParams,
   subjects?: Subject[]
 ): Promise<Topic[]> {
   const userMentor: Mentor =
@@ -667,26 +674,43 @@ MentorSchema.statics.getTopics = async function (
     throw new Error(`mentor ${mentor} not found`);
   }
   const topics: Topic[] = [];
-  subjectId =
+  const mentorDefaultSubjectId =
     defaultSubject && userMentor.defaultSubject
       ? userMentor.defaultSubject
-      : subjectId;
-  if (subjectId) {
-    if (userMentor.subjects.includes(subjectId)) {
-      const s = subjects
-        ? subjects.find((s) => `${s._id}` === `${subjectId}`)
-        : await SubjectModel.findById(subjectId);
-      topics.push(...s.topics);
-    }
-  } else {
-    const ss = subjects || (await this.getSubjects(userMentor));
-    for (const s of ss) {
-      topics.push(...s.topics);
-    }
-    topics.sort((a, b) => {
-      return a.name.localeCompare(b.name);
-    });
+      : '';
+  const mentorDefaultSubjectDoc = mentorDefaultSubjectId
+    ? await SubjectModel.findById(mentorDefaultSubjectId)
+    : undefined;
+  const mentorDefaultSubjectTopics = mentorDefaultSubjectDoc
+    ? mentorDefaultSubjectDoc.topics
+    : [];
+
+  const targetSubjectDoc =
+    targetSubjectId && userMentor.subjects.includes(targetSubjectId)
+      ? await SubjectModel.findById(targetSubjectId)
+      : undefined;
+  const targetSubjectTopics = targetSubjectDoc ? targetSubjectDoc.topics : [];
+
+  topics.push(...targetSubjectTopics);
+  topics.push(...mentorDefaultSubjectTopics);
+
+  let ss = subjects || (await this.getSubjects(userMentor));
+  // remove targeted and mentors default subject from list, if they were used
+  ss = ss.filter(
+    (subject) =>
+      subject._id !== mentorDefaultSubjectId && subject._id !== targetSubjectId
+  );
+  // add all other subjects topics, but sorted in alphabetical order
+  const otherSubjectTopics: Topic[] = [];
+  for (const s of ss) {
+    otherSubjectTopics.push(...s.topics);
   }
+  otherSubjectTopics.sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  });
+
+  topics.push(...otherSubjectTopics);
+
   const topicsIds = [...new Set(topics.map((t) => `${t.id}`))];
   return topicsIds.map((tId) => topics.find((t) => `${t.id}` === tId));
 };

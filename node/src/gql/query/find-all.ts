@@ -13,6 +13,32 @@ import {
 import { HasPaginate } from '../types/mongoose-type-helpers';
 import mongoose from 'mongoose';
 
+// Recursively attempts to convert strings to object ids
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+function convertStringsToObjectIds(filter: any) {
+  if (!filter) {
+    return filter;
+  }
+  if (typeof filter === 'string') {
+    try {
+      return mongoose.Types.ObjectId(filter);
+    } catch (err) {
+      return filter;
+    }
+  } else if (Array.isArray(filter)) {
+    for (let i = 0; i < filter.length; i++) {
+      const value2 = filter[i];
+      filter[i] = convertStringsToObjectIds(value2);
+    }
+  } else if (typeof filter === 'object') {
+    const keys = Object.keys(filter);
+    for (let i = 0; i < keys.length; i++) {
+      filter[keys[i]] = convertStringsToObjectIds(filter[keys[i]]);
+    }
+  }
+  return filter;
+}
+
 export function findAll<T extends PaginatedResolveResult>(config: {
   nodeType: GraphQLObjectType;
   model: HasPaginate<T>;
@@ -24,18 +50,9 @@ export function findAll<T extends PaginatedResolveResult>(config: {
     nodeType,
     resolve: async (resolveArgs: PaginatedResolveArgs) => {
       const { args } = resolveArgs;
-      const filter = Object.assign({}, args.filter || {}, {
-        $or: [{ deleted: false }, { deleted: null }],
-      });
-      Object.keys(filter).map((key) => {
-        if (typeof filter[key] === 'string') {
-          try {
-            filter[key] = {
-              $in: [filter[key], mongoose.Types.ObjectId(filter[key])],
-            };
-          } catch (err) {}
-        }
-      });
+      let filter = Object.assign({}, args.filter || {});
+
+      filter = convertStringsToObjectIds(filter);
 
       const cursor = args.cursor;
       let next = null;
@@ -49,7 +66,15 @@ export function findAll<T extends PaginatedResolveResult>(config: {
           next = cursor;
         }
       }
-
+      if (Object.keys(filter).length > 0) {
+        filter = {
+          $and: [filter, { $or: [{ deleted: false }, { deleted: null }] }],
+        };
+      } else {
+        filter = {
+          $or: [{ deleted: false }, { deleted: null }],
+        };
+      }
       const result = await model.paginate({
         query: filter,
         limit: Number(args.limit) || 100,
