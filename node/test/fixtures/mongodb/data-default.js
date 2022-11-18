@@ -23,6 +23,7 @@ module.exports = {
       _id: ObjectId('5ffdf41a1ee2c62320b49ea2'),
       name: 'Dan Davis',
       email: 'dan@davis.com',
+      mentorIds: ['5ffdf41a1ee2c62111111113'],
       userRole: 'USER',
     },
     {
@@ -422,6 +423,17 @@ module.exports = {
   uploadtasks: [
     {
       mentor: ObjectId('5ffdf41a1ee2c62111111111'),
+      question: ObjectId('511111111111111111111112'),
+      transcribeTask: {
+        task_name: 'transcribe',
+        task_id: 'transcribe_task_id',
+        status: 'IN_PROGRESS',
+        payload: 'text payload',
+      },
+      transcript: 'fake_transcript',
+    },
+    {
+      mentor: ObjectId('5ffdf41a1ee2c62111111113'),
       question: ObjectId('511111111111111111111112'),
       transcribeTask: {
         task_name: 'transcribe',
