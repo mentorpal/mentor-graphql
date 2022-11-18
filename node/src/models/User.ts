@@ -16,6 +16,8 @@ export const UserRole = {
   USER: 'USER',
   CONTENT_MANAGER: 'CONTENT_MANAGER',
   ADMIN: 'ADMIN',
+  SUPER_CONTENT_MANAGER: 'SUPER_CONTENT_MANAGER',
+  SUPER_ADMIN: 'SUPER_ADMIN',
 };
 
 export interface FirstTimeTracking extends Document {
@@ -50,7 +52,13 @@ export const UserSchema = new Schema<User, UserModel>(
     email: { type: String },
     userRole: {
       type: String,
-      enum: [UserRole.USER, UserRole.CONTENT_MANAGER, UserRole.ADMIN],
+      enum: [
+        UserRole.USER,
+        UserRole.CONTENT_MANAGER,
+        UserRole.ADMIN,
+        UserRole.SUPER_CONTENT_MANAGER,
+        UserRole.SUPER_ADMIN,
+      ],
       default: UserRole.USER,
     },
     mentorIds: {

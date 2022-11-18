@@ -8,6 +8,7 @@ import { GraphQLObjectType } from 'graphql';
 import { User } from '../../../models/User';
 import mentorImport from './mentor-import';
 import addOrUpdateMentorPanel from './mentor-panel-add-or-update';
+import addOrUpdateOrganization from './organization-add-or-update';
 import updateConfig from './config-update';
 import updateMentorDetails from './mentor-details-update';
 import updateMentorPrivacy from './mentor-update-privacy';
@@ -31,6 +32,7 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
   fields: () => ({
     mentorImport,
     addOrUpdateMentorPanel,
+    addOrUpdateOrganization,
     updateConfig,
     updateMentorDetails,
     updateMentorPrivacy,

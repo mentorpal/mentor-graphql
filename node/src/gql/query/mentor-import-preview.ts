@@ -33,7 +33,7 @@ import { SubjectUpdateInput } from '../mutation/me/subject-update';
 import { QuestionUpdateInput } from '../mutation/me/question-update';
 import { isId } from '../mutation/me/helpers';
 import { User } from '../../models/User';
-import { hasAccessToMentor } from '../../utils/mentor-check-private';
+import { canViewMentor } from '../../utils/check-permissions';
 
 enum EditType {
   NONE = 'NONE',
@@ -146,7 +146,7 @@ export const mentorImportPreview = {
     context: { user: User }
   ): Promise<MentorImportPreview> => {
     const mentor = await MentorModel.findById(args.mentor);
-    if (!hasAccessToMentor(mentor, context.user)) {
+    if (!canViewMentor(mentor, context.user)) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );

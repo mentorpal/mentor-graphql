@@ -8,7 +8,7 @@ import { GraphQLObjectType, GraphQLNonNull, GraphQLID } from 'graphql';
 import { Answer as AnswerModel, Mentor as MentorModel } from '../../models';
 import { Answer } from '../../models/Answer';
 import { User } from '../../models/User';
-import { hasAccessToMentor } from '../../utils/mentor-check-private';
+import { canViewMentor } from '../../utils/check-permissions';
 import AnswerType from '../types/answer';
 
 export const answer = {
@@ -23,7 +23,7 @@ export const answer = {
     context: { user: User }
   ): Promise<Answer> => {
     const mentor = await MentorModel.findById(args.mentor);
-    if (!hasAccessToMentor(mentor, context.user)) {
+    if (!canViewMentor(mentor, context.user)) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );

@@ -24,7 +24,7 @@ import { Question, QuestionType } from '../../models/Question';
 import { SubjectQuestion, Topic } from '../../models/Subject';
 import { User } from '../../models/User';
 import { isAnswerComplete, Mentor } from '../../models/Mentor';
-import { hasAccessToMentor } from '../../utils/mentor-check-private';
+import { canViewMentor } from '../../utils/check-permissions';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 
 export interface MentorClientData {
@@ -140,7 +140,7 @@ export const mentorData = {
     if (!mentor) {
       throw new Error(`mentor ${args.mentor} not found`);
     }
-    if (!hasAccessToMentor(mentor, context.user)) {
+    if (!canViewMentor(mentor, context.user)) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );

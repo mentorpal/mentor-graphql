@@ -59,7 +59,7 @@ describe('uploadTaskDelete', () => {
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'you do not have a mentor'
+      'invalid mentor'
     );
   });
 
@@ -97,7 +97,7 @@ describe('uploadTaskDelete', () => {
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'you do not have a mentor'
+      'invalid mentor'
     );
   });
 

@@ -59,7 +59,7 @@ describe('updateAnswer', () => {
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'you do not have a mentor'
+      'invalid mentor'
     );
   });
 
@@ -139,7 +139,7 @@ describe('updateAnswer', () => {
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'you do not have a mentor'
+      'invalid mentor'
     );
   });
 
@@ -227,7 +227,7 @@ describe('updateAnswer', () => {
         }`,
         variables: {
           questionId: '511111111111111111111112',
-          mentorId: '5ffdf41a1ee2c62320b49ea3', //other mentor
+          mentorId: '5ffdf41a1ee2c62111111112', //other mentor
           answer: {
             transcript:
               "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",

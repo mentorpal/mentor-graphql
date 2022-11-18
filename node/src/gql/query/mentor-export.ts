@@ -24,7 +24,7 @@ import { Question } from '../../models/Question';
 import { Mentor } from '../../models/Mentor';
 import { UserQuestion } from '../../models/UserQuestion';
 import { User } from '../../models/User';
-import { hasAccessToMentor } from '../../utils/mentor-check-private';
+import { canViewMentor } from '../../utils/check-permissions';
 
 export interface MentorExportJson {
   id: string;
@@ -97,7 +97,7 @@ export const exportMentor = {
     context: { user: User }
   ): Promise<MentorExportJson> => {
     const mentor = await MentorModel.findById(args.mentor);
-    if (mentor && !hasAccessToMentor(mentor, context.user)) {
+    if (mentor && !canViewMentor(mentor, context.user)) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );

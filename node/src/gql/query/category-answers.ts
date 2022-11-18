@@ -13,7 +13,7 @@ import {
   GraphQLNonNull,
 } from 'graphql';
 import { User } from '../../models/User';
-import { hasAccessToMentor } from '../../utils/mentor-check-private';
+import { canViewMentor } from '../../utils/check-permissions';
 import { Mentor as MentorModel } from '../../models';
 import { Status } from '../../models/Answer';
 
@@ -37,7 +37,7 @@ export const categoryAnswers = {
     context: { user: User }
   ) => {
     const mentor = await MentorModel.findById(args.mentor);
-    if (!hasAccessToMentor(mentor, context.user)) {
+    if (!canViewMentor(mentor, context.user)) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );

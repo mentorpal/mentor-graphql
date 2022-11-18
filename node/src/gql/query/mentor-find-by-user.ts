@@ -8,7 +8,7 @@ import { GraphQLString } from 'graphql';
 import { Mentor as MentorModel } from '../../models';
 import { Mentor } from '../../models/Mentor';
 import { User } from '../../models/User';
-import { hasAccessToMentor } from '../../utils/mentor-check-private';
+import { canViewMentor } from '../../utils/check-permissions';
 import { MentorType } from '../types/mentor';
 import findOne from './find-one';
 
@@ -23,7 +23,7 @@ export const mentor = findOne({
     },
   },
   checkIfInvalid: (mentor: Mentor, context: { user: User }) => {
-    if (!hasAccessToMentor(mentor, context.user)) {
+    if (!canViewMentor(mentor, context.user)) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );

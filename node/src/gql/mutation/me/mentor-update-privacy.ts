@@ -11,8 +11,8 @@ import {
   GraphQLID,
 } from 'graphql';
 import { Mentor as MentorModel } from '../../../models';
-import { Mentor } from '../../../models/Mentor';
-import { User, UserRole } from '../../../models/User';
+import { User } from '../../../models/User';
+import { canEditMentor } from '../../../utils/check-permissions';
 
 export const updateMentorPrivacy = {
   type: GraphQLBoolean,
@@ -25,18 +25,11 @@ export const updateMentorPrivacy = {
     args: { mentorId: string; isPrivate: boolean },
     context: { user: User }
   ): Promise<boolean> => {
-    const mentor: Mentor = await MentorModel.findById(args.mentorId);
+    const mentor = await MentorModel.findById(args.mentorId);
     if (!mentor) {
       throw new Error('invalid mentor id given');
     }
-    const userMentor: Mentor = await MentorModel.findOne({
-      user: context.user._id,
-    });
-    if (
-      `${userMentor._id}` !== `${args.mentorId}` &&
-      context.user.userRole !== UserRole.ADMIN &&
-      context.user.userRole !== UserRole.CONTENT_MANAGER
-    ) {
+    if (!canEditMentor(mentor, context.user)) {
       throw new Error('you do not have permission to edit this mentor');
     }
     const updated = await MentorModel.findByIdAndUpdate(

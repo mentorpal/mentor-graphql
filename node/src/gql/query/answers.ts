@@ -8,7 +8,7 @@ import { PaginatedResolveResult } from '../types/connection';
 import { Answer as AnswerModel, Mentor as MentorModel } from '../../models';
 import { Answer } from '../../models/Answer';
 import { User } from '../../models/User';
-import { hasAccessToMentor } from '../../utils/mentor-check-private';
+import { canViewMentor } from '../../utils/check-permissions';
 import AnswerType from '../types/answer';
 import findAll from './find-all';
 
@@ -29,7 +29,7 @@ export const answers = findAll({
         if (!mentor) {
           return false;
         }
-        return hasAccessToMentor(mentor, context.user);
+        return canViewMentor(mentor, context.user);
       }
     );
     return {

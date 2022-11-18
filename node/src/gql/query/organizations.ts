@@ -4,32 +4,27 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Mentor as MentorModel } from '../../models';
-import { Mentor } from '../../models/Mentor';
+import { Organization } from '../../models';
 import { User } from '../../models/User';
-import { canViewMentor } from '../../utils/check-permissions';
-import { MentorType } from '../types/mentor';
-import findByParentField from './find-by-parent-field';
-import findOne from './find-one';
+import { OrganizationType } from '../types/organization';
+import { PaginatedResolveResult } from '../types/connection';
+import { canViewOrganization } from '../../utils/check-permissions';
+import findAll from './find-all';
 
-export const mentorFindOne = findOne({
-  model: MentorModel,
-  type: MentorType,
-  typeName: 'mentor',
-  checkIfInvalid: (mentor: Mentor, context: { user: User }) => {
-    if (!canViewMentor(mentor, context.user)) {
-      throw new Error(
-        `mentor is private and you do not have permission to access`
-      );
-    }
+export const organizations = findAll({
+  nodeType: OrganizationType,
+  model: Organization,
+  filterInvalid: (
+    paginationResults: PaginatedResolveResult,
+    context: { user: User }
+  ) => {
+    const orgs = paginationResults.results;
+    const newOrgList = orgs.filter((o) => canViewOrganization(o, context.user));
+    return {
+      ...paginationResults,
+      results: newOrgList,
+    };
   },
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function mentorFieldWithName(field = 'mentor'): any {
-  return findByParentField(MentorType, MentorModel, field);
-}
-
-export const mentorField = mentorFieldWithName();
-
-export default mentorFindOne;
+export default organizations;

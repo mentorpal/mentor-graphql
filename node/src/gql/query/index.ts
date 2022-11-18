@@ -22,6 +22,8 @@ import mentorImportPreview from './mentor-import-preview';
 import mentorClientData from './mentor-client-data';
 import mentorsByKeyword from './mentors-by-keyword';
 import mentorsById from './mentors-by-id';
+import organization from './organization';
+import organizations from './organizations';
 import question from './question';
 import questions from './questions';
 import questionsById from './questions-by-id';
@@ -54,6 +56,8 @@ export default new GraphQLObjectType({
     mentorClientData,
     mentorsById,
     mentorsByKeyword,
+    organization,
+    organizations,
     question,
     questions,
     questionsById,

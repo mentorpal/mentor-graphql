@@ -16,7 +16,7 @@ import { Mentor as MentorModel } from '../../models';
 import { Mentor } from '../../models/Mentor';
 import { User } from '../../models/User';
 import { MentorType } from '../types/mentor';
-import { hasAccessToMentor } from '../../utils/mentor-check-private';
+import { canViewMentor } from '../../utils/check-permissions';
 
 export const mentorsByKeyword = {
   type: GraphQLList(MentorType),
@@ -38,7 +38,7 @@ export const mentorsByKeyword = {
   ): Promise<Mentor[]> => {
     const filter = args.subject ? { subjects: { $in: [args.subject] } } : {};
     let mentors = await MentorModel.find(filter);
-    mentors = mentors.filter((m) => hasAccessToMentor(m, context.user));
+    mentors = mentors.filter((m) => canViewMentor(m, context.user));
     if (args.sortBy) {
       mentors = mentors.sort((a, b) => {
         return (

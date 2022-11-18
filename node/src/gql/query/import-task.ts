@@ -6,14 +6,14 @@ The full terms of this copyright and license should always be found in the root 
 */
 
 import { GraphQLID, GraphQLNonNull, GraphQLObjectType } from 'graphql';
-import { User, UserRole } from '../../models/User';
+import { User } from '../../models/User';
 import {
   ImportTask as ImportTaskModel,
   Mentor as MentorModel,
 } from '../../models';
 import { ImportTask } from '../../models/ImportTask';
-import { Mentor } from '../../models/Mentor';
 import ImportTaskType from '../types/import-task';
+import { canEditMentor } from '../../utils/check-permissions';
 
 export const importTask = {
   type: ImportTaskType,
@@ -30,24 +30,15 @@ export const importTask = {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
-    if (context.user.id) {
-      const mentor: Mentor = await MentorModel.findOne({
-        user: context.user._id,
-      });
-      if (!mentor) {
-        throw new Error('you do not have a mentor');
-      }
-      if (
-        `${mentor._id}` !== `${args.mentorId}` &&
-        context.user.userRole !== UserRole.ADMIN &&
-        context.user.userRole !== UserRole.CONTENT_MANAGER
-      ) {
-        throw new Error(
-          'you do not have permission to view this mentors information'
-        );
-      }
+    const mentor = await MentorModel.findById(args.mentorId);
+    if (!mentor) {
+      throw new Error('invalid mentor');
     }
-
+    if (!canEditMentor(mentor, context.user)) {
+      throw new Error(
+        'you do not have permission to view this mentors information'
+      );
+    }
     const task = await ImportTaskModel.findOne({
       mentor: args.mentorId,
     });
