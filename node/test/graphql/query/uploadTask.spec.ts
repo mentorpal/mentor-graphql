@@ -61,8 +61,8 @@ describe('query uploadTask', () => {
     );
   });
 
-  it(`provides the upload task for authenticated and authorized users`, async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+  it(`provides the upload task for USER who owns the target mentor`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
@@ -80,14 +80,14 @@ describe('query uploadTask', () => {
           }
         }`,
         variables: {
-          mentorId: '5ffdf41a1ee2c62111111111',
+          mentorId: '5ffdf41a1ee2c62111111113',
           questionId: '511111111111111111111112',
         },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.uploadTask).to.eql({
       mentor: {
-        _id: '5ffdf41a1ee2c62111111111',
+        _id: '5ffdf41a1ee2c62111111113',
       },
       question: {
         _id: '511111111111111111111112',

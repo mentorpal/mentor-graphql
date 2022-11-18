@@ -31,7 +31,7 @@ export const uploadTask = {
     if (context.user.id) {
       // jwt strategy (users)
       if (
-        context.user.id !== args.mentorId &&
+        !context.user.mentorIds.find((mentorId) => mentorId == args.mentorId) &&
         context.user.userRole !== UserRole.ADMIN &&
         context.user.userRole !== UserRole.CONTENT_MANAGER
       ) {
