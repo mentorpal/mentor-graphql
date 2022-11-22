@@ -44,6 +44,7 @@ const reservedSubdomains = [
   'api',
   'video',
   'sbert',
+  'static',
   'static-careerfair',
   // other
   'local',
