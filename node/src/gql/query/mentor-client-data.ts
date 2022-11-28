@@ -20,10 +20,10 @@ import {
   Question as QuestionModel,
 } from '../../models';
 import { AnswerMedia } from '../../models/Answer';
-import { QuestionType } from '../../models/Question';
-import { SubjectQuestion } from '../../models/Subject';
+import { Question, QuestionType } from '../../models/Question';
+import { SubjectQuestion, Topic } from '../../models/Subject';
 import { User } from '../../models/User';
-import { isAnswerComplete } from '../../models/Mentor';
+import { isAnswerComplete, Mentor } from '../../models/Mentor';
 import { hasAccessToMentor } from '../../utils/mentor-check-private';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 
@@ -90,6 +90,41 @@ export const TopicQuestionsType = new GraphQLObjectType({
   }),
 });
 
+async function getQuestions(
+  mentor: Mentor,
+  sQuestions: SubjectQuestion[]
+): Promise<Question[]> {
+  return await QuestionModel.find({
+    _id: { $in: sQuestions.map((sq) => sq.question) },
+    type: QuestionType.QUESTION,
+    $or: [
+      { mentor: mentor._id },
+      { mentor: { $exists: false } },
+      { mentor: null },
+    ],
+  });
+}
+
+async function getCompletedQuestions(
+  mentor: Mentor,
+  sQuestions: SubjectQuestion[],
+  questions: Question[]
+): Promise<SubjectQuestion[]> {
+  let answers = await AnswerModel.find({
+    mentor: mentor._id,
+    question: { $in: questions.map((q) => q.id) },
+  });
+  answers = answers.filter((a) =>
+    isAnswerComplete(
+      a,
+      questions.find((q) => `${q._id}` === `${a.question}`),
+      mentor
+    )
+  );
+  const questionIds = answers.map((a) => `${a.question}`);
+  return sQuestions.filter((sq) => questionIds.includes(`${sq.question}`));
+}
+
 export const mentorData = {
   type: MentorClientDataType,
   args: {
@@ -110,68 +145,96 @@ export const mentorData = {
         `mentor is private and you do not have permission to access`
       );
     }
-    const subjectIds = args.subject
-      ? [args.subject]
-      : mentor.defaultSubject
-      ? [mentor.defaultSubject]
-      : mentor.subjects;
-    const subjects = await SubjectModel.find({ _id: { $in: subjectIds } });
-    const topics = await MentorModel.getTopics(
-      { mentor, defaultSubject: false, subjectId: args.subject },
-      subjects
-    );
-    const sQuestions: SubjectQuestion[] = [];
-    for (const subject of subjects) {
-      sQuestions.push(...subject.questions);
-    }
-    const questions = await QuestionModel.find({
-      _id: { $in: sQuestions.map((sq) => sq.question) },
-      type: QuestionType.QUESTION,
-      $or: [
-        { mentor: mentor._id },
-        { mentor: { $exists: false } },
-        { mentor: null },
-      ],
-    });
-    let answers = await AnswerModel.find({
-      mentor: mentor._id,
-      question: { $in: questions.map((q) => q.id) },
-    });
-    answers = answers.filter((a) =>
-      isAnswerComplete(
-        a,
-        questions.find((q) => `${q._id}` === `${a.question}`),
-        mentor
-      )
-    );
 
-    const qIds = answers.map((a) => `${a.question}`);
-    const sQs = sQuestions.filter((sq) => qIds.includes(`${sq.question}`));
-    const topicQuestions: Record<string, string[]> = {};
-    for (const topic of topics) {
-      topicQuestions[topic.id] = [];
+    let topicQuestions: TopicQuestions[] = [];
+    let sQuestions: SubjectQuestion[] = [];
+    let questions: Question[] = [];
+    let topics: Topic[] = [];
+    // use a single subject, either specified or default
+    if (
+      (args.subject && mentor.subjects.includes(args.subject)) ||
+      (mentor.defaultSubject && mentor.subjects.includes(mentor.defaultSubject))
+    ) {
+      const subject = await SubjectModel.findById(
+        args.subject || mentor.defaultSubject
+      );
+      // get topics in subject order
+      topics = subject.topics;
+      // get recorded questions in subject order
+      const sqs = subject.questions;
+      questions = await getQuestions(mentor, sqs);
+      sQuestions = await getCompletedQuestions(mentor, sqs, questions);
     }
-    for (const sQuestion of sQs) {
-      for (const topic of sQuestion.topics) {
-        if (!topicQuestions[topic].includes(`${sQuestion.question}`)) {
-          topicQuestions[topic].push(`${sQuestion.question}`);
+    // no specified or default subject, use all subjects
+    else {
+      const subjects = await SubjectModel.find({
+        _id: { $in: mentor.subjects },
+      });
+      // get topics in alphabetical order
+      topics = subjects.reduce((acc, cur) => {
+        const newTopics = cur.topics.filter(
+          (ct) => !acc.find((t) => t._id === ct._id)
+        );
+        return [...acc, ...newTopics];
+      }, []);
+      topics.sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      });
+      // get recorded questions in alphabetical order
+      const sqs = subjects.reduce((acc, cur) => [...acc, ...cur.questions], []);
+      questions = await getQuestions(mentor, sqs);
+      sQuestions = await getCompletedQuestions(mentor, sqs, questions);
+      sQuestions.sort((a, b) => {
+        const qa = questions.find((q) => `${q._id}` === `${a.question}`);
+        const qb = questions.find((q) => `${q._id}` === `${b.question}`);
+        return qa.question.localeCompare(qb.question);
+      });
+    }
+
+    // get questions in topic in order
+    const topicQuestionRecord: Record<string, string[]> = {};
+    for (const topic of topics) {
+      topicQuestionRecord[topic.id] = [];
+      const topicQuestions = sQuestions.filter((sq) =>
+        sq.topics.includes(topic.id)
+      );
+      for (const tQuestion of topicQuestions) {
+        if (!topicQuestionRecord[topic.id].includes(`${tQuestion.question}`)) {
+          topicQuestionRecord[topic.id].push(`${tQuestion.question}`);
         }
       }
     }
+    topicQuestions = Object.keys(topicQuestionRecord)
+      .filter((key) => topicQuestionRecord[key].length > 0) // don't return empty topics
+      .map((key) => ({
+        topic: topics.find((t) => `${t.id}` === key)?.name,
+        questions: topicQuestionRecord[key].map(
+          (tq) => questions.find((q) => `${q._id}` === tq)?.question
+        ),
+      }));
+
     const utteranceQuestions = await QuestionModel.find({
       type: QuestionType.UTTERANCE,
     });
-    let utterances = await AnswerModel.find({
+    let utteranceAnswers = await AnswerModel.find({
       mentor: mentor._id,
       question: { $in: utteranceQuestions.map((q) => q.id) },
     });
-    utterances = utterances.filter((a) =>
+    utteranceAnswers = utteranceAnswers.filter((a) =>
       isAnswerComplete(
         a,
         questions.find((q) => `${q._id}` === `${a.question}`),
         mentor
       )
     );
+    const utterances = utteranceAnswers.map((u) => ({
+      _id: u.id,
+      name: utteranceQuestions.find((q) => `${q.id}` === `${u.question}`)?.name,
+      transcript: u.transcript,
+      webMedia: u.webMedia,
+      mobileMedia: u.mobileMedia,
+      vttMedia: u.vttMedia,
+    }));
 
     return {
       _id: mentor._id,
@@ -184,27 +247,8 @@ export const mentorData = {
         : '',
       mentorType: mentor.mentorType,
       allowContact: mentor.allowContact,
-      topicQuestions: Object.keys(topicQuestions)
-        .filter((key) => topicQuestions[key].length > 0)
-        .map((key) => {
-          const t = topics.find((t) => `${t.id}` === key);
-          const tq = questions.filter((q) =>
-            topicQuestions[key]?.includes(`${q.id}`)
-          );
-          return {
-            topic: t.name,
-            questions: tq.map((q) => q.question).sort(),
-          };
-        }),
-      utterances: utterances.map((u) => ({
-        _id: u.id,
-        name: utteranceQuestions.find((q) => `${q.id}` === `${u.question}`)
-          ?.name,
-        transcript: u.transcript,
-        webMedia: u.webMedia,
-        mobileMedia: u.mobileMedia,
-        vttMedia: u.vttMedia,
-      })),
+      topicQuestions,
+      utterances,
     };
   },
 };
