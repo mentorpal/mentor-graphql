@@ -67,6 +67,7 @@ describe('updateSubject', () => {
       _id: '5ffdf41a1ee2c62320b49eb3',
       name: 'stem',
       type: 'SUBJECT',
+      isArchived: true,
       categories: [
         {
           id: 'newcategory',
@@ -125,6 +126,7 @@ describe('updateSubject', () => {
               type
               description
               isRequired
+              isArchived
               categories {
                 id
                 name
@@ -158,6 +160,7 @@ describe('updateSubject', () => {
       type: 'SUBJECT',
       description: 'These questions will ask about STEM careers.',
       isRequired: false,
+      isArchived: true,
       categories: [
         {
           id: 'newcategory',

@@ -71,6 +71,7 @@ export interface Subject extends Document {
   type: string;
   description: string;
   isRequired: boolean;
+  isArchived: boolean;
   categories: Category[];
   topics: Topic[];
   questions: SubjectQuestion[];
@@ -81,6 +82,7 @@ export interface SubjectInsert {
   type: string;
   description: string;
   isRequired: boolean;
+  isArchived: boolean;
   categories: CategoryProps[];
   topics: TopicProps[];
   questions: SubjectQuestionProps[];
@@ -94,6 +96,7 @@ export const SubjectSchema = new Schema<Subject, SubjectModel>(
     type: { type: String, default: 'SUBJECT' },
     description: { type: String },
     isRequired: { type: Boolean },
+    isArchived: { type: Boolean },
     categories: { type: [CategorySchema] },
     topics: { type: [TopicSchema] },
     questions: { type: [SubjectQuestionSchema] },
