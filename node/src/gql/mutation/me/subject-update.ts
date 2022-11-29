@@ -26,6 +26,7 @@ import {
   QuestionUpdateInputType,
 } from './question-update';
 import { toUpdateProps } from './helpers';
+import { User, UserRole } from '../../../models/User';
 
 export interface CategoryUpdateInput {
   id: string;
@@ -128,8 +129,17 @@ export const subjectUpdate = {
   args: { subject: { type: GraphQLNonNull(SubjectUpdateInputType) } },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { subject: SubjectUpdateInput }
+    args: { subject: SubjectUpdateInput },
+    context: { user: User }
   ): Promise<Subject> => {
+    const userCanManageArchival =
+      context.user.userRole == UserRole.CONTENT_MANAGER ||
+      context.user.userRole == UserRole.ADMIN;
+    console.log(userCanManageArchival);
+    if (args.subject.isArchived && !userCanManageArchival) {
+      throw new Error('User is not authorized to archive this subject.');
+    }
+    console.log('reached here');
     return await SubjectModel.updateOrCreate(args.subject);
   },
 };

@@ -61,6 +61,33 @@ describe('updateSubject', () => {
     expect(response.status).to.equal(400);
   });
 
+  it('throws error if USER tries to archive the subject', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2');
+    const subject = JSON.stringify({
+      _id: '5ffdf41a1ee2c62320b49eb3',
+      name: 'stem',
+      type: 'SUBJECT',
+      isArchived: true,
+    }).replace(/"([^"]+)":/g, '$1:');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation {
+          me {
+            updateSubject(subject: ${subject}) {
+              isArchived
+            }
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'User is not authorized to archive this subject.'
+    );
+  });
+
   it('updates subject', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const subject = JSON.stringify({

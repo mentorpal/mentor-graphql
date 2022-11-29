@@ -97,6 +97,7 @@ export const SubjectPreviewType = new GraphQLObjectType({
     type: { type: GraphQLString },
     description: { type: GraphQLString },
     isRequired: { type: GraphQLBoolean },
+    isArchived: { type: GraphQLBoolean },
     topics: { type: GraphQLList(TopicType) },
     categories: { type: GraphQLList(CategoryType) },
     questions: { type: GraphQLList(SubjectQuestionPreviewType) },

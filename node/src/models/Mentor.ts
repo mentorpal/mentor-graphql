@@ -574,6 +574,7 @@ MentorSchema.statics.import = async function (
             name: s.name,
             description: s.description,
             isRequired: s.isRequired,
+            isArchived: s.isArchived,
             categories: s.categories,
             topics: s.topics,
             questions: s.questions.map((sq) => ({
