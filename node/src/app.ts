@@ -21,14 +21,14 @@ import { User as UserSchema } from './models';
 const CORS_ORIGIN = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',')
   : [
-    'https://devmentorpal.org',
-    'https://qamentorpal.org',
-    'https://mentorpal.org',
-    'https://v2.mentorpal.org',
-    'https://careerfair.mentorpal.org',
-    'http://local.mentorpal.org:8000',
-    'http://localhost:8000',
-  ];
+      'https://devmentorpal.org',
+      'https://qamentorpal.org',
+      'https://mentorpal.org',
+      'https://v2.mentorpal.org',
+      'https://careerfair.mentorpal.org',
+      'http://local.mentorpal.org:8000',
+      'http://localhost:8000',
+    ];
 
 function setupPassport() {
   passport.use(
@@ -104,19 +104,30 @@ export async function createApp(): Promise<Express> {
 
   const corsOptions = {
     credentials: true,
-    origin: CORS_ORIGIN,
+    origin: function (
+      origin: string,
+      callback: (err: Error, allow?: boolean) => void
+    ) {
+      if (!origin) {
+        callback(null, true);
+      } else {
+        let allowOrigin = false;
+        for (const co of CORS_ORIGIN) {
+          if (origin === co || origin.endsWith(co)) {
+            allowOrigin = true;
+            break;
+          }
+        }
+        if (allowOrigin) {
+          callback(null, true);
+        } else {
+          callback(new Error(`${origin} not allowed by CORS`));
+        }
+      }
+    },
   };
-  //CORS middleware
-  var allowCrossDomain = function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', CORS_ORIGIN);
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    next();
-  }
 
   app.use(cors(corsOptions));
-  app.use(allowCrossDomain);
   app.use(express.json({ limit: '2mb' }));
   app.use(cookieParser());
   app.use(express.urlencoded({ limit: '2mb', extended: true }));
@@ -159,7 +170,7 @@ export async function createApp(): Promise<Express> {
     if (err instanceof Object) {
       errorStatus =
         (!isNaN(err.status) && Number(err.status) > 0) ||
-          Number(err.status) < 600
+        Number(err.status) < 600
           ? Number(err.status)
           : 500;
       errorMessage = err.message || '';

@@ -35,7 +35,7 @@ custom:
       MONGO_URI: ${ssm:/mentorpal/graphql/dev/mongo_uri, ''}
       NODE_ENV: 'careerfair-dev'
       STATIC_URL_BASE: 'https://static-newdev.mentorpal.org/'
-      CORS_ORIGIN: 'https://newdev.mentorpal.org,https://devmentorpal.org,/\.devmentorpal\.org$/'
+      CORS_ORIGIN: 'https://newdev.mentorpal.org,https://devmentorpal.org,https://api-dev.mentorpal.org,devmentorpal.org'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenDev'
       WEBACL_ARN: ${ssm:/mentorpal/newdev/api_firewall_arn, ''}
@@ -47,7 +47,7 @@ custom:
       MONGO_URI: ${ssm:/mentorpal/graphql/qa/mongo_uri, ''}
       NODE_ENV: 'careerfair-v2'
       STATIC_URL_BASE: 'https://static-v2.mentorpal.org/'
-      CORS_ORIGIN: 'https://v2.mentorpal.org,https://qamentorpal.org,/\.qamentorpal\.org$/'
+      CORS_ORIGIN: 'https://v2.mentorpal.org,https://qamentorpal.org,https://api-qa.mentorpal.org,qamentorpal.org'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenQa'
       WEBACL_ARN: ${ssm:/mentorpal/v2/api_firewall_arn, ''}
@@ -59,7 +59,7 @@ custom:
       MONGO_URI: ${ssm:/mentorpal/graphql/prod/mongo_uri, ''}
       NODE_ENV: 'careerfair'
       STATIC_URL_BASE: 'https://static-careerfair.mentorpal.org/'
-      CORS_ORIGIN: 'https://careerfair.mentorpal.org,https://mentorpal.org,/\.mentorpal\.org$/'
+      CORS_ORIGIN: 'https://careerfair.mentorpal.org,https://mentorpal.org,https://api.mentorpal.org,mentorpal.org'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/prod/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenProd'
       WEBACL_ARN: ${ssm:/mentorpal/cf/api_firewall_arn, ''}
