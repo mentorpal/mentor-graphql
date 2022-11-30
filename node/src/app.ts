@@ -106,10 +106,10 @@ export async function createApp(): Promise<Express> {
     credentials: true,
     origin: function (
       origin: string,
-      callback: (err: Error, allow?: boolean) => void
+      callback: (err: Error, allow?: string) => void
     ) {
       if (!origin) {
-        callback(null, true);
+        callback(null, "");
       } else {
         let allowOrigin = false;
         for (const co of CORS_ORIGIN) {
@@ -119,7 +119,7 @@ export async function createApp(): Promise<Express> {
           }
         }
         if (allowOrigin) {
-          callback(null, true);
+          callback(null, origin);
         } else {
           callback(new Error(`${origin} not allowed by CORS`));
         }
@@ -128,6 +128,7 @@ export async function createApp(): Promise<Express> {
   };
 
   app.use(cors(corsOptions));
+  app.options('*', cors(corsOptions));
   app.use(express.json({ limit: '2mb' }));
   app.use(cookieParser());
   app.use(express.urlencoded({ limit: '2mb', extended: true }));
