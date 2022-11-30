@@ -180,6 +180,7 @@ describe('updateSubject', () => {
           }
         }`,
       });
+    console.log(response.body);
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateSubject).to.eql({
       _id: '5ffdf41a1ee2c62320b49eb3',

@@ -39,7 +39,7 @@ export const uploadTask = {
     if (context.user.id) {
       // jwt strategy (users)
       if (
-        !context.user.mentorIds.find((mentorId) => mentorId == args.mentorId) &&
+        !context.user.mentorIds.find((mentorId) => mentorId == args.mentorId) ||
         !canEditMentor(mentor, context.user)
       ) {
         throw new Error(

@@ -44,6 +44,7 @@ export function canViewMentor(
     const userRole = user.userRole;
     return (
       equals(mentor.user, user._id) ||
+      user.mentorIds.includes(mentor.user) ||
       userRole === UserRole.CONTENT_MANAGER ||
       userRole === UserRole.ADMIN ||
       userRole === UserRole.SUPER_CONTENT_MANAGER ||
@@ -87,6 +88,7 @@ export async function canEditMentor(
   const userRole = user.userRole;
   return (
     equals(mentor.user, user._id) ||
+    user.mentorIds.includes(mentor.user) ||
     userRole === UserRole.CONTENT_MANAGER ||
     userRole === UserRole.ADMIN ||
     userRole === UserRole.SUPER_CONTENT_MANAGER ||
@@ -121,6 +123,7 @@ export async function canEditMentorPrivacy(
   const userRole = user.userRole;
   return (
     equals(mentor.user, user._id) ||
+    user.mentorIds.includes(mentor.user) ||
     userRole === UserRole.CONTENT_MANAGER ||
     userRole === UserRole.ADMIN ||
     userRole === UserRole.SUPER_CONTENT_MANAGER ||

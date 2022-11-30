@@ -24,12 +24,11 @@ function isApiReq(req: Request): boolean {
   return Boolean(req.headers['mentor-graphql-req']);
 }
 
-async function checkOrg(req: Request, next: any, user: User, jwtToken = '') {
-  // eslint-disable-line  @typescript-eslint/no-explicit-any
+async function getOrg(req: Request, next: any, user: User, jwtToken = '') {
   try {
-    const hosts = req.hostname.split('.');
-    if (hosts.length > 0) {
-      const subdomain = hosts[0];
+    const origin = req.header('origin');
+    if (origin) {
+      const subdomain = /:\/\/([^\/]+)/.exec(origin)[1].split('.')[0];
       const org = await OrganizationModel.findOne({ subdomain });
       return next(user, org, jwtToken);
     } else {
@@ -47,21 +46,21 @@ async function refreshToken(req: Request, next: any) {
     const token = req.cookies[process.env.REFRESH_TOKEN_NAME];
     if (!token) {
       logger.debug('refresh token not found');
-      return checkOrg(req, next, null);
+      return getOrg(req, next, null);
     }
     const { jwtToken, user } = await getRefreshedToken(token);
     if (user) {
-      return checkOrg(req, next, user, jwtToken);
+      return getOrg(req, next, user, jwtToken);
     } else {
       logger.warn("couldn't get user");
-      return checkOrg(req, next, null);
+      return getOrg(req, next, null);
     }
   } catch (err) {
     logger.warn(
       `couldn't refresh token ${req.cookies[process.env.REFRESH_TOKEN_NAME]}`
     );
     logger.error(err);
-    return checkOrg(req, next, null);
+    return getOrg(req, next, null);
   }
 }
 
@@ -92,7 +91,7 @@ export default graphqlHTTP((req: Request, res: Response) => {
       if (err == 'token expired' || user === false) {
         refreshToken(req, next);
       } else {
-        checkOrg(req, next, user);
+        getOrg(req, next, user);
       }
     })(req, res, next);
   });

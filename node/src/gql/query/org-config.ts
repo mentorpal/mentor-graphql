@@ -4,18 +4,21 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
+import { GraphQLObjectType } from 'graphql';
 import { ConfigType } from '../types/config';
-import SettingModel, { Config } from '../../models/Setting';
 import OrganizationModel, { Organization } from '../../models/Organization';
+import SettingModel, { Config } from '../../models/Setting';
+import { User } from '../../models/User';
+import { canViewOrganization } from '../../utils/check-permissions';
 
 export const orgConfig = {
   type: ConfigType,
   resolve: async (
-    _: {},
-    _args: {},
-    context: { org: Organization }
+    _: GraphQLObjectType,
+    _args: GraphQLObjectType,
+    context: { org: Organization; user: User }
   ): Promise<Config> => {
-    if (context.org) {
+    if (context.org && canViewOrganization(context.org, context.user)) {
       return await OrganizationModel.getConfig(context.org);
     }
     return await SettingModel.getConfig();

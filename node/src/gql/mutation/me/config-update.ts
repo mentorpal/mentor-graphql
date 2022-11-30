@@ -32,6 +32,7 @@ export interface ConfigUpdateInput {
   defaultVirtualBackground: string;
   styleHeaderLogo: string;
   styleHeaderColor: string;
+  styleHeaderText: string;
   styleHeaderTextColor: string;
   disclaimerTitle: string;
   disclaimerText: string;
@@ -56,6 +57,7 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     defaultVirtualBackground: { type: GraphQLString },
     styleHeaderLogo: { type: GraphQLString },
     styleHeaderColor: { type: GraphQLString },
+    styleHeaderText: { type: GraphQLString },
     styleHeaderTextColor: { type: GraphQLString },
     disclaimerTitle: { type: GraphQLString },
     disclaimerText: { type: GraphQLString },
