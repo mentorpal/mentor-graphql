@@ -39,6 +39,55 @@ function convertStringsToObjectIds(filter: any) {
   return filter;
 }
 
+// {
+//   "filter": {
+//     "$and": [
+//       {
+//         "createdAt": {"$gt": "1234"}
+//       },
+//       {
+//         "createdAt": {"$lt": 1234}
+//       }
+//     ]
+//   }
+// }
+
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+function convertDateStringsToDateObjects(keyName: string, value: any) {
+  if (!value) {
+    return value;
+  }
+  const targetKeys: string[] = ['createdAt', 'updatedAt'];
+  if (targetKeys.find((targetKey) => targetKey === keyName)) {
+    if (typeof value === 'object') {
+      const keys = Object.keys(value);
+      if (keys.length === 0) {
+        throw new Error('No key found in date field value');
+      }
+      if (keys.length > 1) {
+        throw new Error(
+          'Expected single conditional key but found more than one for a date field'
+        );
+      }
+      const targetValue = value[keys[0]];
+      // number == epoch and string is any string date format
+      if (typeof targetValue == 'string' || typeof targetValue == 'number') {
+        value[keys[0]] = new Date(targetValue);
+      }
+    } else if (typeof value === 'string' || typeof value === 'number') {
+      // date value should be in date format
+      value = new Date(value);
+    }
+  }
+  if (typeof value === 'object') {
+    const keys = Object.keys(value);
+    for (let i = 0; i < keys.length; i++) {
+      value[keys[i]] = convertDateStringsToDateObjects(keys[i], value[keys[i]]);
+    }
+  }
+  return value;
+}
+
 export function findAll<T extends PaginatedResolveResult>(config: {
   nodeType: GraphQLObjectType;
   model: HasPaginate<T>;
@@ -53,6 +102,7 @@ export function findAll<T extends PaginatedResolveResult>(config: {
       let filter = Object.assign({}, args.filter || {});
 
       filter = convertStringsToObjectIds(filter);
+      filter = convertDateStringsToDateObjects('', filter);
 
       const cursor = args.cursor;
       let next = null;
