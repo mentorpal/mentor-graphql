@@ -39,17 +39,16 @@ function convertStringsToObjectIds(filter: any) {
   return filter;
 }
 
+// Example filter object:
 // {
-//   "filter": {
-//     "$and": [
-//       {
-//         "createdAt": {"$gt": "1234"}
-//       },
-//       {
-//         "createdAt": {"$lt": 1234}
-//       }
-//     ]
-//   }
+//   "$and": [
+//     {
+//       "createdAt": {"$gt": "2022-11-20T02:21:22.763Z"}
+//     },
+//     {
+//       "createdAt": {"$lt": "2022-12-01T18:02:16.391Z"}
+//     }
+//   ]
 // }
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
