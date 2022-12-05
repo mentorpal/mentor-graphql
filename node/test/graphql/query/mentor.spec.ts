@@ -954,7 +954,7 @@ describe('mentor', () => {
         query: `query {
           mentor(id: "5ffdf41a1ee2c62111111113") {
             orgPermissions {
-              org
+              orgId
               orgName
               permission
             }
@@ -966,12 +966,12 @@ describe('mentor', () => {
     expect(response.body.data.mentor).to.eql({
       orgPermissions: [
         {
-          org: '511111111111111111111111',
+          orgId: '511111111111111111111111',
           orgName: 'USC',
           permission: 'HIDDEN',
         },
         {
-          org: '511111111111111111111112',
+          orgId: '511111111111111111111112',
           orgName: 'CSUF',
           permission: 'MANAGE',
         },

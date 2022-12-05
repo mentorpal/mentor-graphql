@@ -54,7 +54,6 @@ describe('query uploadTask', () => {
           }
         }`,
       });
-    console.log(response.body);
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',

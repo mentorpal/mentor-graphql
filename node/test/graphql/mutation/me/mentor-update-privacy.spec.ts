@@ -279,7 +279,7 @@ describe('updateMentorPrivacy', () => {
               mentor {
                 isPrivate
                 orgPermissions {
-                  org
+                  orgId
                   orgName
                   permission
                 }
@@ -292,12 +292,12 @@ describe('updateMentorPrivacy', () => {
       isPrivate: true,
       orgPermissions: [
         {
-          org: '511111111111111111111112',
+          orgId: '511111111111111111111112',
           orgName: 'CSUF',
           permission: 'SHARE',
         },
         {
-          org: '511111111111111111111111',
+          orgId: '511111111111111111111111',
           orgName: 'USC',
           permission: 'ADMIN',
         },
@@ -334,7 +334,7 @@ describe('updateMentorPrivacy', () => {
               mentor {
                 isPrivate
                 orgPermissions {
-                  org
+                  orgId
                   orgName
                   permission
                 }
@@ -347,7 +347,7 @@ describe('updateMentorPrivacy', () => {
       isPrivate: true,
       orgPermissions: [
         {
-          org: '511111111111111111111111',
+          orgId: '511111111111111111111111',
           orgName: 'USC',
           permission: 'HIDDEN',
         },
@@ -366,7 +366,7 @@ describe('updateMentorPrivacy', () => {
               mentor {
                 isPrivate
                 orgPermissions {
-                  org
+                  orgId
                   orgName
                   permission
                 }
@@ -379,12 +379,12 @@ describe('updateMentorPrivacy', () => {
       isPrivate: true,
       orgPermissions: [
         {
-          org: '511111111111111111111112',
+          orgId: '511111111111111111111112',
           orgName: 'CSUF',
           permission: 'SHARE',
         },
         {
-          org: '511111111111111111111111',
+          orgId: '511111111111111111111111',
           orgName: 'USC',
           permission: 'ADMIN',
         },
@@ -419,7 +419,7 @@ describe('updateMentorPrivacy', () => {
               mentor {
                 isPrivate
                 orgPermissions {
-                  org
+                  orgId
                   orgName
                   permission
                 }
@@ -432,12 +432,12 @@ describe('updateMentorPrivacy', () => {
       isPrivate: true,
       orgPermissions: [
         {
-          org: '511111111111111111111112',
+          orgId: '511111111111111111111112',
           orgName: 'CSUF',
           permission: 'SHARE',
         },
         {
-          org: '511111111111111111111111',
+          orgId: '511111111111111111111111',
           orgName: 'USC',
           permission: 'ADMIN',
         },

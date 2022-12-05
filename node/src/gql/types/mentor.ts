@@ -30,7 +30,7 @@ import { QuestionType as QuestionGQLType } from './question';
 export const OrgPermissionType = new GraphQLObjectType({
   name: 'OrgPermissionType',
   fields: () => ({
-    org: { type: GraphQLID },
+    orgId: { type: GraphQLID },
     orgName: { type: GraphQLString },
     permission: { type: GraphQLString },
   }),
@@ -70,7 +70,7 @@ export const MentorType = new GraphQLObjectType({
           _id: { $in: mentor.orgPermissions.map((op) => op.org) },
         });
         return mentor.orgPermissions.map((op) => ({
-          org: op.org,
+          orgId: op.org,
           orgName: orgs.find((o) => `${o._id}` === `${op.org}`)?.name || '',
           permission: op.permission,
         }));

@@ -137,7 +137,6 @@ export const subjectUpdate = {
     if (args.subject.isArchived && !userCanManageArchival) {
       throw new Error('User is not authorized to archive this subject.');
     }
-    console.log('reached here');
     return await SubjectModel.updateOrCreate(args.subject);
   },
 };
