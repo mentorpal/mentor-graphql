@@ -21,6 +21,7 @@ import {
 import { Subject } from '../../models/Subject';
 import { Question } from '../../models/Question';
 import { Answer } from '../../models/Answer';
+import { Organization } from '../../models/Organization';
 import {
   AnswerUpdateInput,
   MentorImportJson,
@@ -33,7 +34,7 @@ import { SubjectUpdateInput } from '../mutation/me/subject-update';
 import { QuestionUpdateInput } from '../mutation/me/question-update';
 import { isId } from '../mutation/me/helpers';
 import { User } from '../../models/User';
-import { hasAccessToMentor } from '../../utils/mentor-check-private';
+import { canViewMentor } from '../../utils/check-permissions';
 
 enum EditType {
   NONE = 'NONE',
@@ -143,10 +144,10 @@ export const mentorImportPreview = {
   resolve: async (
     _root: GraphQLObjectType,
     args: { mentor: string; json: MentorImportJson },
-    context: { user: User }
+    context: { user: User; org: Organization }
   ): Promise<MentorImportPreview> => {
     const mentor = await MentorModel.findById(args.mentor);
-    if (!hasAccessToMentor(mentor, context.user)) {
+    if (!canViewMentor(mentor, context.user, context.org)) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );

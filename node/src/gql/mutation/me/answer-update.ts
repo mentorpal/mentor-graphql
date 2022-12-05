@@ -18,8 +18,8 @@ import {
   Question as QuestionModel,
 } from '../../../models';
 import { Status } from '../../../models/Answer';
-import { Mentor } from '../../../models/Mentor';
-import { User, UserRole } from '../../../models/User';
+import { User } from '../../../models/User';
+import { canEditMentor } from '../../../utils/check-permissions';
 
 export interface AnswerUpdateInput {
   transcript: string;
@@ -49,20 +49,14 @@ export const updateAnswer = {
     if (!(await QuestionModel.exists({ _id: args.questionId }))) {
       throw new Error(`no question found for id '${args.questionId}'`);
     }
-    let mentor: Mentor = await MentorModel.findOne({
-      user: context.user._id,
-    });
+    const mentor = args.mentorId
+      ? await MentorModel.findById(args.mentorId)
+      : await MentorModel.findOne({ user: context.user._id });
     if (!mentor) {
-      throw new Error('you do not have a mentor');
+      throw new Error('invalid mentor');
     }
-    if (args.mentorId && `${mentor._id}` !== `${args.mentorId}`) {
-      if (
-        context.user.userRole !== UserRole.ADMIN &&
-        context.user.userRole !== UserRole.CONTENT_MANAGER
-      ) {
-        throw new Error('you do not have permission to edit this mentor');
-      }
-      mentor = await MentorModel.findById(args.mentorId);
+    if (!(await canEditMentor(mentor, context.user))) {
+      throw new Error('you do not have permission to edit this mentor');
     }
 
     let answer = await AnswerModel.findOne({

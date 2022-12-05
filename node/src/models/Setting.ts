@@ -28,6 +28,7 @@ export interface Config {
 
   styleHeaderLogo: string;
   styleHeaderColor: string;
+  styleHeaderText: string;
   styleHeaderTextColor: string;
   displayGuestPrompt: boolean;
   disclaimerTitle: string;
@@ -81,6 +82,7 @@ export const ConfigKeys: ConfigKey[] = [
   'activeMentorPanels',
   'styleHeaderLogo',
   'styleHeaderColor',
+  'styleHeaderText',
   'styleHeaderTextColor',
   'displayGuestPrompt',
   'disclaimerTitle',
@@ -125,6 +127,7 @@ export function getDefaultConfig(): Config {
     activeMentorPanels: [],
     styleHeaderLogo: '',
     styleHeaderColor: '',
+    styleHeaderText: '',
     styleHeaderTextColor: '',
     displayGuestPrompt: false,
     disclaimerTitle: '',

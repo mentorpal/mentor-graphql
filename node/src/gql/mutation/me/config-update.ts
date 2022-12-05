@@ -15,8 +15,9 @@ import {
   GraphQLInt,
 } from 'graphql';
 import SettingModel, { Config } from '../../../models/Setting';
-import { User, UserRole } from '../../../models/User';
+import { User } from '../../../models/User';
 import { ConfigType } from '../../types/config';
+import { canEditContent } from '../../../utils/check-permissions';
 
 export interface ConfigUpdateInput {
   mentorsDefault: string[];
@@ -31,6 +32,7 @@ export interface ConfigUpdateInput {
   defaultVirtualBackground: string;
   styleHeaderLogo: string;
   styleHeaderColor: string;
+  styleHeaderText: string;
   styleHeaderTextColor: string;
   disclaimerTitle: string;
   disclaimerText: string;
@@ -55,6 +57,7 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     defaultVirtualBackground: { type: GraphQLString },
     styleHeaderLogo: { type: GraphQLString },
     styleHeaderColor: { type: GraphQLString },
+    styleHeaderText: { type: GraphQLString },
     styleHeaderTextColor: { type: GraphQLString },
     disclaimerTitle: { type: GraphQLString },
     disclaimerText: { type: GraphQLString },
@@ -75,10 +78,7 @@ export const updateConfig = {
     args: { config: ConfigUpdateInput },
     context: { user: User }
   ): Promise<Config> => {
-    if (
-      context.user.userRole !== UserRole.ADMIN &&
-      context.user.userRole !== UserRole.CONTENT_MANAGER
-    ) {
+    if (!canEditContent(context.user)) {
       throw new Error('you do not have permission to edit config');
     }
     await SettingModel.saveConfig(args.config);

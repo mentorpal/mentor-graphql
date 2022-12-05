@@ -40,6 +40,7 @@ export const ConfigType = new GraphQLObjectType({
     videoRecorderMaxLength: { type: GraphQLInt },
     styleHeaderLogo: { type: GraphQLString },
     styleHeaderColor: { type: GraphQLString },
+    styleHeaderText: { type: GraphQLString },
     styleHeaderTextColor: { type: GraphQLString },
     displayGuestPrompt: { type: GraphQLBoolean },
     disclaimerTitle: { type: GraphQLString },

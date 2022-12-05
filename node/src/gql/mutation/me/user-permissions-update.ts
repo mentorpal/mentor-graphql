@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType } from 'graphql';
+import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
 import UserType from '../../types/user';
 import { User as UserSchema } from '../../../models';
 import { User, UserRole } from '../../../models/User';
@@ -12,42 +12,30 @@ import { User, UserRole } from '../../../models/User';
 export const updateUserPermissions = {
   type: UserType,
   args: {
-    userId: { type: GraphQLString },
-    permissionLevel: { type: GraphQLString },
+    userId: { type: GraphQLNonNull(GraphQLString) },
+    permissionLevel: { type: GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: { userId: string; permissionLevel: string },
     context: { user: User }
   ): Promise<User> => {
-    if (!args.userId) {
-      throw new Error('missing required param userId');
-    }
-    if (!args.permissionLevel) {
-      throw new Error('missing required param permissionLevel');
-    }
-    if (
-      args.permissionLevel !== UserRole.USER &&
-      args.permissionLevel !== UserRole.CONTENT_MANAGER &&
-      args.permissionLevel !== UserRole.ADMIN
-    ) {
-      throw new Error(
-        `permissionLevel must be "${UserRole.USER}", "${UserRole.CONTENT_MANAGER}", or "${UserRole.ADMIN}"`
-      );
+    if (!Object.values(UserRole).includes(args.permissionLevel)) {
+      throw new Error('invalid permissionLevel');
     }
     if (
       context.user.userRole !== UserRole.ADMIN &&
-      context.user.userRole !== UserRole.CONTENT_MANAGER
+      context.user.userRole !== UserRole.SUPER_ADMIN
     ) {
       throw new Error(
-        'must be an admin or content manager to edit user permissions'
+        'must be an admin or super admin to edit user permissions'
       );
     }
     if (
-      args.permissionLevel === UserRole.ADMIN &&
-      context.user.userRole !== UserRole.ADMIN
+      args.permissionLevel === UserRole.SUPER_ADMIN &&
+      context.user.userRole !== UserRole.SUPER_ADMIN
     ) {
-      throw new Error('only admins can give admin permissions');
+      throw new Error('only super admins can give super admin permissions');
     }
 
     const userToEdit = await UserSchema.findOne({ _id: args.userId });
@@ -55,12 +43,11 @@ export const updateUserPermissions = {
       throw new Error(`could not find user for id ${args.userId}`);
     }
     if (
-      userToEdit.userRole == UserRole.ADMIN &&
-      context.user.userRole !== UserRole.ADMIN
+      userToEdit.userRole == UserRole.SUPER_ADMIN &&
+      context.user.userRole !== UserRole.SUPER_ADMIN
     ) {
-      throw new Error('only admins can edit an admins permissions');
+      throw new Error('only super admins can edit a super admins permissions');
     }
-
     return await UserSchema.findOneAndUpdate(
       {
         _id: args.userId,

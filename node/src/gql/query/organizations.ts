@@ -4,40 +4,27 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { PaginatedResolveResult } from '../types/connection';
-import { Answer as AnswerModel, Mentor as MentorModel } from '../../models';
-import { Answer } from '../../models/Answer';
-import { Organization } from '../../models/Organization';
+import { Organization } from '../../models';
 import { User } from '../../models/User';
-import { canViewMentor } from '../../utils/check-permissions';
-import AnswerType from '../types/answer';
+import { OrganizationType } from '../types/organization';
+import { PaginatedResolveResult } from '../types/connection';
+import { canViewOrganization } from '../../utils/check-permissions';
 import findAll from './find-all';
 
-export const answers = findAll({
-  nodeType: AnswerType,
-  model: AnswerModel,
-  filterInvalid: async (
+export const organizations = findAll({
+  nodeType: OrganizationType,
+  model: Organization,
+  filterInvalid: (
     paginationResults: PaginatedResolveResult,
-    context: { user: User; org: Organization }
+    context: { user: User }
   ) => {
-    const mentorIds = Array.from(
-      new Set(paginationResults.results.map((a: Answer) => a.mentor))
-    );
-    const mentors = await MentorModel.find({ _id: { $in: mentorIds } });
-    const newAnswerResults: Answer[] = paginationResults.results.filter(
-      (a: Answer) => {
-        const mentor = mentors.find((m) => `${m._id}` === `${a.mentor}`);
-        if (!mentor) {
-          return false;
-        }
-        return canViewMentor(mentor, context.user, context.org);
-      }
-    );
+    const orgs = paginationResults.results;
+    const newOrgList = orgs.filter((o) => canViewOrganization(o, context.user));
     return {
       ...paginationResults,
-      results: newAnswerResults,
+      results: newOrgList,
     };
   },
 });
 
-export default answers;
+export default organizations;

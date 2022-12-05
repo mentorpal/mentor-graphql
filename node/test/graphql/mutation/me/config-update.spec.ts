@@ -223,6 +223,7 @@ describe('updateConfig', () => {
               activeMentors
               styleHeaderLogo
               styleHeaderColor
+              styleHeaderText
               styleHeaderTextColor
             }
           }
@@ -231,6 +232,7 @@ describe('updateConfig', () => {
           config: {
             styleHeaderLogo: 'test',
             styleHeaderColor: 'test',
+            styleHeaderText: 'test',
             styleHeaderTextColor: 'test',
           },
         },
@@ -243,6 +245,7 @@ describe('updateConfig', () => {
       mentorsDefault: [],
       styleHeaderLogo: 'test',
       styleHeaderColor: 'test',
+      styleHeaderText: 'test',
       styleHeaderTextColor: 'test',
     });
   });

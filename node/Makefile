@@ -99,3 +99,7 @@ test-types: node_modules/typescript
 .PHONY: license-deploy
 license-deploy: node_modules/license-check-and-add
 	LICENSE_CONFIG=${LICENSE_CONFIG} npm run license:deploy
+
+.PHONY: deploy-dev
+deploy-dev: 
+	sls deploy -s dev

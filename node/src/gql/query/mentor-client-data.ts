@@ -22,9 +22,10 @@ import {
 import { AnswerMedia } from '../../models/Answer';
 import { Question, QuestionType } from '../../models/Question';
 import { SubjectQuestion, Topic } from '../../models/Subject';
+import { Organization } from '../../models/Organization';
 import { User } from '../../models/User';
 import { isAnswerComplete, Mentor } from '../../models/Mentor';
-import { hasAccessToMentor } from '../../utils/mentor-check-private';
+import { canViewMentor } from '../../utils/check-permissions';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 
 export interface MentorClientData {
@@ -134,13 +135,13 @@ export const mentorData = {
   resolve: async (
     _root: GraphQLObjectType,
     args: { mentor: string; subject?: string },
-    context: { user: User }
+    context: { user: User; org: Organization }
   ): Promise<MentorClientData> => {
     const mentor = await MentorModel.findById(args.mentor);
     if (!mentor) {
       throw new Error(`mentor ${args.mentor} not found`);
     }
-    if (!hasAccessToMentor(mentor, context.user)) {
+    if (!canViewMentor(mentor, context.user, context.org)) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );

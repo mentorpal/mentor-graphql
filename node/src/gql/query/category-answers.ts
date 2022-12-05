@@ -12,8 +12,9 @@ import {
   GraphQLID,
   GraphQLNonNull,
 } from 'graphql';
+import { Organization } from '../../models/Organization';
 import { User } from '../../models/User';
-import { hasAccessToMentor } from '../../utils/mentor-check-private';
+import { canViewMentor } from '../../utils/check-permissions';
 import { Mentor as MentorModel } from '../../models';
 import { Status } from '../../models/Answer';
 
@@ -34,10 +35,10 @@ export const categoryAnswers = {
   resolve: async (
     _: GraphQLObjectType,
     args: { category: string; mentor: string },
-    context: { user: User }
+    context: { user: User; org: Organization }
   ) => {
     const mentor = await MentorModel.findById(args.mentor);
-    if (!hasAccessToMentor(mentor, context.user)) {
+    if (!canViewMentor(mentor, context.user, context.org)) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );

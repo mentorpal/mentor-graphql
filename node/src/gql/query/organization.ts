@@ -4,36 +4,24 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType, GraphQLNonNull, GraphQLID } from 'graphql';
-import { Answer as AnswerModel, Mentor as MentorModel } from '../../models';
-import { Answer } from '../../models/Answer';
+import { Organization as OrganizationModel } from '../../models';
 import { Organization } from '../../models/Organization';
 import { User } from '../../models/User';
-import { canViewMentor } from '../../utils/check-permissions';
-import AnswerType from '../types/answer';
+import { OrganizationType } from '../types/organization';
+import { canViewOrganization } from '../../utils/check-permissions';
+import findOne from './find-one';
 
-export const answer = {
-  type: AnswerType,
-  args: {
-    mentor: { type: GraphQLNonNull(GraphQLID) },
-    question: { type: GraphQLNonNull(GraphQLID) },
-  },
-  resolve: async (
-    _root: GraphQLObjectType,
-    args: { mentor: string; question: string },
-    context: { user: User; org: Organization }
-  ): Promise<Answer> => {
-    const mentor = await MentorModel.findById(args.mentor);
-    if (!canViewMentor(mentor, context.user, context.org)) {
+export const organization = findOne({
+  model: OrganizationModel,
+  type: OrganizationType,
+  typeName: 'organization',
+  checkIfInvalid: (org: Organization, context: { user: User }) => {
+    if (!canViewOrganization(org, context.user)) {
       throw new Error(
-        `mentor is private and you do not have permission to access`
+        `organization is private and you do not have permission to access`
       );
     }
-    return await AnswerModel.findOne({
-      mentor: args.mentor,
-      question: args.question,
-    });
   },
-};
+});
 
-export default answer;
+export default organization;

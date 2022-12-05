@@ -9,6 +9,7 @@ import { graphqlHTTP } from 'express-graphql';
 import { Request, Response } from 'express';
 import schema from './schema';
 import { User } from '../models/User';
+import OrganizationModel, { Organization } from '../models/Organization';
 import { getRefreshedToken } from './types/user-access-token';
 import { logger } from '../utils/logging';
 
@@ -23,6 +24,21 @@ function isApiReq(req: Request): boolean {
   return Boolean(req.headers['mentor-graphql-req']);
 }
 
+async function getOrg(req: Request, next: any, user: User, jwtToken = '') {
+  try {
+    const origin = req.header('origin');
+    if (origin) {
+      const subdomain = /:\/\/([^\/]+)/.exec(origin)[1].split('.')[0];
+      const org = await OrganizationModel.findOne({ subdomain });
+      return next(user, org, jwtToken);
+    } else {
+      return next(user, null, jwtToken);
+    }
+  } catch (err) {
+    return next(user, null, jwtToken);
+  }
+}
+
 async function refreshToken(req: Request, next: any) {
   // eslint-disable-line  @typescript-eslint/no-explicit-any
   try {
@@ -30,27 +46,27 @@ async function refreshToken(req: Request, next: any) {
     const token = req.cookies[process.env.REFRESH_TOKEN_NAME];
     if (!token) {
       logger.debug('refresh token not found');
-      return next(null);
+      return getOrg(req, next, null);
     }
     const { jwtToken, user } = await getRefreshedToken(token);
     if (user) {
-      return next(user, jwtToken);
+      return getOrg(req, next, user, jwtToken);
     } else {
       logger.warn("couldn't get user");
-      return next(null);
+      return getOrg(req, next, null);
     }
   } catch (err) {
     logger.warn(
       `couldn't refresh token ${req.cookies[process.env.REFRESH_TOKEN_NAME]}`
     );
     logger.error(err);
-    return next(null);
+    return getOrg(req, next, null);
   }
 }
 
 export default graphqlHTTP((req: Request, res: Response) => {
   return new Promise((resolve) => {
-    const next = (user: User, newToken = '') => {
+    const next = (user: User, org: Organization, newToken = '') => {
       resolve({
         schema,
         ...(!process.env.NODE_ENV?.includes('prod') && {
@@ -58,6 +74,7 @@ export default graphqlHTTP((req: Request, res: Response) => {
         }),
         context: {
           user: user || null,
+          org: org || null,
           newToken: newToken || '',
           res: res,
           req: req,
@@ -74,7 +91,7 @@ export default graphqlHTTP((req: Request, res: Response) => {
       if (err == 'token expired' || user === false) {
         refreshToken(req, next);
       } else {
-        next(user);
+        getOrg(req, next, user);
       }
     })(req, res, next);
   });

@@ -6,10 +6,14 @@ The full terms of this copyright and license should always be found in the root 
 */
 
 import { GraphQLID, GraphQLNonNull, GraphQLObjectType } from 'graphql';
-import { User, UserRole } from '../../models/User';
-import { UploadTask as UploadTaskModel } from '../../models';
+import { User } from '../../models/User';
+import {
+  UploadTask as UploadTaskModel,
+  Mentor as MentorModel,
+} from '../../models';
 import { UploadTask } from '../../models/UploadTask';
 import { UploadTaskType } from '../types/upload-task';
+import { canEditMentor } from '../../utils/check-permissions';
 
 export const uploadTask = {
   type: UploadTaskType,
@@ -28,19 +32,21 @@ export const uploadTask = {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
+    const mentor = await MentorModel.findById(args.mentorId);
+    if (!mentor) {
+      throw new Error('invalid mentor');
+    }
     if (context.user.id) {
       // jwt strategy (users)
       if (
-        !context.user.mentorIds.find((mentorId) => mentorId == args.mentorId) &&
-        context.user.userRole !== UserRole.ADMIN &&
-        context.user.userRole !== UserRole.CONTENT_MANAGER
+        !context.user.mentorIds.find((mentorId) => mentorId == args.mentorId) ||
+        !canEditMentor(mentor, context.user)
       ) {
         throw new Error(
           'you are not authorized to view this mentors information'
         );
       }
-    } // else bearer-api strategy (services)
-
+    }
     const task = await UploadTaskModel.findOne({
       mentor: args.mentorId,
       question: args.questionId,

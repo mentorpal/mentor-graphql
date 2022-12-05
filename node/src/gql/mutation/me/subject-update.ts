@@ -20,13 +20,14 @@ import {
 } from '../../../models';
 import { Question } from '../../../models/Question';
 import { Subject, SubjectQuestionProps } from '../../../models/Subject';
+import { User } from '../../../models/User';
 import SubjectType from '../../types/subject';
 import {
   QuestionUpdateInput,
   QuestionUpdateInputType,
 } from './question-update';
 import { toUpdateProps } from './helpers';
-import { User, UserRole } from '../../../models/User';
+import { canEditContent } from '../../../utils/check-permissions';
 
 export interface CategoryUpdateInput {
   id: string;
@@ -132,14 +133,10 @@ export const subjectUpdate = {
     args: { subject: SubjectUpdateInput },
     context: { user: User }
   ): Promise<Subject> => {
-    const userCanManageArchival =
-      context.user.userRole == UserRole.CONTENT_MANAGER ||
-      context.user.userRole == UserRole.ADMIN;
-    console.log(userCanManageArchival);
+    const userCanManageArchival = canEditContent(context.user);
     if (args.subject.isArchived && !userCanManageArchival) {
       throw new Error('User is not authorized to archive this subject.');
     }
-    console.log('reached here');
     return await SubjectModel.updateOrCreate(args.subject);
   },
 };

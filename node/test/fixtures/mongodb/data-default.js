@@ -13,7 +13,7 @@ module.exports = {
       _id: ObjectId('5ffdf41a1ee2c62320b49ea1'),
       name: 'Clinton Anderson',
       email: 'clint@anderson.com',
-      userRole: 'ADMIN',
+      userRole: 'SUPER_ADMIN',
       firstTimeTracking: {
         myMentorSplash: false,
         tooltips: true,
@@ -42,7 +42,7 @@ module.exports = {
       _id: ObjectId('5ffdf41a1ee2c62320b49ea5'),
       name: 'Jacob Ferguson',
       email: 'jacob@ferguson.com',
-      userRole: 'CONTENT_MANAGER',
+      userRole: 'SUPER_CONTENT_MANAGER',
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49ea6'),
@@ -139,6 +139,16 @@ module.exports = {
       user: ObjectId('5ffdf41a1ee2c62320b49ea2'),
       subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
       keywords: [ObjectId('511111111111111111111111')],
+      orgPermissions: [
+        {
+          org: ObjectId('511111111111111111111111'),
+          permission: 'HIDDEN',
+        },
+        {
+          org: ObjectId('511111111111111111111112'),
+          permission: 'MANAGE',
+        },
+      ],
     },
     {
       _id: ObjectId('5ffdf41a1ee2c62111111114'),
@@ -148,6 +158,16 @@ module.exports = {
       user: ObjectId('5ffdf41a1ee2c62320b49ea7'),
       subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
       keywords: [ObjectId('511111111111111111111113')],
+      orgPermissions: [
+        {
+          org: ObjectId('511111111111111111111112'),
+          permission: 'SHARE',
+        },
+        {
+          org: ObjectId('511111111111111111111111'),
+          permission: 'ADMIN',
+        },
+      ],
     },
   ],
 
@@ -465,6 +485,51 @@ module.exports = {
       _id: ObjectId('511111111111111111111114'),
       type: 'Career',
       name: 'STEM',
+    },
+  ],
+
+  organizations: [
+    {
+      _id: ObjectId('511111111111111111111111'),
+      uuid: 'usc',
+      name: 'USC',
+      subdomain: 'usc',
+      isPrivate: true,
+      members: [
+        {
+          user: ObjectId('5ffdf41a1ee2c62320b49ea2'),
+          role: 'ADMIN',
+        },
+        {
+          user: ObjectId('5ffdf41a1ee2c62320b49ea4'),
+          role: 'CONTENT_MANAGER',
+        },
+        {
+          user: ObjectId('5ffdf41a1ee2c62320b49ea3'),
+          role: 'USER',
+        },
+      ],
+    },
+    {
+      _id: ObjectId('511111111111111111111112'),
+      uuid: 'csuf',
+      name: 'CSUF',
+      subdomain: 'careerfair',
+      isPrivate: false,
+      members: [
+        {
+          user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
+          role: 'ADMIN',
+        },
+        {
+          user: ObjectId('5ffdf41a1ee2c62320b49ea5'),
+          role: 'CONTENT_MANAGER',
+        },
+        {
+          user: ObjectId('5ffdf41a1ee2c62320b49ea3'),
+          role: 'USER',
+        },
+      ],
     },
   ],
 };

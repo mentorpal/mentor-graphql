@@ -6,12 +6,12 @@ The full terms of this copyright and license should always be found in the root 
 */
 
 import { GraphQLID, GraphQLList, GraphQLObjectType } from 'graphql';
-import { User, UserRole } from '../../../models/User';
+import { User } from '../../../models/User';
 import { Mentor as MentorModel } from '../../../models';
 import { UploadTask as UploadTaskModel } from '../../../models';
 import { UploadTask } from '../../../models/UploadTask';
 import { UploadTaskType } from '../../types/upload-task';
-import { Mentor } from '../../../models/Mentor';
+import { canEditMentor } from '../../../utils/check-permissions';
 
 export const uploadTasks = {
   type: GraphQLList(UploadTaskType),
@@ -26,22 +26,18 @@ export const uploadTasks = {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
-    let mentor: Mentor = await MentorModel.findOne({
-      user: context.user._id,
-    });
+    const mentor = args.mentorId
+      ? await MentorModel.findById(args.mentorId)
+      : await MentorModel.findOne({
+          user: context.user._id,
+        });
     if (!mentor) {
-      throw new Error('you do not have a mentor');
+      throw new Error('invalid mentor');
     }
-    if (args.mentorId && `${mentor._id}` !== `${args.mentorId}`) {
-      if (
-        context.user.userRole !== UserRole.ADMIN &&
-        context.user.userRole !== UserRole.CONTENT_MANAGER
-      ) {
-        throw new Error(
-          'you do not have permission to view this mentors information'
-        );
-      }
-      mentor = await MentorModel.findById(args.mentorId);
+    if (!(await canEditMentor(mentor, context.user))) {
+      throw new Error(
+        'you do not have permission to view this mentors information'
+      );
     }
     const tasks = await UploadTaskModel.find({
       mentor: mentor._id,

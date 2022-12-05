@@ -5,8 +5,9 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLString, GraphQLObjectType, GraphQLBoolean } from 'graphql';
-import { User, UserRole } from '../../../models/User';
+import { User } from '../../../models/User';
 import { User as UserSchema } from '../../../models';
+import { canEditContent } from '../../../utils/check-permissions';
 
 export const canManageContent = {
   type: GraphQLBoolean,
@@ -20,10 +21,7 @@ export const canManageContent = {
   ): Promise<boolean> => {
     const userIdToFind = args.userId ? args.userId : context.user.id;
     const user = await UserSchema.findOne({ _id: userIdToFind });
-    return (
-      user.userRole === UserRole.CONTENT_MANAGER ||
-      user.userRole === UserRole.ADMIN
-    );
+    return canEditContent(user);
   },
 };
 

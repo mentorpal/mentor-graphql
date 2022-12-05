@@ -4,22 +4,25 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Mentor } from '../models/Mentor';
-import { User, UserRole } from '../models/User';
+import { GraphQLObjectType } from 'graphql';
+import { ConfigType } from '../types/config';
+import OrganizationModel, { Organization } from '../../models/Organization';
+import SettingModel, { Config } from '../../models/Setting';
+import { User } from '../../models/User';
+import { canViewOrganization } from '../../utils/check-permissions';
 
-export function hasAccessToMentor(mentor: Mentor, user: User): boolean {
-  if (!mentor) {
-    return false;
-  }
-  if (mentor.isPrivate) {
-    if (!user) {
-      return false;
+export const orgConfig = {
+  type: ConfigType,
+  resolve: async (
+    _: GraphQLObjectType,
+    _args: GraphQLObjectType,
+    context: { org: Organization; user: User }
+  ): Promise<Config> => {
+    if (context.org && canViewOrganization(context.org, context.user)) {
+      return await OrganizationModel.getConfig(context.org);
     }
-    return (
-      `${mentor.user}` === `${user._id}` ||
-      user.userRole === UserRole.ADMIN ||
-      user.userRole === UserRole.CONTENT_MANAGER
-    );
-  }
-  return true;
-}
+    return await SettingModel.getConfig();
+  },
+};
+
+export default orgConfig;

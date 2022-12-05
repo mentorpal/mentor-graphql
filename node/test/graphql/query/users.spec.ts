@@ -59,5 +59,78 @@ describe('query users', () => {
         },
       });
     expect(response.status).to.equal(200);
+    expect(response.body.data.users).to.eql({
+      edges: [
+        {
+          node: {
+            _id: '5ffdf41a1ee2c62320b49ea7',
+            name: 'Private Mentor',
+            email: 'private@mentor.com',
+            userRole: 'USER',
+            defaultMentor: { _id: '5ffdf41a1ee2c62111111114' },
+          },
+        },
+        {
+          node: {
+            _id: '5ffdf41a1ee2c62320b49ea6',
+            name: 'Aaron Klunder',
+            email: 'aaron@klunder.com',
+            userRole: 'ADMIN',
+            defaultMentor: { _id: '5ffdf41a1ee2c62111111119' },
+          },
+        },
+        {
+          node: {
+            _id: '5ffdf41a1ee2c62320b49ea5',
+            name: 'Jacob Ferguson',
+            email: 'jacob@ferguson.com',
+            userRole: 'SUPER_CONTENT_MANAGER',
+            defaultMentor: { _id: '5ffdf41a1ee2c62111111110' },
+          },
+        },
+        {
+          node: {
+            _id: '5ffdf41a1ee2c62320b49ea4',
+            name: 'No Mentor',
+            email: 'no@mentor.com',
+            userRole: 'CONTENT_MANAGER',
+            defaultMentor: null,
+          },
+        },
+        {
+          node: {
+            _id: '5ffdf41a1ee2c62320b49ea3',
+            name: 'Julianne Nordhagen',
+            email: 'julianne@nordhagen.com',
+            userRole: 'USER',
+            defaultMentor: { _id: '5ffdf41a1ee2c62111111112' },
+          },
+        },
+        {
+          node: {
+            _id: '5ffdf41a1ee2c62320b49ea2',
+            name: 'Dan Davis',
+            email: 'dan@davis.com',
+            userRole: 'USER',
+            defaultMentor: { _id: '5ffdf41a1ee2c62111111113' },
+          },
+        },
+        {
+          node: {
+            _id: '5ffdf41a1ee2c62320b49ea1',
+            name: 'Clinton Anderson',
+            email: 'clint@anderson.com',
+            userRole: 'SUPER_ADMIN',
+            defaultMentor: { _id: '5ffdf41a1ee2c62111111111' },
+          },
+        },
+      ],
+      pageInfo: {
+        startCursor: null,
+        endCursor: null,
+        hasPreviousPage: false,
+        hasNextPage: false,
+      },
+    });
   });
 });

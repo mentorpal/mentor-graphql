@@ -9,34 +9,44 @@ import {
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLID,
+  GraphQLList,
+  GraphQLInputObjectType,
+  GraphQLString,
 } from 'graphql';
 import { Mentor as MentorModel } from '../../../models';
-import { Mentor } from '../../../models/Mentor';
-import { User, UserRole } from '../../../models/User';
+import { User } from '../../../models/User';
+import { OrgPermissionProps } from '../../../models/Mentor';
+import { canEditMentorPrivacy } from '../../../utils/check-permissions';
+
+export const OrgPermissionInputType = new GraphQLInputObjectType({
+  name: 'OrgPermissionInputType',
+  fields: {
+    org: { type: GraphQLNonNull(GraphQLID) },
+    permission: { type: GraphQLNonNull(GraphQLString) },
+  },
+});
 
 export const updateMentorPrivacy = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     isPrivate: { type: GraphQLNonNull(GraphQLBoolean) },
+    orgPermissions: { type: GraphQLList(OrgPermissionInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentorId: string; isPrivate: boolean },
+    args: {
+      mentorId: string;
+      isPrivate: boolean;
+      orgPermissions: OrgPermissionProps;
+    },
     context: { user: User }
   ): Promise<boolean> => {
-    const mentor: Mentor = await MentorModel.findById(args.mentorId);
+    const mentor = await MentorModel.findById(args.mentorId);
     if (!mentor) {
       throw new Error('invalid mentor id given');
     }
-    const userMentor: Mentor = await MentorModel.findOne({
-      user: context.user._id,
-    });
-    if (
-      `${userMentor._id}` !== `${args.mentorId}` &&
-      context.user.userRole !== UserRole.ADMIN &&
-      context.user.userRole !== UserRole.CONTENT_MANAGER
-    ) {
+    if (!(await canEditMentorPrivacy(mentor, context.user))) {
       throw new Error('you do not have permission to edit this mentor');
     }
     const updated = await MentorModel.findByIdAndUpdate(
@@ -44,6 +54,7 @@ export const updateMentorPrivacy = {
       {
         $set: {
           isPrivate: args.isPrivate,
+          orgPermissions: args.orgPermissions || mentor.orgPermissions,
         },
       },
       {

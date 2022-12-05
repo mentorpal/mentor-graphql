@@ -13,9 +13,9 @@ import {
   GraphQLList,
 } from 'graphql';
 import { Mentor as MentorModel } from '../../../models';
-import { Mentor } from '../../../models/Mentor';
 import { Subject } from '../../../models/Subject';
-import { User, UserRole } from '../../../models/User';
+import { User } from '../../../models/User';
+import { canEditMentor } from '../../../utils/check-permissions';
 
 export interface UpdateMentorSubjects {
   defaultSubject: Subject['_id'];
@@ -41,20 +41,16 @@ export const updateMentorSubjects = {
     args: { mentor: UpdateMentorSubjects; mentorId: string },
     context: { user: User }
   ): Promise<boolean> => {
-    let mentor: Mentor = await MentorModel.findOne({
-      user: context.user._id,
-    });
+    const mentor = args.mentorId
+      ? await MentorModel.findById(args.mentorId)
+      : await MentorModel.findOne({
+          user: context.user._id,
+        });
     if (!mentor) {
-      throw new Error('you do not have a mentor');
+      throw new Error('invalid mentor');
     }
-    if (args.mentorId && `${mentor._id}` !== `${args.mentorId}`) {
-      if (
-        context.user.userRole !== UserRole.ADMIN &&
-        context.user.userRole !== UserRole.CONTENT_MANAGER
-      ) {
-        throw new Error('you do not have permission to edit this mentor');
-      }
-      mentor = await MentorModel.findById(args.mentorId);
+    if (!(await canEditMentor(mentor, context.user))) {
+      throw new Error('you do not have permission to edit this mentor');
     }
     const updated = await MentorModel.findByIdAndUpdate(
       mentor._id,
