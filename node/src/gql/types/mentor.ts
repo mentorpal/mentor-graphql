@@ -66,6 +66,9 @@ export const MentorType = new GraphQLObjectType({
     orgPermissions: {
       type: GraphQLList(OrgPermissionType),
       resolve: async (mentor: Mentor) => {
+        if (!mentor.orgPermissions) {
+          return [];
+        }
         const orgs = await OrganizationModel.find({
           _id: { $in: mentor.orgPermissions.map((op) => op.org) },
         });

@@ -132,6 +132,7 @@ describe('config', () => {
       videoRecorderMaxLength: 300,
       styleHeaderLogo: '/a/logo.png',
       styleHeaderColor: '',
+      styleHeaderTitle: '',
       styleHeaderText: '',
       styleHeaderTextColor: '',
       displayGuestPrompt: false,
@@ -173,6 +174,7 @@ describe('config', () => {
             urlVideo
             styleHeaderLogo
             styleHeaderColor
+            styleHeaderTitle
             styleHeaderText
             styleHeaderTextColor
             displayGuestPrompt

@@ -12,7 +12,7 @@ import {
   pluginPagination,
 } from './Paginatation';
 import { User, UserRole } from './User';
-import SettingModel, { Config, Setting, SettingSchema } from './Setting';
+import SettingModel, { Config, getDefaultConfig } from './Setting';
 
 export interface OrgMemberProps {
   user: User['_id'];
@@ -28,13 +28,24 @@ export const OrgMemberSchema = new Schema({
   },
 });
 
+export interface OrgConfigProps {
+  key: string;
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  value: any;
+}
+export interface OrgConfig extends OrgConfigProps, Document {}
+export const OrgConfigSchema = new Schema({
+  key: { type: String },
+  value: { type: Schema.Types.Mixed },
+});
+
 export interface OrganizationProps {
   uuid: string;
   name: string;
   subdomain: string;
   isPrivate: boolean;
   members: OrgMemberProps[];
-  config: Setting[];
+  config: OrgConfigProps[];
 }
 export interface Organization extends OrganizationProps, Document {}
 export const OrganizationSchema = new Schema<Organization, OrganizationModel>(
@@ -44,7 +55,7 @@ export const OrganizationSchema = new Schema<Organization, OrganizationModel>(
     subdomain: { type: String },
     isPrivate: { type: Boolean, default: false },
     members: { type: [OrgMemberSchema], default: [] },
-    config: { type: [SettingSchema], default: [] },
+    config: { type: [OrgConfigSchema], default: [] },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
@@ -63,19 +74,35 @@ export interface OrganizationModel extends Model<Organization> {
 
 OrganizationSchema.statics.getConfig = async function (
   o: string | Organization
-) {
+): Promise<Config> {
   const org: Organization = typeof o === 'string' ? await this.findById(o) : o;
   if (!org) {
     throw new Error(`org ${o} not found`);
   }
-  const defaultConfig = await SettingModel.getConfig();
-  return org.config
-    ? org.config.reduce((acc: Config, cur: Setting) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (acc as any)[cur.key] = cur.value;
-        return acc;
-      }, defaultConfig)
-    : defaultConfig;
+  const config = await SettingModel.getConfig();
+  const defaultConfig = getDefaultConfig();
+  let orgConfig = {
+    ...config,
+    featuredMentors: defaultConfig.featuredMentors,
+    featuredMentorPanels: defaultConfig.featuredMentorPanels,
+    featuredSubjects: defaultConfig.featuredSubjects,
+    activeMentors: defaultConfig.activeMentors,
+    activeMentorPanels: defaultConfig.activeMentorPanels,
+    styleHeaderLogo: defaultConfig.styleHeaderLogo,
+    styleHeaderColor: defaultConfig.styleHeaderColor,
+    styleHeaderTitle: defaultConfig.styleHeaderTitle,
+    styleHeaderText: defaultConfig.styleHeaderText,
+    styleHeaderTextColor: defaultConfig.styleHeaderTextColor,
+    mentorsDefault: defaultConfig.mentorsDefault,
+    defaultSubject: defaultConfig.defaultSubject,
+  };
+  for (const setting of org.config || []) {
+    orgConfig = {
+      ...orgConfig,
+      [setting.key]: setting.value,
+    };
+  }
+  return orgConfig;
 };
 
 OrganizationSchema.statics.saveConfig = async function (
@@ -106,8 +133,6 @@ OrganizationSchema.statics.saveConfig = async function (
   return await this.getConfig(updatedOrg);
 };
 
-OrganizationSchema.index({ question: -1, _id: -1 });
-OrganizationSchema.index({ type: -1, _id: -1 });
 OrganizationSchema.index({ name: -1, _id: -1 });
 pluginPagination(OrganizationSchema);
 

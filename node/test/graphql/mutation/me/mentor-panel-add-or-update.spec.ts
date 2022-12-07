@@ -204,12 +204,12 @@ describe('addOrUpdateMentorPanel', () => {
       edges: [
         {
           node: {
-            title: 'fake panel title',
+            title: 'New Panel',
           },
         },
         {
           node: {
-            title: 'New Panel',
+            title: 'fake panel title',
           },
         },
       ],
@@ -273,12 +273,12 @@ describe('addOrUpdateMentorPanel', () => {
       edges: [
         {
           node: {
-            title: 'fake panel title',
+            title: 'New Panel',
           },
         },
         {
           node: {
-            title: 'New Panel',
+            title: 'fake panel title',
           },
         },
       ],
