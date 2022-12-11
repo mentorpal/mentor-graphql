@@ -16,10 +16,9 @@ export const mentor = {
   type: MentorType,
   resolve: async (
     _: GraphQLObjectType,
-    args: any,
+    _args: GraphQLObjectType,
     context: { user: User }
   ): Promise<Mentor> => {
-    // eslint-disable-line  @typescript-eslint/no-explicit-any
     if (!context.user) {
       throw new Error('Only authenticated users');
     }

@@ -94,7 +94,6 @@ OrganizationSchema.statics.getConfig = async function (
     styleHeaderText: defaultConfig.styleHeaderText,
     styleHeaderTextColor: defaultConfig.styleHeaderTextColor,
     mentorsDefault: defaultConfig.mentorsDefault,
-    defaultSubject: defaultConfig.defaultSubject,
   };
   for (const setting of org.config || []) {
     orgConfig = {

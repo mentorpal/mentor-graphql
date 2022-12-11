@@ -4,7 +4,6 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-
 import { GraphQLID, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import { User } from '../../models/User';
 import {
@@ -34,10 +33,12 @@ export const importTask = {
     if (!mentor) {
       throw new Error('invalid mentor');
     }
-    if (!(await canEditMentor(mentor, context.user))) {
-      throw new Error(
-        'you do not have permission to view this mentors information'
-      );
+    if (context.user.id) {
+      if (!(await canEditMentor(mentor, context.user))) {
+        throw new Error(
+          'you do not have permission to view this mentors information'
+        );
+      }
     }
     const task = await ImportTaskModel.findOne({
       mentor: args.mentorId,
