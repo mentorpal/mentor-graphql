@@ -29,17 +29,18 @@ export const importTask = {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
-    const mentor = await MentorModel.findById(args.mentorId);
-    if (!mentor) {
-      throw new Error('invalid mentor');
-    }
+    // jwt strategy (users)
     if (context.user.id) {
+      const mentor = await MentorModel.findById(args.mentorId);
+      if (!mentor) {
+        throw new Error('invalid mentor');
+      }
       if (!(await canEditMentor(mentor, context.user))) {
         throw new Error(
           'you do not have permission to view this mentors information'
         );
       }
-    }
+    } // else bearer-api strategy (services)
     const task = await ImportTaskModel.findOne({
       mentor: args.mentorId,
     });
