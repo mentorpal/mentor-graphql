@@ -6,7 +6,11 @@ The full terms of this copyright and license should always be found in the root 
 */
 import axios from 'axios';
 import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
-import { User as UserSchema, Mentor as MentorSchema } from '../../models';
+import {
+  User as UserSchema,
+  Mentor as MentorSchema,
+  Subject as SubjectSchema,
+} from '../../models';
 import {
   UserAccessTokenType,
   UserAccessToken,
@@ -80,6 +84,8 @@ export const loginGoogle = {
       }
       // Create/Migrate mentor to user model
       if (!user.mentorIds.length) {
+        // add any required subjects to mentor
+        const requiredSubjects = await SubjectSchema.find({ isRequired: true });
         const newMentor = await MentorSchema.findOneAndUpdate(
           {
             user: user._id,
@@ -89,6 +95,7 @@ export const loginGoogle = {
               name: googleResponse.name,
               firstName: googleResponse.given_name,
               email: googleResponse.email,
+              subjects: requiredSubjects.map((s) => s._id),
             },
           },
           {

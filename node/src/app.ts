@@ -18,12 +18,17 @@ import { logger } from './utils/logging';
 import requireEnv from './utils/require-env';
 import { User as UserSchema } from './models';
 
-const CORS_ORIGIN = process.env.CORS_ORIGIN || [
-  'https://v2.mentorpal.org',
-  'https://careerfair.mentorpal.org',
-  'http://local.mentorpal.org:8000',
-  'http://localhost:8000',
-];
+const CORS_ORIGIN = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',')
+  : [
+      'https://devmentorpal.org',
+      'https://qamentorpal.org',
+      'https://mentorpal.org',
+      'https://v2.mentorpal.org',
+      'https://careerfair.mentorpal.org',
+      'http://local.mentorpal.org:8000',
+      'http://localhost:8000',
+    ];
 
 function setupPassport() {
   passport.use(
@@ -99,8 +104,29 @@ export async function createApp(): Promise<Express> {
 
   const corsOptions = {
     credentials: true,
-    origin: CORS_ORIGIN,
+    origin: function (
+      origin: string,
+      callback: (err: Error, allow?: string) => void
+    ) {
+      if (!origin) {
+        callback(null, '');
+      } else {
+        let allowOrigin = false;
+        for (const co of CORS_ORIGIN) {
+          if (origin === co || origin.endsWith(co)) {
+            allowOrigin = true;
+            break;
+          }
+        }
+        if (allowOrigin) {
+          callback(null, origin);
+        } else {
+          callback(new Error(`${origin} not allowed by CORS`));
+        }
+      }
+    },
   };
+
   app.use(cors(corsOptions));
   app.use(express.json({ limit: '2mb' }));
   app.use(cookieParser());

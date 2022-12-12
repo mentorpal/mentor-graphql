@@ -14,9 +14,12 @@ import {
 } from 'graphql';
 import MentorPanelType from '../../../gql/types/mentor-panel';
 import MentorPanelModel, { MentorPanel } from '../../../models/MentorPanel';
-import { User, UserRole } from '../../../models/User';
+import { User } from '../../../models/User';
+import { canEditContent } from '../../../utils/check-permissions';
+import { idOrNew } from './helpers';
 
 interface AddOrUpdateMentorPanelInput {
+  org: string;
   subject: string;
   mentors: string[];
   title: string;
@@ -26,6 +29,7 @@ interface AddOrUpdateMentorPanelInput {
 export const AddOrUpdateMentorPanelInputType = new GraphQLInputObjectType({
   name: 'AddOrUpdateMentorPanelInputType',
   fields: {
+    org: { type: GraphQLID },
     subject: { type: GraphQLID },
     mentors: { type: GraphQLList(GraphQLID) },
     title: { type: GraphQLString },
@@ -44,14 +48,11 @@ export const addOrUpdateMentorPanel = {
     args: { id: string; mentorPanel: AddOrUpdateMentorPanelInput },
     context: { user: User }
   ): Promise<MentorPanel> => {
-    if (
-      context.user.userRole !== UserRole.ADMIN &&
-      context.user.userRole !== UserRole.CONTENT_MANAGER
-    ) {
+    if (!canEditContent(context.user)) {
       throw new Error('you do not have permission to add or edit mentorpanel');
     }
     return await MentorPanelModel.findOneAndUpdate(
-      { _id: args.id },
+      { _id: idOrNew(args.id) },
       {
         $set: { ...args.mentorPanel },
       },

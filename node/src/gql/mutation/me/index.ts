@@ -8,11 +8,13 @@ import { GraphQLObjectType } from 'graphql';
 import { User } from '../../../models/User';
 import mentorImport from './mentor-import';
 import addOrUpdateMentorPanel from './mentor-panel-add-or-update';
+import addOrUpdateOrganization from './organization-add-or-update';
 import updateConfig from './config-update';
 import updateMentorDetails from './mentor-details-update';
 import updateMentorPrivacy from './mentor-update-privacy';
 import updateMentorSubjects from './mentor-subjects-update';
 import updateMentorKeywords from './mentor-keywords-update';
+import updateOrgConfig from './organization-config-update';
 import updateAnswer from './answer-update';
 import updateQuestion from './question-update';
 import subjectUpdate from './subject-update';
@@ -31,11 +33,13 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
   fields: () => ({
     mentorImport,
     addOrUpdateMentorPanel,
+    addOrUpdateOrganization,
     updateConfig,
     updateMentorDetails,
     updateMentorPrivacy,
     updateMentorSubjects,
     updateMentorKeywords,
+    updateOrgConfig,
     updateAnswer,
     updateQuestion,
     updateSubject: subjectUpdate,

@@ -11,11 +11,11 @@ import {
   GraphQLObjectType,
 } from 'graphql';
 import { UserQuestion as UserQuestionModel } from '../../../models';
-import { Mentor } from '../../../models/Mentor';
 import { Mentor as MentorModel } from '../../../models';
 import { UserQuestion } from '../../../models/UserQuestion';
 import { UserQuestionType } from '../../types/user-question';
-import { User, UserRole } from '../../../models/User';
+import { User } from '../../../models/User';
+import { canEditMentor } from '../../../utils/check-permissions';
 
 export const userQuestionSetDismissed = {
   type: UserQuestionType,
@@ -32,16 +32,9 @@ export const userQuestionSetDismissed = {
     if (!targetUserQuestion) {
       throw new Error('No user question found');
     }
-    const actorsMentor: Mentor = await MentorModel.findOne({
-      user: context.user._id,
-    });
-    if (`${actorsMentor._id}` !== `${targetUserQuestion.mentor}`) {
-      if (
-        context.user.userRole !== UserRole.ADMIN &&
-        context.user.userRole !== UserRole.CONTENT_MANAGER
-      ) {
-        throw new Error('you do not have permission to edit this mentor');
-      }
+    const mentor = await MentorModel.findById(targetUserQuestion.mentor);
+    if (!(await canEditMentor(mentor, context.user))) {
+      throw new Error('you do not have permission to edit this mentor');
     }
     const update = await UserQuestionModel.findByIdAndUpdate(
       args.id,

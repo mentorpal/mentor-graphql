@@ -5,35 +5,33 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLObjectType, GraphQLNonNull, GraphQLID } from 'graphql';
-import { Answer as AnswerModel, Mentor as MentorModel } from '../../models';
-import { Answer } from '../../models/Answer';
-import { Organization } from '../../models/Organization';
-import { User } from '../../models/User';
-import { canViewMentor } from '../../utils/check-permissions';
-import AnswerType from '../types/answer';
+import { ConfigType } from '../../../gql/types/config';
+import { Config } from '../../../models/Setting';
+import OrganizationModel from '../../../models/Organization';
+import { User } from '../../../models/User';
+import { canEditOrganization } from '../../../utils/check-permissions';
+import { ConfigUpdateInput, ConfigUpdateInputType } from './config-update';
 
-export const answer = {
-  type: AnswerType,
+export const updateOrgConfig = {
+  type: ConfigType,
   args: {
-    mentor: { type: GraphQLNonNull(GraphQLID) },
-    question: { type: GraphQLNonNull(GraphQLID) },
+    id: { type: GraphQLNonNull(GraphQLID) },
+    config: { type: GraphQLNonNull(ConfigUpdateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: string; question: string },
-    context: { user: User; org: Organization }
-  ): Promise<Answer> => {
-    const mentor = await MentorModel.findById(args.mentor);
-    if (!canViewMentor(mentor, context.user, context.org)) {
-      throw new Error(
-        `mentor is private and you do not have permission to access`
-      );
+    args: { id: string; config: ConfigUpdateInput },
+    context: { user: User }
+  ): Promise<Config> => {
+    const org = await OrganizationModel.findById(args.id);
+    if (!org) {
+      throw new Error('invalid organization id');
     }
-    return await AnswerModel.findOne({
-      mentor: args.mentor,
-      question: args.question,
-    });
+    if (!canEditOrganization(org, context.user)) {
+      throw new Error('you do not have permission to edit organization');
+    }
+    return await OrganizationModel.saveConfig(org, args.config);
   },
 };
 
-export default answer;
+export default updateOrgConfig;

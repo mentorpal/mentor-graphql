@@ -11,10 +11,12 @@ import {
   PaginateQuery,
   pluginPagination,
 } from './Paginatation';
-import { Subject } from './Subject';
 import { Mentor } from './Mentor';
+import { Organization } from './Organization';
+import { Subject } from './Subject';
 
 export interface MentorPanel extends Document {
+  org: Organization['_id'];
   subject: Subject['_id'];
   mentors: Mentor['_id'][];
   title: string;
@@ -30,6 +32,7 @@ export interface MentorPanelModel extends Model<MentorPanel> {
 
 export const MentorPanelSchema = new Schema<MentorPanel, MentorPanelModel>(
   {
+    org: { type: Schema.Types.ObjectId, ref: 'Organization' },
     subject: { type: Schema.Types.ObjectId, ref: 'Subject' },
     mentors: { type: [{ type: Schema.Types.ObjectId, ref: 'Mentor' }] },
     title: { type: String },

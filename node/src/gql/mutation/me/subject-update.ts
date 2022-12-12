@@ -20,12 +20,14 @@ import {
 } from '../../../models';
 import { Question } from '../../../models/Question';
 import { Subject, SubjectQuestionProps } from '../../../models/Subject';
+import { User } from '../../../models/User';
 import SubjectType from '../../types/subject';
 import {
   QuestionUpdateInput,
   QuestionUpdateInputType,
 } from './question-update';
 import { toUpdateProps } from './helpers';
+import { canEditContent } from '../../../utils/check-permissions';
 
 export interface CategoryUpdateInput {
   id: string;
@@ -78,6 +80,7 @@ export interface SubjectUpdateInput {
   type: string;
   description: string;
   isRequired: boolean;
+  isArchived: boolean;
   categories: CategoryUpdateInput[];
   topics: TopicUpdateInput[];
   questions: SubjectQuestionUpdateInput[];
@@ -91,6 +94,7 @@ export const SubjectUpdateInputType = new GraphQLInputObjectType({
     type: { type: GraphQLString },
     description: { type: GraphQLString },
     isRequired: { type: GraphQLBoolean },
+    isArchived: { type: GraphQLBoolean },
     categories: { type: GraphQLList(CategoryInputType) },
     topics: { type: GraphQLList(TopicInputType) },
     questions: { type: GraphQLList(SubjectQuestionInputType) },
@@ -126,8 +130,13 @@ export const subjectUpdate = {
   args: { subject: { type: GraphQLNonNull(SubjectUpdateInputType) } },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { subject: SubjectUpdateInput }
+    args: { subject: SubjectUpdateInput },
+    context: { user: User }
   ): Promise<Subject> => {
+    const userCanManageArchival = canEditContent(context.user);
+    if (args.subject.isArchived && !userCanManageArchival) {
+      throw new Error('User is not authorized to archive this subject.');
+    }
     return await SubjectModel.updateOrCreate(args.subject);
   },
 };

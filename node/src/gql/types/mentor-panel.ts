@@ -16,6 +16,7 @@ export const MentorPanelType = new GraphQLObjectType({
   name: 'MentorPanel',
   fields: () => ({
     _id: { type: GraphQLID },
+    org: { type: GraphQLID },
     subject: { type: GraphQLID },
     mentors: { type: GraphQLList(GraphQLID) },
     title: { type: GraphQLString },

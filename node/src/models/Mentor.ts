@@ -37,11 +37,40 @@ import UserQuestion, {
 } from './UserQuestion';
 import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
 import { Keyword } from './Keyword';
+import { Organization } from './Organization';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
   CHAT = 'CHAT',
 }
+
+export enum OrgPermissionType {
+  NONE = 'NONE', // no custom settings, use "isPrivate"
+  HIDDEN = 'HIDDEN', // org cannot see or use mentor
+  SHARE = 'SHARE', // org can use mentor as-is
+  MANAGE = 'MANAGE', // org can edit content
+  ADMIN = 'ADMIN', // org can edit content and edit sharing settings
+}
+
+export interface OrgPermissionProps {
+  org: Organization['_id'];
+  permission: OrgPermissionType;
+}
+export interface OrgPermission extends OrgPermissionProps, Document {}
+export const OrgPermissionSchema = new Schema({
+  org: { type: mongoose.Types.ObjectId, ref: 'Organization' },
+  permission: {
+    type: String,
+    enum: [
+      OrgPermissionType.NONE,
+      OrgPermissionType.HIDDEN,
+      OrgPermissionType.SHARE,
+      OrgPermissionType.MANAGE,
+      OrgPermissionType.ADMIN,
+    ],
+    default: OrgPermissionType.NONE,
+  },
+});
 
 export interface Mentor extends Document {
   name: string;
@@ -49,6 +78,7 @@ export interface Mentor extends Document {
   title: string;
   goal: string;
   email: string;
+  mentorType: string;
   thumbnail: string;
   allowContact: boolean;
   defaultSubject: Subject['_id'];
@@ -59,9 +89,9 @@ export interface Mentor extends Document {
   lastPreviewedAt: Date;
   isDirty: boolean;
   isPrivate: boolean;
+  orgPermissions: OrgPermissionProps[];
   hasVirtualBackground: boolean;
   virtualBackgroundUrl: string;
-  mentorType: string;
   user: User['_id'];
 }
 
@@ -131,6 +161,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     lastPreviewedAt: { type: Date },
     isDirty: { type: Boolean, default: true },
     isPrivate: { type: Boolean, default: false },
+    orgPermissions: { type: [OrgPermissionSchema], default: [] },
     hasVirtualBackground: { type: Boolean, default: false },
     virtualBackgroundUrl: { type: String, default: '' },
     mentorType: {
@@ -574,6 +605,7 @@ MentorSchema.statics.import = async function (
             name: s.name,
             description: s.description,
             isRequired: s.isRequired,
+            isArchived: s.isArchived,
             categories: s.categories,
             topics: s.topics,
             questions: s.questions.map((sq) => ({

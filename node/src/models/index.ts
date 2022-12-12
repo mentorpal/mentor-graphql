@@ -12,6 +12,8 @@ import Mentor from './Mentor';
 export { default as Mentor } from './Mentor';
 import MentorPanel from './MentorPanel';
 export { default as MentorPanel } from './MentorPanel';
+import Organization from './Organization';
+export { default as Organization } from './Organization';
 import Question from './Question';
 export { default as Question } from './Question';
 import Subject from './Subject';
@@ -32,6 +34,7 @@ export default {
   Keyword,
   Mentor,
   MentorPanel,
+  Organization,
   Question,
   Subject,
   UploadTask,

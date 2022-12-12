@@ -8,13 +8,17 @@ The full terms of this copyright and license should always be found in the root 
 import { Types } from 'mongoose';
 import { User } from '../../../models/User';
 import { Mentor as MentorModel } from '../../../models';
+import { Mentor } from '../../../models/Mentor';
 import { MentorType } from '../../types/mentor';
 import { GraphQLObjectType } from 'graphql';
 
 export const mentor = {
   type: MentorType,
-  resolve: async (_: GraphQLObjectType, args: any, context: { user: User }) => {
-    // eslint-disable-line  @typescript-eslint/no-explicit-any
+  resolve: async (
+    _: GraphQLObjectType,
+    _args: GraphQLObjectType,
+    context: { user: User }
+  ): Promise<Mentor> => {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }

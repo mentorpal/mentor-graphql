@@ -44,20 +44,6 @@ export const login = {
       if (!user) {
         throw new Error('invalid token');
       }
-
-      // add any missing required subjects to mentor
-      const requiredSubjects = await SubjectSchema.find({ isRequired: true });
-      await MentorSchema.findOneAndUpdate(
-        {
-          user: user._id,
-        },
-        {
-          $addToSet: {
-            subjects: { $each: requiredSubjects.map((s) => s._id) },
-          },
-        }
-      );
-
       return generateAccessToken(user);
     } catch (error) {
       throw new Error(error);
