@@ -4,7 +4,6 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-
 import { GraphQLID, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import { User } from '../../models/User';
 import {
@@ -32,21 +31,18 @@ export const uploadTask = {
     if (!context.user) {
       throw new Error('Only authenticated users');
     }
-    const mentor = await MentorModel.findById(args.mentorId);
-    if (!mentor) {
-      throw new Error('invalid mentor');
-    }
+    // jwt strategy (users)
     if (context.user.id) {
-      // jwt strategy (users)
-      if (
-        !context.user.mentorIds.find((mentorId) => mentorId == args.mentorId) ||
-        !canEditMentor(mentor, context.user)
-      ) {
+      const mentor = await MentorModel.findById(args.mentorId);
+      if (!mentor) {
+        throw new Error('invalid mentor');
+      }
+      if (!(await canEditMentor(mentor, context.user))) {
         throw new Error(
           'you are not authorized to view this mentors information'
         );
       }
-    }
+    } // else bearer-api strategy (services)
     const task = await UploadTaskModel.findOne({
       mentor: args.mentorId,
       question: args.questionId,

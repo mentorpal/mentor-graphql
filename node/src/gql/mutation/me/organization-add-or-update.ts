@@ -21,32 +21,17 @@ import { canEditOrganization } from '../../../utils/check-permissions';
 import { idOrNew } from './helpers';
 
 const reservedSubdomains = [
-  // dev
-  'devmentorpal',
-  'dev',
   'newdev',
   'api-dev',
-  'dev-video',
-  'static-dev',
   'static-newdev',
-  // qa
-  'qamentorpal',
-  'qa',
   'v2',
   'api-qa',
-  'qa-video',
   'sbert-qa',
   'static-v2',
-  // prod
-  'mentorpal',
-  'prod',
   'careerfair',
   'api',
-  'video',
   'sbert',
-  'static',
   'static-careerfair',
-  // other
   'local',
   'uscquestions',
   'static-uscquestions',
@@ -70,6 +55,7 @@ export const OrganizationMemberInputType = new GraphQLInputObjectType({
     role: { type: GraphQLNonNull(GraphQLString) },
   },
 });
+
 export const AddOrUpdateOrganizationInputType = new GraphQLInputObjectType({
   name: 'AddOrUpdateOrganizationInputType',
   fields: {
