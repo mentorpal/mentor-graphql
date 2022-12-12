@@ -34,6 +34,7 @@ export interface UserQuestion extends Document {
   classifierAnswer: Answer['_id'];
   classifierAnswerType: string;
   graderAnswer: Answer['_id'];
+  chatSessionId: string;
   dismissed: boolean;
 }
 
@@ -44,6 +45,7 @@ export const UserQuestionSchema = new Schema<UserQuestion, UserQuestionModel>(
     confidence: { type: Number },
     classifierAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
     graderAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
+    chatSessionId: { type: String },
     classifierAnswerType: {
       type: String,
       enum: [

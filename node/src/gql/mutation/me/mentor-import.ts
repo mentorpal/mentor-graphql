@@ -156,6 +156,7 @@ export const UserQuestionInputType = new GraphQLInputObjectType({
     mentor: { type: MentorUserQuestionInputType },
     classifierAnswer: { type: AnswerUserQuestionInputType },
     graderAnswer: { type: AnswerUserQuestionInputType },
+    chatSessionId: { type: GraphQLString },
   }),
 });
 
