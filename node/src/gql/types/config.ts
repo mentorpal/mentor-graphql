@@ -44,6 +44,8 @@ export const ConfigType = new GraphQLObjectType({
     styleHeaderText: { type: GraphQLString },
     styleHeaderTextColor: { type: GraphQLString },
     displayGuestPrompt: { type: GraphQLBoolean },
+    guestPromptTitle: { type: GraphQLString },
+    guestPromptText: { type: GraphQLString },
     disclaimerTitle: { type: GraphQLString },
     disclaimerText: { type: GraphQLString },
     disclaimerDisabled: { type: GraphQLBoolean },
