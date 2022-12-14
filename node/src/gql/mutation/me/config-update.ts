@@ -39,6 +39,8 @@ export interface ConfigUpdateInput {
   disclaimerText: string;
   disclaimerDisabled: boolean;
   displayGuestPrompt: boolean;
+  guestPromptTitle: string;
+  guestPromptText: string;
   videoRecorderMaxLength: number;
   questionSortOrder: number;
 }
@@ -65,6 +67,8 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     disclaimerText: { type: GraphQLString },
     disclaimerDisabled: { type: GraphQLBoolean },
     displayGuestPrompt: { type: GraphQLBoolean },
+    guestPromptTitle: { type: GraphQLString },
+    guestPromptText: { type: GraphQLString },
     videoRecorderMaxLength: { type: GraphQLInt },
     questionSortOrder: { type: GraphQLInt },
   }),

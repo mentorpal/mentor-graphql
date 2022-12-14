@@ -25,6 +25,7 @@ export interface UserQuestionCreateInput {
   mentor: string;
   classifierAnswer: string;
   classifierAnswerType: string;
+  chatSessionId: string;
   confidence: number;
 }
 
@@ -42,6 +43,9 @@ export const UserQuestionCreateInputType = new GraphQLInputObjectType({
       type: GraphQLNonNull(GraphQLID),
     },
     classifierAnswerType: {
+      type: GraphQLString,
+    },
+    chatSessionId: {
       type: GraphQLString,
     },
     confidence: {
@@ -68,6 +72,7 @@ export const userQuestionCreate = {
         ClassifierAnswerType.CLASSIFIER,
       confidence: args.userQuestion.confidence,
       graderAnswer: null,
+      chatSessionId: args.userQuestion.chatSessionId || '',
       feedback: Feedback.NEUTRAL,
     });
   },

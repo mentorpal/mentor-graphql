@@ -43,6 +43,12 @@ export const UserQuestionType = new GraphQLObjectType({
         return AnswerModel.findById(uq.graderAnswer);
       },
     },
+    chatSessionId: {
+      type: GraphQLString,
+      resolve: async function (uq: UserQuestion) {
+        return uq.chatSessionId || '';
+      },
+    },
     createdAt: { type: DateType },
     updatedAt: { type: DateType },
     dismissed: { type: GraphQLBoolean },
