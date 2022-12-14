@@ -32,6 +32,8 @@ export interface Config {
   styleHeaderText: string;
   styleHeaderTextColor: string;
   displayGuestPrompt: boolean;
+  guestPromptTitle: string;
+  guestPromptText: string;
   disclaimerTitle: string;
   disclaimerText: string;
   disclaimerDisabled: boolean;
@@ -87,6 +89,8 @@ export const ConfigKeys: ConfigKey[] = [
   'styleHeaderText',
   'styleHeaderTextColor',
   'displayGuestPrompt',
+  'guestPromptTitle',
+  'guestPromptText',
   'disclaimerTitle',
   'disclaimerText',
   'disclaimerDisabled',
@@ -133,6 +137,8 @@ export function getDefaultConfig(): Config {
     styleHeaderText: '',
     styleHeaderTextColor: '',
     displayGuestPrompt: false,
+    guestPromptTitle: '',
+    guestPromptText: '',
     disclaimerTitle: '',
     disclaimerText: '',
     disclaimerDisabled: true,

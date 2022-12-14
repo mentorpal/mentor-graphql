@@ -136,6 +136,8 @@ describe('config', () => {
       styleHeaderText: '',
       styleHeaderTextColor: '',
       displayGuestPrompt: false,
+      guestPromptTitle: '',
+      guestPromptText: '',
       disclaimerTitle: '',
       disclaimerText: '',
       disclaimerDisabled: true,
@@ -178,6 +180,8 @@ describe('config', () => {
             styleHeaderText
             styleHeaderTextColor
             displayGuestPrompt
+            guestPromptTitle
+            guestPromptText
             disclaimerTitle
             disclaimerText
             disclaimerDisabled
