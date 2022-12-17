@@ -24,6 +24,7 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN
       'https://devmentorpal.org',
       'https://qamentorpal.org',
       'https://mentorpal.org',
+      'https://newdev.mentorpal.org',
       'https://v2.mentorpal.org',
       'https://careerfair.mentorpal.org',
       'http://local.mentorpal.org:8000',

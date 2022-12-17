@@ -15,38 +15,9 @@ export interface Config {
   cmi5Enabled: boolean;
   cmi5Endpoint: string;
   cmi5Fetch: string;
-
   classifierLambdaEndpoint: string;
   uploadLambdaEndpoint: string;
   graphqlLambdaEndpoint: string;
-
-  urlGraphql: string;
-  urlVideo: string;
-  urlDocSetup: string;
-  urlVideoIdleTips: string;
-  urlVideoMentorpalWalkthrough: string;
-
-  styleHeaderLogo: string;
-  styleHeaderColor: string;
-  styleHeaderTitle: string;
-  styleHeaderText: string;
-  styleHeaderTextColor: string;
-  displayGuestPrompt: boolean;
-  guestPromptTitle: string;
-  guestPromptText: string;
-  disclaimerTitle: string;
-  disclaimerText: string;
-  disclaimerDisabled: boolean;
-
-  mentorsDefault: string[];
-  defaultSubject: string;
-  activeMentors: string[];
-  activeMentorPanels: string[];
-  featuredMentors: string[];
-  featuredMentorPanels: string[];
-  featuredSubjects: string[];
-  featuredKeywordTypes: string[];
-
   subjectRecordPriority: string[];
   filterEmailMentorAddress: string;
   videoRecorderMaxLength: number;
@@ -54,6 +25,44 @@ export interface Config {
   virtualBackgroundUrls: string[];
   defaultVirtualBackground: string;
   questionSortOrder: number;
+  urlGraphql: string;
+  urlVideo: string;
+  urlDocSetup: string;
+  urlVideoIdleTips: string;
+  mentorsDefault: string[];
+  // home style settings
+  styleHeaderTitle: string;
+  styleHeaderText: string;
+  styleHeaderColor: string;
+  styleHeaderTextColor: string;
+  styleHeaderLogo: string;
+  styleHeaderLogoUrl: string;
+  homeFooterColor: string;
+  homeFooterTextColor: string;
+  homeFooterImages: string[];
+  homeFooterLinks: string[];
+  homeBannerColor: string;
+  homeBannerButtonColor: string;
+  homeCarouselColor: string;
+  walkthroughDisabled: boolean;
+  walkthroughTitle: string;
+  urlVideoMentorpalWalkthrough: string;
+  disclaimerDisabled: boolean;
+  disclaimerTitle: string;
+  disclaimerText: string;
+  termsOfServiceDisabled: boolean;
+  termsOfServiceText: string;
+  displayGuestPrompt: boolean;
+  guestPromptTitle: string;
+  guestPromptText: string;
+  guestPromptInputType: string;
+  activeMentors: string[];
+  activeMentorPanels: string[];
+  featuredMentors: string[];
+  featuredMentorPanels: string[];
+  featuredSubjects: string[];
+  featuredKeywordTypes: string[];
+  defaultSubject: string;
 }
 
 type ConfigKey = keyof Config;
@@ -61,40 +70,54 @@ export const ConfigKeys: ConfigKey[] = [
   'cmi5Enabled',
   'cmi5Endpoint',
   'cmi5Fetch',
+  'classifierLambdaEndpoint',
+  'uploadLambdaEndpoint',
+  'graphqlLambdaEndpoint',
+  'subjectRecordPriority',
+  'filterEmailMentorAddress',
+  'videoRecorderMaxLength',
+  'googleClientId',
+  'virtualBackgroundUrls',
+  'defaultVirtualBackground',
+  'questionSortOrder',
   'urlGraphql',
   'urlVideo',
   'urlDocSetup',
   'urlVideoIdleTips',
-  'subjectRecordPriority',
-  'urlVideoMentorpalWalkthrough',
-  'classifierLambdaEndpoint',
-  'uploadLambdaEndpoint',
-  'graphqlLambdaEndpoint',
-  'filterEmailMentorAddress',
-  'videoRecorderMaxLength',
-  'googleClientId',
   'mentorsDefault',
-  'featuredMentors',
-  'featuredMentorPanels',
-  'featuredKeywordTypes',
-  'featuredSubjects',
-  'defaultSubject',
-  'virtualBackgroundUrls',
-  'defaultVirtualBackground',
-  'activeMentors',
-  'activeMentorPanels',
-  'styleHeaderLogo',
-  'styleHeaderColor',
+  // home style settings
   'styleHeaderTitle',
   'styleHeaderText',
+  'styleHeaderColor',
   'styleHeaderTextColor',
+  'styleHeaderLogo',
+  'styleHeaderLogoUrl',
+  'homeFooterColor',
+  'homeFooterTextColor',
+  'homeFooterImages',
+  'homeFooterLinks',
+  'homeBannerColor',
+  'homeBannerButtonColor',
+  'homeCarouselColor',
+  'walkthroughDisabled',
+  'walkthroughTitle',
+  'urlVideoMentorpalWalkthrough',
+  'disclaimerDisabled',
+  'disclaimerTitle',
+  'disclaimerText',
+  'termsOfServiceDisabled',
+  'termsOfServiceText',
   'displayGuestPrompt',
   'guestPromptTitle',
   'guestPromptText',
-  'disclaimerTitle',
-  'disclaimerText',
-  'disclaimerDisabled',
-  'questionSortOrder',
+  'guestPromptInputType',
+  'activeMentors',
+  'activeMentorPanels',
+  'featuredMentors',
+  'featuredMentorPanels',
+  'featuredSubjects',
+  'featuredKeywordTypes',
+  'defaultSubject',
 ];
 
 export interface Setting {
@@ -108,41 +131,55 @@ export function getDefaultConfig(): Config {
     cmi5Enabled: false,
     cmi5Endpoint: '',
     cmi5Fetch: '',
+    classifierLambdaEndpoint: '',
+    uploadLambdaEndpoint: '',
+    graphqlLambdaEndpoint: '',
+    subjectRecordPriority: [],
+    filterEmailMentorAddress: 'careerfair.ai@gmail.com',
+    videoRecorderMaxLength: 300, //seconds
+    googleClientId: process.env.GOOGLE_CLIENT_ID || '',
+    virtualBackgroundUrls: [],
+    defaultVirtualBackground: '',
+    questionSortOrder: QuestionSortOrder.Alphabetical,
     urlGraphql: '/graphql',
     urlVideo: '/video',
     urlDocSetup:
       'https://docs.google.com/document/d/1av1pWamFrXQ1KabMU02LtAutrTt3ppblneQeilFBU3s/edit?usp=sharing',
     urlVideoIdleTips: 'https://youtu.be/xSu1BhuFt8A',
-    subjectRecordPriority: [],
-    urlVideoMentorpalWalkthrough: 'https://youtu.be/EGdSl4Q8NAY',
-    classifierLambdaEndpoint: '',
-    uploadLambdaEndpoint: '',
-    graphqlLambdaEndpoint: '',
-    filterEmailMentorAddress: 'careerfair.ai@gmail.com',
-    videoRecorderMaxLength: 300, //seconds
-    googleClientId: process.env.GOOGLE_CLIENT_ID || '',
     mentorsDefault: [],
-    featuredMentors: [],
-    featuredMentorPanels: [],
-    featuredKeywordTypes: [],
-    featuredSubjects: [],
-    defaultSubject: '',
-    virtualBackgroundUrls: [],
-    defaultVirtualBackground: '',
-    activeMentors: [],
-    activeMentorPanels: [],
-    styleHeaderLogo: '',
-    styleHeaderColor: '',
+    // home style settings
     styleHeaderTitle: '',
     styleHeaderText: '',
+    styleHeaderColor: '',
     styleHeaderTextColor: '',
+    styleHeaderLogo: '',
+    styleHeaderLogoUrl: '',
+    homeFooterColor: '',
+    homeFooterTextColor: '',
+    homeFooterImages: [],
+    homeFooterLinks: [],
+    homeBannerColor: '',
+    homeBannerButtonColor: '',
+    homeCarouselColor: '',
+    walkthroughDisabled: false,
+    walkthroughTitle: '',
+    urlVideoMentorpalWalkthrough: 'https://youtu.be/EGdSl4Q8NAY',
+    disclaimerDisabled: false,
+    disclaimerTitle: '',
+    disclaimerText: '',
+    termsOfServiceDisabled: false,
+    termsOfServiceText: '',
     displayGuestPrompt: false,
     guestPromptTitle: '',
     guestPromptText: '',
-    disclaimerTitle: '',
-    disclaimerText: '',
-    disclaimerDisabled: true,
-    questionSortOrder: QuestionSortOrder.Alphabetical,
+    guestPromptInputType: 'email',
+    activeMentors: [],
+    activeMentorPanels: [],
+    featuredMentors: [],
+    featuredMentorPanels: [],
+    featuredSubjects: [],
+    featuredKeywordTypes: [],
+    defaultSubject: '',
   };
 }
 
