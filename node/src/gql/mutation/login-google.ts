@@ -112,6 +112,9 @@ export const loginGoogle = {
             $set: {
               mentorIds: [mentorId],
             },
+          },
+          {
+            new: true,
           }
         );
       }
