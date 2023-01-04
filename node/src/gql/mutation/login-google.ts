@@ -62,7 +62,7 @@ export const loginGoogle = {
   ): Promise<UserAccessToken> => {
     try {
       const googleResponse = await authGoogle(args.accessToken);
-      const user = await UserSchema.findOneAndUpdate(
+      let user = await UserSchema.findOneAndUpdate(
         {
           googleId: googleResponse.id,
         },
@@ -104,7 +104,7 @@ export const loginGoogle = {
           }
         );
         const mentorId = newMentor._id;
-        await UserSchema.findOneAndUpdate(
+        user = await UserSchema.findOneAndUpdate(
           {
             googleId: googleResponse.id,
           },
