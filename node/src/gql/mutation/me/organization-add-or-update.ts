@@ -22,19 +22,20 @@ import { idOrNew } from './helpers';
 
 const reservedSubdomains = [
   'newdev',
-  'api-dev',
-  'static-newdev',
   'v2',
-  'api-qa',
-  'sbert-qa',
-  'static-v2',
   'careerfair',
-  'api',
-  'sbert',
-  'static-careerfair',
   'local',
   'uscquestions',
+  'api',
+  'api-dev',
+  'api-qa',
+  'static',
+  'static-v2',
+  'static-newdev',
+  'static-careerfair',
   'static-uscquestions',
+  'sbert',
+  'sbert-qa',
 ];
 
 interface AddOrUpdateOrganizationInput {

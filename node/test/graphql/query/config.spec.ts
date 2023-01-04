@@ -113,12 +113,8 @@ describe('config', () => {
       cmi5Fetch: '/auth',
       googleClientId: '',
       mentorsDefault: ['somementor'],
-      featuredMentors: ['somementor'],
-      featuredMentorPanels: ['somementorpanel'],
       virtualBackgroundUrls: ['https://some/custom/url'],
       defaultVirtualBackground: 'https://some/custom/url',
-      activeMentors: ['somementor'],
-      activeMentorPanels: ['somementorpanel'],
       urlGraphql: '/graphql/v2',
       urlVideo: '/video/v2',
       urlDocSetup: 'https://some/custom/url',
@@ -130,19 +126,37 @@ describe('config', () => {
       uploadLambdaEndpoint: 'https://faketransferlambdaurl.com',
       filterEmailMentorAddress: 'fakeemail@gmail.com',
       videoRecorderMaxLength: 300,
-      styleHeaderLogo: '/a/logo.png',
-      styleHeaderColor: '',
+      // home style settings
       styleHeaderTitle: '',
       styleHeaderText: '',
+      styleHeaderColor: '',
       styleHeaderTextColor: '',
+      styleHeaderLogo: '/a/logo.png',
+      styleHeaderLogoUrl: '',
+      homeFooterColor: '',
+      homeFooterTextColor: '',
+      homeFooterImages: [],
+      homeFooterLinks: [],
+      homeBannerColor: '',
+      homeBannerButtonColor: '',
+      homeCarouselColor: '',
+      walkthroughDisabled: false,
+      walkthroughTitle: '',
+      disclaimerDisabled: false,
+      disclaimerTitle: '',
+      disclaimerText: '',
+      termsOfServiceDisabled: false,
+      termsOfServiceText: '',
       displayGuestPrompt: false,
       guestPromptTitle: '',
       guestPromptText: '',
-      disclaimerTitle: '',
-      disclaimerText: '',
-      disclaimerDisabled: true,
-      featuredKeywordTypes: [],
+      guestPromptInputType: 'email',
+      activeMentors: ['somementor'],
+      activeMentorPanels: ['somementorpanel'],
+      featuredMentors: ['somementor'],
+      featuredMentorPanels: ['somementorpanel'],
       featuredSubjects: [],
+      featuredKeywordTypes: [],
       defaultSubject: '',
       questionSortOrder: 0,
     };
@@ -155,40 +169,53 @@ describe('config', () => {
             cmi5Enabled
             cmi5Endpoint
             cmi5Fetch
-            googleClientId
-            urlDocSetup
-            urlVideoIdleTips
-            subjectRecordPriority
-            urlVideoMentorpalWalkthrough
             classifierLambdaEndpoint
-            graphqlLambdaEndpoint
             uploadLambdaEndpoint
+            graphqlLambdaEndpoint
+            subjectRecordPriority
             filterEmailMentorAddress
             videoRecorderMaxLength
-            mentorsDefault
-            featuredMentors
-            featuredMentorPanels
+            googleClientId
             virtualBackgroundUrls
             defaultVirtualBackground
-            activeMentors
-            activeMentorPanels
+            questionSortOrder
             urlGraphql
             urlVideo
-            styleHeaderLogo
-            styleHeaderColor
+            urlDocSetup
+            urlVideoIdleTips
+            mentorsDefault
             styleHeaderTitle
             styleHeaderText
+            styleHeaderColor
             styleHeaderTextColor
+            styleHeaderLogo
+            styleHeaderLogoUrl
+            homeFooterColor
+            homeFooterTextColor
+            homeFooterImages
+            homeFooterLinks
+            homeBannerColor
+            homeBannerButtonColor
+            homeCarouselColor
+            walkthroughDisabled
+            walkthroughTitle
+            urlVideoMentorpalWalkthrough
+            disclaimerDisabled
+            disclaimerTitle
+            disclaimerText
+            termsOfServiceDisabled
+            termsOfServiceText
             displayGuestPrompt
             guestPromptTitle
             guestPromptText
-            disclaimerTitle
-            disclaimerText
-            disclaimerDisabled
-            featuredKeywordTypes
+            guestPromptInputType
+            activeMentors
+            activeMentorPanels
+            featuredMentors
+            featuredMentorPanels
             featuredSubjects
+            featuredKeywordTypes
             defaultSubject
-            questionSortOrder
           }
         }`,
       });

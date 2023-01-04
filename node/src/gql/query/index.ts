@@ -22,6 +22,8 @@ import mentorImportPreview from './mentor-import-preview';
 import mentorClientData from './mentor-client-data';
 import mentorsByKeyword from './mentors-by-keyword';
 import mentorsById from './mentors-by-id';
+import mentorCanEdit from './mentor-can-edit';
+import mantorCanView from './mentor-can-view';
 import orgConfig from './org-config';
 import organization from './organization';
 import organizations from './organizations';
@@ -57,6 +59,8 @@ export default new GraphQLObjectType({
     mentorClientData,
     mentorsById,
     mentorsByKeyword,
+    mentorCanEdit,
+    mantorCanView,
     orgConfig,
     organization,
     organizations,
