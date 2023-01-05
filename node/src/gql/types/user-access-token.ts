@@ -12,6 +12,7 @@ import { User } from '../../models/User';
 import UserType from './user';
 import DateType from './date';
 import { RefreshToken as RefreshTokenSchema } from '../../models';
+import requireEnv from '../../utils/require-env';
 
 export interface UserAccessToken {
   user: User;
@@ -58,6 +59,7 @@ async function getRefreshToken(token: string) {
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function setTokenCookie(res: Response, token: string): any {
+  const domain = requireEnv('DOMAIN');
   // create http only cookie with refresh token that expires in 90 days
   const validDays = process.env['ACCESS_TOKEN_VALIDITY_DAYS']
     ? parseInt(process.env['ACCESS_TOKEN_VALIDITY_DAYS'])
@@ -67,7 +69,7 @@ export function setTokenCookie(res: Response, token: string): any {
     httpOnly: true,
     expires: new Date(Date.now() + validDays * 24 * 60 * 60 * 1000),
     // api endpoints are on another subdomain so need to allow all subdomains:
-    domain: 'mentorpal.org',
+    domain: domain,
     sameSite: 'strict' as CookieOptions['sameSite'],
     secure: true,
   };
