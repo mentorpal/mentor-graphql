@@ -5,37 +5,29 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import {
-  GraphQLObjectType,
-  GraphQLList,
+  GraphQLBoolean,
   GraphQLID,
-  GraphQLString,
+  GraphQLNonNull,
+  GraphQLObjectType,
 } from 'graphql';
-import DateType from './date';
-import MentorType from './mentor';
-import { MentorPanel } from '../../models/MentorPanel';
 import { Mentor as MentorModel } from '../../models';
+import { Organization } from '../../models/Organization';
+import { User } from '../../models/User';
+import { canEditMentor } from '../../utils/check-permissions';
 
-export const MentorPanelType = new GraphQLObjectType({
-  name: 'MentorPanel',
-  fields: () => ({
-    _id: { type: GraphQLID },
-    org: { type: GraphQLID },
-    subject: { type: GraphQLID },
-    mentors: { type: GraphQLList(GraphQLID) },
-    title: { type: GraphQLString },
-    subtitle: { type: GraphQLString },
-    createdAt: { type: DateType },
-    updatedAt: { type: DateType },
-    mentorData: {
-      type: GraphQLList(MentorType),
-      resolve: async (mp: MentorPanel) => {
-        const mentors = await MentorModel.find({
-          _id: { $in: mp.mentors },
-        });
-        return mentors;
-      },
-    },
-  }),
-});
+export const mentorCanEdit = {
+  type: GraphQLBoolean,
+  args: {
+    mentor: { type: GraphQLNonNull(GraphQLID) },
+  },
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { mentor: string },
+    context: { user: User; org: Organization }
+  ): Promise<boolean> => {
+    const mentor = await MentorModel.findById(args.mentor);
+    return await canEditMentor(mentor, context.user);
+  },
+};
 
-export default MentorPanelType;
+export default mentorCanEdit;

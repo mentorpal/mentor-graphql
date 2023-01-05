@@ -21,56 +21,86 @@ import { canEditContent } from '../../../utils/check-permissions';
 
 export interface ConfigUpdateInput {
   mentorsDefault: string[];
+  virtualBackgroundUrls: string[];
+  defaultVirtualBackground: string;
+  videoRecorderMaxLength: number;
+  questionSortOrder: number;
+  // home style settings
+  styleHeaderTitle: string;
+  styleHeaderText: string;
+  styleHeaderColor: string;
+  styleHeaderTextColor: string;
+  styleHeaderLogo: string;
+  styleHeaderLogoUrl: string;
+  homeFooterColor: string;
+  homeFooterTextColor: string;
+  homeFooterImages: string[];
+  homeFooterLinks: string[];
+  homeBannerColor: string;
+  homeBannerButtonColor: string;
+  homeCarouselColor: string;
+  walkthroughDisabled: boolean;
+  walkthroughTitle: string;
+  urlVideoMentorpalWalkthrough: string;
+  disclaimerDisabled: boolean;
+  disclaimerTitle: string;
+  disclaimerText: string;
+  termsOfServiceDisabled: boolean;
+  termsOfServiceText: string;
+  displayGuestPrompt: boolean;
+  guestPromptTitle: string;
+  guestPromptText: string;
+  guestPromptInputType: string;
   activeMentors: string[];
   activeMentorPanels: string[];
   featuredMentors: string[];
   featuredMentorPanels: string[];
-  featuredKeywordTypes: string[];
   featuredSubjects: string[];
+  featuredKeywordTypes: string[];
   defaultSubject: string;
-  virtualBackgroundUrls: string[];
-  defaultVirtualBackground: string;
-  styleHeaderLogo: string;
-  styleHeaderColor: string;
-  styleHeaderTitle: string;
-  styleHeaderText: string;
-  styleHeaderTextColor: string;
-  disclaimerTitle: string;
-  disclaimerText: string;
-  disclaimerDisabled: boolean;
-  displayGuestPrompt: boolean;
-  guestPromptTitle: string;
-  guestPromptText: string;
-  videoRecorderMaxLength: number;
-  questionSortOrder: number;
 }
 
 export const ConfigUpdateInputType = new GraphQLInputObjectType({
   name: 'ConfigUpdateInputType',
   fields: () => ({
     mentorsDefault: { type: GraphQLList(GraphQLID) },
+    virtualBackgroundUrls: { type: GraphQLList(GraphQLString) },
+    defaultVirtualBackground: { type: GraphQLString },
+    videoRecorderMaxLength: { type: GraphQLInt },
+    questionSortOrder: { type: GraphQLInt },
+    // home style settings
+    styleHeaderTitle: { type: GraphQLString },
+    styleHeaderText: { type: GraphQLString },
+    styleHeaderColor: { type: GraphQLString },
+    styleHeaderTextColor: { type: GraphQLString },
+    styleHeaderLogo: { type: GraphQLString },
+    styleHeaderLogoUrl: { type: GraphQLString },
+    homeFooterColor: { type: GraphQLString },
+    homeFooterTextColor: { type: GraphQLString },
+    homeFooterImages: { type: GraphQLList(GraphQLString) },
+    homeFooterLinks: { type: GraphQLList(GraphQLString) },
+    homeBannerColor: { type: GraphQLString },
+    homeBannerButtonColor: { type: GraphQLString },
+    homeCarouselColor: { type: GraphQLString },
+    walkthroughDisabled: { type: GraphQLBoolean },
+    walkthroughTitle: { type: GraphQLString },
+    urlVideoMentorpalWalkthrough: { type: GraphQLString },
+    disclaimerDisabled: { type: GraphQLBoolean },
+    disclaimerTitle: { type: GraphQLString },
+    disclaimerText: { type: GraphQLString },
+    termsOfServiceDisabled: { type: GraphQLBoolean },
+    termsOfServiceText: { type: GraphQLString },
+    displayGuestPrompt: { type: GraphQLBoolean },
+    guestPromptTitle: { type: GraphQLString },
+    guestPromptText: { type: GraphQLString },
+    guestPromptInputType: { type: GraphQLString },
     activeMentors: { type: GraphQLList(GraphQLID) },
     activeMentorPanels: { type: GraphQLList(GraphQLID) },
     featuredMentors: { type: GraphQLList(GraphQLID) },
     featuredMentorPanels: { type: GraphQLList(GraphQLID) },
-    featuredKeywordTypes: { type: GraphQLList(GraphQLString) },
     featuredSubjects: { type: GraphQLList(GraphQLID) },
+    featuredKeywordTypes: { type: GraphQLList(GraphQLString) },
     defaultSubject: { type: GraphQLID },
-    virtualBackgroundUrls: { type: GraphQLList(GraphQLString) },
-    defaultVirtualBackground: { type: GraphQLString },
-    styleHeaderLogo: { type: GraphQLString },
-    styleHeaderColor: { type: GraphQLString },
-    styleHeaderTitle: { type: GraphQLString },
-    styleHeaderText: { type: GraphQLString },
-    styleHeaderTextColor: { type: GraphQLString },
-    disclaimerTitle: { type: GraphQLString },
-    disclaimerText: { type: GraphQLString },
-    disclaimerDisabled: { type: GraphQLBoolean },
-    displayGuestPrompt: { type: GraphQLBoolean },
-    guestPromptTitle: { type: GraphQLString },
-    guestPromptText: { type: GraphQLString },
-    videoRecorderMaxLength: { type: GraphQLInt },
-    questionSortOrder: { type: GraphQLInt },
   }),
 });
 
