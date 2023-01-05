@@ -4,7 +4,6 @@ env:
   variables:
     SENTRY_ORG: 'usc-ict-ls'
     SENTRY_PROJECT: 'mentor-graphql'
-    DOMAIN: 'mentorpal.org'
 
 phases:
   install:

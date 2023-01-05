@@ -39,6 +39,7 @@ custom:
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenDev'
       WEBACL_ARN: ${ssm:/mentorpal/newdev/api_firewall_arn, ''}
+      DOMAIN: "devmentorpal.org"
     qa:
       LOG_LEVEL: 'debug'
       IS_SENTRY_ENABLED: true
@@ -51,6 +52,7 @@ custom:
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenQa'
       WEBACL_ARN: ${ssm:/mentorpal/v2/api_firewall_arn, ''}
+      DOMAIN: "qamentorpal.org"
     prod:
       LOG_LEVEL: 'info'
       IS_SENTRY_ENABLED: true
@@ -63,6 +65,7 @@ custom:
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/prod/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenProd'
       WEBACL_ARN: ${ssm:/mentorpal/cf/api_firewall_arn, ''}
+      DOMAIN: "mentorpal.org"
 
 provider:
   name: aws
@@ -103,6 +106,7 @@ provider:
     CORS_ORIGIN: ${self:custom.stages.${self:provider.stage}.CORS_ORIGIN}
     GOOGLE_CLIENT_ID: ${self:custom.stages.${self:provider.stage}.GOOGLE_CLIENT_ID}
     REFRESH_TOKEN_NAME: ${self:custom.stages.${self:provider.stage}.REFRESH_TOKEN_NAME}
+    DOMAIN: ${self:custom.stages.${self:provider.stage}.DOMAIN}
 
   stackTags:
     Environment: ${self:provider.stage}
