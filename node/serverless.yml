@@ -10,8 +10,8 @@ custom:
   serverless-offline:
     httpPort: 3001
   domain:
-    dev: api-dev.mentorpal.org
-    qa: api-qa.mentorpal.org
+    dev: api.devmentorpal.org
+    qa: api.qamentorpal.org
     prod: api.mentorpal.org
   customDomain:
     domainName: ${self:custom.domain.${opt:stage, 'dev'}}
