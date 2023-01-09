@@ -91,16 +91,17 @@ OrganizationSchema.statics.getConfig = async function (
     mentorsDefault: defaultConfig.mentorsDefault,
     styleHeaderTitle: defaultConfig.styleHeaderTitle,
     styleHeaderText: defaultConfig.styleHeaderText,
-    styleHeaderColor: defaultConfig.styleHeaderColor,
-    styleHeaderTextColor: defaultConfig.styleHeaderTextColor,
     styleHeaderLogo: defaultConfig.styleHeaderLogo,
     styleHeaderLogoUrl: defaultConfig.styleHeaderLogoUrl,
+    styleHeaderColor: defaultConfig.styleHeaderColor,
+    styleHeaderTextColor: defaultConfig.styleHeaderTextColor,
     homeFooterColor: defaultConfig.homeFooterColor,
     homeFooterTextColor: defaultConfig.homeFooterTextColor,
     homeFooterImages: defaultConfig.homeFooterImages,
     homeFooterLinks: defaultConfig.homeFooterLinks,
     homeBannerColor: defaultConfig.homeBannerColor,
     homeBannerButtonColor: defaultConfig.homeBannerButtonColor,
+    homeCarouselColor: defaultConfig.homeCarouselColor,
   };
   for (const setting of org.config || []) {
     orgConfig = {
