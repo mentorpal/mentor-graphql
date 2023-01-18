@@ -281,7 +281,8 @@ describe('updateMentorPrivacy', () => {
                 orgPermissions {
                   orgId
                   orgName
-                  permission
+                  viewPermission
+                  editPermission
                 }
               }
             }
@@ -294,12 +295,14 @@ describe('updateMentorPrivacy', () => {
         {
           orgId: '511111111111111111111112',
           orgName: 'CSUF',
-          permission: 'SHARE',
+          viewPermission: 'SHARE',
+          editPermission: 'NONE',
         },
         {
           orgId: '511111111111111111111111',
           orgName: 'USC',
-          permission: 'ADMIN',
+          viewPermission: 'NONE',
+          editPermission: 'ADMIN',
         },
       ],
     });
@@ -316,7 +319,11 @@ describe('updateMentorPrivacy', () => {
           mentorId: '5ffdf41a1ee2c62111111114',
           isPrivate: true,
           orgPermissions: [
-            { org: '511111111111111111111111', permission: 'HIDDEN' },
+            {
+              org: '511111111111111111111111',
+              viewPermission: 'HIDDEN',
+              editPermission: 'NONE',
+            },
           ],
         },
       });
@@ -336,7 +343,8 @@ describe('updateMentorPrivacy', () => {
                 orgPermissions {
                   orgId
                   orgName
-                  permission
+                  viewPermission
+                  editPermission
                 }
               }
             }
@@ -349,7 +357,8 @@ describe('updateMentorPrivacy', () => {
         {
           orgId: '511111111111111111111111',
           orgName: 'USC',
-          permission: 'HIDDEN',
+          viewPermission: 'HIDDEN',
+          editPermission: 'NONE',
         },
       ],
     });
@@ -368,7 +377,8 @@ describe('updateMentorPrivacy', () => {
                 orgPermissions {
                   orgId
                   orgName
-                  permission
+                  viewPermission
+                  editPermission
                 }
               }
             }
@@ -381,12 +391,14 @@ describe('updateMentorPrivacy', () => {
         {
           orgId: '511111111111111111111112',
           orgName: 'CSUF',
-          permission: 'SHARE',
+          viewPermission: 'SHARE',
+          editPermission: 'NONE',
         },
         {
           orgId: '511111111111111111111111',
           orgName: 'USC',
-          permission: 'ADMIN',
+          viewPermission: 'NONE',
+          editPermission: 'ADMIN',
         },
       ],
     });
@@ -421,7 +433,8 @@ describe('updateMentorPrivacy', () => {
                 orgPermissions {
                   orgId
                   orgName
-                  permission
+                  viewPermission
+                  editPermission
                 }
               }
             }
@@ -434,12 +447,14 @@ describe('updateMentorPrivacy', () => {
         {
           orgId: '511111111111111111111112',
           orgName: 'CSUF',
-          permission: 'SHARE',
+          viewPermission: 'SHARE',
+          editPermission: 'NONE',
         },
         {
           orgId: '511111111111111111111111',
           orgName: 'USC',
-          permission: 'ADMIN',
+          viewPermission: 'NONE',
+          editPermission: 'ADMIN',
         },
       ],
     });

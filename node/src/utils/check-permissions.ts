@@ -4,7 +4,11 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Mentor, OrgPermissionType } from '../models/Mentor';
+import {
+  Mentor,
+  OrgViewPermissionType,
+  OrgEditPermissionType,
+} from '../models/Mentor';
 import OrganizationModel, { Organization } from '../models/Organization';
 import { User, UserRole } from '../models/User';
 
@@ -35,7 +39,7 @@ export function canViewMentor(
   }
   const orgPerm = mentor.orgPermissions?.find((op) => equals(op.org, org?._id));
   if (mentor.isPrivate) {
-    if (orgPerm && orgPerm.permission === OrgPermissionType.SHARE) {
+    if (orgPerm && orgPerm.viewPermission === OrgViewPermissionType.SHARE) {
       return true;
     }
     if (!user) {
@@ -51,7 +55,7 @@ export function canViewMentor(
       userRole === UserRole.SUPER_ADMIN
     );
   }
-  if (orgPerm && orgPerm.permission === OrgPermissionType.HIDDEN) {
+  if (orgPerm && orgPerm.viewPermission === OrgViewPermissionType.HIDDEN) {
     return false;
   }
   return true;
@@ -66,8 +70,8 @@ export async function canEditMentor(
   }
   const ops = mentor.orgPermissions?.filter(
     (op) =>
-      op.permission === OrgPermissionType.MANAGE ||
-      op.permission === OrgPermissionType.ADMIN
+      op.editPermission === OrgEditPermissionType.MANAGE ||
+      op.editPermission === OrgEditPermissionType.ADMIN
   );
   if (ops) {
     const orgs = await OrganizationModel.find({
@@ -104,7 +108,7 @@ export async function canEditMentorPrivacy(
     return false;
   }
   const ops = mentor.orgPermissions?.filter(
-    (op) => op.permission === OrgPermissionType.ADMIN
+    (op) => op.editPermission === OrgEditPermissionType.ADMIN
   );
   if (ops) {
     const orgs = await OrganizationModel.find({
