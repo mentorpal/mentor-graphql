@@ -44,31 +44,42 @@ export enum MentorType {
   CHAT = 'CHAT',
 }
 
-export enum OrgPermissionType {
+export enum OrgViewPermissionType {
   NONE = 'NONE', // no custom settings, use "isPrivate"
   HIDDEN = 'HIDDEN', // org cannot see or use mentor
   SHARE = 'SHARE', // org can use mentor as-is
+}
+export enum OrgEditPermissionType {
+  NONE = 'NONE', // no custom settings, use "isPrivate"
   MANAGE = 'MANAGE', // org can edit content
   ADMIN = 'ADMIN', // org can edit content and edit sharing settings
 }
 
 export interface OrgPermissionProps {
   org: Organization['_id'];
-  permission: OrgPermissionType;
+  viewPermission: OrgViewPermissionType;
+  editPermission: OrgEditPermissionType;
 }
 export interface OrgPermission extends OrgPermissionProps, Document {}
 export const OrgPermissionSchema = new Schema({
   org: { type: mongoose.Types.ObjectId, ref: 'Organization' },
-  permission: {
+  viewPermission: {
     type: String,
     enum: [
-      OrgPermissionType.NONE,
-      OrgPermissionType.HIDDEN,
-      OrgPermissionType.SHARE,
-      OrgPermissionType.MANAGE,
-      OrgPermissionType.ADMIN,
+      OrgViewPermissionType.NONE,
+      OrgViewPermissionType.HIDDEN,
+      OrgViewPermissionType.SHARE,
     ],
-    default: OrgPermissionType.NONE,
+    default: OrgViewPermissionType.NONE,
+  },
+  editPermission: {
+    type: String,
+    enum: [
+      OrgEditPermissionType.NONE,
+      OrgEditPermissionType.MANAGE,
+      OrgEditPermissionType.ADMIN,
+    ],
+    default: OrgEditPermissionType.NONE,
   },
 });
 

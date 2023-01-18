@@ -32,7 +32,8 @@ export const OrgPermissionType = new GraphQLObjectType({
   fields: () => ({
     orgId: { type: GraphQLID },
     orgName: { type: GraphQLString },
-    permission: { type: GraphQLString },
+    viewPermission: { type: GraphQLString },
+    editPermission: { type: GraphQLString },
   }),
 });
 
@@ -75,7 +76,8 @@ export const MentorType = new GraphQLObjectType({
         return mentor.orgPermissions.map((op) => ({
           orgId: op.org,
           orgName: orgs.find((o) => `${o._id}` === `${op.org}`)?.name || '',
-          permission: op.permission,
+          viewPermission: op.viewPermission,
+          editPermission: op.editPermission,
         }));
       },
     },

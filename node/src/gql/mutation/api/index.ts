@@ -17,6 +17,8 @@ import importTaskUpdate from './import-task-update';
 import mentorImport from './mentor-import';
 import subjectUpdate from './subject-update';
 import mentorVbgUpdate from './mentor-vbg-update';
+import orgFooterUpdate from './org-footer-update';
+import orgHeaderUpdate from './org-header-update';
 import updateAnswers from './update-answers';
 
 export const Api: GraphQLObjectType = new GraphQLObjectType({
@@ -24,6 +26,8 @@ export const Api: GraphQLObjectType = new GraphQLObjectType({
   fields: () => ({
     mentorThumbnailUpdate,
     mentorVbgUpdate,
+    orgFooterUpdate,
+    orgHeaderUpdate,
     mediaUpdate,
     uploadAnswer,
     uploadTaskUpdate,

@@ -22,7 +22,8 @@ export const OrgPermissionInputType = new GraphQLInputObjectType({
   name: 'OrgPermissionInputType',
   fields: {
     org: { type: GraphQLNonNull(GraphQLID) },
-    permission: { type: GraphQLNonNull(GraphQLString) },
+    viewPermission: { type: GraphQLNonNull(GraphQLString) },
+    editPermission: { type: GraphQLNonNull(GraphQLString) },
   },
 });
 

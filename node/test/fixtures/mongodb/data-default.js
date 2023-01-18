@@ -142,11 +142,11 @@ module.exports = {
       orgPermissions: [
         {
           org: ObjectId('511111111111111111111111'),
-          permission: 'HIDDEN',
+          viewPermission: 'HIDDEN',
         },
         {
           org: ObjectId('511111111111111111111112'),
-          permission: 'MANAGE',
+          editPermission: 'MANAGE',
         },
       ],
     },
@@ -161,11 +161,11 @@ module.exports = {
       orgPermissions: [
         {
           org: ObjectId('511111111111111111111112'),
-          permission: 'SHARE',
+          viewPermission: 'SHARE',
         },
         {
           org: ObjectId('511111111111111111111111'),
-          permission: 'ADMIN',
+          editPermission: 'ADMIN',
         },
       ],
     },

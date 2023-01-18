@@ -956,7 +956,8 @@ describe('mentor', () => {
             orgPermissions {
               orgId
               orgName
-              permission
+              viewPermission
+              editPermission
             }
           }
         }
@@ -968,12 +969,14 @@ describe('mentor', () => {
         {
           orgId: '511111111111111111111111',
           orgName: 'USC',
-          permission: 'HIDDEN',
+          viewPermission: 'HIDDEN',
+          editPermission: 'NONE',
         },
         {
           orgId: '511111111111111111111112',
           orgName: 'CSUF',
-          permission: 'MANAGE',
+          viewPermission: 'NONE',
+          editPermission: 'MANAGE',
         },
       ],
     });
