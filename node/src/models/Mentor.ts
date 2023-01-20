@@ -43,7 +43,6 @@ export enum MentorType {
   VIDEO = 'VIDEO',
   CHAT = 'CHAT',
 }
-
 export enum OrgViewPermissionType {
   NONE = 'NONE', // no custom settings, use "isPrivate"
   HIDDEN = 'HIDDEN', // org cannot see or use mentor
@@ -100,6 +99,7 @@ export interface Mentor extends Document {
   lastPreviewedAt: Date;
   isDirty: boolean;
   isPrivate: boolean;
+  isArchived: boolean;
   orgPermissions: OrgPermissionProps[];
   hasVirtualBackground: boolean;
   virtualBackgroundUrl: string;
@@ -172,6 +172,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     lastPreviewedAt: { type: Date },
     isDirty: { type: Boolean, default: true },
     isPrivate: { type: Boolean, default: false },
+    isArchived: { type: Boolean, default: false },
     orgPermissions: { type: [OrgPermissionSchema], default: [] },
     hasVirtualBackground: { type: Boolean, default: false },
     virtualBackgroundUrl: { type: String, default: '' },
