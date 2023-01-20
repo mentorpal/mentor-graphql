@@ -224,7 +224,7 @@ export const mentorData = {
     utteranceAnswers = utteranceAnswers.filter((a) =>
       isAnswerComplete(
         a,
-        questions.find((q) => `${q._id}` === `${a.question}`),
+        utteranceQuestions.find((q) => `${q._id}` === `${a.question}`),
         mentor
       )
     );
