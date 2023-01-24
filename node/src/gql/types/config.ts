@@ -28,12 +28,16 @@ export const ConfigType = new GraphQLObjectType({
     googleClientId: { type: GraphQLString },
     virtualBackgroundUrls: { type: GraphQLList(GraphQLString) },
     defaultVirtualBackground: { type: GraphQLString },
-    questionSortOrder: { type: GraphQLInt },
     urlGraphql: { type: GraphQLString },
     urlVideo: { type: GraphQLString },
     urlDocSetup: { type: GraphQLString },
     urlVideoIdleTips: { type: GraphQLString },
+    // client settings
+    questionSortOrder: { type: GraphQLBoolean },
     mentorsDefault: { type: GraphQLList(GraphQLString) },
+    postSurveyLink: { type: GraphQLString },
+    postSurveyTimer: { type: GraphQLInt },
+    minTopicQuestionSize: { type: GraphQLInt },
     // home style settings
     styleHeaderTitle: { type: GraphQLString },
     styleHeaderText: { type: GraphQLString },
