@@ -20,11 +20,14 @@ import { ConfigType } from '../../types/config';
 import { canEditContent } from '../../../utils/check-permissions';
 
 export interface ConfigUpdateInput {
-  mentorsDefault: string[];
   virtualBackgroundUrls: string[];
   defaultVirtualBackground: string;
   videoRecorderMaxLength: number;
-  questionSortOrder: number;
+  questionSortOrder: boolean;
+  mentorsDefault: string[];
+  postSurveyLink: string;
+  postSurveyTimer: number;
+  minTopicQuestionSize: number;
   // home style settings
   styleHeaderTitle: string;
   styleHeaderText: string;
@@ -63,11 +66,14 @@ export interface ConfigUpdateInput {
 export const ConfigUpdateInputType = new GraphQLInputObjectType({
   name: 'ConfigUpdateInputType',
   fields: () => ({
-    mentorsDefault: { type: GraphQLList(GraphQLID) },
     virtualBackgroundUrls: { type: GraphQLList(GraphQLString) },
     defaultVirtualBackground: { type: GraphQLString },
     videoRecorderMaxLength: { type: GraphQLInt },
-    questionSortOrder: { type: GraphQLInt },
+    questionSortOrder: { type: GraphQLBoolean },
+    mentorsDefault: { type: GraphQLList(GraphQLID) },
+    postSurveyLink: { type: GraphQLString },
+    postSurveyTimer: { type: GraphQLInt },
+    minTopicQuestionSize: { type: GraphQLInt },
     // home style settings
     styleHeaderTitle: { type: GraphQLString },
     styleHeaderText: { type: GraphQLString },
