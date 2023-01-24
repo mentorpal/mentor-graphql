@@ -158,7 +158,10 @@ describe('config', () => {
       featuredSubjects: [],
       featuredKeywordTypes: [],
       defaultSubject: '',
-      questionSortOrder: 0,
+      questionSortOrder: true,
+      postSurveyLink: '',
+      postSurveyTimer: 0,
+      minTopicQuestionSize: 0,
     };
     await SettingModel.saveConfig(config);
     const response = await request(app)
@@ -179,6 +182,9 @@ describe('config', () => {
             virtualBackgroundUrls
             defaultVirtualBackground
             questionSortOrder
+            postSurveyLink
+            postSurveyTimer
+            minTopicQuestionSize          
             urlGraphql
             urlVideo
             urlDocSetup

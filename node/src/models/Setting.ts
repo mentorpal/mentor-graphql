@@ -6,11 +6,6 @@ The full terms of this copyright and license should always be found in the root 
 */
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
-export enum QuestionSortOrder {
-  Alphabetical = 0,
-  ReverseAlphabetical = 1,
-}
-
 export interface Config {
   cmi5Enabled: boolean;
   cmi5Endpoint: string;
@@ -24,13 +19,17 @@ export interface Config {
   googleClientId: string;
   virtualBackgroundUrls: string[];
   defaultVirtualBackground: string;
-  questionSortOrder: number;
   urlGraphql: string;
   urlVideo: string;
   urlDocSetup: string;
   urlVideoIdleTips: string;
+  // client settings
+  questionSortOrder: boolean;
   mentorsDefault: string[];
-  // home style settings
+  postSurveyLink: string;
+  postSurveyTimer: number;
+  minTopicQuestionSize: number;
+  // home settings
   styleHeaderTitle: string;
   styleHeaderText: string;
   styleHeaderColor: string;
@@ -79,12 +78,16 @@ export const ConfigKeys: ConfigKey[] = [
   'googleClientId',
   'virtualBackgroundUrls',
   'defaultVirtualBackground',
-  'questionSortOrder',
   'urlGraphql',
   'urlVideo',
   'urlDocSetup',
   'urlVideoIdleTips',
+  // client settings
+  'questionSortOrder',
   'mentorsDefault',
+  'postSurveyLink',
+  'postSurveyTimer',
+  'minTopicQuestionSize',
   // home style settings
   'styleHeaderTitle',
   'styleHeaderText',
@@ -140,13 +143,18 @@ export function getDefaultConfig(): Config {
     googleClientId: process.env.GOOGLE_CLIENT_ID || '',
     virtualBackgroundUrls: [],
     defaultVirtualBackground: '',
-    questionSortOrder: QuestionSortOrder.Alphabetical,
     urlGraphql: '/graphql',
     urlVideo: '/video',
     urlDocSetup:
       'https://docs.google.com/document/d/1av1pWamFrXQ1KabMU02LtAutrTt3ppblneQeilFBU3s/edit?usp=sharing',
     urlVideoIdleTips: 'https://youtu.be/xSu1BhuFt8A',
+    // client settings
+    questionSortOrder: true,
     mentorsDefault: [],
+    postSurveyLink:
+      'https://fullerton.qualtrics.com/jfe/form/SV_1ZzDYgNPzLE2QPI',
+    postSurveyTimer: 0,
+    minTopicQuestionSize: 0,
     // home style settings
     styleHeaderTitle: '',
     styleHeaderText: '',
