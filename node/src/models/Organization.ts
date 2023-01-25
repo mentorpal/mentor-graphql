@@ -30,8 +30,7 @@ export const OrgMemberSchema = new Schema({
 
 export interface OrgConfigProps {
   key: string;
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  value: any;
+  value: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 export interface OrgConfig extends OrgConfigProps, Document {}
 export const OrgConfigSchema = new Schema({
@@ -111,36 +110,47 @@ OrganizationSchema.statics.saveConfig = async function (
   o: string | Organization,
   config: Partial<Config>
 ) {
-  const org: Organization = typeof o === 'string' ? await this.findById(o) : o;
+  let org: Organization = typeof o === 'string' ? await this.findById(o) : o;
   if (!org) {
     throw new Error(`org ${o} not found`);
   }
-  const updates: Record<string, any> = {};
+
   const configPush: OrgConfigProps[] = [];
+  for (const [k, v] of Object.entries(config)) {
+    if (org.config.findIndex((c) => c.key == k) === -1) {
+      configPush.push({ key: k, value: v });
+    }
+  }
+  if (configPush.length > 0) {
+    org = await this.findOneAndUpdate(
+      { _id: org._id },
+      { $push: { config: { $each: configPush } } },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+  }
+
   const configUpdates: Record<string, string | number | boolean | string[]> =
     {};
   for (const [k, v] of Object.entries(config)) {
     const i = org.config.findIndex((c) => c.key == k);
-    if (i === -1) {
-      configPush.push({ key: k, value: v });
-    } else if (!equals(org.config[i].value, v)) {
+    if (i !== -1 && !equals(org.config[i].value, v)) {
       configUpdates[`config.${i}.value`] = v;
     }
   }
-  if (configPush.length > 0) {
-    updates['$push'] = { config: { $each: configPush } };
-  }
   if (configUpdates !== {}) {
-    updates['$set'] = configUpdates;
+    org = await this.findOneAndUpdate(
+      { _id: org._id },
+      { $set: configUpdates },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
   }
-  if (updates === {}) {
-    return await this.getConfig(org);
-  }
-  const updatedOrg = await this.findOneAndUpdate({ _id: org._id }, updates, {
-    new: true,
-    upsert: true,
-  });
-  return await this.getConfig(updatedOrg);
+  return await this.getConfig(org);
 };
 
 OrganizationSchema.index({ name: -1, _id: -1 });

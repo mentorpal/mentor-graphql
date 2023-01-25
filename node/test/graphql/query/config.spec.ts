@@ -136,6 +136,9 @@ describe('config', () => {
       homeFooterColor: '',
       homeFooterTextColor: '',
       homeFooterImages: [],
+      styleHeaderLogoOffset: 0,
+      styleHeaderLogoHeight: 0,
+      styleHeaderLogoWidth: 0,
       homeFooterLinks: [],
       homeBannerColor: '',
       homeBannerButtonColor: '',
@@ -199,6 +202,9 @@ describe('config', () => {
             homeFooterColor
             homeFooterTextColor
             homeFooterImages
+            styleHeaderLogoOffset
+            styleHeaderLogoHeight
+            styleHeaderLogoWidth
             homeFooterLinks
             homeBannerColor
             homeBannerButtonColor
