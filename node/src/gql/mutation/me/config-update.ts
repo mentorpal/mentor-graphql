@@ -23,12 +23,7 @@ export interface ConfigUpdateInput {
   virtualBackgroundUrls: string[];
   defaultVirtualBackground: string;
   videoRecorderMaxLength: number;
-  questionSortOrder: boolean;
-  mentorsDefault: string[];
-  postSurveyLink: string;
-  postSurveyTimer: number;
-  minTopicQuestionSize: number;
-  // home style settings
+  // style settings
   styleHeaderTitle: string;
   styleHeaderText: string;
   styleHeaderColor: string;
@@ -38,10 +33,14 @@ export interface ConfigUpdateInput {
   homeFooterColor: string;
   homeFooterTextColor: string;
   homeFooterImages: string[];
+  styleHeaderLogoOffset: number;
+  styleHeaderLogoHeight: number;
+  styleHeaderLogoWidth: number;
   homeFooterLinks: string[];
   homeBannerColor: string;
   homeBannerButtonColor: string;
   homeCarouselColor: string;
+  // popup settings
   walkthroughDisabled: boolean;
   walkthroughTitle: string;
   urlVideoMentorpalWalkthrough: string;
@@ -54,6 +53,13 @@ export interface ConfigUpdateInput {
   guestPromptTitle: string;
   guestPromptText: string;
   guestPromptInputType: string;
+  // client settings
+  questionSortOrder: string;
+  mentorsDefault: string[];
+  postSurveyLink: string;
+  postSurveyTimer: number;
+  minTopicQuestionSize: number;
+  // home settings
   activeMentors: string[];
   activeMentorPanels: string[];
   featuredMentors: string[];
@@ -69,18 +75,16 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     virtualBackgroundUrls: { type: GraphQLList(GraphQLString) },
     defaultVirtualBackground: { type: GraphQLString },
     videoRecorderMaxLength: { type: GraphQLInt },
-    questionSortOrder: { type: GraphQLBoolean },
-    mentorsDefault: { type: GraphQLList(GraphQLID) },
-    postSurveyLink: { type: GraphQLString },
-    postSurveyTimer: { type: GraphQLInt },
-    minTopicQuestionSize: { type: GraphQLInt },
-    // home style settings
+    // style settings
     styleHeaderTitle: { type: GraphQLString },
     styleHeaderText: { type: GraphQLString },
     styleHeaderColor: { type: GraphQLString },
     styleHeaderTextColor: { type: GraphQLString },
     styleHeaderLogo: { type: GraphQLString },
     styleHeaderLogoUrl: { type: GraphQLString },
+    styleHeaderLogoOffset: { type: GraphQLInt },
+    styleHeaderLogoHeight: { type: GraphQLInt },
+    styleHeaderLogoWidth: { type: GraphQLInt },
     homeFooterColor: { type: GraphQLString },
     homeFooterTextColor: { type: GraphQLString },
     homeFooterImages: { type: GraphQLList(GraphQLString) },
@@ -88,6 +92,7 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     homeBannerColor: { type: GraphQLString },
     homeBannerButtonColor: { type: GraphQLString },
     homeCarouselColor: { type: GraphQLString },
+    // popup settings
     walkthroughDisabled: { type: GraphQLBoolean },
     walkthroughTitle: { type: GraphQLString },
     urlVideoMentorpalWalkthrough: { type: GraphQLString },
@@ -100,6 +105,13 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     guestPromptTitle: { type: GraphQLString },
     guestPromptText: { type: GraphQLString },
     guestPromptInputType: { type: GraphQLString },
+    // client settings
+    questionSortOrder: { type: GraphQLString },
+    mentorsDefault: { type: GraphQLList(GraphQLID) },
+    postSurveyLink: { type: GraphQLString },
+    postSurveyTimer: { type: GraphQLInt },
+    minTopicQuestionSize: { type: GraphQLInt },
+    // home style settings
     activeMentors: { type: GraphQLList(GraphQLID) },
     activeMentorPanels: { type: GraphQLList(GraphQLID) },
     featuredMentors: { type: GraphQLList(GraphQLID) },

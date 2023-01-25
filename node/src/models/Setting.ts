@@ -6,6 +6,11 @@ The full terms of this copyright and license should always be found in the root 
 */
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
+export interface Setting {
+  key: string;
+  value: any; // eslint-disable-line  @typescript-eslint/no-explicit-any
+}
+
 export interface Config {
   cmi5Enabled: boolean;
   cmi5Endpoint: string;
@@ -23,19 +28,16 @@ export interface Config {
   urlVideo: string;
   urlDocSetup: string;
   urlVideoIdleTips: string;
-  // client settings
-  questionSortOrder: boolean;
-  mentorsDefault: string[];
-  postSurveyLink: string;
-  postSurveyTimer: number;
-  minTopicQuestionSize: number;
-  // home settings
+  // style settings
   styleHeaderTitle: string;
   styleHeaderText: string;
   styleHeaderColor: string;
   styleHeaderTextColor: string;
   styleHeaderLogo: string;
   styleHeaderLogoUrl: string;
+  styleHeaderLogoOffset: number;
+  styleHeaderLogoHeight: number;
+  styleHeaderLogoWidth: number;
   homeFooterColor: string;
   homeFooterTextColor: string;
   homeFooterImages: string[];
@@ -43,6 +45,7 @@ export interface Config {
   homeBannerColor: string;
   homeBannerButtonColor: string;
   homeCarouselColor: string;
+  // popup settings
   walkthroughDisabled: boolean;
   walkthroughTitle: string;
   urlVideoMentorpalWalkthrough: string;
@@ -55,6 +58,13 @@ export interface Config {
   guestPromptTitle: string;
   guestPromptText: string;
   guestPromptInputType: string;
+  // client settings
+  questionSortOrder: string;
+  mentorsDefault: string[];
+  postSurveyLink: string;
+  postSurveyTimer: number;
+  minTopicQuestionSize: number;
+  // home settings
   activeMentors: string[];
   activeMentorPanels: string[];
   featuredMentors: string[];
@@ -82,13 +92,7 @@ export const ConfigKeys: ConfigKey[] = [
   'urlVideo',
   'urlDocSetup',
   'urlVideoIdleTips',
-  // client settings
-  'questionSortOrder',
-  'mentorsDefault',
-  'postSurveyLink',
-  'postSurveyTimer',
-  'minTopicQuestionSize',
-  // home style settings
+  // style settings
   'styleHeaderTitle',
   'styleHeaderText',
   'styleHeaderColor',
@@ -102,6 +106,10 @@ export const ConfigKeys: ConfigKey[] = [
   'homeBannerColor',
   'homeBannerButtonColor',
   'homeCarouselColor',
+  'styleHeaderLogoOffset',
+  'styleHeaderLogoHeight',
+  'styleHeaderLogoWidth',
+  // popup settings
   'walkthroughDisabled',
   'walkthroughTitle',
   'urlVideoMentorpalWalkthrough',
@@ -114,6 +122,13 @@ export const ConfigKeys: ConfigKey[] = [
   'guestPromptTitle',
   'guestPromptText',
   'guestPromptInputType',
+  // client settings
+  'questionSortOrder',
+  'mentorsDefault',
+  'postSurveyLink',
+  'postSurveyTimer',
+  'minTopicQuestionSize',
+  // home settings
   'activeMentors',
   'activeMentorPanels',
   'featuredMentors',
@@ -122,12 +137,6 @@ export const ConfigKeys: ConfigKey[] = [
   'featuredKeywordTypes',
   'defaultSubject',
 ];
-
-export interface Setting {
-  key: string;
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  value: any;
-}
 
 export function getDefaultConfig(): Config {
   return {
@@ -148,14 +157,7 @@ export function getDefaultConfig(): Config {
     urlDocSetup:
       'https://docs.google.com/document/d/1av1pWamFrXQ1KabMU02LtAutrTt3ppblneQeilFBU3s/edit?usp=sharing',
     urlVideoIdleTips: 'https://youtu.be/xSu1BhuFt8A',
-    // client settings
-    questionSortOrder: true,
-    mentorsDefault: [],
-    postSurveyLink:
-      'https://fullerton.qualtrics.com/jfe/form/SV_1ZzDYgNPzLE2QPI',
-    postSurveyTimer: 0,
-    minTopicQuestionSize: 0,
-    // home style settings
+    // style settings
     styleHeaderTitle: '',
     styleHeaderText: '',
     styleHeaderLogo: '',
@@ -169,6 +171,10 @@ export function getDefaultConfig(): Config {
     homeBannerColor: '#ffffff',
     homeBannerButtonColor: '#007cba',
     homeCarouselColor: '#398bb4',
+    styleHeaderLogoOffset: 0,
+    styleHeaderLogoHeight: 0,
+    styleHeaderLogoWidth: 0,
+    // popup settings
     walkthroughDisabled: false,
     walkthroughTitle: '',
     urlVideoMentorpalWalkthrough: 'https://youtu.be/EGdSl4Q8NAY',
@@ -181,6 +187,14 @@ export function getDefaultConfig(): Config {
     guestPromptTitle: '',
     guestPromptText: '',
     guestPromptInputType: 'email',
+    // client settings
+    questionSortOrder: '',
+    mentorsDefault: [],
+    postSurveyLink:
+      'https://fullerton.qualtrics.com/jfe/form/SV_1ZzDYgNPzLE2QPI',
+    postSurveyTimer: 0,
+    minTopicQuestionSize: 0,
+    // home settings
     activeMentors: [],
     activeMentorPanels: [],
     featuredMentors: [],
