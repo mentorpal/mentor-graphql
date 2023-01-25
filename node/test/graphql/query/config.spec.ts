@@ -136,6 +136,9 @@ describe('config', () => {
       homeFooterColor: '',
       homeFooterTextColor: '',
       homeFooterImages: [],
+      styleHeaderLogoOffset: 0,
+      styleHeaderLogoHeight: 0,
+      styleHeaderLogoWidth: 0,
       homeFooterLinks: [],
       homeBannerColor: '',
       homeBannerButtonColor: '',
@@ -158,7 +161,7 @@ describe('config', () => {
       featuredSubjects: [],
       featuredKeywordTypes: [],
       defaultSubject: '',
-      questionSortOrder: true,
+      questionSortOrder: '',
       postSurveyLink: '',
       postSurveyTimer: 0,
       minTopicQuestionSize: 0,
@@ -199,6 +202,9 @@ describe('config', () => {
             homeFooterColor
             homeFooterTextColor
             homeFooterImages
+            styleHeaderLogoOffset
+            styleHeaderLogoHeight
+            styleHeaderLogoWidth
             homeFooterLinks
             homeBannerColor
             homeBannerButtonColor

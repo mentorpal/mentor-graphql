@@ -32,13 +32,7 @@ export const ConfigType = new GraphQLObjectType({
     urlVideo: { type: GraphQLString },
     urlDocSetup: { type: GraphQLString },
     urlVideoIdleTips: { type: GraphQLString },
-    // client settings
-    questionSortOrder: { type: GraphQLBoolean },
-    mentorsDefault: { type: GraphQLList(GraphQLString) },
-    postSurveyLink: { type: GraphQLString },
-    postSurveyTimer: { type: GraphQLInt },
-    minTopicQuestionSize: { type: GraphQLInt },
-    // home style settings
+    // style settings
     styleHeaderTitle: { type: GraphQLString },
     styleHeaderText: { type: GraphQLString },
     styleHeaderColor: { type: GraphQLString },
@@ -49,9 +43,13 @@ export const ConfigType = new GraphQLObjectType({
     homeFooterTextColor: { type: GraphQLString },
     homeFooterImages: { type: GraphQLList(GraphQLString) },
     homeFooterLinks: { type: GraphQLList(GraphQLString) },
+    styleHeaderLogoOffset: { type: GraphQLInt },
+    styleHeaderLogoHeight: { type: GraphQLInt },
+    styleHeaderLogoWidth: { type: GraphQLInt },
     homeBannerColor: { type: GraphQLString },
     homeBannerButtonColor: { type: GraphQLString },
     homeCarouselColor: { type: GraphQLString },
+    // popup settings
     walkthroughDisabled: { type: GraphQLBoolean },
     walkthroughTitle: { type: GraphQLString },
     urlVideoMentorpalWalkthrough: { type: GraphQLString },
@@ -64,6 +62,13 @@ export const ConfigType = new GraphQLObjectType({
     guestPromptTitle: { type: GraphQLString },
     guestPromptText: { type: GraphQLString },
     guestPromptInputType: { type: GraphQLString },
+    // client settings
+    questionSortOrder: { type: GraphQLString },
+    mentorsDefault: { type: GraphQLList(GraphQLString) },
+    postSurveyLink: { type: GraphQLString },
+    postSurveyTimer: { type: GraphQLInt },
+    minTopicQuestionSize: { type: GraphQLInt },
+    // home style settings
     activeMentors: { type: GraphQLList(GraphQLID) },
     activeMentorPanels: { type: GraphQLList(GraphQLID) },
     featuredMentors: { type: GraphQLList(GraphQLID) },

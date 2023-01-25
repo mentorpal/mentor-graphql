@@ -21,11 +21,15 @@ import {
 } from '../../models';
 import { AnswerMedia } from '../../models/Answer';
 import { Question, QuestionType } from '../../models/Question';
+import SettingModel, { Config } from '../../models/Setting';
 import { SubjectQuestion, Topic } from '../../models/Subject';
-import { Organization } from '../../models/Organization';
+import OrganizationModel, { Organization } from '../../models/Organization';
 import { User } from '../../models/User';
 import { isAnswerComplete, Mentor } from '../../models/Mentor';
-import { canViewMentor } from '../../utils/check-permissions';
+import {
+  canViewMentor,
+  canViewOrganization,
+} from '../../utils/check-permissions';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 
 export interface MentorClientData {
@@ -146,6 +150,12 @@ export const mentorData = {
         `mentor is private and you do not have permission to access`
       );
     }
+    let config: Config;
+    if (context.org && canViewOrganization(context.org, context.user)) {
+      config = await OrganizationModel.getConfig(context.org);
+    } else {
+      config = await SettingModel.getConfig();
+    }
 
     let topicQuestions: TopicQuestions[] = [];
     let sQuestions: SubjectQuestion[] = [];
@@ -188,7 +198,31 @@ export const mentorData = {
       sQuestions.sort((a, b) => {
         const qa = questions.find((q) => `${q._id}` === `${a.question}`);
         const qb = questions.find((q) => `${q._id}` === `${b.question}`);
+        return (
+          qa.question.localeCompare(qb.question) *
+          (config.questionSortOrder ? 1 : -1)
+        );
+      });
+    }
+
+    if (config.questionSortOrder === 'Alphabetical') {
+      topics.sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      });
+      sQuestions.sort((a, b) => {
+        const qa = questions.find((q) => `${q._id}` === `${a.question}`);
+        const qb = questions.find((q) => `${q._id}` === `${b.question}`);
         return qa.question.localeCompare(qb.question);
+      });
+    }
+    if (config.questionSortOrder === 'Reverse-Alphabetical') {
+      topics.sort((a, b) => {
+        return a.name.localeCompare(b.name) * -1;
+      });
+      sQuestions.sort((a, b) => {
+        const qa = questions.find((q) => `${q._id}` === `${a.question}`);
+        const qb = questions.find((q) => `${q._id}` === `${b.question}`);
+        return qa.question.localeCompare(qb.question) * -1;
       });
     }
 
