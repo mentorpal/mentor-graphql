@@ -115,23 +115,31 @@ OrganizationSchema.statics.saveConfig = async function (
   if (!org) {
     throw new Error(`org ${o} not found`);
   }
-  const updatedConfig = { ...org.config, ...config };
-  const configKeys = Object.entries(updatedConfig).map((kv) => ({
-    key: kv[0],
-    value: kv[1],
-  }));
-  const updatedOrg = await this.findOneAndUpdate(
-    { _id: org._id },
-    {
-      $set: {
-        config: configKeys,
-      },
-    },
-    {
-      new: true,
-      upsert: true,
+  const updates: Record<string, any> = {};
+  const configPush: OrgConfigProps[] = [];
+  const configUpdates: Record<string, string | number | boolean | string[]> =
+    {};
+  for (const [k, v] of Object.entries(config)) {
+    const i = org.config.findIndex((c) => c.key == k);
+    if (i === -1) {
+      configPush.push({ key: k, value: v });
+    } else if (!equals(org.config[i].value, v)) {
+      configUpdates[`config.${i}.value`] = v;
     }
-  );
+  }
+  if (configPush.length > 0) {
+    updates['$push'] = { config: { $each: configPush } };
+  }
+  if (configUpdates !== {}) {
+    updates['$set'] = configUpdates;
+  }
+  if (updates === {}) {
+    return await this.getConfig(org);
+  }
+  const updatedOrg = await this.findOneAndUpdate({ _id: org._id }, updates, {
+    new: true,
+    upsert: true,
+  });
   return await this.getConfig(updatedOrg);
 };
 
@@ -142,3 +150,13 @@ export default mongoose.model<Organization, OrganizationModel>(
   'Organization',
   OrganizationSchema
 );
+
+function equals(
+  a: string | number | boolean | string[],
+  b: string | number | boolean | string[]
+): boolean {
+  if (typeof a == 'object' && typeof b == 'object') {
+    return `${JSON.stringify(a)}` == `${JSON.stringify(b)}`;
+  }
+  return a == b;
+}
