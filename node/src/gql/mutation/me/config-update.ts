@@ -54,7 +54,7 @@ export interface ConfigUpdateInput {
   guestPromptText: string;
   guestPromptInputType: string;
   // client settings
-  questionSortOrder: boolean;
+  questionSortOrder: string;
   mentorsDefault: string[];
   postSurveyLink: string;
   postSurveyTimer: number;
@@ -106,7 +106,7 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     guestPromptText: { type: GraphQLString },
     guestPromptInputType: { type: GraphQLString },
     // client settings
-    questionSortOrder: { type: GraphQLBoolean },
+    questionSortOrder: { type: GraphQLString },
     mentorsDefault: { type: GraphQLList(GraphQLID) },
     postSurveyLink: { type: GraphQLString },
     postSurveyTimer: { type: GraphQLInt },

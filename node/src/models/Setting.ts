@@ -59,7 +59,7 @@ export interface Config {
   guestPromptText: string;
   guestPromptInputType: string;
   // client settings
-  questionSortOrder: boolean;
+  questionSortOrder: string;
   mentorsDefault: string[];
   postSurveyLink: string;
   postSurveyTimer: number;
@@ -188,7 +188,7 @@ export function getDefaultConfig(): Config {
     guestPromptText: '',
     guestPromptInputType: 'email',
     // client settings
-    questionSortOrder: true,
+    questionSortOrder: '',
     mentorsDefault: [],
     postSurveyLink:
       'https://fullerton.qualtrics.com/jfe/form/SV_1ZzDYgNPzLE2QPI',

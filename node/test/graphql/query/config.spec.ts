@@ -161,7 +161,7 @@ describe('config', () => {
       featuredSubjects: [],
       featuredKeywordTypes: [],
       defaultSubject: '',
-      questionSortOrder: true,
+      questionSortOrder: '',
       postSurveyLink: '',
       postSurveyTimer: 0,
       minTopicQuestionSize: 0,

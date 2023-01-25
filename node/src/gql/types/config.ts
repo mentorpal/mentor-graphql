@@ -63,7 +63,7 @@ export const ConfigType = new GraphQLObjectType({
     guestPromptText: { type: GraphQLString },
     guestPromptInputType: { type: GraphQLString },
     // client settings
-    questionSortOrder: { type: GraphQLBoolean },
+    questionSortOrder: { type: GraphQLString },
     mentorsDefault: { type: GraphQLList(GraphQLString) },
     postSurveyLink: { type: GraphQLString },
     postSurveyTimer: { type: GraphQLInt },
