@@ -50,6 +50,7 @@ describe('config', () => {
             urlGraphql
             urlVideo
             styleHeaderLogo
+            defaultSubject
           }
         }`,
       });
@@ -66,6 +67,7 @@ describe('config', () => {
       urlGraphql: '/graphql',
       urlVideo: '/video',
       styleHeaderLogo: '',
+      defaultSubject: '',
     });
   });
 

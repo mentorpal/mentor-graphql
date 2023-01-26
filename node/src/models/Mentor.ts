@@ -163,7 +163,6 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     defaultSubject: {
       type: Schema.Types.ObjectId,
       ref: 'Subject',
-      default: '',
     },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
     keywords: { type: [{ type: Schema.Types.ObjectId, ref: 'Keyword' }] },
@@ -185,7 +184,6 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: '{PATH} is required!',
-      unique: true,
     },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }

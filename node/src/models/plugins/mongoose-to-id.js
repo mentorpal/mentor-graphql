@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import isHex from 'is-hex';
+import { isHex } from 'ishex';
 import mongoose from 'mongoose';
 import { logger } from '../../utils/logging';
 
@@ -30,7 +30,7 @@ function toIdPlugin(schema) {
     }
     if (obj.length === 24 && isHex(obj)) {
       try {
-        return mongoose.Types.ObjectId(obj);
+        return new mongoose.Types.ObjectId(obj);
       } catch (castErr) {
         logger.error(`cast error for id '${obj}': ${castErr}`);
         logger.error(castErr);

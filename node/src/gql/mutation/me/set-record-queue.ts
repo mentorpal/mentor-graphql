@@ -31,13 +31,13 @@ export const removeQuestionFromRecordQueue = {
       throw new Error('Only authenticated users');
     }
     const mentor = await MentorModel.findOne({
-      user: Types.ObjectId(`${context.user._id}`),
+      user: new Types.ObjectId(`${context.user._id}`),
     });
     if (!mentor) {
       throw new Error('Failed to find mentor for user');
     }
     const newMentor = await MentorModel.findOneAndUpdate(
-      { user: Types.ObjectId(`${context.user._id}`) },
+      { user: new Types.ObjectId(`${context.user._id}`) },
       {
         $set: {
           recordQueue: args.questionIds,

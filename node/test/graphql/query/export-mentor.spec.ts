@@ -306,27 +306,6 @@ describe('export mentor', () => {
       ],
       answers: [
         {
-          transcript: '[being still]',
-          status: 'COMPLETE',
-          question: {
-            _id: '511111111111111111111111',
-            question: "Don't talk and stay still.",
-          },
-          hasUntransferredMedia: false,
-          webMedia: {
-            tag: 'web',
-            type: 'video',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
-            needsTransfer: false,
-          },
-          mobileMedia: {
-            tag: 'mobile',
-            type: 'video',
-            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
-            needsTransfer: false,
-          },
-        },
-        {
           transcript: 'Test Transcript',
           status: 'COMPLETE',
           question: {
@@ -344,6 +323,27 @@ describe('export mentor', () => {
             tag: 'mobile',
             type: 'video',
             url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
+            needsTransfer: false,
+          },
+        },
+        {
+          transcript: '[being still]',
+          status: 'COMPLETE',
+          question: {
+            _id: '511111111111111111111111',
+            question: "Don't talk and stay still.",
+          },
+          hasUntransferredMedia: false,
+          webMedia: {
+            tag: 'web',
+            type: 'video',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+            needsTransfer: false,
+          },
+          mobileMedia: {
+            tag: 'mobile',
+            type: 'video',
+            url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
             needsTransfer: false,
           },
         },

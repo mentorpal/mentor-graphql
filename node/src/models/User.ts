@@ -40,7 +40,7 @@ export interface User extends Document {
   name: string;
   email: string;
   userRole: string;
-  mentorIds: string[];
+  mentorIds: Schema.Types.ObjectId[];
   lastLoginAt: Date;
   firstTimeTracking: FirstTimeTracking;
 }
