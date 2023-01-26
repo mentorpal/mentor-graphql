@@ -29,7 +29,7 @@ function findOneByIdOrAlias(schema) {
       id = idOrAlias;
     } else if (idOrAlias.length === 24 && isHex(idOrAlias)) {
       try {
-        id = mongoose.Types.ObjectId(idOrAlias);
+        id = new mongoose.Types.ObjectId(idOrAlias);
       } catch (castErr) {
         logger.error(`cast error for id '${idOrAlias}': ${castErr}`);
         logger.error(castErr);

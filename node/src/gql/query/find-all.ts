@@ -21,7 +21,7 @@ function convertStringsToObjectIds(filter: any) {
   }
   if (typeof filter === 'string') {
     try {
-      return mongoose.Types.ObjectId(filter);
+      return new mongoose.Types.ObjectId(filter);
     } catch (err) {
       return filter;
     }

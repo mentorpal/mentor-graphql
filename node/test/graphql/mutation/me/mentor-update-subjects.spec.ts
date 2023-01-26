@@ -333,7 +333,7 @@ describe('updateMentorSubjects', () => {
         }`,
         variables: {
           mentor: {
-            defaultSubject: null,
+            defaultSubject: '5ffdf41a1ee2c62320b49eb3',
             subjects: ['5ffdf41a1ee2c62320b49eb3'],
           },
           mentorId: '5ffdf41a1ee2c62111111112',

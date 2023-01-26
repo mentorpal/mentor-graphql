@@ -32,7 +32,7 @@ export const RefreshTokenSchema = new Schema<RefreshToken, RefreshTokenModel>({
 });
 
 RefreshTokenSchema.virtual('isExpired').get(function () {
-  return Date.now() >= this.expires;
+  return Date.now() >= this.expires.getTime();
 });
 
 RefreshTokenSchema.virtual('isActive').get(function () {

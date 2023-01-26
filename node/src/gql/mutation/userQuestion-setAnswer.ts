@@ -68,7 +68,7 @@ export const userQuestionSetAnswer = {
       await UserQuestionModel.findByIdAndUpdate(
         args.id,
         {
-          graderAnswer: answerId ? mongoose.Types.ObjectId(answerId) : null,
+          graderAnswer: answerId ? new mongoose.Types.ObjectId(answerId) : null,
         },
         {
           new: true,

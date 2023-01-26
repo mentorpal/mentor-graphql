@@ -107,7 +107,7 @@ describe('userQuestions', () => {
       .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {
-        userQuestions(filter: { mentor: "${mongoose.Types.ObjectId(
+        userQuestions(filter: { mentor: "${new mongoose.Types.ObjectId(
           '6109d2a86e6fa01e5bf3219f'
         )}" }) {
           edges {

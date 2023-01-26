@@ -63,12 +63,14 @@ export const updateMentorDetails = {
       : await MentorModel.findOne({
           user: context.user._id,
         });
+
     if (!mentor) {
       throw new Error('invalid mentor');
     }
     if (!(await canEditMentor(mentor, context.user))) {
       throw new Error('you do not have permission to edit this mentor');
     }
+
     const updated = await MentorModel.findByIdAndUpdate(
       mentor._id,
       {
@@ -79,6 +81,7 @@ export const updateMentorDetails = {
         upsert: true,
       }
     );
+
     return Boolean(updated);
   },
 };

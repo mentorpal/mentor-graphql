@@ -121,7 +121,7 @@ describe('userQuestions', () => {
       .post('/graphql')
       .send({
         query: `query {
-        userQuestions(filter: { mentor: "${mongoose.Types.ObjectId(
+        userQuestions(filter: { mentor: "${new mongoose.Types.ObjectId(
           '5ffdf41a1ee2c62111111111'
         )}" }) {
           edges {

@@ -23,7 +23,7 @@ export const mentor = {
       throw new Error('Only authenticated users');
     }
     const mentor = await MentorModel.findOne({
-      user: Types.ObjectId(`${context.user._id}`),
+      user: new Types.ObjectId(`${context.user._id}`),
     });
     return mentor;
   },

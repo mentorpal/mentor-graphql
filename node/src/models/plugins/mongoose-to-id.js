@@ -30,7 +30,7 @@ function toIdPlugin(schema) {
     }
     if (obj.length === 24 && isHex(obj)) {
       try {
-        return mongoose.Types.ObjectId(obj);
+        return new mongoose.Types.ObjectId(obj);
       } catch (castErr) {
         logger.error(`cast error for id '${obj}': ${castErr}`);
         logger.error(castErr);
