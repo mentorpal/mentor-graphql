@@ -33,7 +33,8 @@ describe('keywords', () => {
           edges {
             node {
               _id
-              name
+              type
+              keywords
             }
           }
           pageInfo {
@@ -48,26 +49,16 @@ describe('keywords', () => {
       edges: [
         {
           node: {
-            _id: '511111111111111111111114',
-            name: 'STEM',
-          },
-        },
-        {
-          node: {
-            _id: '511111111111111111111113',
-            name: 'Nonbinary',
-          },
-        },
-        {
-          node: {
             _id: '511111111111111111111112',
-            name: 'Female',
+            type: 'Career',
+            keywords: ['STEM'],
           },
         },
         {
           node: {
             _id: '511111111111111111111111',
-            name: 'Male',
+            type: 'Gender',
+            keywords: ['Male', 'Female', 'Nonbinary'],
           },
         },
       ],
@@ -79,16 +70,16 @@ describe('keywords', () => {
   });
 
   describe('can order list of keywords', () => {
-    it('by name in ascending order', async () => {
+    it('by type in ascending order', async () => {
       const response = await request(app)
         .post('/graphql')
         .send({
           query: `query {
-          keywords(sortBy: "name", sortAscending: true) {
+          keywords(sortBy: "type", sortAscending: true) {
             edges {
               node {
                 _id
-                name
+                type
               }
             }
             pageInfo {
@@ -104,25 +95,13 @@ describe('keywords', () => {
           {
             node: {
               _id: '511111111111111111111112',
-              name: 'Female',
+              type: 'Career',
             },
           },
           {
             node: {
               _id: '511111111111111111111111',
-              name: 'Male',
-            },
-          },
-          {
-            node: {
-              _id: '511111111111111111111113',
-              name: 'Nonbinary',
-            },
-          },
-          {
-            node: {
-              _id: '511111111111111111111114',
-              name: 'STEM',
+              type: 'Gender',
             },
           },
         ],
@@ -133,16 +112,16 @@ describe('keywords', () => {
       });
     });
 
-    it('by name in descending order', async () => {
+    it('by type in descending order', async () => {
       const response = await request(app)
         .post('/graphql')
         .send({
           query: `query {
-          keywords(sortBy: "name", sortAscending: false) {
+          keywords(sortBy: "type", sortAscending: false) {
             edges {
               node {
                 _id
-                name
+                type
               }
             }
             pageInfo {
@@ -157,26 +136,14 @@ describe('keywords', () => {
         edges: [
           {
             node: {
-              _id: '511111111111111111111114',
-              name: 'STEM',
-            },
-          },
-          {
-            node: {
-              _id: '511111111111111111111113',
-              name: 'Nonbinary',
-            },
-          },
-          {
-            node: {
               _id: '511111111111111111111111',
-              name: 'Male',
+              type: 'Gender',
             },
           },
           {
             node: {
               _id: '511111111111111111111112',
-              name: 'Female',
+              type: 'Career',
             },
           },
         ],
@@ -189,55 +156,12 @@ describe('keywords', () => {
   });
 
   describe('can paginate list of keywords', () => {
-    it('gets first 2 keywords', async () => {
+    it('gets first 1 keywords', async () => {
       const response = await request(app)
         .post('/graphql')
         .send({
           query: `query {
-          keywords(limit: 2) {
-            edges {
-              node {
-                _id
-              }
-            }
-            pageInfo {
-              hasNextPage
-              hasPreviousPage
-              startCursor
-              endCursor
-            }
-          }
-        }`,
-        });
-      expect(response.status).to.equal(200);
-      expect(response.body.data.keywords).to.eql({
-        edges: [
-          {
-            node: {
-              _id: '511111111111111111111114',
-            },
-          },
-          {
-            node: {
-              _id: '511111111111111111111113',
-            },
-          },
-        ],
-        pageInfo: {
-          hasPreviousPage: false,
-          hasNextPage: true,
-          startCursor: null,
-          endCursor: 'eyIkb2lkIjoiNTExMTExMTExMTExMTExMTExMTExMTEzIn0',
-        },
-      });
-    });
-
-    it('gets next page', async () => {
-      const response = await request(app)
-        .post('/graphql')
-        .send({
-          query: `query {
-          keywords(limit: 2, cursor: "next__eyIkb2lkIjoiNTExMTExMTExMTExMTExMTExMTExMTEzIn0") {
+          keywords(limit: 1) {
             edges {
               node {
                 _id
@@ -260,27 +184,22 @@ describe('keywords', () => {
               _id: '511111111111111111111112',
             },
           },
-          {
-            node: {
-              _id: '511111111111111111111111',
-            },
-          },
         ],
         pageInfo: {
-          hasPreviousPage: true,
-          hasNextPage: false,
-          startCursor: 'eyIkb2lkIjoiNTExMTExMTExMTExMTExMTExMTExMTEyIn0',
-          endCursor: null,
+          hasPreviousPage: false,
+          hasNextPage: true,
+          startCursor: null,
+          endCursor: 'eyIkb2lkIjoiNTExMTExMTExMTExMTExMTExMTExMTEyIn0',
         },
       });
     });
 
-    it('gets first 2 keywords', async () => {
+    it('gets next page', async () => {
       const response = await request(app)
         .post('/graphql')
         .send({
           query: `query {
-          keywords(limit: 2, cursor: "prev__eyIkb2lkIjoiNTExMTExMTExMTExMTExMTExMTExMTEyIn0") {
+          keywords(limit: 1, cursor: "next__eyIkb2lkIjoiNTExMTExMTExMTExMTExMTExMTExMTEyIn0") {
             edges {
               node {
                 _id
@@ -300,12 +219,45 @@ describe('keywords', () => {
         edges: [
           {
             node: {
-              _id: '511111111111111111111114',
+              _id: '511111111111111111111111',
             },
           },
+        ],
+        pageInfo: {
+          hasPreviousPage: true,
+          hasNextPage: false,
+          startCursor: 'eyIkb2lkIjoiNTExMTExMTExMTExMTExMTExMTExMTExIn0',
+          endCursor: null,
+        },
+      });
+    });
+
+    it('gets first 1 keywords', async () => {
+      const response = await request(app)
+        .post('/graphql')
+        .send({
+          query: `query {
+          keywords(limit: 2, cursor: "prev__eyIkb2lkIjoiNTExMTExMTExMTExMTExMTExMTExMTExIn0") {
+            edges {
+              node {
+                _id
+              }
+            }
+            pageInfo {
+              hasNextPage
+              hasPreviousPage
+              startCursor
+              endCursor
+            }
+          }
+        }`,
+        });
+      expect(response.status).to.equal(200);
+      expect(response.body.data.keywords).to.eql({
+        edges: [
           {
             node: {
-              _id: '511111111111111111111113',
+              _id: '511111111111111111111112',
             },
           },
         ],
@@ -313,7 +265,7 @@ describe('keywords', () => {
           hasPreviousPage: false,
           hasNextPage: true,
           startCursor: null,
-          endCursor: 'eyIkb2lkIjoiNTExMTExMTExMTExMTExMTExMTExMTEzIn0',
+          endCursor: 'eyIkb2lkIjoiNTExMTExMTExMTExMTExMTExMTExMTEyIn0',
         },
       });
     });

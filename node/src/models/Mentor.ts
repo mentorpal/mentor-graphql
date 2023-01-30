@@ -36,18 +36,19 @@ import UserQuestion, {
   UserQuestion as UserQuestionInterface,
 } from './UserQuestion';
 import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
-import { Keyword } from './Keyword';
 import { Organization } from './Organization';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
   CHAT = 'CHAT',
 }
+
 export enum OrgViewPermissionType {
   NONE = 'NONE', // no custom settings, use "isPrivate"
   HIDDEN = 'HIDDEN', // org cannot see or use mentor
   SHARE = 'SHARE', // org can use mentor as-is
 }
+
 export enum OrgEditPermissionType {
   NONE = 'NONE', // no custom settings, use "isPrivate"
   MANAGE = 'MANAGE', // org can edit content
@@ -59,7 +60,9 @@ export interface OrgPermissionProps {
   viewPermission: OrgViewPermissionType;
   editPermission: OrgEditPermissionType;
 }
+
 export interface OrgPermission extends OrgPermissionProps, Document {}
+
 export const OrgPermissionSchema = new Schema({
   org: { type: mongoose.Types.ObjectId, ref: 'Organization' },
   viewPermission: {
@@ -93,7 +96,7 @@ export interface Mentor extends Document {
   allowContact: boolean;
   defaultSubject: Subject['_id'];
   subjects: Subject['_id'][];
-  keywords: Keyword['_id'][];
+  keywords: string[];
   recordQueue: Question['_id'][];
   lastTrainedAt: Date;
   lastPreviewedAt: Date;
@@ -165,7 +168,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
       ref: 'Subject',
     },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
-    keywords: { type: [{ type: Schema.Types.ObjectId, ref: 'Keyword' }] },
+    keywords: { type: [String] },
     recordQueue: { type: [{ type: Schema.Types.ObjectId, ref: 'Question' }] },
     lastTrainedAt: { type: Date },
     lastPreviewedAt: { type: Date },
