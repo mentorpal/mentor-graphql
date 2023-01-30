@@ -8,39 +8,22 @@ import {
   GraphQLObjectType,
   GraphQLBoolean,
   GraphQLID,
-  GraphQLInputObjectType,
   GraphQLList,
   GraphQLString,
 } from 'graphql';
-import {
-  Mentor as MentorModel,
-  Keyword as KeywordModel,
-} from '../../../models';
+import { Mentor as MentorModel } from '../../../models';
 import { User } from '../../../models/User';
 import { canEditMentor } from '../../../utils/check-permissions';
-
-export interface UpdateKeyword {
-  name: string;
-  type: string;
-}
-
-export const UpdateKeywordType = new GraphQLInputObjectType({
-  name: 'UpdateKeywordType',
-  fields: () => ({
-    name: { type: GraphQLString },
-    type: { type: GraphQLString },
-  }),
-});
 
 export const updateMentorKeywords = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLID },
-    keywords: { type: GraphQLList(UpdateKeywordType) },
+    keywords: { type: GraphQLList(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentorId: string; keywords: UpdateKeyword[] },
+    args: { mentorId: string; keywords: string[] },
     context: { user: User }
   ): Promise<boolean> => {
     const mentor = args.mentorId
@@ -55,30 +38,19 @@ export const updateMentorKeywords = {
     if (!(await canEditMentor(mentor, context.user))) {
       throw new Error('you do not have permission to edit this mentor');
     }
-    // Batch write all keywords
-    if (args.keywords && args.keywords.length > 0) {
-      await KeywordModel.bulkWrite(
-        args.keywords.map((k) => {
-          return {
-            updateOne: {
-              filter: { name: k.name },
-              update: { $set: k },
-              upsert: true,
-            },
-          };
-        })
-      );
+    // don't keep duplicate keywords
+    const keywords: string[] = [];
+    for (const k of args.keywords) {
+      if (!keywords.find((kk) => kk.toLowerCase() === k.toLowerCase())) {
+        keywords.push(k);
+      }
     }
-
     // Update mentor keywords
-    const keywords = await KeywordModel.find({
-      name: { $in: args.keywords.map((k) => k.name) },
-    });
     const updated = await MentorModel.findByIdAndUpdate(
       mentor._id,
       {
         $set: {
-          keywords: keywords.map((k) => k._id),
+          keywords: keywords,
         },
       },
       {

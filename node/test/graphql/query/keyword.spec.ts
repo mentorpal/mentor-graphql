@@ -33,7 +33,7 @@ describe('keyword', () => {
           keyword(id: $id){
             _id
             type
-            name
+            keywords
           }
       }`,
         variables: {
@@ -44,7 +44,7 @@ describe('keyword', () => {
     expect(response.body.data?.keyword).to.eql({
       _id: '511111111111111111111111',
       type: 'Gender',
-      name: 'Male',
+      keywords: ['Male', 'Female', 'Nonbinary'],
     });
   });
 });

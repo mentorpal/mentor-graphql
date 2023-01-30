@@ -5,19 +5,30 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import {
-  GraphQLString,
   GraphQLObjectType,
-  GraphQLID,
+  GraphQLBoolean,
   GraphQLList,
+  GraphQLString,
+  GraphQLNonNull,
 } from 'graphql';
+import { Keyword as KeywordModel } from '../../../models';
 
-export const KeywordType = new GraphQLObjectType({
-  name: 'Keyword',
-  fields: () => ({
-    _id: { type: GraphQLID },
-    type: { type: GraphQLString },
-    keywords: { type: GraphQLList(GraphQLString) },
-  }),
-});
+export const updateKeyword = {
+  type: GraphQLBoolean,
+  args: {
+    type: { type: GraphQLNonNull(GraphQLString) },
+    keywords: { type: GraphQLNonNull(GraphQLList(GraphQLString)) },
+  },
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: { type: string; keywords: string[] }
+  ): Promise<boolean> => {
+    const updated = await KeywordModel.updateOrCreate({
+      type: args.type,
+      keywords: args.keywords,
+    });
+    return Boolean(updated);
+  },
+};
 
-export default KeywordType;
+export default updateKeyword;
