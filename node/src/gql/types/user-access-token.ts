@@ -53,7 +53,9 @@ async function getRefreshToken(token: string) {
   const refreshToken = await RefreshTokenSchema.findOne({ token }).populate(
     'user'
   );
-  if (!refreshToken || !refreshToken.isActive) throw 'invalid token';
+  if (!refreshToken || !refreshToken.isActive) {
+    throw 'invalid token';
+  }
   return refreshToken;
 }
 
