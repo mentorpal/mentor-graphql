@@ -4,7 +4,6 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { toUpdateProps } from '../gql/mutation/me/helpers';
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import {
   PaginatedResolveResult,
@@ -14,14 +13,14 @@ import {
 } from './Paginatation';
 
 export interface Keyword extends Document {
-  name: string;
   type: string;
+  keywords: string[];
 }
 
 export const KeywordSchema = new Schema<Keyword, KeywordModel>(
   {
-    name: { type: String },
     type: { type: String },
+    keywords: { type: [String] },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
@@ -31,15 +30,27 @@ export interface KeywordModel extends Model<Keyword> {
     query?: PaginateQuery<Keyword>,
     options?: PaginateOptions
   ): Promise<PaginatedResolveResult<Keyword>>;
-  updateOrCreate(keyword: Keyword): Promise<Keyword>;
+  updateOrCreate(props: { type: string; keywords: string[] }): Promise<Keyword>;
 }
 
-KeywordSchema.statics.updateOrCreate = async function (keyword: Keyword) {
-  const { _id, props } = toUpdateProps<Keyword>(keyword);
+KeywordSchema.statics.updateOrCreate = async function (props: {
+  type: string;
+  keywords: string[];
+}) {
+  // don't keep duplicate keywords
+  const keywords: string[] = [];
+  for (const k of props.keywords) {
+    if (!keywords.find((kk) => kk.toLowerCase() === k.toLowerCase())) {
+      keywords.push(k);
+    }
+  }
   return await this.findOneAndUpdate(
-    { _id: _id },
+    { type: props.type },
     {
-      $set: props,
+      $set: {
+        type: props.type,
+        keywords: keywords,
+      },
     },
     {
       new: true,
@@ -49,7 +60,6 @@ KeywordSchema.statics.updateOrCreate = async function (keyword: Keyword) {
 };
 
 KeywordSchema.index({ type: -1, _id: -1 });
-KeywordSchema.index({ name: -1, _id: -1 });
 pluginPagination(KeywordSchema);
 
 export default mongoose.model<Keyword, KeywordModel>('Keyword', KeywordSchema);

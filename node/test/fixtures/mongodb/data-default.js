@@ -71,7 +71,7 @@ module.exports = {
         ObjectId('5ffdf41a1ee2c62320b49eb1'),
         ObjectId('5ffdf41a1ee2c62320b49eb2'),
       ],
-      keywords: [ObjectId('511111111111111111111111')],
+      keywords: ['Male'],
       user: ObjectId('5ffdf41a1ee2c62320b49ea6'),
     },
     {
@@ -86,7 +86,7 @@ module.exports = {
         ObjectId('5ffdf41a1ee2c62320b49eb1'),
         ObjectId('5ffdf41a1ee2c62320b49eb2'),
       ],
-      keywords: [ObjectId('511111111111111111111111')],
+      keywords: ['Male'],
       user: ObjectId('5ffdf41a1ee2c62320b49ea5'),
     },
     {
@@ -102,10 +102,7 @@ module.exports = {
         ObjectId('5ffdf41a1ee2c62320b49eb1'),
         ObjectId('5ffdf41a1ee2c62320b49eb2'),
       ],
-      keywords: [
-        ObjectId('511111111111111111111111'),
-        ObjectId('511111111111111111111114'),
-      ],
+      keywords: ['Male', 'STEM'],
       user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
       hasVirtualBackground: true,
       virtualBackgroundUrl: 'https://www.fakeurl.com',
@@ -125,7 +122,7 @@ module.exports = {
         ObjectId('5ffdf41a1ee2c62320b49eb2'),
         ObjectId('5ffdf41a1ee2c62320b49eb3'),
       ],
-      keywords: [ObjectId('511111111111111111111112')],
+      keywords: ['Female'],
       user: ObjectId('5ffdf41a1ee2c62320b49ea3'),
       recordQueue: [
         ObjectId('511111111111111111111112'),
@@ -138,7 +135,7 @@ module.exports = {
       firstName: 'Dan',
       user: ObjectId('5ffdf41a1ee2c62320b49ea2'),
       subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
-      keywords: [ObjectId('511111111111111111111111')],
+      keywords: ['Male'],
       orgPermissions: [
         {
           org: ObjectId('511111111111111111111111'),
@@ -157,7 +154,7 @@ module.exports = {
       isPrivate: true,
       user: ObjectId('5ffdf41a1ee2c62320b49ea7'),
       subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
-      keywords: [ObjectId('511111111111111111111113')],
+      keywords: ['Nonbinary'],
       orgPermissions: [
         {
           org: ObjectId('511111111111111111111112'),
@@ -469,22 +466,12 @@ module.exports = {
     {
       _id: ObjectId('511111111111111111111111'),
       type: 'Gender',
-      name: 'Male',
+      keywords: ['Male', 'Female', 'Nonbinary'],
     },
     {
       _id: ObjectId('511111111111111111111112'),
-      type: 'Gender',
-      name: 'Female',
-    },
-    {
-      _id: ObjectId('511111111111111111111113'),
-      type: 'Gender',
-      name: 'Nonbinary',
-    },
-    {
-      _id: ObjectId('511111111111111111111114'),
       type: 'Career',
-      name: 'STEM',
+      keywords: ['STEM'],
     },
   ],
 
@@ -530,6 +517,16 @@ module.exports = {
           role: 'USER',
         },
       ],
+    },
+  ],
+  refreshtokens: [
+    {
+      _id: ObjectId('511111111111111111111678'),
+      user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
+      token:
+        '6c3c54a0eab05e133b2425137a11111ce0b5f0053e62140bf7086477d1111191cd2fc2679724b111',
+      expires: '2100-10-12T20:49:41.599+00:00',
+      created: '',
     },
   ],
 };

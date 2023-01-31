@@ -11,7 +11,7 @@ import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 import { getToken } from '../../helpers';
 
-describe('mentorByKeyword', () => {
+describe('mentorsByKeyword', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -367,12 +367,12 @@ describe('mentorByKeyword', () => {
     let response = await request(app)
       .post('/graphql')
       .send({
-        query: `query MentorsByKeyword($keywords: [ID]) {
+        query: `query MentorsByKeyword($keywords: [String]) {
           mentorsByKeyword(keywords: $keywords) {
             name
           }
         }`,
-        variables: { keywords: ['511111111111111111111111'] },
+        variables: { keywords: ['Male'] },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorsByKeyword).to.eql([
@@ -396,12 +396,12 @@ describe('mentorByKeyword', () => {
     response = await request(app)
       .post('/graphql')
       .send({
-        query: `query MentorsByKeyword($keywords: [ID]) {
+        query: `query MentorsByKeyword($keywords: [String]) {
           mentorsByKeyword(keywords: $keywords) {
             name
           }
         }`,
-        variables: { keywords: ['511111111111111111111112'] },
+        variables: { keywords: ['Female'] },
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorsByKeyword).to.eql([
@@ -425,13 +425,13 @@ describe('mentorByKeyword', () => {
     response = await request(app)
       .post('/graphql')
       .send({
-        query: `query MentorsByKeyword($keywords: [ID]) {
+        query: `query MentorsByKeyword($keywords: [String]) {
           mentorsByKeyword(keywords: $keywords) {
             name
           }
         }`,
         variables: {
-          keywords: ['511111111111111111111111', '511111111111111111111114'],
+          keywords: ['Male', 'STEM'],
         },
       });
     expect(response.status).to.equal(200);
@@ -459,13 +459,13 @@ describe('mentorByKeyword', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `query MentorsByKeyword($keywords: [ID], $subject: ID, $sortBy: String, $sortAscending: Boolean) {
+        query: `query MentorsByKeyword($keywords: [String], $subject: ID, $sortBy: String, $sortAscending: Boolean) {
             mentorsByKeyword(keywords: $keywords, subject: $subject, sortBy: $sortBy, sortAscending: $sortAscending) {
               name
             }
           }`,
         variables: {
-          keywords: ['511111111111111111111112'],
+          keywords: ['Female'],
           subject: '5ffdf41a1ee2c62320b49eb2',
           sortBy: 'name',
           sortAscending: true,

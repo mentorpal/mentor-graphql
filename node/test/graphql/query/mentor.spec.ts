@@ -924,26 +924,14 @@ describe('mentor', () => {
       .send({
         query: `query {
           mentor(id: "5ffdf41a1ee2c62111111111") {
-            keywords {
-              name
-              type
-            }
+            keywords
           }
         }
       `,
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
-      keywords: [
-        {
-          type: 'Gender',
-          name: 'Male',
-        },
-        {
-          type: 'Career',
-          name: 'STEM',
-        },
-      ],
+      keywords: ['Male', 'STEM'],
     });
   });
 

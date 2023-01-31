@@ -23,7 +23,7 @@ export const mentorsByKeyword = {
   type: GraphQLList(MentorType),
   args: {
     subject: { type: GraphQLID },
-    keywords: { type: GraphQLList(GraphQLID) },
+    keywords: { type: GraphQLList(GraphQLString) },
     sortBy: { type: GraphQLString },
     sortAscending: { type: GraphQLBoolean },
   },

@@ -29,7 +29,7 @@ describe('updateMentorKeywords', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `mutation UpdateMentorKeywords($keywords: [UpdateKeywordType]) {
+        query: `mutation UpdateMentorKeywords($keywords: [String]) {
           me {
             updateMentorKeywords(keywords: $keywords)
           }
@@ -49,7 +49,7 @@ describe('updateMentorKeywords', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateMentorKeywords($keywords: [UpdateKeywordType]) {
+        query: `mutation UpdateMentorKeywords($keywords: [String]) {
           me {
             updateMentorKeywords(keywords: $keywords)
           }
@@ -63,31 +63,19 @@ describe('updateMentorKeywords', () => {
     );
   });
 
-  it('updates and creates keywords', async () => {
+  it('updates keywords', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateMentorKeywords($keywords: [UpdateKeywordType]) {
+        query: `mutation UpdateMentorKeywords($keywords: [String]) {
           me {
             updateMentorKeywords(keywords: $keywords)
           }
         }`,
         variables: {
-          keywords: [
-            {
-              name: 'STEM', // does not create keyword because name already exists
-              type: 'Updated type', // change type of existing keyword
-            },
-            {
-              name: 'Male', // does not create or change type of existing keyword
-            },
-            {
-              name: 'New Keyword', // creates a brand new keyword
-              type: 'New Type',
-            },
-          ],
+          keywords: ['STEM', 'Male', 'New Keyword'],
         },
       });
     expect(response.status).to.equal(200);
@@ -95,57 +83,6 @@ describe('updateMentorKeywords', () => {
       'data.me.updateMentorKeywords',
       true
     );
-
-    const keywords = await request(app)
-      .post('/graphql')
-      .send({
-        query: `query {
-          keywords {
-            edges {
-              node {
-                name
-                type
-              }
-            }
-          }
-        }`,
-      });
-    expect(keywords.status).to.equal(200);
-    expect(keywords.body.data.keywords).to.eql({
-      edges: [
-        {
-          node: {
-            name: 'New Keyword',
-            type: 'New Type',
-          },
-        },
-        {
-          node: {
-            name: 'STEM',
-            type: 'Updated type',
-          },
-        },
-        {
-          node: {
-            name: 'Nonbinary',
-            type: 'Gender',
-          },
-        },
-        {
-          node: {
-            name: 'Female',
-            type: 'Gender',
-          },
-        },
-        {
-          node: {
-            name: 'Male',
-            type: 'Gender',
-          },
-        },
-      ],
-    });
-
     const mentor = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
@@ -153,40 +90,24 @@ describe('updateMentorKeywords', () => {
         query: `query {
             me {
               mentor {
-                keywords {
-                  name
-                  type
-                }
+                keywords
               }
             }
           }`,
       });
     expect(mentor.status).to.equal(200);
     expect(mentor.body.data.me.mentor).to.eql({
-      keywords: [
-        {
-          name: 'Male',
-          type: 'Gender',
-        },
-        {
-          name: 'STEM',
-          type: 'Updated type',
-        },
-        {
-          name: 'New Keyword',
-          type: 'New Type',
-        },
-      ],
+      keywords: ['STEM', 'Male', 'New Keyword'],
     });
   });
 
-  it('removes keywords from mentor', async () => {
+  it('removes keywords', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateMentorKeywords($keywords: [UpdateKeywordType]) {
+        query: `mutation UpdateMentorKeywords($keywords: [String]) {
           me {
             updateMentorKeywords(keywords: $keywords)
           }
@@ -201,50 +122,6 @@ describe('updateMentorKeywords', () => {
       true
     );
 
-    const keywords = await request(app)
-      .post('/graphql')
-      .send({
-        query: `query {
-          keywords {
-            edges {
-              node {
-                name
-                type
-              }
-            }
-          }
-        }`,
-      });
-    expect(keywords.status).to.equal(200);
-    expect(keywords.body.data.keywords).to.eql({
-      edges: [
-        {
-          node: {
-            name: 'STEM',
-            type: 'Career',
-          },
-        },
-        {
-          node: {
-            name: 'Nonbinary',
-            type: 'Gender',
-          },
-        },
-        {
-          node: {
-            name: 'Female',
-            type: 'Gender',
-          },
-        },
-        {
-          node: {
-            name: 'Male',
-            type: 'Gender',
-          },
-        },
-      ],
-    });
-
     const mentor = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
@@ -252,10 +129,7 @@ describe('updateMentorKeywords', () => {
         query: `query {
             me {
               mentor {
-                keywords {
-                  name
-                  type
-                }
+                keywords
               }
             }
           }`,
@@ -266,13 +140,51 @@ describe('updateMentorKeywords', () => {
     });
   });
 
+  it('does not add duplicate keywords', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateMentorKeywords($keywords: [String]) {
+          me {
+            updateMentorKeywords(keywords: $keywords)
+          }
+        }`,
+        variables: {
+          keywords: ['STEM', 'Male', 'STEM', 'stem', 'StEm'],
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'data.me.updateMentorKeywords',
+      true
+    );
+    const mentor = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+            me {
+              mentor {
+                keywords
+              }
+            }
+          }`,
+      });
+    expect(mentor.status).to.equal(200);
+    expect(mentor.body.data.me.mentor).to.eql({
+      keywords: ['STEM', 'Male'],
+    });
+  });
+
   it("doesn't accept unaccepted fields", async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateMentorKeywords($keywords: [UpdateKeywordType]) {
+        query: `mutation UpdateMentorKeywords($keywords: [String]) {
           me {
             updateMentorKeywords(keywords: $keywords)
           }
@@ -288,7 +200,7 @@ describe('updateMentorKeywords', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateMentorKeywords($keywords: [UpdateKeywordType]) {
+        query: `mutation UpdateMentorKeywords($keywords: [String]) {
           me {
             updateMentorKeywords(keywords: $keywords)
           }
@@ -304,7 +216,7 @@ describe('updateMentorKeywords', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateMentorKeywords($keywords: [UpdateKeywordType], $mentorId: ID!) {
+        query: `mutation UpdateMentorKeywords($keywords: [String], $mentorId: ID!) {
           me {
             updateMentorKeywords(keywords: $keywords, mentorId: $mentorId)
           }
@@ -326,7 +238,7 @@ describe('updateMentorKeywords', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateMentorKeywords($keywords: [UpdateKeywordType], $mentorId: ID!) {
+        query: `mutation UpdateMentorKeywords($keywords: [String], $mentorId: ID!) {
           me {
             updateMentorKeywords(keywords: $keywords, mentorId: $mentorId)
           }
@@ -346,7 +258,7 @@ describe('updateMentorKeywords', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateMentorKeywords($keywords: [UpdateKeywordType], $mentorId: ID!) {
+        query: `mutation UpdateMentorKeywords($keywords: [String], $mentorId: ID!) {
           me {
             updateMentorKeywords(keywords: $keywords, mentorId: $mentorId)
           }

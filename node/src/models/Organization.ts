@@ -140,7 +140,8 @@ OrganizationSchema.statics.saveConfig = async function (
       configUpdates[`config.${i}.value`] = v;
     }
   }
-  if (configUpdates !== {}) {
+  if (Object.keys(configUpdates).length > 0) {
+    //configUpdates !== {}
     org = await this.findOneAndUpdate(
       { _id: org._id },
       { $set: configUpdates },

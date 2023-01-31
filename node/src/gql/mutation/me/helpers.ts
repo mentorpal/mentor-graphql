@@ -38,9 +38,9 @@ export function toUpdateProps<T extends HasId>(
 //  - if invalid, create a valid object id
 export function idOrNew(id: string): string {
   if (!Boolean(id)) {
-    return `${mongoose.Types.ObjectId()}`;
+    return `${new mongoose.Types.ObjectId()}`;
   }
-  return isId(id) ? id : `${mongoose.Types.ObjectId()}`;
+  return isId(id) ? id : `${new mongoose.Types.ObjectId()}`;
 }
 
 export function isId(id: string): boolean {

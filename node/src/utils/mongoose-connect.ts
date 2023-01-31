@@ -7,7 +7,6 @@ The full terms of this copyright and license should always be found in the root 
 import mongoose from 'mongoose';
 import requireEnv from './require-env';
 import { logger } from './logging';
-mongoose.set('useCreateIndex', true);
 
 /**
  * Connect mongoose using env variables:
@@ -26,12 +25,7 @@ export default async function mongooseConnect(uri: string): Promise<void> {
     )}@${requireEnv('MONGO_HOST')}/${requireEnv('MONGO_DB')}${
       process.env.MONGO_QUERY_STRING || ''
     }`;
-  await mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-  });
-  mongoose.set('useCreateIndex', true);
+  await mongoose.connect(mongoUri);
   logger.info(
     'mongoose: connection successful ' + mongoUri.replace(/^.*@/g, '')
   );

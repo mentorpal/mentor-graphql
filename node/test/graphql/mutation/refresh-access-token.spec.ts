@@ -7,11 +7,11 @@ The full terms of this copyright and license should always be found in the root 
 import createApp, { appStart, appStop } from 'app';
 import { expect } from 'chai';
 import { Express } from 'express';
-import { describe } from 'mocha';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
+import { getToken, mockSetCookie, mockGetCookie } from '../../helpers';
 
-describe('keyword', () => {
+describe('refresh access token', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -25,26 +25,45 @@ describe('keyword', () => {
     await mongoUnit.drop();
   });
 
-  it('gets a keyword by id', async () => {
+  it(`user does not get authenticated without refresh token`, async () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `query Keyword($id: ID!){
-          keyword(id: $id){
-            _id
-            type
-            keywords
+        query: `
+        mutation {
+          refreshAccessToken {
+            accessToken
+            errorMessage
+            authenticated
           }
-      }`,
-        variables: {
-          id: '511111111111111111111111',
-        },
+        }
+        `,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data?.keyword).to.eql({
-      _id: '511111111111111111111111',
-      type: 'Gender',
-      keywords: ['Male', 'Female', 'Nonbinary'],
-    });
+    expect(response.body.data.refreshAccessToken.authenticated).to.eql(false);
+  });
+
+  it(`get new access token via refresh token`, async () => {
+    const date = new Date(Date.now() - 1000);
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      // .set('Authorization', `bearer ${token}`)
+      .set('Cookie', [
+        'mockRefreshToken=6c3c54a0eab05e133b2425137a11111ce0b5f0053e62140bf7086477d1111191cd2fc2679724b111',
+      ])
+      .send({
+        query: `
+        mutation {
+          refreshAccessToken {
+            accessToken
+            errorMessage
+            authenticated
+          }
+        }
+        `,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.refreshAccessToken.authenticated).to.eql(true);
   });
 });

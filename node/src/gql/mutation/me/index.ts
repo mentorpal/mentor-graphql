@@ -17,6 +17,7 @@ import updateMentorKeywords from './mentor-keywords-update';
 import updateOrgConfig from './organization-config-update';
 import updateAnswer from './answer-update';
 import updateQuestion from './question-update';
+import updateKeyword from './keyword-update';
 import subjectUpdate from './subject-update';
 import subjectAddOrUpdateQuestions from './subject-add-or-update-questions';
 import uploadTaskDelete from './upload-task-delete';
@@ -42,6 +43,7 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
     updateOrgConfig,
     updateAnswer,
     updateQuestion,
+    updateKeyword,
     updateSubject: subjectUpdate,
     subjectAddOrUpdateQuestions,
     uploadTaskDelete,
