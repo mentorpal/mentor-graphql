@@ -519,4 +519,14 @@ module.exports = {
       ],
     },
   ],
+  refreshtokens: [
+    {
+      _id: ObjectId('511111111111111111111678'),
+      user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
+      token:
+        '6c3c54a0eab05e133b2425137a11111ce0b5f0053e62140bf7086477d1111191cd2fc2679724b111',
+      expires: '2100-10-12T20:49:41.599+00:00',
+      created: '',
+    },
+  ],
 };
