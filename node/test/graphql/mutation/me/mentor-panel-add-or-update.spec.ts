@@ -148,7 +148,7 @@ describe('addOrUpdateMentorPanel', () => {
   });
 
   it('CONTENT_MANAGER can create mentorpanel', async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea5'); //mentor with role "Content Manager"
+    const token = getToken('5ffdf41a1ee2c62320b49ea4'); //mentor with role "Content Manager"
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
@@ -217,6 +217,144 @@ describe('addOrUpdateMentorPanel', () => {
   });
 
   it('ADMIN can create mentorpanel', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea6'); //mentor with role "Admin"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation AddOrUpdateMentorPanel($id: ID, $mentorPanel: AddOrUpdateMentorPanelInputType!) {
+          me {
+            addOrUpdateMentorPanel(id: $id, mentorPanel: $mentorPanel) {
+              _id
+              subject
+              mentors
+              title
+              subtitle
+            }
+          }
+        }`,
+        variables: {
+          mentorPanel: {
+            subject: '5ffdf41a1ee2c62320b49eb1',
+            title: 'New Panel',
+            subtitle: 'New Panel',
+            mentors: ['5ffdf41a1ee2c62111111119'],
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.addOrUpdateMentorPanel.subject).to.eql(
+      '5ffdf41a1ee2c62320b49eb1'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.title).to.eql(
+      'New Panel'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.subtitle).to.eql(
+      'New Panel'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.mentors).to.eql([
+      '5ffdf41a1ee2c62111111119',
+    ]);
+    const mentorpanels = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+        mentorPanels {
+          edges {
+            node {
+              title
+            }
+          }
+        }
+      }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(mentorpanels.body.data.mentorPanels).to.eql({
+      edges: [
+        {
+          node: {
+            title: 'New Panel',
+          },
+        },
+        {
+          node: {
+            title: 'fake panel title',
+          },
+        },
+      ],
+    });
+  });
+
+  it('SUPER_CONTENT_MANAGER can create mentorpanel', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea5'); //mentor with role "Content Manager"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation AddOrUpdateMentorPanel($id: ID, $mentorPanel: AddOrUpdateMentorPanelInputType!) {
+          me {
+            addOrUpdateMentorPanel(id: $id, mentorPanel: $mentorPanel) {
+              _id
+              subject
+              mentors
+              title
+              subtitle
+            }
+          }
+        }`,
+        variables: {
+          mentorPanel: {
+            subject: '5ffdf41a1ee2c62320b49eb1',
+            title: 'New Panel',
+            subtitle: 'New Panel',
+            mentors: ['5ffdf41a1ee2c62111111119'],
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.addOrUpdateMentorPanel.subject).to.eql(
+      '5ffdf41a1ee2c62320b49eb1'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.title).to.eql(
+      'New Panel'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.subtitle).to.eql(
+      'New Panel'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.mentors).to.eql([
+      '5ffdf41a1ee2c62111111119',
+    ]);
+    const mentorpanels = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+          mentorPanels {
+            edges {
+              node {
+                title
+              }
+            }
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(mentorpanels.body.data.mentorPanels).to.eql({
+      edges: [
+        {
+          node: {
+            title: 'New Panel',
+          },
+        },
+        {
+          node: {
+            title: 'fake panel title',
+          },
+        },
+      ],
+    });
+  });
+
+  it('SUPER_ADMIN can create mentorpanel', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1'); //mentor with role "Admin"
     const response = await request(app)
       .post('/graphql')
@@ -286,7 +424,7 @@ describe('addOrUpdateMentorPanel', () => {
   });
 
   it('CONTENT_MANAGER can update mentorpanel', async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea5'); //mentor with role "Content Manager"
+    const token = getToken('5ffdf41a1ee2c62320b49ea4'); //mentor with role "Content Manager"
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
@@ -320,6 +458,74 @@ describe('addOrUpdateMentorPanel', () => {
   });
 
   it('ADMIN can update mentorpanel', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea6'); //mentor with role "Admin"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation AddOrUpdateMentorPanel($id: ID, $mentorPanel: AddOrUpdateMentorPanelInputType!) {
+          me {
+            addOrUpdateMentorPanel(id: $id, mentorPanel: $mentorPanel) {
+              _id
+              subject
+              mentors
+              title
+              subtitle
+            }
+          }
+        }`,
+        variables: {
+          id: '5ffdf41a1ee2c62111111111',
+          mentorPanel: {
+            title: 'Updated',
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.addOrUpdateMentorPanel).to.eql({
+      _id: '5ffdf41a1ee2c62111111111',
+      subject: '5ffdf41a1ee2c62320b49eb3',
+      mentors: ['5ffdf41a1ee2c62111111112'],
+      title: 'Updated',
+      subtitle: 'fake panel subtitle',
+    });
+  });
+
+  it('SUPER_CONTENT_MANAGER can update mentorpanel', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea5'); //mentor with role "Content Manager"
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation AddOrUpdateMentorPanel($id: ID, $mentorPanel: AddOrUpdateMentorPanelInputType!) {
+          me {
+            addOrUpdateMentorPanel(id: $id, mentorPanel: $mentorPanel) {
+              _id
+              subject
+              mentors
+              title
+              subtitle
+            }
+          }
+        }`,
+        variables: {
+          id: '5ffdf41a1ee2c62111111111',
+          mentorPanel: {
+            title: 'Updated',
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.addOrUpdateMentorPanel).to.eql({
+      _id: '5ffdf41a1ee2c62111111111',
+      subject: '5ffdf41a1ee2c62320b49eb3',
+      mentors: ['5ffdf41a1ee2c62111111112'],
+      title: 'Updated',
+      subtitle: 'fake panel subtitle',
+    });
+  });
+
+  it('SUPER_ADMIN can update mentorpanel', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1'); //mentor with role "Admin"
     const response = await request(app)
       .post('/graphql')
@@ -351,5 +557,188 @@ describe('addOrUpdateMentorPanel', () => {
       title: 'Updated',
       subtitle: 'fake panel subtitle',
     });
+  });
+
+  it('USER who is an org ADMIN can create org mentorpanel', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation AddOrUpdateMentorPanel($id: ID, $mentorPanel: AddOrUpdateMentorPanelInputType!) {
+          me {
+            addOrUpdateMentorPanel(id: $id, mentorPanel: $mentorPanel) {
+              _id
+              subject
+              mentors
+              title
+              subtitle
+              org
+            }
+          }
+        }`,
+        variables: {
+          mentorPanel: {
+            org: '511111111111111111111111',
+            subject: '5ffdf41a1ee2c62320b49eb1',
+            title: 'New Panel',
+            subtitle: 'New Panel',
+            mentors: ['5ffdf41a1ee2c62111111119'],
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.addOrUpdateMentorPanel.org).to.equal(
+      '511111111111111111111111'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.subject).to.eql(
+      '5ffdf41a1ee2c62320b49eb1'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.title).to.eql(
+      'New Panel'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.subtitle).to.eql(
+      'New Panel'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.mentors).to.eql([
+      '5ffdf41a1ee2c62111111119',
+    ]);
+    const mentorpanels = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+        mentorPanels {
+          edges {
+            node {
+              title
+            }
+          }
+        }
+      }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(mentorpanels.body.data.mentorPanels).to.eql({
+      edges: [
+        {
+          node: {
+            title: 'New Panel',
+          },
+        },
+        {
+          node: {
+            title: 'fake panel title',
+          },
+        },
+      ],
+    });
+  });
+
+  it('USER who is an org CONTENT_MANAGER can create org mentorpanel', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea4');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation AddOrUpdateMentorPanel($id: ID, $mentorPanel: AddOrUpdateMentorPanelInputType!) {
+          me {
+            addOrUpdateMentorPanel(id: $id, mentorPanel: $mentorPanel) {
+              _id
+              subject
+              mentors
+              title
+              subtitle
+              org
+            }
+          }
+        }`,
+        variables: {
+          mentorPanel: {
+            org: '511111111111111111111111',
+            subject: '5ffdf41a1ee2c62320b49eb1',
+            title: 'New Panel',
+            subtitle: 'New Panel',
+            mentors: ['5ffdf41a1ee2c62111111119'],
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.addOrUpdateMentorPanel.org).to.equal(
+      '511111111111111111111111'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.subject).to.eql(
+      '5ffdf41a1ee2c62320b49eb1'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.title).to.eql(
+      'New Panel'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.subtitle).to.eql(
+      'New Panel'
+    );
+    expect(response.body.data.me.addOrUpdateMentorPanel.mentors).to.eql([
+      '5ffdf41a1ee2c62111111119',
+    ]);
+    const mentorpanels = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+        mentorPanels {
+          edges {
+            node {
+              title
+            }
+          }
+        }
+      }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(mentorpanels.body.data.mentorPanels).to.eql({
+      edges: [
+        {
+          node: {
+            title: 'New Panel',
+          },
+        },
+        {
+          node: {
+            title: 'fake panel title',
+          },
+        },
+      ],
+    });
+  });
+
+  it('USER who is an org USER cannot create org mentorpanel', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea3');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation AddOrUpdateMentorPanel($id: ID, $mentorPanel: AddOrUpdateMentorPanelInputType!) {
+          me {
+            addOrUpdateMentorPanel(id: $id, mentorPanel: $mentorPanel) {
+              _id
+              subject
+              mentors
+              title
+              subtitle
+              org
+            }
+          }
+        }`,
+        variables: {
+          mentorPanel: {
+            org: '511111111111111111111111',
+            subject: '5ffdf41a1ee2c62320b49eb1',
+            title: 'New Panel',
+            subtitle: 'New Panel',
+            mentors: ['5ffdf41a1ee2c62111111119'],
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'you do not have permission to add or edit mentorpanel'
+    );
   });
 });

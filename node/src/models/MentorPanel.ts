@@ -21,6 +21,7 @@ export interface MentorPanel extends Document {
   mentors: Mentor['_id'][];
   title: string;
   subtitle: string;
+  deleted: boolean;
 }
 
 export interface MentorPanelModel extends Model<MentorPanel> {
@@ -37,6 +38,7 @@ export const MentorPanelSchema = new Schema<MentorPanel, MentorPanelModel>(
     mentors: { type: [{ type: Schema.Types.ObjectId, ref: 'Mentor' }] },
     title: { type: String },
     subtitle: { type: String },
+    deleted: { type: Boolean, default: false },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );

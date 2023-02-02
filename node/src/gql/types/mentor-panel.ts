@@ -9,6 +9,7 @@ import {
   GraphQLList,
   GraphQLID,
   GraphQLString,
+  GraphQLBoolean,
 } from 'graphql';
 import DateType from './date';
 import MentorType from './mentor';
@@ -26,6 +27,7 @@ export const MentorPanelType = new GraphQLObjectType({
     subtitle: { type: GraphQLString },
     createdAt: { type: DateType },
     updatedAt: { type: DateType },
+    deleted: { type: GraphQLBoolean },
     mentorData: {
       type: GraphQLList(MentorType),
       resolve: async (mp: MentorPanel) => {
