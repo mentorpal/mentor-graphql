@@ -63,6 +63,8 @@ export interface Config {
   mentorsDefault: string[];
   postSurveyLink: string;
   postSurveyTimer: number;
+  postSurveyUserIdEnabled: boolean;
+  postSurveyReferrerEnabled: boolean;
   minTopicQuestionSize: number;
   // home settings
   activeMentors: string[];
@@ -127,6 +129,8 @@ export const ConfigKeys: ConfigKey[] = [
   'mentorsDefault',
   'postSurveyLink',
   'postSurveyTimer',
+  'postSurveyUserIdEnabled',
+  'postSurveyReferrerEnabled',
   'minTopicQuestionSize',
   // home settings
   'activeMentors',
@@ -193,6 +197,8 @@ export function getDefaultConfig(): Config {
     postSurveyLink:
       'https://fullerton.qualtrics.com/jfe/form/SV_1ZzDYgNPzLE2QPI',
     postSurveyTimer: 0,
+    postSurveyUserIdEnabled: true,
+    postSurveyReferrerEnabled: false,
     minTopicQuestionSize: 0,
     // home settings
     activeMentors: [],
