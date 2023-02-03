@@ -67,6 +67,8 @@ export const ConfigType = new GraphQLObjectType({
     mentorsDefault: { type: GraphQLList(GraphQLString) },
     postSurveyLink: { type: GraphQLString },
     postSurveyTimer: { type: GraphQLInt },
+    postSurveyUserIdEnabled: { type: GraphQLBoolean },
+    postSurveyReferrerEnabled: { type: GraphQLBoolean },
     minTopicQuestionSize: { type: GraphQLInt },
     // home style settings
     activeMentors: { type: GraphQLList(GraphQLID) },

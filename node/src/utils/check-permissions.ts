@@ -29,6 +29,29 @@ export function canEditContent(user: User): boolean {
   );
 }
 
+export async function canEditMentorPanel(
+  user: User,
+  mentorPanelOrg?: string
+): Promise<boolean> {
+  if (canEditContent(user)) {
+    return true;
+  }
+  if (mentorPanelOrg) {
+    const org = await OrganizationModel.findById(mentorPanelOrg);
+    if (
+      org &&
+      org.members.find(
+        (m) =>
+          equals(m.user, user._id) &&
+          (m.role === UserRole.CONTENT_MANAGER || m.role === UserRole.ADMIN)
+      )
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export function canViewMentor(
   mentor: Mentor,
   user: User,

@@ -110,6 +110,8 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     mentorsDefault: { type: GraphQLList(GraphQLID) },
     postSurveyLink: { type: GraphQLString },
     postSurveyTimer: { type: GraphQLInt },
+    postSurveyUserIdEnabled: { type: GraphQLBoolean },
+    postSurveyReferrerEnabled: { type: GraphQLBoolean },
     minTopicQuestionSize: { type: GraphQLInt },
     // home style settings
     activeMentors: { type: GraphQLList(GraphQLID) },

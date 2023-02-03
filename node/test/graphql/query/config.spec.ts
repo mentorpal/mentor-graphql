@@ -166,6 +166,8 @@ describe('config', () => {
       questionSortOrder: '',
       postSurveyLink: '',
       postSurveyTimer: 0,
+      postSurveyUserIdEnabled: true,
+      postSurveyReferrerEnabled: false,
       minTopicQuestionSize: 0,
     };
     await SettingModel.saveConfig(config);
@@ -189,6 +191,8 @@ describe('config', () => {
             questionSortOrder
             postSurveyLink
             postSurveyTimer
+            postSurveyUserIdEnabled
+            postSurveyReferrerEnabled
             minTopicQuestionSize          
             urlGraphql
             urlVideo

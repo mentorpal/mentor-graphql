@@ -7,6 +7,7 @@ The full terms of this copyright and license should always be found in the root 
 import { GraphQLObjectType } from 'graphql';
 import { User } from '../../../models/User';
 import mentorImport from './mentor-import';
+import deleteMentorPanel from './mentor-panel-delete';
 import addOrUpdateMentorPanel from './mentor-panel-add-or-update';
 import addOrUpdateOrganization from './organization-add-or-update';
 import updateConfig from './config-update';
@@ -33,6 +34,7 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeMutation',
   fields: () => ({
     mentorImport,
+    deleteMentorPanel,
     addOrUpdateMentorPanel,
     addOrUpdateOrganization,
     updateConfig,

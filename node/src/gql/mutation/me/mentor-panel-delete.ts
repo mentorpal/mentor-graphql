@@ -4,57 +4,31 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import {
-  GraphQLObjectType,
-  GraphQLNonNull,
-  GraphQLID,
-  GraphQLList,
-  GraphQLString,
-  GraphQLInputObjectType,
-} from 'graphql';
-import MentorPanelType from '../../../gql/types/mentor-panel';
+import { GraphQLObjectType, GraphQLID, GraphQLNonNull } from 'graphql';
+import MentorPanelType from '../../types/mentor-panel';
 import MentorPanelModel, { MentorPanel } from '../../../models/MentorPanel';
 import { User } from '../../../models/User';
 import { canEditMentorPanel } from '../../../utils/check-permissions';
-import { idOrNew } from './helpers';
 
-interface AddOrUpdateMentorPanelInput {
-  org: string;
-  subject: string;
-  mentors: string[];
-  title: string;
-  subtitle: string;
-}
-
-export const AddOrUpdateMentorPanelInputType = new GraphQLInputObjectType({
-  name: 'AddOrUpdateMentorPanelInputType',
-  fields: {
-    org: { type: GraphQLID },
-    subject: { type: GraphQLID },
-    mentors: { type: GraphQLList(GraphQLID) },
-    title: { type: GraphQLString },
-    subtitle: { type: GraphQLString },
-  },
-});
-
-export const addOrUpdateMentorPanel = {
+export const deleteMentorPanel = {
   type: MentorPanelType,
-  args: {
-    id: { type: GraphQLID },
-    mentorPanel: { type: GraphQLNonNull(AddOrUpdateMentorPanelInputType) },
-  },
+  args: { id: { type: GraphQLNonNull(GraphQLID) } },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { id: string; mentorPanel: AddOrUpdateMentorPanelInput },
+    args: { id: string },
     context: { user: User }
   ): Promise<MentorPanel> => {
-    if (!(await canEditMentorPanel(context.user, args.mentorPanel.org))) {
-      throw new Error('you do not have permission to add or edit mentorpanel');
+    const mp = await MentorPanelModel.findById(args.id);
+    if (!mp) {
+      throw new Error('invalid mentor panel');
+    }
+    if (!(await canEditMentorPanel(context.user, mp.org))) {
+      throw new Error('you do not have permission to edit mentorpanel');
     }
     return await MentorPanelModel.findOneAndUpdate(
-      { _id: idOrNew(args.id) },
+      { _id: args.id },
       {
-        $set: { ...args.mentorPanel },
+        $set: { deleted: true },
       },
       {
         new: true,
@@ -64,4 +38,4 @@ export const addOrUpdateMentorPanel = {
   },
 };
 
-export default addOrUpdateMentorPanel;
+export default deleteMentorPanel;
