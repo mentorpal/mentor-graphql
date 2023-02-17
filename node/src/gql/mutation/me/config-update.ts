@@ -19,11 +19,6 @@ import { User } from '../../../models/User';
 import { ConfigType } from '../../types/config';
 import { canEditContent } from '../../../utils/check-permissions';
 
-export type SurveyButtonInDisclaimer =
-  | 'OFF'
-  | 'ALWAYS'
-  | 'PROVIDED_USER_IDENTIFIER';
-
 export interface ConfigUpdateInput {
   virtualBackgroundUrls: string[];
   defaultVirtualBackground: string;
@@ -58,7 +53,7 @@ export interface ConfigUpdateInput {
   guestPromptTitle: string;
   guestPromptText: string;
   guestPromptInputType: string;
-  surveyButtonInDisclaimer: SurveyButtonInDisclaimer;
+  surveyButtonInDisclaimer: string;
   // client settings
   questionSortOrder: string;
   mentorsDefault: string[];
