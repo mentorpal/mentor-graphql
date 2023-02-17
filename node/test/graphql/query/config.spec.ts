@@ -156,6 +156,7 @@ describe('config', () => {
       guestPromptTitle: '',
       guestPromptText: '',
       guestPromptInputType: 'email',
+      surveyButtonInDisclaimer: 'ALWAYS',
       activeMentors: ['somementor'],
       activeMentorPanels: ['somementorpanel'],
       featuredMentors: ['somementor'],
@@ -227,6 +228,7 @@ describe('config', () => {
             guestPromptTitle
             guestPromptText
             guestPromptInputType
+            surveyButtonInDisclaimer
             activeMentors
             activeMentorPanels
             featuredMentors

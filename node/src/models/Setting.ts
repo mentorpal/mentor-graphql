@@ -4,6 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
+import { SurveyButtonInDisclaimer } from 'gql/mutation/me/config-update';
 import mongoose, { Document, Model, Schema } from 'mongoose';
 
 export interface Setting {
@@ -58,6 +59,7 @@ export interface Config {
   guestPromptTitle: string;
   guestPromptText: string;
   guestPromptInputType: string;
+  surveyButtonInDisclaimer: SurveyButtonInDisclaimer;
   // client settings
   questionSortOrder: string;
   mentorsDefault: string[];
@@ -124,6 +126,7 @@ export const ConfigKeys: ConfigKey[] = [
   'guestPromptTitle',
   'guestPromptText',
   'guestPromptInputType',
+  'surveyButtonInDisclaimer',
   // client settings
   'questionSortOrder',
   'mentorsDefault',
@@ -191,6 +194,7 @@ export function getDefaultConfig(): Config {
     guestPromptTitle: '',
     guestPromptText: '',
     guestPromptInputType: 'email',
+    surveyButtonInDisclaimer: 'ALWAYS',
     // client settings
     questionSortOrder: '',
     mentorsDefault: [],

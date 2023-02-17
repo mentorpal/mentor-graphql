@@ -62,6 +62,7 @@ export const ConfigType = new GraphQLObjectType({
     guestPromptTitle: { type: GraphQLString },
     guestPromptText: { type: GraphQLString },
     guestPromptInputType: { type: GraphQLString },
+    surveyButtonInDisclaimer: { type: GraphQLString },
     // client settings
     questionSortOrder: { type: GraphQLString },
     mentorsDefault: { type: GraphQLList(GraphQLString) },
