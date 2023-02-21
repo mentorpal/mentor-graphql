@@ -103,9 +103,7 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     disclaimerText: { type: GraphQLString },
     termsOfServiceDisabled: { type: GraphQLBoolean },
     termsOfServiceText: { type: GraphQLString },
-    displayGuestPrompt: {
-      type: GraphQLBoolean,
-    },
+    displayGuestPrompt: { type: GraphQLBoolean },
     displaySurveyPopupCondition: { type: GraphQLString },
     guestPromptTitle: { type: GraphQLString },
     guestPromptText: { type: GraphQLString },
