@@ -22,7 +22,7 @@ import { canEditContent } from '../../../utils/check-permissions';
 export type DisplayGuestPrompt =
   | 'ALWAYS'
   | 'USER_ID'
-  | 'USER_ID_AND_EMAL'
+  | 'USER_ID_AND_EMAIL'
   | 'NEVER';
 
 export interface ConfigUpdateInput {

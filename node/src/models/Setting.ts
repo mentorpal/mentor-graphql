@@ -14,7 +14,7 @@ export interface Setting {
 export type DisplayGuestPrompt =
   | 'ALWAYS'
   | 'USER_ID'
-  | 'USER_ID_AND_EMAL'
+  | 'USER_ID_AND_EMAIL'
   | 'NEVER';
 
 export interface Config {
