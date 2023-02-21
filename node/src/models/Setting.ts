@@ -58,6 +58,7 @@ export interface Config {
   guestPromptTitle: string;
   guestPromptText: string;
   guestPromptInputType: string;
+  surveyButtonInDisclaimer: string;
   // client settings
   questionSortOrder: string;
   mentorsDefault: string[];
@@ -124,6 +125,7 @@ export const ConfigKeys: ConfigKey[] = [
   'guestPromptTitle',
   'guestPromptText',
   'guestPromptInputType',
+  'surveyButtonInDisclaimer',
   // client settings
   'questionSortOrder',
   'mentorsDefault',
@@ -191,6 +193,7 @@ export function getDefaultConfig(): Config {
     guestPromptTitle: '',
     guestPromptText: '',
     guestPromptInputType: 'email',
+    surveyButtonInDisclaimer: 'ALWAYS',
     // client settings
     questionSortOrder: '',
     mentorsDefault: [],
