@@ -19,13 +19,6 @@ import { User } from '../../../models/User';
 import { ConfigType } from '../../types/config';
 import { canEditContent } from '../../../utils/check-permissions';
 
-export enum DisplaySurveyPopupCondition {
-  ALWAYS = 'ALWAYS',
-  USER_ID = 'USER_ID',
-  USER_ID_AND_EMAIL = 'USER_ID_AND_EMAIL',
-  NEVER = 'NEVER',
-}
-
 export interface ConfigUpdateInput {
   virtualBackgroundUrls: string[];
   defaultVirtualBackground: string;
@@ -57,7 +50,7 @@ export interface ConfigUpdateInput {
   termsOfServiceDisabled: boolean;
   termsOfServiceText: string;
   displayGuestPrompt: boolean;
-  displaySurveyPopupCondition: DisplaySurveyPopupCondition;
+  displaySurveyPopupCondition: string;
   guestPromptTitle: string;
   guestPromptText: string;
   guestPromptInputType: string;

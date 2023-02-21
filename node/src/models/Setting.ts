@@ -11,13 +11,6 @@ export interface Setting {
   value: any; // eslint-disable-line  @typescript-eslint/no-explicit-any
 }
 
-export enum DisplaySurveyPopupCondition {
-  ALWAYS = 'ALWAYS',
-  USER_ID = 'USER_ID',
-  USER_ID_AND_EMAIL = 'USER_ID_AND_EMAIL',
-  NEVER = 'NEVER',
-}
-
 export interface Config {
   cmi5Enabled: boolean;
   cmi5Endpoint: string;
@@ -62,7 +55,7 @@ export interface Config {
   termsOfServiceDisabled: boolean;
   termsOfServiceText: string;
   displayGuestPrompt: boolean;
-  displaySurveyPopupCondition: DisplaySurveyPopupCondition;
+  displaySurveyPopupCondition: string;
   guestPromptTitle: string;
   guestPromptText: string;
   guestPromptInputType: string;
@@ -199,7 +192,7 @@ export function getDefaultConfig(): Config {
     termsOfServiceDisabled: false,
     termsOfServiceText: '',
     displayGuestPrompt: false,
-    displaySurveyPopupCondition: DisplaySurveyPopupCondition.USER_ID,
+    displaySurveyPopupCondition: 'USER_ID',
     guestPromptTitle: '',
     guestPromptText: '',
     guestPromptInputType: 'email',
