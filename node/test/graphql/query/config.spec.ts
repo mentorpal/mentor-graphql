@@ -152,7 +152,7 @@ describe('config', () => {
       disclaimerText: '',
       termsOfServiceDisabled: false,
       termsOfServiceText: '',
-      displayGuestPrompt: false,
+      displayGuestPrompt: 'USER_ID',
       guestPromptTitle: '',
       guestPromptText: '',
       guestPromptInputType: 'email',

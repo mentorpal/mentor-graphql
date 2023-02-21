@@ -11,6 +11,12 @@ export interface Setting {
   value: any; // eslint-disable-line  @typescript-eslint/no-explicit-any
 }
 
+export type DisplayGuestPrompt =
+  | 'ALWAYS'
+  | 'USER_ID'
+  | 'USER_ID_AND_EMAL'
+  | 'NEVER';
+
 export interface Config {
   cmi5Enabled: boolean;
   cmi5Endpoint: string;
@@ -54,7 +60,7 @@ export interface Config {
   disclaimerText: string;
   termsOfServiceDisabled: boolean;
   termsOfServiceText: string;
-  displayGuestPrompt: boolean;
+  displayGuestPrompt: DisplayGuestPrompt;
   guestPromptTitle: string;
   guestPromptText: string;
   guestPromptInputType: string;
@@ -189,7 +195,7 @@ export function getDefaultConfig(): Config {
     disclaimerText: '',
     termsOfServiceDisabled: false,
     termsOfServiceText: '',
-    displayGuestPrompt: false,
+    displayGuestPrompt: 'USER_ID',
     guestPromptTitle: '',
     guestPromptText: '',
     guestPromptInputType: 'email',
