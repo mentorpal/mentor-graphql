@@ -19,11 +19,12 @@ import { User } from '../../../models/User';
 import { ConfigType } from '../../types/config';
 import { canEditContent } from '../../../utils/check-permissions';
 
-export type DisplayGuestPrompt =
-  | 'ALWAYS'
-  | 'USER_ID'
-  | 'USER_ID_AND_EMAIL'
-  | 'NEVER';
+export enum DisplaySurveyPopupCondition {
+  ALWAYS = 'ALWAYS',
+  USER_ID = 'USER_ID',
+  USER_ID_AND_EMAIL = 'USER_ID_AND_EMAIL',
+  NEVER = 'NEVER',
+}
 
 export interface ConfigUpdateInput {
   virtualBackgroundUrls: string[];
@@ -55,7 +56,8 @@ export interface ConfigUpdateInput {
   disclaimerText: string;
   termsOfServiceDisabled: boolean;
   termsOfServiceText: string;
-  displayGuestPrompt: DisplayGuestPrompt;
+  displayGuestPrompt: boolean;
+  displaySurveyPopupCondition: DisplaySurveyPopupCondition;
   guestPromptTitle: string;
   guestPromptText: string;
   guestPromptInputType: string;
@@ -109,8 +111,9 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     termsOfServiceDisabled: { type: GraphQLBoolean },
     termsOfServiceText: { type: GraphQLString },
     displayGuestPrompt: {
-      type: GraphQLString,
+      type: GraphQLBoolean,
     },
+    displaySurveyPopupCondition: { type: GraphQLString },
     guestPromptTitle: { type: GraphQLString },
     guestPromptText: { type: GraphQLString },
     guestPromptInputType: { type: GraphQLString },

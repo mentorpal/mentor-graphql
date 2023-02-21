@@ -10,7 +10,10 @@ import { Express } from 'express';
 import { describe } from 'mocha';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
-import SettingModel, { Config } from 'models/Setting';
+import SettingModel, {
+  Config,
+  DisplaySurveyPopupCondition,
+} from 'models/Setting';
 
 describe('config', () => {
   let app: Express;
@@ -152,7 +155,8 @@ describe('config', () => {
       disclaimerText: '',
       termsOfServiceDisabled: false,
       termsOfServiceText: '',
-      displayGuestPrompt: 'USER_ID',
+      displayGuestPrompt: false,
+      displaySurveyPopupCondition: DisplaySurveyPopupCondition.USER_ID,
       guestPromptTitle: '',
       guestPromptText: '',
       guestPromptInputType: 'email',
@@ -225,6 +229,7 @@ describe('config', () => {
             termsOfServiceDisabled
             termsOfServiceText
             displayGuestPrompt
+            displaySurveyPopupCondition
             guestPromptTitle
             guestPromptText
             guestPromptInputType
