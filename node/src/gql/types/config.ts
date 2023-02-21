@@ -59,6 +59,7 @@ export const ConfigType = new GraphQLObjectType({
     termsOfServiceDisabled: { type: GraphQLBoolean },
     termsOfServiceText: { type: GraphQLString },
     displayGuestPrompt: { type: GraphQLBoolean },
+    displaySurveyPopupCondition: { type: GraphQLString },
     guestPromptTitle: { type: GraphQLString },
     guestPromptText: { type: GraphQLString },
     guestPromptInputType: { type: GraphQLString },

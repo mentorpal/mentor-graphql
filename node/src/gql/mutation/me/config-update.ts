@@ -50,6 +50,7 @@ export interface ConfigUpdateInput {
   termsOfServiceDisabled: boolean;
   termsOfServiceText: string;
   displayGuestPrompt: boolean;
+  displaySurveyPopupCondition: string;
   guestPromptTitle: string;
   guestPromptText: string;
   guestPromptInputType: string;
@@ -103,6 +104,7 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     termsOfServiceDisabled: { type: GraphQLBoolean },
     termsOfServiceText: { type: GraphQLString },
     displayGuestPrompt: { type: GraphQLBoolean },
+    displaySurveyPopupCondition: { type: GraphQLString },
     guestPromptTitle: { type: GraphQLString },
     guestPromptText: { type: GraphQLString },
     guestPromptInputType: { type: GraphQLString },

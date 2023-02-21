@@ -153,6 +153,7 @@ describe('config', () => {
       termsOfServiceDisabled: false,
       termsOfServiceText: '',
       displayGuestPrompt: false,
+      displaySurveyPopupCondition: 'USER_ID',
       guestPromptTitle: '',
       guestPromptText: '',
       guestPromptInputType: 'email',
@@ -225,6 +226,7 @@ describe('config', () => {
             termsOfServiceDisabled
             termsOfServiceText
             displayGuestPrompt
+            displaySurveyPopupCondition
             guestPromptTitle
             guestPromptText
             guestPromptInputType

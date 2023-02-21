@@ -25,6 +25,7 @@ export default async function mongooseConnect(uri: string): Promise<void> {
     )}@${requireEnv('MONGO_HOST')}/${requireEnv('MONGO_DB')}${
       process.env.MONGO_QUERY_STRING || ''
     }`;
+  mongoose.set('strictQuery', false);
   await mongoose.connect(mongoUri);
   logger.info(
     'mongoose: connection successful ' + mongoUri.replace(/^.*@/g, '')

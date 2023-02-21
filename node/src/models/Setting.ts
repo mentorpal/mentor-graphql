@@ -55,6 +55,7 @@ export interface Config {
   termsOfServiceDisabled: boolean;
   termsOfServiceText: string;
   displayGuestPrompt: boolean;
+  displaySurveyPopupCondition: string;
   guestPromptTitle: string;
   guestPromptText: string;
   guestPromptInputType: string;
@@ -122,6 +123,7 @@ export const ConfigKeys: ConfigKey[] = [
   'termsOfServiceDisabled',
   'termsOfServiceText',
   'displayGuestPrompt',
+  'displaySurveyPopupCondition',
   'guestPromptTitle',
   'guestPromptText',
   'guestPromptInputType',
@@ -190,6 +192,7 @@ export function getDefaultConfig(): Config {
     termsOfServiceDisabled: false,
     termsOfServiceText: '',
     displayGuestPrompt: false,
+    displaySurveyPopupCondition: 'USER_ID',
     guestPromptTitle: '',
     guestPromptText: '',
     guestPromptInputType: 'email',
