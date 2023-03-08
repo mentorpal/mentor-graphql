@@ -23,7 +23,6 @@ import { idOrNew } from './helpers';
 const reservedSubdomains = [
   'newdev',
   'v2',
-  'careerfair',
   'local',
   'uscquestions',
   'api',
