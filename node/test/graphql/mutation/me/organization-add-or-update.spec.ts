@@ -1189,4 +1189,64 @@ describe('addOrUpdateOrganization', () => {
       'subdomain must be lower-case, alpha-numerical, and 3-20 characters'
     );
   });
+
+  it('can update accessCodes', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation AddOrUpdateOrganization($id: ID, $organization: AddOrUpdateOrganizationInputType!) {
+          me {
+            addOrUpdateOrganization(id: $id, organization: $organization) {
+              isPrivate
+              accessCodes
+            }
+          }
+        }`,
+        variables: {
+          id: '511111111111111111111111',
+          organization: {
+            accessCodes: ['new'],
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.me.addOrUpdateOrganization).to.eql({
+      isPrivate: true,
+      accessCodes: ['new'],
+    });
+    const organizations = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query {
+          organizations {
+            edges {
+              node {
+                name
+                accessCodes
+              }
+            }
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(organizations.body.data.organizations).to.eql({
+      edges: [
+        {
+          node: {
+            name: 'CSUF',
+            accessCodes: [],
+          },
+        },
+        {
+          node: {
+            name: 'USC',
+            accessCodes: ['new'],
+          },
+        },
+      ],
+    });
+  });
 });

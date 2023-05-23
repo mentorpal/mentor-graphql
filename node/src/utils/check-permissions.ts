@@ -61,6 +61,9 @@ export function canViewMentor(
     return false;
   }
   const orgPerm = mentor.orgPermissions?.find((op) => equals(op.org, org?._id));
+  if (orgPerm && orgPerm.viewPermission === OrgViewPermissionType.HIDDEN) {
+    return false;
+  }
   if (mentor.isPrivate) {
     if (orgPerm && orgPerm.viewPermission === OrgViewPermissionType.SHARE) {
       return true;
@@ -77,9 +80,6 @@ export function canViewMentor(
       userRole === UserRole.SUPER_CONTENT_MANAGER ||
       userRole === UserRole.SUPER_ADMIN
     );
-  }
-  if (orgPerm && orgPerm.viewPermission === OrgViewPermissionType.HIDDEN) {
-    return false;
   }
   return true;
 }
@@ -158,11 +158,18 @@ export async function canEditMentorPrivacy(
   );
 }
 
-export function canViewOrganization(org: Organization, user: User): boolean {
+export function canViewOrganization(
+  org: Organization,
+  user: User,
+  orgAccessCode?: string
+): boolean {
   if (!org) {
     return false;
   }
   if (org.isPrivate) {
+    if (orgAccessCode && org.accessCodes.includes(orgAccessCode)) {
+      return true;
+    }
     if (!user) {
       return false;
     }

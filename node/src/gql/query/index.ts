@@ -25,6 +25,7 @@ import mentorsById from './mentors-by-id';
 import mentorCanEdit from './mentor-can-edit';
 import mantorCanView from './mentor-can-view';
 import orgConfig from './org-config';
+import orgCheckPermission from './org-check-permission';
 import organization from './organization';
 import organizations from './organizations';
 import question from './question';
@@ -62,6 +63,7 @@ export default new GraphQLObjectType({
     mentorCanEdit,
     mantorCanView,
     orgConfig,
+    orgCheckPermission,
     organization,
     organizations,
     question,

@@ -4,15 +4,27 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType, GraphQLString } from 'graphql';
-import { ConfigType } from '../types/config';
-import OrganizationModel, { Organization } from '../../models/Organization';
-import SettingModel, { Config } from '../../models/Setting';
+import { GraphQLBoolean, GraphQLObjectType, GraphQLString } from 'graphql';
+import { Organization } from '../../models/Organization';
 import { User } from '../../models/User';
 import { canViewOrganization } from '../../utils/check-permissions';
 
-export const orgConfig = {
-  type: ConfigType,
+export interface OrgCheckPermission {
+  isOrg: boolean;
+  isPrivate: boolean;
+  canView: boolean;
+}
+export const OrgCheckPermissionType = new GraphQLObjectType({
+  name: 'OrgCheckPermissionType',
+  fields: () => ({
+    isOrg: { type: GraphQLBoolean },
+    isPrivate: { type: GraphQLBoolean },
+    canView: { type: GraphQLBoolean },
+  }),
+});
+
+export const orgCheckPermission = {
+  type: OrgCheckPermissionType,
   args: {
     orgAccessCode: { type: GraphQLString },
   },
@@ -20,15 +32,18 @@ export const orgConfig = {
     _: GraphQLObjectType,
     args: { orgAccessCode?: string },
     context: { org: Organization; user: User }
-  ): Promise<Config> => {
-    if (
-      context.org &&
-      canViewOrganization(context.org, context.user, args.orgAccessCode)
-    ) {
-      return await OrganizationModel.getConfig(context.org);
-    }
-    return await SettingModel.getConfig();
+  ): Promise<OrgCheckPermission> => {
+    const isOrg = Boolean(context.org);
+    const isPrivate = isOrg ? context.org.isPrivate : false;
+    const canView = isOrg
+      ? canViewOrganization(context.org, context.user, args.orgAccessCode)
+      : true;
+    return {
+      isOrg,
+      isPrivate,
+      canView,
+    };
   },
 };
 
-export default orgConfig;
+export default orgCheckPermission;

@@ -41,8 +41,10 @@ interface AddOrUpdateOrganizationInput {
   name: string;
   subdomain: string;
   isPrivate: string;
+  accessCodes: string[];
   members: OrganizationMentorInput[];
 }
+
 interface OrganizationMentorInput {
   user: string;
   role: string;
@@ -62,6 +64,7 @@ export const AddOrUpdateOrganizationInputType = new GraphQLInputObjectType({
     name: { type: GraphQLString },
     subdomain: { type: GraphQLString },
     isPrivate: { type: GraphQLBoolean },
+    accessCodes: { type: GraphQLList(GraphQLString) },
     members: { type: GraphQLList(OrganizationMemberInputType) },
   },
 });

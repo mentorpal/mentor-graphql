@@ -43,6 +43,7 @@ export interface OrganizationProps {
   name: string;
   subdomain: string;
   isPrivate: boolean;
+  accessCodes: string[];
   members: OrgMemberProps[];
   config: OrgConfigProps[];
 }
@@ -53,6 +54,7 @@ export const OrganizationSchema = new Schema<Organization, OrganizationModel>(
     name: { type: String },
     subdomain: { type: String },
     isPrivate: { type: Boolean, default: false },
+    accessCodes: { type: [String], default: [] },
     members: { type: [OrgMemberSchema], default: [] },
     config: { type: [OrgConfigSchema], default: [] },
   },
@@ -114,7 +116,6 @@ OrganizationSchema.statics.saveConfig = async function (
   if (!org) {
     throw new Error(`org ${o} not found`);
   }
-
   const configPush: OrgConfigProps[] = [];
   for (const [k, v] of Object.entries(config)) {
     if (org.config.findIndex((c) => c.key == k) === -1) {
