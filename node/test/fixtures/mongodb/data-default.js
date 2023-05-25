@@ -482,6 +482,7 @@ module.exports = {
       name: 'USC',
       subdomain: 'usc',
       isPrivate: true,
+      accessCodes: ['asdf', 'test'],
       members: [
         {
           user: ObjectId('5ffdf41a1ee2c62320b49ea2'),
@@ -503,6 +504,7 @@ module.exports = {
       name: 'CSUF',
       subdomain: 'careerfair',
       isPrivate: false,
+      accessCodes: [],
       members: [
         {
           user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
@@ -519,6 +521,7 @@ module.exports = {
       ],
     },
   ],
+
   refreshtokens: [
     {
       _id: ObjectId('511111111111111111111678'),

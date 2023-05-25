@@ -135,10 +135,11 @@ export const mentorData = {
   args: {
     mentor: { type: GraphQLNonNull(GraphQLID) },
     subject: { type: GraphQLID },
+    orgAccessCode: { type: GraphQLString },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: string; subject?: string },
+    args: { mentor: string; subject?: string; orgAccessCode?: string },
     context: { user: User; org: Organization }
   ): Promise<MentorClientData> => {
     const mentor = await MentorModel.findById(args.mentor);
@@ -151,7 +152,10 @@ export const mentorData = {
       );
     }
     let config: Config;
-    if (context.org && canViewOrganization(context.org, context.user)) {
+    if (
+      context.org &&
+      canViewOrganization(context.org, context.user, args.orgAccessCode)
+    ) {
       config = await OrganizationModel.getConfig(context.org);
     } else {
       config = await SettingModel.getConfig();
