@@ -26,6 +26,9 @@ export const updateMentorKeywords = {
     args: { mentorId: string; keywords: string[] },
     context: { user: User }
   ): Promise<boolean> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     const mentor = args.mentorId
       ? await MentorModel.findById(args.mentorId)
       : await MentorModel.findOne({

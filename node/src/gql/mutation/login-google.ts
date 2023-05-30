@@ -82,6 +82,9 @@ export const loginGoogle = {
       if (!user) {
         throw new Error('failed to create user');
       }
+      if (user.isDisabled) {
+        throw new Error('Your account has been disabled');
+      }
       // Create/Migrate mentor to user model
       if (!user.mentorIds.length) {
         // add any required subjects to mentor

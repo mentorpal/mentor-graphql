@@ -28,6 +28,9 @@ export const userQuestionSetDismissed = {
     args: { id: string; dismissed: boolean },
     context: { user: User }
   ): Promise<UserQuestion> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     const targetUserQuestion = await UserQuestionModel.findById(args.id);
     if (!targetUserQuestion) {
       throw new Error('No user question found');

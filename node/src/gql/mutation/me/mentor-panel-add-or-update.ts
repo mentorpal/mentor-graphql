@@ -48,6 +48,9 @@ export const addOrUpdateMentorPanel = {
     args: { id: string; mentorPanel: AddOrUpdateMentorPanelInput },
     context: { user: User }
   ): Promise<MentorPanel> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     if (!(await canEditMentorPanel(context.user, args.mentorPanel.org))) {
       throw new Error('you do not have permission to add or edit mentorpanel');
     }

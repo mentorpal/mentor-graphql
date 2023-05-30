@@ -12,6 +12,7 @@ import {
   GraphQLNonNull,
 } from 'graphql';
 import { Keyword as KeywordModel } from '../../../models';
+import { User } from '../../../models/User';
 
 export const updateKeyword = {
   type: GraphQLBoolean,
@@ -21,8 +22,12 @@ export const updateKeyword = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { type: string; keywords: string[] }
+    args: { type: string; keywords: string[] },
+    context: { user: User }
   ): Promise<boolean> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     const updated = await KeywordModel.updateOrCreate({
       type: args.type,
       keywords: args.keywords,

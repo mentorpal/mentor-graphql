@@ -5,11 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
-import {
-  User as UserSchema,
-  Mentor as MentorSchema,
-  Subject as SubjectSchema,
-} from '../../models';
+import { User as UserSchema } from '../../models';
 import {
   UserAccessTokenType,
   UserAccessToken,
@@ -23,7 +19,7 @@ export const login = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { accessToken: string },
+    _args: { accessToken: string },
     context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
   ): Promise<UserAccessToken> => {
     try {
@@ -43,6 +39,9 @@ export const login = {
       );
       if (!user) {
         throw new Error('invalid token');
+      }
+      if (user.isDisabled) {
+        throw new Error('Your account has been disabled');
       }
       return generateAccessToken(user);
     } catch (error) {

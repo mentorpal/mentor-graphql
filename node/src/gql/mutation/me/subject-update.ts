@@ -133,6 +133,9 @@ export const subjectUpdate = {
     args: { subject: SubjectUpdateInput },
     context: { user: User }
   ): Promise<Subject> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     const userCanManageArchival = canEditContent(context.user);
     if (args.subject.isArchived && !userCanManageArchival) {
       throw new Error('User is not authorized to archive this subject.');

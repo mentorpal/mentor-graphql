@@ -9,6 +9,7 @@ import {
   GraphQLObjectType,
   GraphQLID,
   GraphQLList,
+  GraphQLBoolean,
 } from 'graphql';
 import { Mentor as MentorModel } from '../../models';
 import { User } from '../../models/User';
@@ -28,6 +29,7 @@ export const UserType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     name: { type: GraphQLString },
     email: { type: GraphQLString },
+    isDisabled: { type: GraphQLBoolean },
     userRole: { type: GraphQLString },
     lastLoginAt: { type: DateType },
     mentorIds: { type: GraphQLList(GraphQLID) },

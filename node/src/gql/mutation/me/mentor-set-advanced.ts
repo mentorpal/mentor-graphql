@@ -10,40 +10,52 @@ import {
   GraphQLNonNull,
   GraphQLID,
 } from 'graphql';
-import {
-  Mentor as MentorModel,
-  ImportTask as ImportTaskModel,
-} from '../../../models';
-import { User } from '../../../models/User';
-import { canEditMentor } from '../../../utils/check-permissions';
+import { Mentor as MentorModel } from '../../../models';
+import { User, UserRole } from '../../../models/User';
+import { Mentor } from '../../../models/Mentor';
+import MentorType from '../../types/mentor';
 
-export const importTaskDelete = {
-  type: GraphQLBoolean,
+export const mentorSetAdvanced = {
+  type: MentorType,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
+    isAdvanced: { type: GraphQLBoolean },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
       mentorId: string;
+      isAdvanced: boolean;
     },
     context: { user: User }
-  ): Promise<boolean> => {
+  ): Promise<Mentor> => {
     if (context.user?.isDisabled) {
       throw new Error('Your account has been disabled');
     }
     const mentor = await MentorModel.findById(args.mentorId);
     if (!mentor) {
-      throw new Error('invalid mentor');
+      throw new Error('invalid mentor id given');
     }
-    if (!(await canEditMentor(mentor, context.user))) {
-      throw new Error('you do not have permission to edit this mentor');
+    if (
+      context.user.userRole !== UserRole.ADMIN &&
+      context.user.userRole !== UserRole.SUPER_ADMIN
+    ) {
+      throw new Error('only admins may set advanced mentors');
     }
-    const taskDelete = await ImportTaskModel.deleteOne({
-      mentor: mentor._id,
-    });
-    return Boolean(taskDelete);
+    const updated = await MentorModel.findByIdAndUpdate(
+      args.mentorId,
+      {
+        $set: {
+          isAdvanced: args.isAdvanced,
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+    return updated;
   },
 };
 
-export default importTaskDelete;
+export default mentorSetAdvanced;
