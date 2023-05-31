@@ -10,40 +10,62 @@ import {
   GraphQLNonNull,
   GraphQLID,
 } from 'graphql';
-import {
-  Mentor as MentorModel,
-  ImportTask as ImportTaskModel,
-} from '../../../models';
-import { User } from '../../../models/User';
-import { canEditMentor } from '../../../utils/check-permissions';
+import { Types } from 'mongoose';
+import { User as UserModel, Mentor as MentorModel } from '../../../models';
+import { User, UserRole } from '../../../models/User';
+import UserType from '../../types/user';
 
-export const importTaskDelete = {
-  type: GraphQLBoolean,
+export const updateMentorPrivacy = {
+  type: UserType,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
+    userId: { type: GraphQLNonNull(GraphQLID) },
+    isDisabled: { type: GraphQLBoolean },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
-      mentorId: string;
+      userId: string;
+      isDisabled: boolean;
     },
     context: { user: User }
-  ): Promise<boolean> => {
+  ): Promise<User> => {
     if (context.user?.isDisabled) {
       throw new Error('Your account has been disabled');
     }
-    const mentor = await MentorModel.findById(args.mentorId);
-    if (!mentor) {
-      throw new Error('invalid mentor');
+    const user = await UserModel.findById(args.userId);
+    if (!user) {
+      throw new Error('invalid user id given');
     }
-    if (!(await canEditMentor(mentor, context.user))) {
-      throw new Error('you do not have permission to edit this mentor');
+    if (
+      context.user.userRole !== UserRole.ADMIN &&
+      context.user.userRole !== UserRole.SUPER_ADMIN
+    ) {
+      throw new Error('only admins may disable a user');
     }
-    const taskDelete = await ImportTaskModel.deleteOne({
-      mentor: mentor._id,
-    });
-    return Boolean(taskDelete);
+    const updated = await UserModel.findByIdAndUpdate(
+      args.userId,
+      {
+        $set: {
+          isDisabled: args.isDisabled,
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+    if (args.isDisabled) {
+      await MentorModel.findOneAndUpdate(
+        { user: new Types.ObjectId(`${args.userId}`) },
+        {
+          $set: {
+            isArchived: true,
+          },
+        }
+      );
+    }
+    return updated;
   },
 };
 
-export default importTaskDelete;
+export default updateMentorPrivacy;

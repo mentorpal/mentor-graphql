@@ -38,6 +38,9 @@ export const firstTimeTrackingUpdate = {
     },
     context: { user: User }
   ): Promise<FirstTimeTracking> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     const user = await UserModel.findOneAndUpdate(
       { _id: context.user._id },
       { new: true }

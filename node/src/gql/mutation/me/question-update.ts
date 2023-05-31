@@ -13,6 +13,7 @@ import {
   GraphQLID,
   GraphQLInt,
 } from 'graphql';
+import { User } from '../../../models/User';
 import { Question as QuestionModel } from '../../../models';
 import { Question } from '../../../models/Question';
 import QuestionType from '../../types/question';
@@ -51,8 +52,12 @@ export const updateQuestion = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { question: QuestionUpdateInput }
+    args: { question: QuestionUpdateInput },
+    context: { user: User }
   ): Promise<Question> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     return await QuestionModel.updateOrCreate(args.question);
   },
 };

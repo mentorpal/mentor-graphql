@@ -26,6 +26,9 @@ export const removeQuestionFromRecordQueue = {
     },
     context: { user: User }
   ): Promise<string[]> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     // eslint-disable-line  @typescript-eslint/no-explicit-any
     if (!context.user) {
       throw new Error('Only authenticated users');

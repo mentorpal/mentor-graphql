@@ -28,6 +28,7 @@ import {
   ExportedMentorInfoInputType,
 } from '../../query/mentor-export';
 import { UserQuestion } from '../../../models/UserQuestion';
+import { User } from '../../../models/User';
 
 export interface MentorImportJson {
   id: string;
@@ -210,8 +211,12 @@ export const importMentor = {
       mentor: string;
       json: MentorImportJson;
       replacedMentorDataChanges: ReplacedMentorDataChanges;
-    }
+    },
+    context: { user: User }
   ): Promise<Mentor> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     return await MentorModel.import(
       args.mentor,
       args.json,

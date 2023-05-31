@@ -103,6 +103,7 @@ export interface Mentor extends Document {
   isDirty: boolean;
   isPrivate: boolean;
   isArchived: boolean;
+  isAdvanced: boolean;
   orgPermissions: OrgPermissionProps[];
   hasVirtualBackground: boolean;
   virtualBackgroundUrl: string;
@@ -175,6 +176,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     isDirty: { type: Boolean, default: true },
     isPrivate: { type: Boolean, default: false },
     isArchived: { type: Boolean, default: false },
+    isAdvanced: { type: Boolean, default: false },
     orgPermissions: { type: [OrgPermissionSchema], default: [] },
     hasVirtualBackground: { type: Boolean, default: false },
     virtualBackgroundUrl: { type: String, default: '' },

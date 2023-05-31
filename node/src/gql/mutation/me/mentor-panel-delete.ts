@@ -18,6 +18,9 @@ export const deleteMentorPanel = {
     args: { id: string },
     context: { user: User }
   ): Promise<MentorPanel> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     const mp = await MentorPanelModel.findById(args.id);
     if (!mp) {
       throw new Error('invalid mentor panel');

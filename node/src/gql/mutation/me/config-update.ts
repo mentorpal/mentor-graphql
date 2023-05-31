@@ -138,6 +138,9 @@ export const updateConfig = {
     args: { config: ConfigUpdateInput },
     context: { user: User }
   ): Promise<Config> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     if (!canEditContent(context.user)) {
       throw new Error('you do not have permission to edit config');
     }
