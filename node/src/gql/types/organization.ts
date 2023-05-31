@@ -33,6 +33,7 @@ export const OrganizationType = new GraphQLObjectType({
     name: { type: GraphQLString },
     subdomain: { type: GraphQLString },
     isPrivate: { type: GraphQLBoolean },
+    accessCodes: { type: GraphQLList(GraphQLString) },
     createdAt: { type: DateType },
     updatedAt: { type: DateType },
     config: {
