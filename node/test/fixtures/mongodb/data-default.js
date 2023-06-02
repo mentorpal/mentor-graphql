@@ -349,6 +349,9 @@ module.exports = {
         tag: 'mobile',
         url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
       },
+      externalVideoIds: {
+        wistiaId: '5ffdf41a1ee2c62111111111-wistia-id',
+      },
     },
     {
       _id: ObjectId('511111111111111111111114'),

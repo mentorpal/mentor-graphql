@@ -18,6 +18,10 @@ import DateType from './date';
 import removeMarkdown from 'remove-markdown';
 import QuestionType from './question';
 import { isValidObjectId } from 'mongoose';
+import {
+  ExternalVideoIdsObjectType,
+  externalVideoIdsDefault,
+} from 'gql/mutation/api/update-answers';
 
 export const AnswerMediaType = new GraphQLObjectType({
   name: 'AnswerMedia',
@@ -76,6 +80,12 @@ export const AnswerType = new GraphQLObjectType({
       type: GraphQLString,
       resolve: function (answer: Answer) {
         return removeMarkdown(answer.transcript || '');
+      },
+    },
+    externalVideoIds: {
+      type: ExternalVideoIdsObjectType,
+      resolve: function (answer: Answer) {
+        return answer.externalVideoIds || externalVideoIdsDefault;
       },
     },
     markdownTranscript: {

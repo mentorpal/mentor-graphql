@@ -37,6 +37,7 @@ import UserQuestion, {
 } from './UserQuestion';
 import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
 import { Organization } from './Organization';
+import { externalVideoIdsDefault } from 'gql/mutation/api/update-answers';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -350,6 +351,9 @@ async function updateCreateAnswerDocumentAndUserQuestion(
         webMedia: importedAnswerDocumentForQuestion.webMedia,
         mobileMedia: importedAnswerDocumentForQuestion.mobileMedia,
         vttMedia: importedAnswerDocumentForQuestion.vttMedia,
+        externalVideoIds:
+          importedAnswerDocumentForQuestion.externalVideoIds ||
+          externalVideoIdsDefault,
         hasUntransferredMedia: true,
       },
       {
@@ -857,6 +861,7 @@ MentorSchema.statics.getAnswers = async function ({
         webMedia: undefined,
         mobileMedia: undefined,
         vttMedia: undefined,
+        externalVideoIds: externalVideoIdsDefault,
       }
     );
   });

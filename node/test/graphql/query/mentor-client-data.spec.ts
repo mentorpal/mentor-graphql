@@ -71,6 +71,9 @@ describe('mentorClientData', () => {
                 tag
                 url
               }
+              externalVideoIds{
+                wistiaId
+              }
             }
           }
       }`,
@@ -98,6 +101,9 @@ describe('mentorClientData', () => {
             type: 'video',
             tag: 'mobile',
             url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+          },
+          externalVideoIds: {
+            wistiaId: '5ffdf41a1ee2c62111111111-wistia-id',
           },
         },
       ],

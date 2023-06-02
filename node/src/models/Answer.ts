@@ -14,6 +14,7 @@ import {
   PaginateQuery,
   pluginPagination,
 } from './Paginatation';
+import { IExternalVideoIds } from 'gql/mutation/api/update-answers';
 
 export enum Status {
   NONE = 'NONE',
@@ -38,6 +39,10 @@ export const AnswerMediaSchema = new Schema({
   needsTransfer: { type: Boolean, default: false },
 });
 
+export const ExternalVideoIdsSchema = new Schema({
+  wistiaId: { type: String },
+});
+
 export interface Answer extends Document {
   mentor: Mentor['_id'];
   question: Question['_id'] | Question;
@@ -49,6 +54,7 @@ export interface Answer extends Document {
   mobileMedia: AnswerMedia;
   vttMedia: AnswerMedia;
   hasUntransferredMedia: boolean;
+  externalVideoIds: IExternalVideoIds;
 }
 
 export interface AnswerModel extends Model<Answer> {
@@ -74,6 +80,7 @@ export const AnswerSchema = new Schema<Answer, AnswerModel>(
     vttMedia: { type: AnswerMediaSchema },
     media: { type: [AnswerMediaSchema] },
     hasUntransferredMedia: { type: Boolean, default: false },
+    externalVideoIds: { type: ExternalVideoIdsSchema },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );

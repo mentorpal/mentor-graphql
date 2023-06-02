@@ -157,6 +157,55 @@ describe('uploadAnswer', () => {
     });
   });
 
+  it('updates answer wistiaId', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: answerMutation,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111112',
+          answer: {
+            externalVideoIds: {
+              wistiaId: 'test-wistia-id',
+            },
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.api.uploadAnswer).to.eql(true);
+    const r2 = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query { 
+          mentor(id: "5ffdf41a1ee2c62111111111") {
+            answers {
+              question{
+                _id
+              }
+              externalVideoIds{
+                wistiaId
+              }
+            }
+          }
+      }`,
+      });
+    expect(r2.status).to.equal(200);
+    const updatedAnswer = r2.body.data.mentor.answers.find(
+      (a: any) => a.question._id === '511111111111111111111112'
+    );
+    expect(updatedAnswer).to.eql({
+      question: {
+        _id: '511111111111111111111112',
+      },
+      externalVideoIds: {
+        wistiaId: 'test-wistia-id',
+      },
+    });
+  });
+
   it('updates correct media', async () => {
     let response = await request(app)
       .post('/graphql')

@@ -228,6 +228,9 @@ describe('import mentor', () => {
             url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
             needsTransfer: false,
           },
+          externalVideoIds: {
+            wistiaId: '',
+          },
         },
         {
           transcript: '[being still]',
@@ -248,6 +251,9 @@ describe('import mentor', () => {
             type: 'video',
             url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
             needsTransfer: false,
+          },
+          externalVideoIds: {
+            wistiaId: '5ffdf41a1ee2c62111111111-wistia-id',
           },
         },
       ],
@@ -483,6 +489,9 @@ describe('import mentor', () => {
           url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
           needsTransfer: true,
         },
+        externalVideoIds: {
+          wistiaId: '',
+        },
       },
       {
         transcript: '[being still]',
@@ -503,6 +512,9 @@ describe('import mentor', () => {
           type: 'video',
           url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
           needsTransfer: true,
+        },
+        externalVideoIds: {
+          wistiaId: '5ffdf41a1ee2c62111111111-wistia-id',
         },
       },
     ]);
