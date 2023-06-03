@@ -21,7 +21,7 @@ import { isValidObjectId } from 'mongoose';
 import {
   ExternalVideoIdsObjectType,
   externalVideoIdsDefault,
-} from 'gql/mutation/api/update-answers';
+} from '../mutation/api/update-answers';
 
 export const AnswerMediaType = new GraphQLObjectType({
   name: 'AnswerMedia',

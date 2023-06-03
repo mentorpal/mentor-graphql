@@ -35,7 +35,7 @@ import {
   ExternalVideoIdsObjectType,
   IExternalVideoIds,
   externalVideoIdsDefault,
-} from 'gql/mutation/api/update-answers';
+} from '../mutation/api/update-answers';
 
 export interface MentorClientData {
   _id: string;

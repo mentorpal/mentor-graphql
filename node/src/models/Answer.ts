@@ -14,7 +14,7 @@ import {
   PaginateQuery,
   pluginPagination,
 } from './Paginatation';
-import { IExternalVideoIds } from 'gql/mutation/api/update-answers';
+import { IExternalVideoIds } from '../gql/mutation/api/update-answers';
 
 export enum Status {
   NONE = 'NONE',

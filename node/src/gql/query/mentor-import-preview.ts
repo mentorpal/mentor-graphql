@@ -35,7 +35,7 @@ import { QuestionUpdateInput } from '../mutation/me/question-update';
 import { isId } from '../mutation/me/helpers';
 import { User } from '../../models/User';
 import { canViewMentor } from '../../utils/check-permissions';
-import { ExternalVideoIdsObjectType } from 'gql/mutation/api/update-answers';
+import { ExternalVideoIdsObjectType } from '../mutation/api/update-answers';
 
 enum EditType {
   NONE = 'NONE',
