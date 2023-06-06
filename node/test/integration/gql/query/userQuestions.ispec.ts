@@ -63,6 +63,7 @@ describe('userQuestions', () => {
 
     const question = await request(API_URL)
       .post('/graphql')
+      .set(SECRET_HEADER_NAME, SECRET_HEADER_VALUE)
       .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
       .send({
         query: `query {

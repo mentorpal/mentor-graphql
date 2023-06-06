@@ -106,6 +106,7 @@ describe('subjects', () => {
     const second = await request(API_URL)
       .post('/graphql')
       .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
+      .set(SECRET_HEADER_NAME, SECRET_HEADER_VALUE)
       .send({
         query: `query {
         subjects(limit: 2, cursor: "next__${first.body.data.subjects.pageInfo.endCursor}") {
@@ -128,6 +129,7 @@ describe('subjects', () => {
     const backToFirst = await request(API_URL)
       .post('/graphql')
       .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
+      .set(SECRET_HEADER_NAME, SECRET_HEADER_VALUE)
       .send({
         query: `query {
         subjects(limit: 2, cursor: "prev__${second.body.data.subjects.pageInfo.startCursor}") {
