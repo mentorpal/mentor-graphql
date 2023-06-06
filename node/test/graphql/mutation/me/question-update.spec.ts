@@ -67,6 +67,7 @@ describe('updateQuestion', () => {
       _id: '511111111111111111111111',
       question: "Don't talk and stay still.",
       name: 'idle',
+      subType: 'test-sub-type',
     }).replace(/"([^"]+)":/g, '$1:');
     const response = await request(app)
       .post('/graphql')
@@ -76,6 +77,7 @@ describe('updateQuestion', () => {
           me {
             updateQuestion(question: ${question}) {
               _id
+              subType
             }
           }
         }`,
@@ -83,6 +85,7 @@ describe('updateQuestion', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateQuestion).to.eql({
       _id: '511111111111111111111111',
+      subType: 'test-sub-type',
     });
   });
 
@@ -91,6 +94,7 @@ describe('updateQuestion', () => {
     const question = JSON.stringify({
       _id: '',
       question: 'aa',
+      subType: 'test-sub-type',
     }).replace(/"([^"]+)":/g, '$1:');
     const response = await request(app)
       .post('/graphql')
@@ -100,6 +104,7 @@ describe('updateQuestion', () => {
           me {
             updateQuestion(question: ${question}) {
               question
+              subType
             }
           }
         }`,
@@ -107,6 +112,7 @@ describe('updateQuestion', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateQuestion).to.eql({
       question: 'aa',
+      subType: 'test-sub-type',
     });
   });
 });

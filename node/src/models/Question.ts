@@ -23,6 +23,7 @@ export enum QuestionType {
 export interface Question extends Document {
   question: string;
   type: string;
+  subType: string;
   name: string;
   clientId: string;
   paraphrases: string[];
@@ -38,6 +39,9 @@ export const QuestionSchema = new Schema<Question, QuestionModel>(
       type: String,
       enum: [QuestionType.UTTERANCE, QuestionType.QUESTION],
       default: QuestionType.QUESTION,
+    },
+    subType: {
+      type: String,
     },
     name: { type: String },
     clientId: { type: String },

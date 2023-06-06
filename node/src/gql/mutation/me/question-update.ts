@@ -23,6 +23,7 @@ export interface QuestionUpdateInput {
   question: string;
   type: string;
   name: string;
+  subType: string;
   clientId: string;
   paraphrases: string[];
   mentor: string;
@@ -38,6 +39,7 @@ export const QuestionUpdateInputType = new GraphQLInputObjectType({
     type: { type: GraphQLString },
     name: { type: GraphQLString },
     clientId: { type: GraphQLString },
+    subType: { type: GraphQLString },
     paraphrases: { type: GraphQLList(GraphQLString) },
     mentor: { type: GraphQLID },
     mentorType: { type: GraphQLString },

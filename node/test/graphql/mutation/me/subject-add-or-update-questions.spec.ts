@@ -149,6 +149,7 @@ describe('subjectAddOrUpdateQuestions', () => {
                 _id: '511111111111111111111110',
                 question: 'New?',
                 clientId: '12346',
+                subType: 'test-subtype-511111111111111111111110',
               },
               category: { id: 'invalid' },
               topics: [
@@ -176,5 +177,28 @@ describe('subjectAddOrUpdateQuestions', () => {
         topics: ['5ffdf41a1ee2c62320b49ec2'],
       },
     ]);
+
+    const checkQuestionUpdated = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query Question($id: ID!){
+          question(id: $id){
+            _id
+            question
+            clientId
+            subType
+          }
+      }`,
+        variables: {
+          id: '511111111111111111111110',
+        },
+      });
+    expect(checkQuestionUpdated.status).to.equal(200);
+    expect(checkQuestionUpdated.body.data?.question).to.eql({
+      _id: '511111111111111111111110',
+      question: 'New?',
+      clientId: '12346',
+      subType: 'test-subtype-511111111111111111111110',
+    });
   });
 });

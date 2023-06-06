@@ -274,6 +274,7 @@ module.exports = {
       question: "Don't talk and stay still.",
       type: 'UTTERANCE',
       name: 'idle',
+      subType: 'cant_answer',
     },
     {
       _id: ObjectId('511111111111111111111112'),

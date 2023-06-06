@@ -35,6 +35,7 @@ describe('question', () => {
             question
             type
             name
+            subType
           }
       }`,
         variables: {
@@ -47,6 +48,7 @@ describe('question', () => {
       question: "Don't talk and stay still.",
       type: 'UTTERANCE',
       name: 'idle',
+      subType: 'cant_answer',
     });
   });
 });
