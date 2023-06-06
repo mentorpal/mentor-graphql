@@ -9,12 +9,15 @@ import { expect } from 'chai';
 import request from 'supertest';
 
 const API_URL = process.env.API_URL || 'localhost:3001/graphql';
+const SECRET_HEADER_NAME = process.env.SECRET_HEADER_NAME || '';
+const SECRET_HEADER_VALUE = process.env.SECRET_HEADER_VALUE || '';
 
 describe('userQuestions', () => {
   it(`throws an error if invalid id`, async () => {
     const response = await request(API_URL)
       .post('/graphql')
       .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
+      .set(SECRET_HEADER_NAME, SECRET_HEADER_VALUE)
       .send({
         query: `query {
           userQuestion(id: "111111111111111111111111") {
@@ -33,6 +36,7 @@ describe('userQuestions', () => {
     const response = await request(API_URL)
       .post('/graphql')
       .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
+      .set(SECRET_HEADER_NAME, SECRET_HEADER_VALUE)
       .send({
         query: `query {
         userQuestions {
@@ -78,6 +82,7 @@ describe('userQuestions', () => {
     const response = await request(API_URL)
       .post('/graphql')
       .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
+      .set(SECRET_HEADER_NAME, SECRET_HEADER_VALUE)
       .send({
         query: `query {
         userQuestions(filter: { feedback: "NEUTRAL" }) {
@@ -105,6 +110,7 @@ describe('userQuestions', () => {
     const response = await request(API_URL)
       .post('/graphql')
       .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
+      .set(SECRET_HEADER_NAME, SECRET_HEADER_VALUE)
       .send({
         query: `query {
         userQuestions(filter: { mentor: "${new mongoose.Types.ObjectId(

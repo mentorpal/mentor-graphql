@@ -38,6 +38,8 @@ custom:
       CORS_ORIGIN: 'https://newdev.mentorpal.org,https://devmentorpal.org,.mentorpal.org,.devmentorpal.org'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenDev'
+      SECRET_HEADER_VALUE: ${ssm:/mentorpal/newdev/shared/secret_header_value, ''}
+      SECRET_HEADER_NAME: ${ssm:/mentorpal/newdev/shared/secret_header_name, ''}
       WEBACL_ARN: ${ssm:/devmentorpal/api_firewall_arn, ''}
       DOMAIN: "devmentorpal.org"
     qa:
@@ -51,6 +53,8 @@ custom:
       CORS_ORIGIN: 'https://v2.mentorpal.org,https://qamentorpal.org,.mentorpal.org,.qamentorpal.org'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenQa'
+      SECRET_HEADER_VALUE: ${ssm:/mentorpal/v2/shared/secret_header_value, ''}
+      SECRET_HEADER_NAME: ${ssm:/mentorpal/v2/shared/secret_header_name, ''}
       WEBACL_ARN: ${ssm:/qamentorpal/api_firewall_arn, ''}
       DOMAIN: "qamentorpal.org"
     prod:
@@ -60,6 +64,8 @@ custom:
       JWT_SECRET: ${ssm:/mentorpal/cf/shared/jwt_secret, ''}
       MONGO_URI: ${ssm:/mentorpal/graphql/prod/mongo_uri, ''}
       NODE_ENV: 'careerfair'
+      SECRET_HEADER_VALUE: ${ssm:/mentorpal/cf/shared/secret_header_value, ''}
+      SECRET_HEADER_NAME: ${ssm:/mentorpal/cf/shared/secret_header_name, ''}
       STATIC_URL_BASE: 'https://static.mentorpal.org/'
       CORS_ORIGIN: 'https://careerfair.mentorpal.org,https://mentorpal.org,.mentorpal.org'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/prod/shared/GOOGLE_CLIENT_ID, ''}
@@ -107,6 +113,8 @@ provider:
     GOOGLE_CLIENT_ID: ${self:custom.stages.${self:provider.stage}.GOOGLE_CLIENT_ID}
     REFRESH_TOKEN_NAME: ${self:custom.stages.${self:provider.stage}.REFRESH_TOKEN_NAME}
     DOMAIN: ${self:custom.stages.${self:provider.stage}.DOMAIN}
+    SECRET_HEADER_VALUE: ${self:custom.stages.${self:provider.stage}.SECRET_HEADER_VALUE}
+    SECRET_HEADER_NAME: ${self:custom.stages.${self:provider.stage}.SECRET_HEADER_NAME}
 
   stackTags:
     Environment: ${self:provider.stage}

@@ -8,12 +8,15 @@ import { expect } from 'chai';
 import request from 'supertest';
 
 const API_URL = process.env.API_URL || 'localhost:3001/graphql';
+const SECRET_HEADER_NAME = process.env.SECRET_HEADER_NAME || '';
+const SECRET_HEADER_VALUE = process.env.SECRET_HEADER_VALUE || '';
 
 describe('query users', () => {
   it('query all users', async () => {
     const response = await request(API_URL)
       .post('/graphql')
       .set('User-Agent', 'SuperAgent 6.1.4') // required for api firewall
+      .set(SECRET_HEADER_NAME, SECRET_HEADER_VALUE)
       .send({
         query: `
         query Users($filter: Object!, $limit: Int!, $cursor: String!, $sortBy: String!, $sortAscending: Boolean!){
