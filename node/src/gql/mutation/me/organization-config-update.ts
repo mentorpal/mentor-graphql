@@ -23,6 +23,9 @@ export const updateOrgConfig = {
     args: { id: string; config: ConfigUpdateInput },
     context: { user: User }
   ): Promise<Config> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     const org = await OrganizationModel.findById(args.id);
     if (!org) {
       throw new Error('invalid organization id');

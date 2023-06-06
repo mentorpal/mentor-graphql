@@ -32,6 +32,9 @@ export const uploadTaskDelete = {
     },
     context: { user: User }
   ): Promise<boolean> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     if (!(await QuestionModel.exists({ _id: args.questionId }))) {
       throw new Error(`no question found for id '${args.questionId}'`);
     }

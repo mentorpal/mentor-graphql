@@ -31,6 +31,11 @@ import {
   canViewOrganization,
 } from '../../utils/check-permissions';
 import { toAbsoluteUrl } from '../../utils/static-urls';
+import {
+  ExternalVideoIdsObjectType,
+  IExternalVideoIds,
+  externalVideoIdsDefault,
+} from '../mutation/api/update-answers';
 
 export interface MentorClientData {
   _id: string;
@@ -52,6 +57,7 @@ export interface AnswerClientData {
   webMedia: AnswerMedia;
   mobileMedia: AnswerMedia;
   vttMedia: AnswerMedia;
+  externalVideoIds: IExternalVideoIds;
 }
 
 export interface TopicQuestions {
@@ -84,6 +90,7 @@ export const AnswerClientDataType = new GraphQLObjectType({
     webMedia: { type: AnswerMediaType },
     mobileMedia: { type: AnswerMediaType },
     vttMedia: { type: AnswerMediaType },
+    externalVideoIds: { type: ExternalVideoIdsObjectType },
   }),
 });
 
@@ -273,6 +280,7 @@ export const mentorData = {
       webMedia: u.webMedia,
       mobileMedia: u.mobileMedia,
       vttMedia: u.vttMedia,
+      externalVideoIds: u.externalVideoIds || externalVideoIdsDefault,
     }));
 
     return {

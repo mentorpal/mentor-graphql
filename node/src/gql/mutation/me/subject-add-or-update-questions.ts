@@ -11,6 +11,7 @@ import {
   GraphQLList,
   GraphQLString,
 } from 'graphql';
+import { User } from '../../../models/User';
 
 import { Subject as SubjectModel } from '../../../models';
 import {
@@ -41,8 +42,12 @@ export const subjectAddOrUpdateQuestions = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { subject: string; questions: SubjectQuestionUpdateInput[] }
+    args: { subject: string; questions: SubjectQuestionUpdateInput[] },
+    context: { user: User }
   ): Promise<SubjectAddOrUpdateQuestionGQLType[]> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     return await SubjectModel.addOrUpdateQuestions(
       args.subject,
       args.questions

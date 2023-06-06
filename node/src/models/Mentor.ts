@@ -37,6 +37,7 @@ import UserQuestion, {
 } from './UserQuestion';
 import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
 import { Organization } from './Organization';
+import { externalVideoIdsDefault } from '../gql/mutation/api/update-answers';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -103,6 +104,7 @@ export interface Mentor extends Document {
   isDirty: boolean;
   isPrivate: boolean;
   isArchived: boolean;
+  isAdvanced: boolean;
   orgPermissions: OrgPermissionProps[];
   hasVirtualBackground: boolean;
   virtualBackgroundUrl: string;
@@ -175,6 +177,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     isDirty: { type: Boolean, default: true },
     isPrivate: { type: Boolean, default: false },
     isArchived: { type: Boolean, default: false },
+    isAdvanced: { type: Boolean, default: false },
     orgPermissions: { type: [OrgPermissionSchema], default: [] },
     hasVirtualBackground: { type: Boolean, default: false },
     virtualBackgroundUrl: { type: String, default: '' },
@@ -348,6 +351,9 @@ async function updateCreateAnswerDocumentAndUserQuestion(
         webMedia: importedAnswerDocumentForQuestion.webMedia,
         mobileMedia: importedAnswerDocumentForQuestion.mobileMedia,
         vttMedia: importedAnswerDocumentForQuestion.vttMedia,
+        externalVideoIds:
+          importedAnswerDocumentForQuestion.externalVideoIds ||
+          externalVideoIdsDefault,
         hasUntransferredMedia: true,
       },
       {
@@ -855,6 +861,7 @@ MentorSchema.statics.getAnswers = async function ({
         webMedia: undefined,
         mobileMedia: undefined,
         vttMedia: undefined,
+        externalVideoIds: externalVideoIdsDefault,
       }
     );
   });

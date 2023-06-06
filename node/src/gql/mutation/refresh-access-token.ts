@@ -39,6 +39,9 @@ export const refreshAccessToken = {
           errorMessage: 'No user in context',
         };
       }
+      if (context.user.isDisabled) {
+        throw new Error('Your account has been disabled');
+      }
       const userId = context.user._id;
       const user = await UserSchema.findByIdAndUpdate(
         userId,

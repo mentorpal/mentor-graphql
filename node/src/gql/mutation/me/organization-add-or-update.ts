@@ -80,6 +80,9 @@ export const addOrUpdateOrganization = {
     args: { id: string; organization: AddOrUpdateOrganizationInput },
     context: { user: User }
   ): Promise<Organization> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     const org = args.id ? await OrganizationModel.findById(args.id) : undefined;
     const id = org ? org.uuid : uuid();
     if (org) {

@@ -28,6 +28,11 @@ import {
   ExportedMentorInfoInputType,
 } from '../../query/mentor-export';
 import { UserQuestion } from '../../../models/UserQuestion';
+import { User } from '../../../models/User';
+import {
+  ExternalVideoIdsInputType,
+  IExternalVideoIds,
+} from '../api/update-answers';
 
 export interface MentorImportJson {
   id: string;
@@ -73,6 +78,7 @@ interface AnswerGQL {
   vttMedia?: AnswerMedia;
   hasUntransferredMedia: boolean;
   media: AnswerMedia[];
+  externalVideoIds: IExternalVideoIds;
 }
 
 export interface ReplacedMentorQuestionChanges {
@@ -111,6 +117,7 @@ export interface AnswerUpdateInput {
   webMedia: AnswerMediaProps;
   mobileMedia: AnswerMediaProps;
   vttMedia: AnswerMediaProps;
+  externalVideoIds: IExternalVideoIds;
 }
 
 export const ReplacedMentorQuestionChangesInputType =
@@ -142,6 +149,7 @@ export const AnswerUpdateInputType = new GraphQLInputObjectType({
     webMedia: { type: AnswerMediaUpdateInputType },
     mobileMedia: { type: AnswerMediaUpdateInputType },
     vttMedia: { type: AnswerMediaUpdateInputType },
+    externalVideoIds: { type: ExternalVideoIdsInputType },
   }),
 });
 
@@ -210,8 +218,12 @@ export const importMentor = {
       mentor: string;
       json: MentorImportJson;
       replacedMentorDataChanges: ReplacedMentorDataChanges;
-    }
+    },
+    context: { user: User }
   ): Promise<Mentor> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     return await MentorModel.import(
       args.mentor,
       args.json,

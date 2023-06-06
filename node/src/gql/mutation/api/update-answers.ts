@@ -23,6 +23,28 @@ import { Mentor } from '../../../models/Mentor';
 import { mediaNeedsTransfer } from '../../../utils/static-urls';
 import { AnswerMediaInputType } from './upload-answer';
 
+export const externalVideoIdsDefault: IExternalVideoIds = {
+  wistiaId: '',
+};
+
+export const ExternalVideoIdsObjectType = new GraphQLObjectType({
+  name: 'ExternalVideoIdsObjectType',
+  fields: {
+    wistiaId: { type: GraphQLString },
+  },
+});
+
+export const ExternalVideoIdsInputType = new GraphQLInputObjectType({
+  name: 'ExternalVideoIdsInputType',
+  fields: {
+    wistiaId: { type: GraphQLString },
+  },
+});
+
+export interface IExternalVideoIds {
+  wistiaId: string;
+}
+
 export const UploadAnswersType = new GraphQLInputObjectType({
   name: 'UploadAnswersType',
   fields: () => ({
@@ -32,6 +54,7 @@ export const UploadAnswersType = new GraphQLInputObjectType({
     vttMedia: { type: AnswerMediaInputType },
     hasEditedTranscript: { type: GraphQLBoolean },
     questionId: { type: GraphQLID },
+    externalVideoIds: { type: ExternalVideoIdsInputType },
   }),
 });
 
@@ -42,11 +65,15 @@ export interface UploadAnswers {
   vttMedia: AnswerMediaProps;
   hasEditedTranscript: boolean;
   questionId: string;
+  externalVideoIds: IExternalVideoIds;
 }
 
 interface BulkWriteAnswer {
   questionId: string;
-  updates: Record<string, string | boolean | AnswerMediaProps>;
+  updates: Record<
+    string,
+    string | boolean | AnswerMediaProps | IExternalVideoIds
+  >;
 }
 
 export const updateAnswers = {
@@ -98,12 +125,17 @@ export const updateAnswers = {
       const argVttMedia = inputAnswer.vttMedia;
 
       // any = Boolean, String, Answer
-      const updates: Record<string, string | boolean | AnswerMediaProps> = {
+      const updates: Record<
+        string,
+        string | boolean | AnswerMediaProps | IExternalVideoIds
+      > = {
         ...(argWebMedia ? { webMedia: argWebMedia } : {}),
         ...(argMobileMedia ? { mobileMedia: argMobileMedia } : {}),
         ...(argVttMedia ? { vttMedia: argVttMedia } : {}),
-        status: Status.NONE, // with partial updates we cant tell here
+        status: answer?.status || Status.NONE, // with partial updates we cant tell here
         hasEditedTranscript: hasEditedTranscript,
+        externalVideoIds:
+          inputAnswer.externalVideoIds || answer.externalVideoIds,
         transcript:
           inputAnswer.transcript != undefined
             ? inputAnswer.transcript

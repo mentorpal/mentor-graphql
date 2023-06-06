@@ -80,6 +80,9 @@ export const exportMentorQuery = `query ExportMentor($mentor: ID!) {
         url
         needsTransfer
       }
+      externalVideoIds{
+        wistiaId
+      }
     }
     userQuestions{
       _id
@@ -325,6 +328,9 @@ describe('export mentor', () => {
             url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
             needsTransfer: false,
           },
+          externalVideoIds: {
+            wistiaId: '',
+          },
         },
         {
           transcript: '[being still]',
@@ -345,6 +351,9 @@ describe('export mentor', () => {
             type: 'video',
             url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
             needsTransfer: false,
+          },
+          externalVideoIds: {
+            wistiaId: '5ffdf41a1ee2c62111111111-wistia-id',
           },
         },
       ],

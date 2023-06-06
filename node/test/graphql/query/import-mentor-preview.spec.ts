@@ -82,6 +82,9 @@ describe('import mentor preview', () => {
             tag: 'mobile',
             url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
           },
+          externalVideoIds: {
+            wistiaId: 'new-imported-id',
+          },
         },
         {
           transcript: 'new answer',
@@ -132,6 +135,9 @@ describe('import mentor preview', () => {
                   tag
                   url
                   needsTransfer
+                }
+                externalVideoIds{
+                  wistiaId
                 }
               }
               curData {
@@ -217,6 +223,9 @@ describe('import mentor preview', () => {
               url: 'https://mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
               needsTransfer: true,
             },
+            externalVideoIds: {
+              wistiaId: 'new-imported-id',
+            },
           },
           curData: {
             transcript: '[being still]',
@@ -231,6 +240,7 @@ describe('import mentor preview', () => {
             hasUntransferredMedia: false,
             webMedia: null,
             mobileMedia: null,
+            externalVideoIds: null,
           },
           curData: null,
           editType: 'CREATED',

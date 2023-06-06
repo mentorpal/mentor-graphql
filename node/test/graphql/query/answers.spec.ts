@@ -34,6 +34,9 @@ describe('answers', () => {
           edges {
             node {
               _id
+              externalVideoIds{
+                wistiaId
+              }
             }
           }
         }
@@ -45,21 +48,33 @@ describe('answers', () => {
         {
           node: {
             _id: '511111111111111111111174',
+            externalVideoIds: {
+              wistiaId: '',
+            },
           },
         },
         {
           node: {
             _id: '511111111111111111111114',
+            externalVideoIds: {
+              wistiaId: '',
+            },
           },
         },
         {
           node: {
             _id: '511111111111111111111113',
+            externalVideoIds: {
+              wistiaId: '',
+            },
           },
         },
         {
           node: {
             _id: '511111111111111111111112',
+            externalVideoIds: {
+              wistiaId: '5ffdf41a1ee2c62111111111-wistia-id',
+            },
           },
         },
       ],

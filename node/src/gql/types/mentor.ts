@@ -52,6 +52,7 @@ export const MentorType = new GraphQLObjectType({
     isDirty: { type: GraphQLBoolean },
     isPrivate: { type: GraphQLBoolean },
     isArchived: { type: GraphQLBoolean },
+    isAdvanced: { type: GraphQLBoolean },
     hasVirtualBackground: { type: GraphQLBoolean },
     virtualBackgroundUrl: {
       type: GraphQLString,

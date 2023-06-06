@@ -20,6 +20,9 @@ export const updateUserPermissions = {
     args: { userId: string; permissionLevel: string },
     context: { user: User }
   ): Promise<User> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     if (!Object.values(UserRole).includes(args.permissionLevel)) {
       throw new Error('invalid permissionLevel');
     }

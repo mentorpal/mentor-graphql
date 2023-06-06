@@ -20,6 +20,11 @@ import {
 import { AnswerMediaProps, Status } from '../../../models/Answer';
 import { Mentor } from '../../../models/Mentor';
 import { mediaNeedsTransfer } from '../../../utils/static-urls';
+import {
+  ExternalVideoIdsInputType,
+  IExternalVideoIds,
+  externalVideoIdsDefault,
+} from './update-answers';
 
 export interface UploadAnswer {
   transcript: string;
@@ -27,6 +32,7 @@ export interface UploadAnswer {
   mobileMedia: AnswerMediaProps;
   vttMedia: AnswerMediaProps;
   hasEditedTranscript: boolean;
+  externalVideoIds: IExternalVideoIds;
 }
 
 export const AnswerMediaInputType = new GraphQLInputObjectType({
@@ -48,6 +54,7 @@ export const UploadAnswerType = new GraphQLInputObjectType({
     mobileMedia: { type: AnswerMediaInputType },
     vttMedia: { type: AnswerMediaInputType },
     hasEditedTranscript: { type: GraphQLBoolean },
+    externalVideoIds: { type: ExternalVideoIdsInputType },
   }),
 });
 
@@ -96,11 +103,14 @@ export const answerUpload = {
         ? answer.hasEditedTranscript
         : false;
 
-    // any = Boolean, String, Answer
-    const updates: Record<string, string | boolean | AnswerMediaProps> = {
+    const updates: Record<
+      string,
+      string | boolean | AnswerMediaProps | IExternalVideoIds
+    > = {
       ...args.answer,
       status: Status.NONE, // with partial updates we cant tell here
       hasEditedTranscript: hasEditedTranscript,
+      externalVideoIds: args.answer.externalVideoIds || externalVideoIdsDefault,
       transcript:
         args.answer.transcript != undefined
           ? args.answer.transcript

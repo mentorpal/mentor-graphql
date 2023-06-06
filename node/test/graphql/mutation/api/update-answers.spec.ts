@@ -48,18 +48,21 @@ describe('uploadAnswers', () => {
           answers: [
             {
               questionId: '511111111111111111111111',
-              transcript:
-                "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+              transcript: 'Test Transcript: update-answers',
+              externalVideoIds: {
+                wistiaId: '123',
+              },
             },
             {
               questionId: '511111111111111111111112',
-              transcript:
-                "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+              transcript: 'Test Transcript: update-answers',
+              externalVideoIds: {
+                wistiaId: '321',
+              },
             },
             {
               questionId: '511111111111111111111117',
-              transcript:
-                "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+              transcript: 'Test Transcript: update-answers',
             },
           ],
         },
@@ -82,9 +85,44 @@ describe('uploadAnswers', () => {
               mobileMedia{
                 url
               }
+              externalVideoIds{
+                wistiaId
+              }
             }
           }
       }`,
       });
+    expect(r2.status).to.equal(200);
+    const filteredAnswers = r2.body.data.mentor.answers.filter(
+      (answer: any) => answer.transcript === 'Test Transcript: update-answers'
+    );
+    expect(filteredAnswers).to.eql([
+      {
+        question: { _id: '511111111111111111111117' },
+        transcript: 'Test Transcript: update-answers',
+        webMedia: {
+          url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/web.mp4',
+        },
+        mobileMedia: {
+          url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111117/mobile.mp4',
+        },
+        externalVideoIds: {
+          wistiaId: '',
+        },
+      },
+      {
+        question: { _id: '511111111111111111111111' },
+        transcript: 'Test Transcript: update-answers',
+        webMedia: {
+          url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+        },
+        mobileMedia: {
+          url: 'https://static.mentorpal.org/videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+        },
+        externalVideoIds: {
+          wistiaId: '123',
+        },
+      },
+    ]);
   });
 });

@@ -43,6 +43,9 @@ export const updateMentorPrivacy = {
     },
     context: { user: User }
   ): Promise<boolean> => {
+    if (context.user?.isDisabled) {
+      throw new Error('Your account has been disabled');
+    }
     const mentor = await MentorModel.findById(args.mentorId);
     if (!mentor) {
       throw new Error('invalid mentor id given');

@@ -35,6 +35,7 @@ import { QuestionUpdateInput } from '../mutation/me/question-update';
 import { isId } from '../mutation/me/helpers';
 import { User } from '../../models/User';
 import { canViewMentor } from '../../utils/check-permissions';
+import { ExternalVideoIdsObjectType } from '../mutation/api/update-answers';
 
 enum EditType {
   NONE = 'NONE',
@@ -123,6 +124,7 @@ export const AnswerPreviewType = new GraphQLObjectType({
     webMedia: { type: AnswerMediaPreviewType },
     mobileMedia: { type: AnswerMediaPreviewType },
     vttMedia: { type: AnswerMediaPreviewType },
+    externalVideoIds: { type: ExternalVideoIdsObjectType },
   }),
 });
 export const AnswerMediaPreviewType = new GraphQLObjectType({
