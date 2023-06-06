@@ -4,8 +4,8 @@ env:
   variables:
     API_URL: 'https://api-qa.mentorpal.org/graphql'
   parameter-store:
-    SECRET_HEADER_VALUE: ${ssm:/mentorpal/v2/shared/secret_header_value, ''}
-    SECRET_HEADER_NAME: ${ssm:/mentorpal/v2/shared/secret_header_name, ''}
+    SECRET_HEADER_VALUE: "/mentorpal/v2/shared/secret_header_value"
+    SECRET_HEADER_NAME: "/mentorpal/v2/shared/secret_header_name"
 
 phases:
   install:
