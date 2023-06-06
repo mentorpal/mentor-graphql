@@ -135,7 +135,7 @@ export const updateAnswers = {
         status: answer?.status || Status.NONE, // with partial updates we cant tell here
         hasEditedTranscript: hasEditedTranscript,
         externalVideoIds:
-          inputAnswer.externalVideoIds || externalVideoIdsDefault,
+          inputAnswer.externalVideoIds || answer.externalVideoIds,
         transcript:
           inputAnswer.transcript != undefined
             ? inputAnswer.transcript
