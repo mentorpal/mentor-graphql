@@ -110,7 +110,6 @@ export const answerUpload = {
       ...args.answer,
       status: Status.NONE, // with partial updates we cant tell here
       hasEditedTranscript: hasEditedTranscript,
-      externalVideoIds: args.answer.externalVideoIds || externalVideoIdsDefault,
       transcript:
         args.answer.transcript != undefined
           ? args.answer.transcript
@@ -118,6 +117,9 @@ export const answerUpload = {
           ? answer.transcript
           : '',
     };
+    if (args.answer.externalVideoIds) {
+      updates['externalVideoIds'] = args.answer.externalVideoIds;
+    }
     if (argWebMedia) {
       argWebMedia.needsTransfer = mediaNeedsTransfer(argWebMedia.url);
       updates['webMedia'] = argWebMedia;
