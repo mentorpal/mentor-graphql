@@ -107,6 +107,7 @@ module.exports = {
       hasVirtualBackground: true,
       virtualBackgroundUrl: 'https://www.fakeurl.com',
       isAdvanced: true,
+      isDirty: false,
       recordQueue: [
         ObjectId('511111111111111111111112'),
         ObjectId('511111111111111111111111'),
