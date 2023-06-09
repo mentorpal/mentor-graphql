@@ -54,6 +54,7 @@ export interface MentorClientData {
 export interface AnswerClientData {
   _id: string;
   name: string;
+  utteranceType: string;
   transcript: string;
   webMedia: AnswerMedia;
   mobileMedia: AnswerMedia;
@@ -92,6 +93,7 @@ export const AnswerClientDataType = new GraphQLObjectType({
     webMedia: { type: AnswerMediaType },
     mobileMedia: { type: AnswerMediaType },
     vttMedia: { type: AnswerMediaType },
+    utteranceType: { type: GraphQLString },
     externalVideoIds: { type: ExternalVideoIdsObjectType },
   }),
 });
@@ -275,7 +277,7 @@ export const mentorData = {
         mentor
       )
     );
-    const utterances = utteranceAnswers.map((u) => ({
+    const utterances: AnswerClientData[] = utteranceAnswers.map((u) => ({
       _id: u.id,
       name: utteranceQuestions.find((q) => `${q.id}` === `${u.question}`)?.name,
       transcript: u.transcript,
@@ -283,6 +285,9 @@ export const mentorData = {
       mobileMedia: u.mobileMedia,
       vttMedia: u.vttMedia,
       externalVideoIds: u.externalVideoIds || externalVideoIdsDefault,
+      utteranceType:
+        utteranceQuestions.find((q) => `${q.id}` === `${u.question}`)
+          ?.subType || '',
     }));
 
     return {

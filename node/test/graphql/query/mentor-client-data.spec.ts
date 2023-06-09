@@ -62,6 +62,7 @@ describe('mentorClientData', () => {
               _id
               name
               transcript
+              utteranceType
               webMedia {
                 type
                 tag
@@ -77,7 +78,7 @@ describe('mentorClientData', () => {
               }
             }
           }
-      }`,
+        }`,
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorClientData).to.eql({
@@ -93,7 +94,7 @@ describe('mentorClientData', () => {
           _id: '511111111111111111111112',
           name: 'idle',
           transcript: '[being still]',
-
+          utteranceType: 'cant_answer',
           webMedia: {
             type: 'video',
             tag: 'web',
