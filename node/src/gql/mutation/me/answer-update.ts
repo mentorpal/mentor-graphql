@@ -62,6 +62,17 @@ export const updateAnswer = {
       throw new Error('you do not have permission to edit this mentor');
     }
 
+    await MentorModel.findOneAndUpdate(
+      {
+        _id: mentor._id,
+      },
+      {
+        $set: {
+          isDirty: true,
+        },
+      }
+    );
+
     let answer = await AnswerModel.findOne({
       mentor: mentor._id,
       question: args.questionId,
