@@ -20,6 +20,7 @@ import {
 import { Status } from '../../../models/Answer';
 import { User } from '../../../models/User';
 import { canEditMentor } from '../../../utils/check-permissions';
+import { MentorDirtyReason } from '../../../models/Mentor';
 
 export interface AnswerUpdateInput {
   transcript: string;
@@ -69,6 +70,7 @@ export const updateAnswer = {
       {
         $set: {
           isDirty: true,
+          dirtyReason: MentorDirtyReason.ANSWERS_ADDED,
         },
       }
     );

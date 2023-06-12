@@ -18,7 +18,7 @@ import {
   Question as QuestionModel,
 } from '../../../models';
 import { AnswerMediaProps, Status } from '../../../models/Answer';
-import { Mentor } from '../../../models/Mentor';
+import { Mentor, MentorDirtyReason } from '../../../models/Mentor';
 import { mediaNeedsTransfer } from '../../../utils/static-urls';
 import {
   ExternalVideoIdsInputType,
@@ -83,6 +83,7 @@ export const answerUpload = {
       {
         $set: {
           isDirty: true,
+          dirtyReason: MentorDirtyReason.ANSWERS_ADDED,
         },
       }
     );

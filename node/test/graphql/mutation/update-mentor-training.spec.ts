@@ -9,6 +9,7 @@ import { expect } from 'chai';
 import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
+import { MentorDirtyReason } from '../../constants';
 
 describe('updateMentorTraining', () => {
   let app: Express;
@@ -46,6 +47,7 @@ describe('updateMentorTraining', () => {
           updateMentorTraining(id: "5ffdf41a1ee2c62111111111") {
             lastTrainedAt
             isDirty
+            dirtyReason
           }
         }`,
       });
@@ -57,5 +59,8 @@ describe('updateMentorTraining', () => {
       new Date(response.body.data.updateMentorTraining.lastTrainedAt)
     ).to.be.lessThan(new Date(Date.now() + 1000));
     expect(response.body.data.updateMentorTraining.isDirty).to.equal(false);
+    expect(response.body.data.updateMentorTraining.dirtyReason).to.equal(
+      MentorDirtyReason.NONE
+    );
   });
 });
