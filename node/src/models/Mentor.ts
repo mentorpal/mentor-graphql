@@ -108,6 +108,7 @@ export interface Mentor extends Document {
   lastTrainedAt: Date;
   lastPreviewedAt: Date;
   isDirty: boolean;
+  trainId: string;
   dirtyReason: MentorDirtyReason;
   isPrivate: boolean;
   isArchived: boolean;
@@ -193,6 +194,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
       enum: [MentorType.VIDEO, MentorType.CHAT],
       default: MentorType.VIDEO,
     },
+    trainId: { type: String, default: '' },
     dirtyReason: {
       type: String,
       enum: MentorDirtyReason,
