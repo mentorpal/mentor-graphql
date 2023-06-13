@@ -50,6 +50,8 @@ export const MentorType = new GraphQLObjectType({
     lastTrainedAt: { type: DateType },
     lastPreviewedAt: { type: DateType },
     isDirty: { type: GraphQLBoolean },
+    dirtyReason: { type: GraphQLString },
+    trainId: { type: GraphQLString },
     isPrivate: { type: GraphQLBoolean },
     isArchived: { type: GraphQLBoolean },
     isAdvanced: { type: GraphQLBoolean },

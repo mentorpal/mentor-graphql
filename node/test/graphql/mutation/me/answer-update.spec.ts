@@ -10,6 +10,7 @@ import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 import { getToken } from 'test/helpers';
+import { MentorDirtyReason } from '../../../constants';
 
 describe('updateAnswer', () => {
   let app: Express;
@@ -173,6 +174,7 @@ describe('updateAnswer', () => {
         query: `query {
           mentor(id: "5ffdf41a1ee2c62111111111") {
             isDirty
+            dirtyReason
             answers {
               transcript
               status
@@ -185,6 +187,9 @@ describe('updateAnswer', () => {
       });
     expect(r2.status).to.equal(200);
     expect(r2.body.data.mentor.isDirty).to.eql(true);
+    expect(r2.body.data.mentor.dirtyReason).to.eql(
+      MentorDirtyReason.ANSWERS_ADDED
+    );
     const updatedAnswer = r2.body.data.mentor.answers.find(
       (a: any) => a.question._id === questionId
     );

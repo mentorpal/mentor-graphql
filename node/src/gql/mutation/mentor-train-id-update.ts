@@ -4,32 +4,50 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType, GraphQLNonNull, GraphQLID } from 'graphql';
-import { MentorType } from '../types/mentor';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLBoolean,
+  GraphQLNonNull,
+  GraphQLInputObjectType,
+  GraphQLID,
+} from 'graphql';
 import { Mentor as MentorModel } from '../../models';
-import { Mentor, MentorDirtyReason } from '../../models/Mentor';
 
-export const updateMentorTraining = {
-  type: MentorType,
+export const updateMentorTrainIdType = new GraphQLInputObjectType({
+  name: 'UpdateMentorTrainIdType',
+  fields: () => ({
+    trainId: { type: GraphQLString },
+  }),
+});
+
+export const updateMentorTrainId = {
+  type: GraphQLBoolean,
   args: {
-    id: { type: GraphQLNonNull(GraphQLID) },
+    trainId: { type: GraphQLNonNull(GraphQLString) },
+    mentorId: { type: GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { id: string }
-  ): Promise<Mentor> => {
-    return await MentorModel.findByIdAndUpdate(
-      args.id,
+    args: { trainId: string; mentorId: string }
+  ): Promise<boolean> => {
+    const mentor = await MentorModel.findById(args.mentorId);
+    if (!mentor) {
+      throw new Error('invalid mentor');
+    }
+    const updated = await MentorModel.findByIdAndUpdate(
+      mentor._id,
       {
-        lastTrainedAt: new Date(),
-        isDirty: false,
-        dirtyReason: MentorDirtyReason.NONE,
+        trainId: args.trainId,
       },
       {
         new: true,
+        upsert: true,
       }
     );
+
+    return Boolean(updated);
   },
 };
 
-export default updateMentorTraining;
+export default updateMentorTrainId;

@@ -11,7 +11,7 @@ import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 import { MentorDirtyReason } from '../../constants';
 
-describe('updateMentorTraining', () => {
+describe('updateMentorTrainId', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -25,42 +25,45 @@ describe('updateMentorTraining', () => {
     await mongoUnit.drop();
   });
 
-  it(`returns an error if no mentor id`, async () => {
+  it(`returns an error if no params provided`, async () => {
     const response = await request(app)
       .post('/graphql')
       .send({
         query: `mutation {
-        updateMentorTraining {
-          lastTrainedAt
-        }
+          updateMentorTrainId {
+            lastTrainedAt
+          }
       }`,
       });
     expect(response.status).to.equal(400);
   });
 
-  it(`updates lastTrainedAt and isDirty`, async () => {
+  it(`updates train id for mentor`, async () => {
     const date = new Date(Date.now() - 1000);
     const response = await request(app)
       .post('/graphql')
       .send({
         query: `mutation {
-          updateMentorTraining(id: "5ffdf41a1ee2c62111111111") {
-            lastTrainedAt
-            isDirty
-            dirtyReason
-          }
+          updateMentorTrainId(mentorId: "5ffdf41a1ee2c62111111111", trainId:"train-id-123")
         }`,
       });
+    console.log(JSON.stringify(response.body));
     expect(response.status).to.equal(200);
-    expect(
-      new Date(response.body.data.updateMentorTraining.lastTrainedAt)
-    ).to.be.greaterThan(date);
-    expect(
-      new Date(response.body.data.updateMentorTraining.lastTrainedAt)
-    ).to.be.lessThan(new Date(Date.now() + 1000));
-    expect(response.body.data.updateMentorTraining.isDirty).to.equal(false);
-    expect(response.body.data.updateMentorTraining.dirtyReason).to.equal(
-      MentorDirtyReason.NONE
-    );
+    expect(response.body.data.updateMentorTrainId).to.eql(true);
+
+    const response2 = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query Mentor($id: ID!) {
+        mentor(id: $id) {
+          _id
+          trainId
+        }
+    }`,
+        variables: { id: '5ffdf41a1ee2c62111111111' },
+      });
+
+    expect(response2.body.data.mentor.trainId).to.eql('train-id-123');
+    expect(response2.body.data.mentor._id).to.eql('5ffdf41a1ee2c62111111111');
   });
 });

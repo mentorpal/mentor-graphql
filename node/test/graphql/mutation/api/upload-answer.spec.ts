@@ -15,6 +15,7 @@ import { expect } from 'chai';
 import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
+import { MentorDirtyReason } from '../../../constants';
 
 const answerMutation = `mutation UploadAnswer($mentorId: ID!, $questionId: ID!, $answer: UploadAnswerType!) {
   api {
@@ -204,6 +205,42 @@ describe('uploadAnswer', () => {
         wistiaId: 'test-wistia-id',
       },
     });
+  });
+
+  it('sets mentor to dirty', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .set('mentor-graphql-req', 'true')
+      .set('Authorization', `bearer ${process.env.API_SECRET}`)
+      .send({
+        query: answerMutation,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111111',
+          questionId: '511111111111111111111112',
+          answer: {
+            externalVideoIds: {
+              wistiaId: 'test-wistia-id',
+            },
+          },
+        },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.api.uploadAnswer).to.eql(true);
+    const r2 = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query { 
+          mentor(id: "5ffdf41a1ee2c62111111111") {
+            isDirty
+            dirtyReason
+          }
+      }`,
+      });
+    expect(r2.status).to.equal(200);
+    expect(r2.body.data.mentor.isDirty).to.eql(true);
+    expect(r2.body.data.mentor.dirtyReason).to.eql(
+      MentorDirtyReason.ANSWERS_ADDED
+    );
   });
 
   it('updates correct media', async () => {
