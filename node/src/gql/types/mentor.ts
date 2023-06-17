@@ -15,6 +15,7 @@ import {
   Mentor as MentorModel,
   Organization as OrganizationModel,
   Question as QuestionModel,
+  MentorTrainStatus as MentorTrainStatusModel,
 } from '../../models';
 import { Status } from '../../models/Answer';
 import { Mentor } from '../../models/Mentor';
@@ -24,6 +25,7 @@ import AnswerType from './answer';
 import SubjectType, { SubjectQuestionType, TopicType } from './subject';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 import { QuestionType as QuestionGQLType } from './question';
+import { TrainStatus } from 'models/MentorTrainTask';
 
 export const OrgPermissionType = new GraphQLObjectType({
   name: 'OrgPermissionType',
@@ -51,7 +53,6 @@ export const MentorType = new GraphQLObjectType({
     lastPreviewedAt: { type: DateType },
     isDirty: { type: GraphQLBoolean },
     dirtyReason: { type: GraphQLString },
-    trainId: { type: GraphQLString },
     isPrivate: { type: GraphQLBoolean },
     isArchived: { type: GraphQLBoolean },
     isAdvanced: { type: GraphQLBoolean },
@@ -81,6 +82,23 @@ export const MentorType = new GraphQLObjectType({
           viewPermission: op.viewPermission,
           editPermission: op.editPermission,
         }));
+      },
+    },
+    lastTrainStatus: {
+      type: GraphQLString,
+      resolve: async (mentor: Mentor) => {
+        console.log('in last train status');
+        const mostRecentTrainTask = await MentorTrainStatusModel.findOne(
+          { mentor: mentor._id },
+          {},
+          { sort: { createdAt: -1 } }
+        );
+        console.log(mentor._id);
+        console.log(mostRecentTrainTask);
+        if (!mostRecentTrainTask) {
+          return TrainStatus.NONE;
+        }
+        return mostRecentTrainTask.status;
       },
     },
     keywords: { type: GraphQLList(GraphQLString) },

@@ -27,6 +27,8 @@ export { default as UserQuestion } from './UserQuestion';
 import RefreshToken from './RefreshToken';
 export { default as RefreshToken } from './RefreshToken';
 import ImportTask from './ImportTask';
+import MentorTrainStatus from './MentorTrainTask';
+export { default as MentorTrainStatus } from './MentorTrainTask';
 export { default as ImportTask } from './ImportTask';
 
 export default {
@@ -42,4 +44,5 @@ export default {
   UserQuestion,
   RefreshToken,
   ImportTask,
+  MentorTrainStatus,
 };

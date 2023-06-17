@@ -9,3 +9,11 @@ export enum MentorDirtyReason {
   ANSWERS_ADDED = 'ANSWERS_ADDED',
   NONE = 'NONE',
 }
+
+export enum TrainStatus {
+  NONE = 'NONE',
+  FAILURE = 'FAILURE',
+  SUCCESS = 'SUCCESS',
+  PENDING = 'PENDING',
+  STARTED = 'STARTED',
+}

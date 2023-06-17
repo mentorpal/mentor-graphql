@@ -5,9 +5,37 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose from 'mongoose';
+import { TrainStatus } from '../../constants';
 const { ObjectId } = mongoose.Types;
 
 module.exports = {
+  mentortraintasks: [
+    {
+      _id: ObjectId('5ffdf1231ee2c62320b49ea1'),
+      mentor: ObjectId('5ffdf41a1ee2c62111111119'),
+      status: TrainStatus.SUCCESS,
+      createdAt: '2000-10-12T20:49:41.599+00:00',
+    },
+    {
+      _id: ObjectId('5ffdf1241ee2c62320b49ea1'),
+      mentor: ObjectId('5ffdf41a1ee2c62111111119'),
+      status: TrainStatus.PENDING,
+      createdAt: '2023-05-12T20:49:41.599+00:00',
+    },
+    {
+      _id: ObjectId('5ffdf1251ee2c62320b49ea1'),
+      mentor: ObjectId('5ffdf41a1ee2c62111111110'),
+      status: TrainStatus.SUCCESS,
+      createdAt: '2000-10-12T20:49:41.599+00:00',
+    },
+    {
+      _id: ObjectId('5ffdf1261ee2c62320b49ea1'),
+      mentor: ObjectId('5ffdf41a1ee2c62111111110'),
+      status: TrainStatus.FAILURE,
+      createdAt: '2023-05-12T20:49:41.599+00:00',
+    },
+  ],
+
   users: [
     {
       _id: ObjectId('5ffdf41a1ee2c62320b49ea1'),
