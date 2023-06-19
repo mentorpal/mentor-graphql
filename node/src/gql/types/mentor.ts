@@ -87,14 +87,11 @@ export const MentorType = new GraphQLObjectType({
     lastTrainStatus: {
       type: GraphQLString,
       resolve: async (mentor: Mentor) => {
-        console.log('in last train status');
         const mostRecentTrainTask = await MentorTrainStatusModel.findOne(
           { mentor: mentor._id },
           {},
           { sort: { createdAt: -1 } }
         );
-        console.log(mentor._id);
-        console.log(mostRecentTrainTask);
         if (!mostRecentTrainTask) {
           return TrainStatus.NONE;
         }

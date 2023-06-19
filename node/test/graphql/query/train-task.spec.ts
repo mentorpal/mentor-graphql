@@ -13,7 +13,7 @@ import request from 'supertest';
 import { getToken } from '../../helpers';
 import { TrainStatus } from '../../constants';
 
-describe('mentor train task', () => {
+describe('train task', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -27,43 +27,48 @@ describe('mentor train task', () => {
     await mongoUnit.drop();
   });
 
-  it('rejects with no access token', () => {});
-
-  it(`can create a new mentor train task`, async () => {
-    const token = getToken('5ffdf41a1ee2c62320b49ea6'); // admin
+  it('rejects with no access token', async () => {
     const response = await request(app)
       .post('/graphql')
-      .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation TrainTaskAdd($taskDocId: ID!, $mentorId: ID!, $status: String!) {
-          me{
-            mentorTrainTaskAddOrUpdate(taskDocId: $taskDocId, mentorId: $mentorId, status: $status) {
+        query: `query TrainTask($taskId: ID!) {
+            trainTask(taskId: $taskId) {
               _id
               mentor
               status
             }
-          }
       }`,
-        variables: {
-          mentorId: '5ffdf41a1ee2c62111111119',
-          taskDocId: '5ffdf1241ee2c62320b49124',
-          status: TrainStatus.PENDING,
-        },
+        variables: { taskId: '5ffdf1241ee2c62320b49ea1' },
       });
-    console.log(JSON.stringify(response.body));
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.mentorTrainTaskAddOrUpdate).to.eql({
-      _id: '5ffdf1241ee2c62320b49124',
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'Only authenticated users'
+    );
+  });
+
+  it(`can query train task by id`, async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea6');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `query TrainTask($taskId: ID!) {
+          trainTask(taskId: $taskId) {
+            _id
+            mentor
+            status
+          }
+    }`,
+        variables: { taskId: '5ffdf1241ee2c62320b49ea1' },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.trainTask).to.eql({
+      _id: '5ffdf1241ee2c62320b49ea1',
       mentor: '5ffdf41a1ee2c62111111119',
       status: TrainStatus.PENDING,
     });
   });
-
-  it(`can query train task by id`, async () => {});
-
-  it('can update existing train task', () => {});
-
-  it(`new train tasks take precedence in mentor status checks`, async () => {});
 
   it(`can get most recent train status for a mentor`, async () => {
     const response = await request(app)
