@@ -39,11 +39,11 @@ export const addOrUpdateTrainTask = {
     if (!(await canEditMentor(mentor, context.user))) {
       throw new Error('you do not have permission to edit this mentor');
     }
+    const docId = idOrNew(taskDocId);
     return await MentorTrainModel.findOneAndUpdate(
-      { _id: idOrNew(taskDocId) },
+      { _id: docId },
       {
         $set: {
-          _id: taskDocId,
           mentor: mentorId,
           status: status,
         },

@@ -11,7 +11,10 @@ import {
   MentorTrainStatus as TrainTaskModel,
 } from '../../models';
 import { canEditMentor } from '../../utils/check-permissions';
-import { MentorTrainTask, MentorTrainTaskType } from 'models/MentorTrainTask';
+import {
+  MentorTrainTask,
+  MentorTrainTaskType,
+} from '../../models/MentorTrainTask';
 
 export const trainTask = {
   type: MentorTrainTaskType,

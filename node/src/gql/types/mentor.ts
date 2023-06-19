@@ -25,7 +25,7 @@ import AnswerType from './answer';
 import SubjectType, { SubjectQuestionType, TopicType } from './subject';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 import { QuestionType as QuestionGQLType } from './question';
-import { TrainStatus } from 'models/MentorTrainTask';
+import { TrainStatus } from '../../models/MentorTrainTask';
 
 export const OrgPermissionType = new GraphQLObjectType({
   name: 'OrgPermissionType',
