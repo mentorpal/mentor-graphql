@@ -42,7 +42,7 @@ export const MentorTrainTaskSchema = new Schema<
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
 
-MentorTrainTaskSchema.index({ mentor: -1 }, { unique: true });
+MentorTrainTaskSchema.index({ _id: -1 });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MentorTrainTaskModel extends Model<MentorTrainTask> {}
