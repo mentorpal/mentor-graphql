@@ -16,7 +16,6 @@ import userQuestionSetFeedback from './userQuestion-setFeedback';
 import userQuestionSetAnswer from './userQuestion-setAnswer';
 import mentorPreviewed from './mentor-previewed';
 import refreshAccessToken from './refresh-access-token';
-import updateMentorTrainId from './mentor-train-id-update';
 
 export default new GraphQLObjectType({
   name: 'Mutation',
@@ -32,6 +31,5 @@ export default new GraphQLObjectType({
     userQuestionSetAnswer,
     mentorPreviewed,
     refreshAccessToken,
-    updateMentorTrainId,
   },
 });

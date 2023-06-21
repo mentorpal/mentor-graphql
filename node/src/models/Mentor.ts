@@ -38,6 +38,7 @@ import UserQuestion, {
 import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
 import { Organization } from './Organization';
 import { externalVideoIdsDefault } from '../gql/mutation/api/update-answers';
+import { TrainStatus } from './MentorTrainTask';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -108,8 +109,8 @@ export interface Mentor extends Document {
   lastTrainedAt: Date;
   lastPreviewedAt: Date;
   isDirty: boolean;
-  trainId: string;
   dirtyReason: MentorDirtyReason;
+  lastTrainStatus: TrainStatus;
   isPrivate: boolean;
   isArchived: boolean;
   isAdvanced: boolean;
@@ -187,6 +188,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     isArchived: { type: Boolean, default: false },
     isAdvanced: { type: Boolean, default: false },
     orgPermissions: { type: [OrgPermissionSchema], default: [] },
+    lastTrainStatus: { type: String, default: TrainStatus.NONE },
     hasVirtualBackground: { type: Boolean, default: false },
     virtualBackgroundUrl: { type: String, default: '' },
     mentorType: {
@@ -194,7 +196,6 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
       enum: [MentorType.VIDEO, MentorType.CHAT],
       default: MentorType.VIDEO,
     },
-    trainId: { type: String, default: '' },
     dirtyReason: {
       type: String,
       enum: MentorDirtyReason,

@@ -5,49 +5,55 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import {
-  GraphQLString,
   GraphQLObjectType,
-  GraphQLBoolean,
   GraphQLNonNull,
-  GraphQLInputObjectType,
   GraphQLID,
+  GraphQLString,
 } from 'graphql';
-import { Mentor as MentorModel } from '../../models';
+import MentorTrainModel, {
+  MentorTrainTaskType,
+} from '../../../models/MentorTrainTask';
+import MentorModel from '../../../models/Mentor';
+import { User } from '../../../models/User';
+import { canEditMentor } from '../../../utils/check-permissions';
+import { idOrNew } from './helpers';
 
-export const updateMentorTrainIdType = new GraphQLInputObjectType({
-  name: 'UpdateMentorTrainIdType',
-  fields: () => ({
-    trainId: { type: GraphQLString },
-  }),
-});
-
-export const updateMentorTrainId = {
-  type: GraphQLBoolean,
+export const addOrUpdateTrainTask = {
+  type: MentorTrainTaskType,
   args: {
-    trainId: { type: GraphQLNonNull(GraphQLString) },
+    taskDocId: { type: GraphQLNonNull(GraphQLID) },
     mentorId: { type: GraphQLNonNull(GraphQLID) },
+    status: { type: GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { trainId: string; mentorId: string }
-  ): Promise<boolean> => {
-    const mentor = await MentorModel.findById(args.mentorId);
+    args: { taskDocId: string; mentorId: string; status: string },
+    context: { user: User }
+  ): Promise<string> => {
+    const { taskDocId, mentorId, status } = args;
+
+    const mentor = await MentorModel.findOne({ _id: mentorId });
     if (!mentor) {
-      throw new Error('invalid mentor');
+      throw new Error(`No mentor with id ${mentorId}`);
     }
-    const updated = await MentorModel.findByIdAndUpdate(
-      mentor._id,
+    if (!(await canEditMentor(mentor, context.user))) {
+      throw new Error('you do not have permission to edit this mentors');
+    }
+    const docId = idOrNew(taskDocId);
+    return await MentorTrainModel.findOneAndUpdate(
+      { _id: docId },
       {
-        trainId: args.trainId,
+        $set: {
+          mentor: mentorId,
+          status: status,
+        },
       },
       {
         new: true,
         upsert: true,
       }
     );
-
-    return Boolean(updated);
   },
 };
 
-export default updateMentorTrainId;
+export default addOrUpdateTrainTask;
