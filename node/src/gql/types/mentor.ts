@@ -10,15 +10,17 @@ import {
   GraphQLList,
   GraphQLID,
   GraphQLBoolean,
+  GraphQLInt,
 } from 'graphql';
 import {
   Mentor as MentorModel,
   Organization as OrganizationModel,
   Question as QuestionModel,
   MentorTrainStatus as MentorTrainStatusModel,
+  Answer as AnswerModel,
 } from '../../models';
 import { Status } from '../../models/Answer';
-import { Mentor } from '../../models/Mentor';
+import { Mentor, isAnswerComplete } from '../../models/Mentor';
 import { QuestionType } from '../../models/Question';
 import DateType from './date';
 import AnswerType from './answer';
@@ -52,6 +54,26 @@ export const MentorType = new GraphQLObjectType({
     lastTrainedAt: { type: DateType },
     lastPreviewedAt: { type: DateType },
     isDirty: { type: GraphQLBoolean },
+    numAnswersComplete: {
+      type: GraphQLInt,
+      resolve: async function (mentor: Mentor) {
+        const mentorAnswers = await AnswerModel.find({ mentor: mentor._id });
+        const questionIds: string[] = mentorAnswers.map(
+          (answer) => answer.question
+        );
+        const mentorQuestions = await QuestionModel.find({
+          _id: { $in: questionIds },
+        });
+        const completeAnswers = mentorAnswers.filter((answer) =>
+          isAnswerComplete(
+            answer,
+            mentorQuestions.find((q) => answer.question == q._id),
+            mentor
+          )
+        );
+        return completeAnswers.length;
+      },
+    },
     dirtyReason: { type: GraphQLString },
     isPrivate: { type: GraphQLBoolean },
     isArchived: { type: GraphQLBoolean },

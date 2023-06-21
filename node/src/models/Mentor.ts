@@ -102,6 +102,7 @@ export interface Mentor extends Document {
   mentorType: string;
   thumbnail: string;
   allowContact: boolean;
+  numAnswersComplete: number;
   defaultSubject: Subject['_id'];
   subjects: Subject['_id'][];
   keywords: string[];
@@ -178,6 +179,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
       type: Schema.Types.ObjectId,
       ref: 'Subject',
     },
+    numAnswersComplete: { type: Number, default: 0 },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
     keywords: { type: [String] },
     recordQueue: { type: [{ type: Schema.Types.ObjectId, ref: 'Question' }] },
