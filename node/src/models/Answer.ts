@@ -20,6 +20,7 @@ export enum Status {
   NONE = 'NONE',
   INCOMPLETE = 'INCOMPLETE',
   COMPLETE = 'COMPLETE',
+  SKIP = 'SKIP',
 }
 
 export interface AnswerMediaProps {
@@ -72,7 +73,7 @@ export const AnswerSchema = new Schema<Answer, AnswerModel>(
     transcript: { type: String },
     status: {
       type: String,
-      enum: [Status.NONE, Status.INCOMPLETE, Status.COMPLETE],
+      enum: Status,
       default: Status.NONE,
     },
     webMedia: { type: AnswerMediaSchema },
