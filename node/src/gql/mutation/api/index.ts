@@ -20,6 +20,7 @@ import mentorVbgUpdate from './mentor-vbg-update';
 import orgFooterUpdate from './org-footer-update';
 import orgHeaderUpdate from './org-header-update';
 import updateAnswers from './update-answers';
+import mentorVttUpdate from './mentor-vtt-update';
 
 export const Api: GraphQLObjectType = new GraphQLObjectType({
   name: 'ApiMutation',
@@ -38,6 +39,7 @@ export const Api: GraphQLObjectType = new GraphQLObjectType({
     mentorImport,
     subjectUpdate,
     updateAnswers,
+    mentorVttUpdate,
   }),
 });
 
