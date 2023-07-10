@@ -11,6 +11,7 @@ import {
   GraphQLNonNull,
   GraphQLID,
   GraphQLInputObjectType,
+  GraphQLFloat,
 } from 'graphql';
 import {
   Answer as AnswerModel,
@@ -20,11 +21,7 @@ import {
 import { AnswerMediaProps, Status } from '../../../models/Answer';
 import { Mentor, MentorDirtyReason } from '../../../models/Mentor';
 import { mediaNeedsTransfer } from '../../../utils/static-urls';
-import {
-  ExternalVideoIdsInputType,
-  IExternalVideoIds,
-  externalVideoIdsDefault,
-} from './update-answers';
+import { ExternalVideoIdsInputType, IExternalVideoIds } from './update-answers';
 
 export interface UploadAnswer {
   transcript: string;
@@ -42,6 +39,9 @@ export const AnswerMediaInputType = new GraphQLInputObjectType({
     tag: { type: GraphQLString },
     url: { type: GraphQLString },
     transparentVideoUrl: { type: GraphQLString },
+    stringMetadata: { type: GraphQLString },
+    hash: { type: GraphQLString },
+    duration: { type: GraphQLFloat },
     needsTransfer: { type: GraphQLBoolean },
   },
 });

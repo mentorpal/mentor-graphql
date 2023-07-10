@@ -10,6 +10,7 @@ import {
   GraphQLObjectType,
   GraphQLBoolean,
   GraphQLList,
+  GraphQLFloat,
 } from 'graphql';
 import { AnswerMedia, Answer } from '../../models/Answer';
 import { Question as QuestionModel } from '../../models';
@@ -55,6 +56,9 @@ export const AnswerMediaType = new GraphQLObjectType({
           : '';
       },
     },
+    hash: { type: GraphQLString },
+    stringMetadata: { type: GraphQLString },
+    duration: { type: GraphQLFloat },
   },
 });
 
