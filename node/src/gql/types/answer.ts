@@ -10,6 +10,7 @@ import {
   GraphQLObjectType,
   GraphQLBoolean,
   GraphQLList,
+  GraphQLFloat,
 } from 'graphql';
 import { AnswerMedia, Answer } from '../../models/Answer';
 import { Question as QuestionModel } from '../../models';
@@ -22,6 +23,16 @@ import {
   ExternalVideoIdsObjectType,
   externalVideoIdsDefault,
 } from '../mutation/api/update-answers';
+
+export const PreviousAnswerVersionType = new GraphQLObjectType({
+  name: 'PreviousAnswerVersionType',
+  fields: {
+    transcript: { type: GraphQLString },
+    videoHash: {type: GraphQLString },
+    videoDuration: {type: GraphQLFloat},
+    dateVersioned: { type: GraphQLString }
+  },
+});
 
 export const AnswerMediaType = new GraphQLObjectType({
   name: 'AnswerMedia',
@@ -102,6 +113,9 @@ export const AnswerType = new GraphQLObjectType({
     vttMedia: { type: AnswerMediaType },
     createdAt: { type: DateType },
     updatedAt: { type: DateType },
+    previousVersions: {
+      type: PreviousAnswerVersionType
+    }
   }),
 });
 

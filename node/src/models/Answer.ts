@@ -44,6 +44,19 @@ export const ExternalVideoIdsSchema = new Schema({
   wistiaId: { type: String },
 });
 
+export const PreviousAnswerVersionSchema = new Schema({
+  wistiaId: { type: String },
+});
+
+export interface PreviousAnswerVersions{
+  transcript: string;
+  vttText: string;
+  webVideoHash: string;
+  mobVideoHash: string;
+  videoDuration: number;
+  dateVersion: number;
+}
+
 export interface Answer extends Document {
   mentor: Mentor['_id'];
   question: Question['_id'] | Question;
@@ -56,6 +69,7 @@ export interface Answer extends Document {
   vttMedia: AnswerMedia;
   hasUntransferredMedia: boolean;
   externalVideoIds: IExternalVideoIds;
+  previousVersions: PreviousAnswerVersions;
 }
 
 export interface AnswerModel extends Model<Answer> {
@@ -82,6 +96,7 @@ export const AnswerSchema = new Schema<Answer, AnswerModel>(
     media: { type: [AnswerMediaSchema] },
     hasUntransferredMedia: { type: Boolean, default: false },
     externalVideoIds: { type: ExternalVideoIdsSchema },
+    previousVersions: { type: PreviousAnswerVersionSchema }
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );

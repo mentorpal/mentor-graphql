@@ -17,7 +17,7 @@ import {
   Mentor as MentorModel,
   Question as QuestionModel,
 } from '../../../models';
-import { Status } from '../../../models/Answer';
+import { PreviousAnswerVersions, Status } from '../../../models/Answer';
 import { User } from '../../../models/User';
 import { canEditMentor } from '../../../utils/check-permissions';
 import { MentorDirtyReason } from '../../../models/Mentor';
@@ -34,6 +34,15 @@ export const UpdateAnswerInputType = new GraphQLInputObjectType({
     status: { type: GraphQLString },
   }),
 });
+
+/**
+ * Takes the answers current state and add it to its previousVersions
+ */
+export async function versionControlAnswer(questionId: string, mentorId: string){
+  const answerDoc = await AnswerModel.findById({question: questionId, mentor: mentorId});
+  const { transcript, webMedia, mobileMedia, vttMedia } = answerDoc;
+  // TODO: fetch all necessary data to store for versions
+}
 
 export const updateAnswer = {
   type: GraphQLBoolean,
@@ -87,6 +96,9 @@ export const updateAnswer = {
     ) {
       hasEditedTranscript = true;
     }
+
+    // TODO: When an answers video or transcript gets updated, version control it.
+
 
     answer = await AnswerModel.findOneAndUpdate(
       {
