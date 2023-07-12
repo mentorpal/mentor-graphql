@@ -28,6 +28,9 @@ export interface AnswerMediaProps {
   tag: string;
   url: string;
   transparentVideoUrl: string;
+  hash: string;
+  stringMetadata: string;
+  duration?: number;
   needsTransfer: boolean;
 }
 export interface AnswerMedia extends AnswerMediaProps, Document {}
@@ -37,6 +40,9 @@ export const AnswerMediaSchema = new Schema({
   tag: { type: String },
   url: { type: String },
   transparentVideoUrl: { type: String },
+  stringMetadata: { type: String, default: '' },
+  hash: { type: String, default: '' },
+  duration: { type: Number, require: false, default: -1 },
   needsTransfer: { type: Boolean, default: false },
 });
 

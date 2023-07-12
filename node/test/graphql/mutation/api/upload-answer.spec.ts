@@ -261,6 +261,9 @@ describe('uploadAnswer', () => {
               tag: 'web',
               url: `${process.env.STATIC_URL_BASE}/video.mp4`,
               transparentVideoUrl: `${process.env.STATIC_URL_BASE}/video.webm`,
+              hash: '123',
+              stringMetadata: "{'fake': 'metadata'}",
+              duration: 1.5,
             },
           },
         },
@@ -285,6 +288,9 @@ describe('uploadAnswer', () => {
               tag: 'web',
               url: `${process.env.STATIC_URL_BASE}/video.mp4`,
               transparentVideoUrl: `${process.env.STATIC_URL_BASE}/video.webm`,
+              hash: '123',
+              stringMetadata: "{'fake': 'metadata'}",
+              duration: 1.5,
             },
           },
         },
@@ -300,6 +306,9 @@ describe('uploadAnswer', () => {
               transcript
               status
               webMedia{
+                hash
+                stringMetadata
+                duration
                 type
                 tag
                 url
@@ -312,6 +321,7 @@ describe('uploadAnswer', () => {
           }
       }`,
       });
+    console.log(JSON.stringify(r2.body));
     expect(r2.status).to.equal(200);
     const updatedAnswer = r2.body.data.mentor.answers.find(
       (a: any) => a.question._id === '511111111111111111111112'
@@ -321,6 +331,9 @@ describe('uploadAnswer', () => {
       tag: 'web',
       url: `${process.env.STATIC_URL_BASE}/video.mp4`,
       transparentVideoUrl: `${process.env.STATIC_URL_BASE}/video.webm`,
+      hash: '123',
+      stringMetadata: "{'fake': 'metadata'}",
+      duration: 1.5,
     });
   });
 

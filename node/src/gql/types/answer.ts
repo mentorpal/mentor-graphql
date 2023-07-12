@@ -66,6 +66,9 @@ export const AnswerMediaType = new GraphQLObjectType({
           : '';
       },
     },
+    hash: { type: GraphQLString },
+    stringMetadata: { type: GraphQLString },
+    duration: { type: GraphQLFloat },
   },
 });
 
