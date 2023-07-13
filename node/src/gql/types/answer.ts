@@ -27,10 +27,12 @@ import {
 export const PreviousAnswerVersionType = new GraphQLObjectType({
   name: 'PreviousAnswerVersionType',
   fields: {
+    versionControlId: { type: GraphQLString },
     transcript: { type: GraphQLString },
-    videoHash: {type: GraphQLString },
-    videoDuration: {type: GraphQLFloat},
-    dateVersioned: { type: GraphQLString }
+    webVideoHash: { type: GraphQLString },
+    videoDuration: { type: GraphQLFloat },
+    vttText: { type: GraphQLString },
+    dateVersioned: { type: GraphQLString },
   },
 });
 
@@ -68,6 +70,7 @@ export const AnswerMediaType = new GraphQLObjectType({
     },
     hash: { type: GraphQLString },
     stringMetadata: { type: GraphQLString },
+    vttText: { type: GraphQLString },
     duration: { type: GraphQLFloat },
   },
 });
@@ -117,8 +120,8 @@ export const AnswerType = new GraphQLObjectType({
     createdAt: { type: DateType },
     updatedAt: { type: DateType },
     previousVersions: {
-      type: PreviousAnswerVersionType
-    }
+      type: GraphQLList(PreviousAnswerVersionType),
+    },
   }),
 });
 

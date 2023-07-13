@@ -32,7 +32,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
         me {
-          updateAnswer(questionId: $questionId, answer: $answer)
+          updateAnswer(questionId: $questionId, answer: $answer, doNotVersion: true)
         }
       }`,
         variables: { questionId: '511111111111111111111112', answer: {} },
@@ -52,7 +52,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer)
+            updateAnswer(questionId: $questionId, answer: $answer, doNotVersion: true)
           }
         }`,
         variables: { questionId: '511111111111111111111112', answer: {} },
@@ -72,7 +72,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(answer: $answer)
+            updateAnswer(answer: $answer, doNotVersion: true)
           }
         }`,
         variables: { answer: {} },
@@ -88,7 +88,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(questionId: "511111111111111111111112")
+            updateAnswer(questionId: "511111111111111111111112", doNotVersion: true)
           }
         }`,
         variables: { questionId: '511111111111111111111112' },
@@ -104,7 +104,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer)
+            updateAnswer(questionId: $questionId, answer: $answer, doNotVersion: true)
           }
         }`,
         variables: {
@@ -125,7 +125,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer)
+            updateAnswer(questionId: $questionId, answer: $answer, doNotVersion: true)
           }
         }`,
         variables: {
@@ -153,7 +153,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer)
+            updateAnswer(questionId: $questionId, answer: $answer, doNotVersion: true)
           }
         }`,
         variables: {
@@ -208,7 +208,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation {
         me {
-          updateAnswer(questionId: "511111111111111111999999", answer: {})
+          updateAnswer(questionId: "511111111111111111999999", answer: {}, doNotVersion: true)
         }
       }`,
       });
@@ -227,7 +227,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!, $mentorId: ID!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId)
+            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId, doNotVersion: true)
           }
         }`,
         variables: {
@@ -254,7 +254,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!, $mentorId: ID!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId)
+            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId, doNotVersion: true)
           }
         }`,
         variables: {
@@ -279,7 +279,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!, $mentorId: ID!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId)
+            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId, doNotVersion: true)
           }
         }`,
         variables: {

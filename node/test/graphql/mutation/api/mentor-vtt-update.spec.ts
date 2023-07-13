@@ -93,7 +93,6 @@ describe('mentor vtt update', () => {
       true
     );
 
-    // TODO: query answer and check media
     const answerResponse = await request(app)
       .post('/graphql')
       .send({

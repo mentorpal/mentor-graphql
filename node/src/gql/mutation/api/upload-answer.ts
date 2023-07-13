@@ -40,6 +40,7 @@ export const AnswerMediaInputType = new GraphQLInputObjectType({
     url: { type: GraphQLString },
     transparentVideoUrl: { type: GraphQLString },
     stringMetadata: { type: GraphQLString },
+    vttText: { type: GraphQLString },
     hash: { type: GraphQLString },
     duration: { type: GraphQLFloat },
     needsTransfer: { type: GraphQLBoolean },
