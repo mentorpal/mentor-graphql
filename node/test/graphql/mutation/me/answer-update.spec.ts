@@ -32,7 +32,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
         me {
-          updateAnswer(questionId: $questionId, answer: $answer, doNotVersion: true)
+          updateAnswer(questionId: $questionId, answer: $answer)
         }
       }`,
         variables: { questionId: '511111111111111111111112', answer: {} },
@@ -52,7 +52,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer, doNotVersion: true)
+            updateAnswer(questionId: $questionId, answer: $answer)
           }
         }`,
         variables: { questionId: '511111111111111111111112', answer: {} },
@@ -72,7 +72,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(answer: $answer, doNotVersion: true)
+            updateAnswer(answer: $answer)
           }
         }`,
         variables: { answer: {} },
@@ -88,7 +88,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(questionId: "511111111111111111111112", doNotVersion: true)
+            updateAnswer(questionId: "511111111111111111111112")
           }
         }`,
         variables: { questionId: '511111111111111111111112' },
@@ -104,7 +104,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer, doNotVersion: true)
+            updateAnswer(questionId: $questionId, answer: $answer)
           }
         }`,
         variables: {
@@ -125,7 +125,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer, doNotVersion: true)
+            updateAnswer(questionId: $questionId, answer: $answer)
           }
         }`,
         variables: {
@@ -153,7 +153,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer, doNotVersion: true)
+            updateAnswer(questionId: $questionId, answer: $answer)
           }
         }`,
         variables: {
@@ -162,9 +162,20 @@ describe('updateAnswer', () => {
             transcript:
               "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
             status: 'Complete',
+            previousVersions: [
+              {
+                versionControlId: 'previous version control id',
+                transcript: 'previous tracnscript',
+                webVideoHash: 'previous web video hash',
+                videoDuration: 1.0,
+                vttText: 'previous vtt text',
+                dateVersioned: '2021-01-15T00:00:00.000Z',
+              },
+            ],
           },
         },
       });
+
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateAnswer).to.eql(true);
 
@@ -180,6 +191,14 @@ describe('updateAnswer', () => {
               status
               question {
                 _id
+              }
+              previousVersions {
+                versionControlId
+                transcript
+                webVideoHash
+                videoDuration
+                vttText
+                dateVersioned
               }
             }
           }
@@ -197,6 +216,16 @@ describe('updateAnswer', () => {
       'transcript',
       "My name is Clint Anderson and I'm a Nuclear Electrician's Mate"
     );
+    expect(updatedAnswer.previousVersions).to.eql([
+      {
+        versionControlId: 'previous version control id',
+        transcript: 'previous tracnscript',
+        webVideoHash: 'previous web video hash',
+        videoDuration: 1,
+        vttText: 'previous vtt text',
+        dateVersioned: '2021-01-15T00:00:00.000Z',
+      },
+    ]);
     expect(updatedAnswer).to.have.property('status', 'Complete');
   });
 
@@ -208,7 +237,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation {
         me {
-          updateAnswer(questionId: "511111111111111111999999", answer: {}, doNotVersion: true)
+          updateAnswer(questionId: "511111111111111111999999", answer: {})
         }
       }`,
       });
@@ -227,7 +256,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!, $mentorId: ID!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId, doNotVersion: true)
+            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId)
           }
         }`,
         variables: {
@@ -254,7 +283,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!, $mentorId: ID!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId, doNotVersion: true)
+            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId)
           }
         }`,
         variables: {
@@ -279,7 +308,7 @@ describe('updateAnswer', () => {
       .send({
         query: `mutation UpdateAnswer($questionId: ID!, $answer: UpdateAnswerInputType!, $mentorId: ID!) {
           me {
-            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId, doNotVersion: true)
+            updateAnswer(questionId: $questionId, answer: $answer, mentorId: $mentorId)
           }
         }`,
         variables: {

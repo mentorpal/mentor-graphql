@@ -53,7 +53,12 @@ export const ExternalVideoIdsSchema = new Schema({
 });
 
 export const PreviousAnswerVersionSchema = new Schema({
-  wistiaId: { type: String },
+  versionControlId: { type: String },
+  transcript: { type: String },
+  webVideoHash: { type: String },
+  videoDuration: { type: Number },
+  vttText: { type: String },
+  dateVersioned: { type: String },
 });
 
 export interface PreviousAnswerVersions {
@@ -104,7 +109,7 @@ export const AnswerSchema = new Schema<Answer, AnswerModel>(
     media: { type: [AnswerMediaSchema] },
     hasUntransferredMedia: { type: Boolean, default: false },
     externalVideoIds: { type: ExternalVideoIdsSchema },
-    previousVersions: { type: [PreviousAnswerVersionSchema] },
+    previousVersions: { type: [PreviousAnswerVersionSchema], default: [] },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );

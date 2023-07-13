@@ -11,6 +11,8 @@ import {
   GraphQLNonNull,
   GraphQLID,
   GraphQLInputObjectType,
+  GraphQLList,
+  GraphQLFloat,
 } from 'graphql';
 import {
   Answer as AnswerModel,
@@ -21,11 +23,11 @@ import { PreviousAnswerVersions, Status } from '../../../models/Answer';
 import { User } from '../../../models/User';
 import { canEditMentor } from '../../../utils/check-permissions';
 import { MentorDirtyReason } from '../../../models/Mentor';
-import { v4 as uuid } from 'uuid';
 
 export interface AnswerUpdateInput {
   transcript: string;
   status: Status;
+  previousVersions: PreviousAnswerVersions[];
 }
 
 export const UpdateAnswerInputType = new GraphQLInputObjectType({
@@ -33,49 +35,21 @@ export const UpdateAnswerInputType = new GraphQLInputObjectType({
   fields: () => ({
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
+    previousVersions: { type: GraphQLList(PreviousAnswerVersionInputType) },
   }),
 });
 
-/**
- * Takes the answers current state and add it to its previousVersions
- */
-export async function versionControlAnswer(
-  questionId: string,
-  mentorId: string,
-  versionControlId?: string
-) {
-  const answerDoc = await AnswerModel.findById({
-    question: questionId,
-    mentor: mentorId,
-  });
-  const { transcript, webMedia, vttMedia } = answerDoc;
-  const vttText = vttMedia.vttText;
-  const webVideoHash = webMedia.hash;
-  const videoDuration = webMedia.duration;
-  const dateVersioned = new Date().toISOString();
-
-  const alreadyVersioned =
-    versionControlId &&
-    answerDoc.previousVersions.find(
-      (version) => version.versionControlId === versionControlId
-    );
-  if (alreadyVersioned) {
-    return;
-  }
-
-  const newVersion: PreviousAnswerVersions = {
-    transcript,
-    webVideoHash,
-    vttText,
-    videoDuration,
-    dateVersioned,
-    versionControlId: uuid(),
-  };
-
-  await AnswerModel.findByIdAndUpdate(answerDoc._id, {
-    previousVersions: [...answerDoc.previousVersions, newVersion],
-  });
-}
+export const PreviousAnswerVersionInputType = new GraphQLInputObjectType({
+  name: 'PreviousAnswerVersionInputType',
+  fields: {
+    versionControlId: { type: GraphQLString },
+    transcript: { type: GraphQLString },
+    webVideoHash: { type: GraphQLString },
+    videoDuration: { type: GraphQLFloat },
+    vttText: { type: GraphQLString },
+    dateVersioned: { type: GraphQLString },
+  },
+});
 
 export const updateAnswer = {
   type: GraphQLBoolean,
@@ -83,7 +57,6 @@ export const updateAnswer = {
     mentorId: { type: GraphQLID },
     questionId: { type: GraphQLNonNull(GraphQLID) },
     answer: { type: GraphQLNonNull(UpdateAnswerInputType) },
-    doNotVersion: { type: GraphQLBoolean },
   },
   resolve: async (
     _root: GraphQLObjectType,
@@ -91,7 +64,6 @@ export const updateAnswer = {
       mentorId: string;
       questionId: string;
       answer: AnswerUpdateInput;
-      doNotVersion?: boolean;
     },
     context: { user: User }
   ): Promise<boolean> => {
@@ -134,14 +106,6 @@ export const updateAnswer = {
       answer.transcript !== args.answer.transcript
     ) {
       hasEditedTranscript = true;
-    }
-
-    if (
-      !args.doNotVersion &&
-      args.answer.transcript &&
-      args.answer.transcript !== answer.transcript
-    ) {
-      await versionControlAnswer(args.questionId, mentor._id);
     }
 
     answer = await AnswerModel.findOneAndUpdate(
