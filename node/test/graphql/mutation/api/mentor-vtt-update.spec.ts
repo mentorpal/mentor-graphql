@@ -28,15 +28,16 @@ describe('mentor vtt update', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `mutation MentorVttUpdate($mentorId: ID!, $questionId: String!, $vttUrl: String!) {
+        query: `mutation MentorVttUpdate($mentorId: ID!, $questionId: String!, $vttUrl: String!, $vttText: String!) {
         api {
-          mentorVttUpdate(mentorId: $mentorId, questionId: $questionId, vttUrl: $vttUrl)
+          mentorVttUpdate(mentorId: $mentorId, questionId: $questionId, vttUrl: $vttUrl, vttText: $vttText)
         }
       }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111111',
           vttUrl: 'https://test-vtt.url',
+          vttText: 'hello world',
         },
       });
     expect(response.status).to.equal(200);
@@ -52,15 +53,16 @@ describe('mentor vtt update', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer asdfdsadf`)
       .send({
-        query: `mutation MentorVttUpdate($mentorId: ID!, $questionId: String!, $vttUrl: String!) {
+        query: `mutation MentorVttUpdate($mentorId: ID!, $questionId: String!, $vttUrl: String!, $vttText: String!) {
         api {
-          mentorVttUpdate(mentorId: $mentorId, questionId: $questionId, vttUrl: $vttUrl)
+          mentorVttUpdate(mentorId: $mentorId, questionId: $questionId, vttUrl: $vttUrl, vttText: $vttText)
         }
       }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111111',
           vttUrl: 'https://test-vtt.url',
+          vttText: 'hello world',
         },
       });
     expect(response.status).to.equal(200);
@@ -76,15 +78,16 @@ describe('mentor vtt update', () => {
       .set('mentor-graphql-req', 'true')
       .set('Authorization', `bearer ${process.env.API_SECRET}`)
       .send({
-        query: `mutation MentorVttUpdate($mentorId: ID!, $questionId: String!, $vttUrl: String!) {
+        query: `mutation MentorVttUpdate($mentorId: ID!, $questionId: String!, $vttUrl: String!, $vttText: String!) {
         api {
-          mentorVttUpdate(mentorId: $mentorId, questionId: $questionId, vttUrl: $vttUrl)
+          mentorVttUpdate(mentorId: $mentorId, questionId: $questionId, vttUrl: $vttUrl, vttText: $vttText)
         }
       }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62111111111',
           questionId: '511111111111111111111111',
           vttUrl: 'https://test-vtt.url',
+          vttText: 'hello world',
         },
       });
     expect(response.status).to.equal(200);
