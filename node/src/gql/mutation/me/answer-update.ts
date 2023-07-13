@@ -11,13 +11,15 @@ import {
   GraphQLNonNull,
   GraphQLID,
   GraphQLInputObjectType,
+  GraphQLList,
+  GraphQLFloat,
 } from 'graphql';
 import {
   Answer as AnswerModel,
   Mentor as MentorModel,
   Question as QuestionModel,
 } from '../../../models';
-import { Status } from '../../../models/Answer';
+import { PreviousAnswerVersions, Status } from '../../../models/Answer';
 import { User } from '../../../models/User';
 import { canEditMentor } from '../../../utils/check-permissions';
 import { MentorDirtyReason } from '../../../models/Mentor';
@@ -25,6 +27,7 @@ import { MentorDirtyReason } from '../../../models/Mentor';
 export interface AnswerUpdateInput {
   transcript: string;
   status: Status;
+  previousVersions: PreviousAnswerVersions[];
 }
 
 export const UpdateAnswerInputType = new GraphQLInputObjectType({
@@ -32,7 +35,20 @@ export const UpdateAnswerInputType = new GraphQLInputObjectType({
   fields: () => ({
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
+    previousVersions: { type: GraphQLList(PreviousAnswerVersionInputType) },
   }),
+});
+
+export const PreviousAnswerVersionInputType = new GraphQLInputObjectType({
+  name: 'PreviousAnswerVersionInputType',
+  fields: {
+    versionControlId: { type: GraphQLString },
+    transcript: { type: GraphQLString },
+    webVideoHash: { type: GraphQLString },
+    videoDuration: { type: GraphQLFloat },
+    vttText: { type: GraphQLString },
+    dateVersioned: { type: GraphQLString },
+  },
 });
 
 export const updateAnswer = {
@@ -44,7 +60,11 @@ export const updateAnswer = {
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentorId: string; questionId: string; answer: AnswerUpdateInput },
+    args: {
+      mentorId: string;
+      questionId: string;
+      answer: AnswerUpdateInput;
+    },
     context: { user: User }
   ): Promise<boolean> => {
     if (context.user?.isDisabled) {

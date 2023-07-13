@@ -263,6 +263,7 @@ describe('uploadAnswer', () => {
               transparentVideoUrl: `${process.env.STATIC_URL_BASE}/video.webm`,
               hash: '123',
               stringMetadata: "{'fake': 'metadata'}",
+              vttText: 'fake-vtt-text',
               duration: 1.5,
             },
           },
@@ -290,6 +291,7 @@ describe('uploadAnswer', () => {
               transparentVideoUrl: `${process.env.STATIC_URL_BASE}/video.webm`,
               hash: '123',
               stringMetadata: "{'fake': 'metadata'}",
+              vttText: 'fake-vtt-text',
               duration: 1.5,
             },
           },
@@ -308,6 +310,7 @@ describe('uploadAnswer', () => {
               webMedia{
                 hash
                 stringMetadata
+                vttText
                 duration
                 type
                 tag
@@ -321,7 +324,6 @@ describe('uploadAnswer', () => {
           }
       }`,
       });
-    console.log(JSON.stringify(r2.body));
     expect(r2.status).to.equal(200);
     const updatedAnswer = r2.body.data.mentor.answers.find(
       (a: any) => a.question._id === '511111111111111111111112'
@@ -333,6 +335,7 @@ describe('uploadAnswer', () => {
       transparentVideoUrl: `${process.env.STATIC_URL_BASE}/video.webm`,
       hash: '123',
       stringMetadata: "{'fake': 'metadata'}",
+      vttText: 'fake-vtt-text',
       duration: 1.5,
     });
   });

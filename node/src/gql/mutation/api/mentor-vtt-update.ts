@@ -19,6 +19,7 @@ export const mentorVbgUpdate = {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     questionId: { type: GraphQLNonNull(GraphQLString) },
     vttUrl: { type: GraphQLNonNull(GraphQLString) },
+    vttText: { type: GraphQLString },
   },
   resolve: async (
     _root: GraphQLObjectType,
@@ -26,9 +27,10 @@ export const mentorVbgUpdate = {
       mentorId: string;
       questionId: string;
       vttUrl: string;
+      vttText: string;
     }
   ): Promise<boolean> => {
-    const { mentorId, questionId, vttUrl } = args;
+    const { mentorId, questionId, vttUrl, vttText } = args;
     const updatedAnswer = await AnswerModel.findOneAndUpdate(
       {
         mentor: mentorId,
@@ -40,6 +42,7 @@ export const mentorVbgUpdate = {
             type: 'subtitles',
             tag: 'en',
             url: vttUrl,
+            vttText: vttText,
             transparentVideoUrl: '',
             needsTransfer: false,
           },

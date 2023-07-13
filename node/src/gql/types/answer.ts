@@ -24,6 +24,18 @@ import {
   externalVideoIdsDefault,
 } from '../mutation/api/update-answers';
 
+export const PreviousAnswerVersionType = new GraphQLObjectType({
+  name: 'PreviousAnswerVersionType',
+  fields: {
+    versionControlId: { type: GraphQLString },
+    transcript: { type: GraphQLString },
+    webVideoHash: { type: GraphQLString },
+    videoDuration: { type: GraphQLFloat },
+    vttText: { type: GraphQLString },
+    dateVersioned: { type: GraphQLString },
+  },
+});
+
 export const AnswerMediaType = new GraphQLObjectType({
   name: 'AnswerMedia',
   fields: {
@@ -58,6 +70,7 @@ export const AnswerMediaType = new GraphQLObjectType({
     },
     hash: { type: GraphQLString },
     stringMetadata: { type: GraphQLString },
+    vttText: { type: GraphQLString },
     duration: { type: GraphQLFloat },
   },
 });
@@ -106,6 +119,9 @@ export const AnswerType = new GraphQLObjectType({
     vttMedia: { type: AnswerMediaType },
     createdAt: { type: DateType },
     updatedAt: { type: DateType },
+    previousVersions: {
+      type: GraphQLList(PreviousAnswerVersionType),
+    },
   }),
 });
 

@@ -32,6 +32,7 @@ export interface AnswerMediaProps {
   stringMetadata: string;
   duration?: number;
   needsTransfer: boolean;
+  vttText: string;
 }
 export interface AnswerMedia extends AnswerMediaProps, Document {}
 
@@ -41,6 +42,7 @@ export const AnswerMediaSchema = new Schema({
   url: { type: String },
   transparentVideoUrl: { type: String },
   stringMetadata: { type: String, default: '' },
+  vttText: { type: String, default: '' },
   hash: { type: String, default: '' },
   duration: { type: Number, require: false, default: -1 },
   needsTransfer: { type: Boolean, default: false },
@@ -49,6 +51,24 @@ export const AnswerMediaSchema = new Schema({
 export const ExternalVideoIdsSchema = new Schema({
   wistiaId: { type: String },
 });
+
+export const PreviousAnswerVersionSchema = new Schema({
+  versionControlId: { type: String },
+  transcript: { type: String },
+  webVideoHash: { type: String },
+  videoDuration: { type: Number },
+  vttText: { type: String },
+  dateVersioned: { type: String },
+});
+
+export interface PreviousAnswerVersions {
+  versionControlId: string;
+  transcript: string;
+  webVideoHash: string;
+  videoDuration: number;
+  vttText: string;
+  dateVersioned: string;
+}
 
 export interface Answer extends Document {
   mentor: Mentor['_id'];
@@ -62,6 +82,7 @@ export interface Answer extends Document {
   vttMedia: AnswerMedia;
   hasUntransferredMedia: boolean;
   externalVideoIds: IExternalVideoIds;
+  previousVersions: PreviousAnswerVersions[];
 }
 
 export interface AnswerModel extends Model<Answer> {
@@ -88,6 +109,7 @@ export const AnswerSchema = new Schema<Answer, AnswerModel>(
     media: { type: [AnswerMediaSchema] },
     hasUntransferredMedia: { type: Boolean, default: false },
     externalVideoIds: { type: ExternalVideoIdsSchema },
+    previousVersions: { type: [PreviousAnswerVersionSchema], default: [] },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
