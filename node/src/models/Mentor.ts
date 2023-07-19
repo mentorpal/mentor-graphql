@@ -879,6 +879,7 @@ MentorSchema.statics.getAnswers = async function ({
         mobileMedia: undefined,
         vttMedia: undefined,
         externalVideoIds: externalVideoIdsDefault,
+        previousVersions: [],
       }
     );
   });
