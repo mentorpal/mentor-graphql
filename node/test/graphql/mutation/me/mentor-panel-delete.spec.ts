@@ -279,4 +279,78 @@ describe('deleteMentorPanel', () => {
     expect(response.status).to.equal(200);
     expect(mentorpanels.body.data.mentorPanels).to.eql({ edges: [] });
   });
+
+  it("deletes panel from org's activeMentorPanels and featuredMentorPanels", async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1'); //mentor with role "Admin"
+
+    // First, check data before mutation
+    const orgsBeforeMutation = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+        organizations {
+          edges {
+            node {
+              name
+              config{
+                activeMentorPanels
+                featuredMentorPanels
+              }
+            }
+          }
+        }
+      }`,
+      });
+    expect(orgsBeforeMutation.status).to.equal(200);
+    const orgToInspect1 = orgsBeforeMutation.body.data.organizations.edges.find(
+      (org: any) => org.node.name === 'CSUF'
+    );
+    expect(orgToInspect1.node.config.activeMentorPanels).to.eql([
+      '5ffdf41a1ee2c62111111111',
+    ]);
+    expect(orgToInspect1.node.config.featuredMentorPanels).to.eql([
+      '5ffdf41a1ee2c62111111111',
+    ]);
+
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation DeleteMentorPanel($id: ID!) {
+          me {
+            deleteMentorPanel(id: $id) {
+              _id
+            }
+          }
+        }`,
+        variables: {
+          id: '5ffdf41a1ee2c62111111111',
+        },
+      });
+
+    expect(response.status).to.equal(200);
+    const orgs = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+          organizations {
+            edges {
+              node {
+                name
+                config{
+                  activeMentorPanels
+                  featuredMentorPanels
+                }
+              }
+            }
+          }
+        }`,
+      });
+    expect(response.status).to.equal(200);
+    const orgToInspect = orgs.body.data.organizations.edges.find(
+      (org: any) => org.node.name === 'CSUF'
+    );
+    expect(orgToInspect.node.config.activeMentorPanels).to.eql([]);
+    expect(orgToInspect.node.config.featuredMentorPanels).to.eql([]);
+  });
 });

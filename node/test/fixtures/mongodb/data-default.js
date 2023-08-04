@@ -531,6 +531,16 @@ module.exports = {
           role: 'USER',
         },
       ],
+      config: [
+        {
+          key: 'activeMentorPanels',
+          value: [ObjectId('5ffdf41a1ee2c62111111111')],
+        },
+        {
+          key: 'featuredMentorPanels',
+          value: [ObjectId('5ffdf41a1ee2c62111111111')],
+        },
+      ],
     },
     {
       _id: ObjectId('511111111111111111111112'),
@@ -551,6 +561,16 @@ module.exports = {
         {
           user: ObjectId('5ffdf41a1ee2c62320b49ea3'),
           role: 'USER',
+        },
+      ],
+      config: [
+        {
+          key: 'activeMentorPanels',
+          value: [ObjectId('5ffdf41a1ee2c62111111111')],
+        },
+        {
+          key: 'featuredMentorPanels',
+          value: [ObjectId('5ffdf41a1ee2c62111111111')],
         },
       ],
     },

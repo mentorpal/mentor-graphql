@@ -7,6 +7,7 @@ The full terms of this copyright and license should always be found in the root 
 import { GraphQLObjectType, GraphQLID, GraphQLNonNull } from 'graphql';
 import MentorPanelType from '../../types/mentor-panel';
 import MentorPanelModel, { MentorPanel } from '../../../models/MentorPanel';
+import OrganizationModel, { Organization } from '../../../models/Organization';
 import { User } from '../../../models/User';
 import { canEditMentorPanel } from '../../../utils/check-permissions';
 
@@ -28,6 +29,48 @@ export const deleteMentorPanel = {
     if (!(await canEditMentorPanel(context.user, mp.org))) {
       throw new Error('you do not have permission to edit mentorpanel');
     }
+
+    // remove mentor panel from all orgs with panel in active/featured panels
+    const organizations = await OrganizationModel.find({});
+    const orgsContainingPanel: Organization[] = organizations.filter((org) => {
+      const orgActivePanelsConfig = org.config.find((config) => {
+        return config.key === 'activeMentorPanels';
+      });
+      const orgFeaturedPanelsConfig = org.config.find((config) => {
+        return config.key === 'featuredMentorPanels';
+      });
+      return (
+        (orgActivePanelsConfig &&
+          orgActivePanelsConfig.value.find(
+            (panelId: string) => String(panelId) === args.id
+          )) ||
+        (orgFeaturedPanelsConfig &&
+          orgFeaturedPanelsConfig.value.find(
+            (panelId: string) => String(panelId) === args.id
+          ))
+      );
+    });
+
+    orgsContainingPanel.forEach(async (org) => {
+      const orgActivePanelsConfig = org.config.find((config) => {
+        return config.key === 'activeMentorPanels';
+      });
+      const orgFeaturedPanelsConfig = org.config.find((config) => {
+        return config.key === 'featuredMentorPanels';
+      });
+      if (orgActivePanelsConfig) {
+        orgActivePanelsConfig.value = orgActivePanelsConfig.value.filter(
+          (panelId: string) => String(panelId) !== args.id
+        );
+      }
+      if (orgFeaturedPanelsConfig) {
+        orgFeaturedPanelsConfig.value = orgFeaturedPanelsConfig.value.filter(
+          (panelId: string) => String(panelId) !== args.id
+        );
+      }
+      await org.save();
+    });
+
     return await MentorPanelModel.findOneAndUpdate(
       { _id: args.id },
       {
