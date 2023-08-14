@@ -51,7 +51,7 @@ export const UserSchema = new Schema<User, UserModel>(
     googleId: { type: String },
     name: { type: String },
     email: { type: String },
-    isDisabled: { type: Boolean },
+    isDisabled: { type: Boolean, default: false },
     userRole: {
       type: String,
       enum: [

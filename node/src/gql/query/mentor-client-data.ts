@@ -49,6 +49,7 @@ export interface MentorClientData {
   hasVirtualBackground: boolean;
   virtualBackgroundUrl: string;
   isDirty: boolean;
+  isPublicApproved: boolean;
 }
 
 export interface AnswerClientData {
@@ -304,6 +305,7 @@ export const mentorData = {
       topicQuestions,
       utterances,
       isDirty: mentor.isDirty,
+      isPublicApproved: mentor.isPublicApproved
     };
   },
 };
