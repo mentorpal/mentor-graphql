@@ -42,7 +42,6 @@ module.exports = {
       name: 'Clinton Anderson',
       email: 'clint@anderson.com',
       userRole: 'SUPER_ADMIN',
-      isPublicApproved: true,
       firstTimeTracking: {
         myMentorSplash: false,
         tooltips: true,
@@ -136,6 +135,7 @@ module.exports = {
       hasVirtualBackground: true,
       virtualBackgroundUrl: 'https://www.fakeurl.com',
       isAdvanced: true,
+      isPublicApproved: false,
       isDirty: false,
       recordQueue: [
         ObjectId('511111111111111111111112'),

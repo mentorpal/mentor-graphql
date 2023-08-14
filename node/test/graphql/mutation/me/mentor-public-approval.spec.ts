@@ -11,7 +11,7 @@ import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 import { getToken } from '../../../helpers';
 
-describe('publivApproveUser', () => {
+describe('publicApproveMentor', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -31,20 +31,21 @@ describe('publivApproveUser', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateUserPublicApproval($userId: ID!, $isPublicApproved: Boolean) {
+        query: `mutation UpdateMentorPublicApproval($mentorId: ID!, $isPublicApproved: Boolean) {
           me {
-            updateUserPublicApproval(userId: $userId, isPublicApproved: $isPublicApproved) {
+            updateMentorPublicApproval(mentorId: $mentorId, isPublicApproved: $isPublicApproved) {
               isPublicApproved
             }
           }
         }`,
         variables: {
-          userId: '5ffdf41a1ee2c62320b49ea6',
+          mentorId: '5ffdf41a1ee2c62111111113',
           isPublicApproved: true,
         },
       });
+    console.log(JSON.stringify(response.body, null, 2));
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.updateUserPublicApproval).to.eql({
+    expect(response.body.data.me.updateMentorPublicApproval).to.eql({
       isPublicApproved: true,
     });
   });
@@ -55,20 +56,20 @@ describe('publivApproveUser', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateUserPublicApproval($userId: ID!, $isPublicApproved: Boolean) {
+        query: `mutation UpdateMentorPublicApproval($mentorId: ID!, $isPublicApproved: Boolean) {
           me {
-            updateUserPublicApproval(userId: $userId, isPublicApproved: $isPublicApproved) {
+            updateMentorPublicApproval(mentorId: $mentorId, isPublicApproved: $isPublicApproved) {
               isPublicApproved
             }
           }
         }`,
         variables: {
-          userId: '5ffdf41a1ee2c62320b49ea1',
+          mentorId: '5ffdf41a1ee2c62111111113',
           isPublicApproved: true,
         },
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.updateUserPublicApproval).to.eql({
+    expect(response.body.data.me.updateMentorPublicApproval).to.eql({
       isPublicApproved: true,
     });
   });
@@ -79,47 +80,47 @@ describe('publivApproveUser', () => {
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateUserPublicApproval($userId: ID!, $isPublicApproved: Boolean) {
+        query: `mutation UpdateMentorPublicApproval($mentorId: ID!, $isPublicApproved: Boolean) {
           me {
-            updateUserPublicApproval(userId: $userId, isPublicApproved: $isPublicApproved) {
+            updateMentorPublicApproval(mentorId: $mentorId, isPublicApproved: $isPublicApproved) {
               isPublicApproved
             }
           }
         }`,
         variables: {
-          userId: '5ffdf41a1ee2c62320b49ea4',
+          mentorId: '5ffdf41a1ee2c62111111113',
           isPublicApproved: true,
         },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'only admins may disable a user'
+      'only admins may approve a mentor'
     );
   });
 
-  it('"USER"\'s cannot disable users', async () => {
+  it('"USER"\'s cannot approve users', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea2');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateUserPublicApproval($userId: ID!, $isPublicApproved: Boolean) {
+        query: `mutation UpdateMentorPublicApproval($mentorId: ID!, $isPublicApproved: Boolean) {
           me {
-            updateUserPublicApproval(userId: $userId, isPublicApproved: $isPublicApproved) {
+            updateMentorPublicApproval(mentorId: $mentorId, isPublicApproved: $isPublicApproved) {
               isPublicApproved
             }
           }
         }`,
         variables: {
-          userId: '5ffdf41a1ee2c62320b49ea2',
+          mentorId: '5ffdf41a1ee2c62111111113',
           isPublicApproved: true,
         },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'only admins may disable a user'
+      'only admins may approve a mentor'
     );
   });
 });

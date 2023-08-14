@@ -10,24 +10,25 @@ import {
   GraphQLNonNull,
   GraphQLID,
 } from 'graphql';
-import { User as UserModel } from '../../../models';
+import { Mentor as MentorModel } from '../../../models';
 import { User, UserRole } from '../../../models/User';
-import UserType from '../../types/user';
+import { Mentor } from '../../../models/Mentor';
+import MentorType from '../../types/mentor';
 
-export const updateUserPublicApproval = {
-  type: UserType,
+export const updateMentorPublicApproval = {
+  type: MentorType,
   args: {
-    userId: { type: GraphQLNonNull(GraphQLID) },
+    mentorId: { type: GraphQLNonNull(GraphQLID) },
     isPublicApproved: { type: GraphQLBoolean },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
-      userId: string;
+      mentorId: string;
       isPublicApproved: boolean;
     },
     context: { user: User }
-  ): Promise<User> => {
+  ): Promise<Mentor> => {
     if (context.user?.isDisabled) {
       throw new Error('Your account has been disabled');
     }
@@ -35,10 +36,10 @@ export const updateUserPublicApproval = {
       context.user.userRole !== UserRole.ADMIN &&
       context.user.userRole !== UserRole.SUPER_ADMIN
     ) {
-      throw new Error('only admins may disable a user');
+      throw new Error('only admins may approve a mentor');
     }
-    const updated = await UserModel.findByIdAndUpdate(
-      args.userId,
+    const updated = await MentorModel.findByIdAndUpdate(
+      args.mentorId,
       {
         $set: {
           isPublicApproved: args.isPublicApproved,
@@ -48,10 +49,10 @@ export const updateUserPublicApproval = {
         new: true,
       }
     ).catch((e) => {
-      throw new Error(`failed to update user ${e}`);
+      throw new Error(`failed to update mentor ${e}`);
     });
     return updated;
   },
 };
 
-export default updateUserPublicApproval;
+export default updateMentorPublicApproval;
