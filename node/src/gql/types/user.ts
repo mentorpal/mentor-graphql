@@ -30,6 +30,7 @@ export const UserType = new GraphQLObjectType({
     name: { type: GraphQLString },
     email: { type: GraphQLString },
     isDisabled: { type: GraphQLBoolean },
+    isPublicApproved: { type: GraphQLBoolean },
     userRole: { type: GraphQLString },
     lastLoginAt: { type: DateType },
     mentorIds: { type: GraphQLList(GraphQLID) },

@@ -33,6 +33,7 @@ import userQuestionSetDismissed from './userQuestion-setDismissed';
 import setMentorAdvanced from './mentor-set-advanced';
 import disableUser from './user-disable';
 import mentorTrainTaskAddOrUpdate from './mentor-train-task-add-or-update';
+import updateUserPublicApproval from './user-public-approval';
 
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeMutation',
@@ -64,6 +65,7 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
     disableUser,
     updateAnswerUrl,
     mentorTrainTaskAddOrUpdate,
+    updateUserPublicApproval,
   }),
 });
 

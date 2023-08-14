@@ -10,31 +10,26 @@ import {
   GraphQLNonNull,
   GraphQLID,
 } from 'graphql';
-import { Types } from 'mongoose';
-import { User as UserModel, Mentor as MentorModel } from '../../../models';
+import { User as UserModel } from '../../../models';
 import { User, UserRole } from '../../../models/User';
 import UserType from '../../types/user';
 
-export const updateUserDisable = {
+export const updateUserPublicApproval = {
   type: UserType,
   args: {
     userId: { type: GraphQLNonNull(GraphQLID) },
-    isDisabled: { type: GraphQLBoolean },
+    isPublicApproved: { type: GraphQLBoolean },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
       userId: string;
-      isDisabled: boolean;
+      isPublicApproved: boolean;
     },
     context: { user: User }
   ): Promise<User> => {
     if (context.user?.isDisabled) {
       throw new Error('Your account has been disabled');
-    }
-    const user = await UserModel.findById(args.userId);
-    if (!user) {
-      throw new Error('invalid user id given');
     }
     if (
       context.user.userRole !== UserRole.ADMIN &&
@@ -46,25 +41,17 @@ export const updateUserDisable = {
       args.userId,
       {
         $set: {
-          isDisabled: args.isDisabled,
+          isPublicApproved: args.isPublicApproved,
         },
       },
       {
         new: true,
       }
-    );
-    if (args.isDisabled) {
-      await MentorModel.findOneAndUpdate(
-        { user: new Types.ObjectId(`${args.userId}`) },
-        {
-          $set: {
-            isArchived: true,
-          },
-        }
-      );
-    }
+    ).catch((e) => {
+      throw new Error(`failed to update user ${e}`);
+    });
     return updated;
   },
 };
 
-export default updateUserDisable;
+export default updateUserPublicApproval;

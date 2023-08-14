@@ -42,6 +42,7 @@ module.exports = {
       name: 'Clinton Anderson',
       email: 'clint@anderson.com',
       userRole: 'SUPER_ADMIN',
+      isPublicApproved: true,
       firstTimeTracking: {
         myMentorSplash: false,
         tooltips: true,
