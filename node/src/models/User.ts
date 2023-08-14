@@ -52,7 +52,7 @@ export const UserSchema = new Schema<User, UserModel>(
     googleId: { type: String },
     name: { type: String },
     email: { type: String },
-    isPublicApproved: { type: Boolean },
+    isPublicApproved: { type: Boolean, default: false },
     isDisabled: { type: Boolean },
     userRole: {
       type: String,
