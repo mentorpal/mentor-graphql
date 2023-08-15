@@ -78,6 +78,7 @@ export const MentorType = new GraphQLObjectType({
     isPrivate: { type: GraphQLBoolean },
     isArchived: { type: GraphQLBoolean },
     isAdvanced: { type: GraphQLBoolean },
+    isPublicApproved: { type: GraphQLBoolean },
     hasVirtualBackground: { type: GraphQLBoolean },
     virtualBackgroundUrl: {
       type: GraphQLString,

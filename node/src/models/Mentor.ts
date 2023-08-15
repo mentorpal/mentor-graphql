@@ -112,6 +112,7 @@ export interface Mentor extends Document {
   isDirty: boolean;
   dirtyReason: MentorDirtyReason;
   lastTrainStatus: TrainStatus;
+  isPublicApproved: boolean;
   isPrivate: boolean;
   isArchived: boolean;
   isAdvanced: boolean;
@@ -189,6 +190,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     isPrivate: { type: Boolean, default: false },
     isArchived: { type: Boolean, default: false },
     isAdvanced: { type: Boolean, default: false },
+    isPublicApproved: { type: Boolean, default: false },
     orgPermissions: { type: [OrgPermissionSchema], default: [] },
     lastTrainStatus: { type: String, default: TrainStatus.NONE },
     hasVirtualBackground: { type: Boolean, default: false },

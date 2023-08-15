@@ -39,7 +39,6 @@ export interface User extends Document {
   googleId: string;
   name: string;
   email: string;
-  isPublicApproved: boolean;
   isDisabled: boolean;
   userRole: string;
   mentorIds: Schema.Types.ObjectId[];
@@ -52,8 +51,7 @@ export const UserSchema = new Schema<User, UserModel>(
     googleId: { type: String },
     name: { type: String },
     email: { type: String },
-    isPublicApproved: { type: Boolean, default: false },
-    isDisabled: { type: Boolean },
+    isDisabled: { type: Boolean, default: false },
     userRole: {
       type: String,
       enum: [

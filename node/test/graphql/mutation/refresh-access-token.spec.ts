@@ -59,11 +59,17 @@ describe('refresh access token', () => {
             accessToken
             errorMessage
             authenticated
+            userRole
+            mentorIds
           }
         }
         `,
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.refreshAccessToken.authenticated).to.eql(true);
+    expect(response.body.data.refreshAccessToken.userRole).to.eql(
+      'SUPER_ADMIN'
+    );
+    expect(response.body.data.refreshAccessToken.mentorIds).to.eql([]);
   });
 });
