@@ -81,6 +81,7 @@ export const MentorClientDataType = new GraphQLObjectType({
     utterances: { type: GraphQLList(AnswerClientDataType) },
     hasVirtualBackground: { type: GraphQLBoolean },
     isDirty: { type: GraphQLBoolean },
+    isPublicApproved: { type: GraphQLBoolean },
     virtualBackgroundUrl: { type: GraphQLString },
   }),
 });
@@ -305,7 +306,7 @@ export const mentorData = {
       topicQuestions,
       utterances,
       isDirty: mentor.isDirty,
-      isPublicApproved: mentor.isPublicApproved
+      isPublicApproved: mentor.isPublicApproved,
     };
   },
 };

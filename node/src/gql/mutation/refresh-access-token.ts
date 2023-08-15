@@ -4,7 +4,12 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLString, GraphQLObjectType, GraphQLBoolean } from 'graphql';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLBoolean,
+  GraphQLList,
+} from 'graphql';
 import { User } from 'models/User';
 import { User as UserSchema } from '../../models';
 import { generateAccessToken } from '../types/user-access-token';
@@ -13,6 +18,8 @@ export interface RefreshAccessTokenData {
   accessToken: string;
   authenticated: boolean;
   errorMessage: string;
+  userRole: string;
+  mentorIds: string[];
 }
 
 export const RefreshAccessTokenDataType = new GraphQLObjectType({
@@ -21,6 +28,8 @@ export const RefreshAccessTokenDataType = new GraphQLObjectType({
     accessToken: { type: GraphQLString },
     authenticated: { type: GraphQLBoolean },
     errorMessage: { type: GraphQLString },
+    userRole: { type: GraphQLString },
+    mentorIds: { type: GraphQLList(GraphQLString) },
   },
 });
 
@@ -37,6 +46,8 @@ export const refreshAccessToken = {
           accessToken: '',
           authenticated: false,
           errorMessage: 'No user in context',
+          userRole: '',
+          mentorIds: [],
         };
       }
       if (context.user.isDisabled) {
@@ -58,6 +69,8 @@ export const refreshAccessToken = {
           accessToken: '',
           authenticated: false,
           errorMessage: 'No user found',
+          userRole: '',
+          mentorIds: [],
         };
       }
       const token = generateAccessToken(user);
@@ -65,12 +78,16 @@ export const refreshAccessToken = {
         accessToken: token.accessToken,
         authenticated: true,
         errorMessage: '',
+        userRole: user.userRole,
+        mentorIds: user.mentorIds.map((oId) => oId.toString()),
       };
     } catch (error) {
       return {
         accessToken: '',
         authenticated: false,
         errorMessage: JSON.stringify(error),
+        userRole: '',
+        mentorIds: [],
       };
     }
   },

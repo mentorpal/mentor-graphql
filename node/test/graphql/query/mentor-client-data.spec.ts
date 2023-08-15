@@ -54,6 +54,7 @@ describe('mentorClientData', () => {
             title
             mentorType
             isDirty
+            isPublicApproved
             topicQuestions {
               topic
               questions
@@ -87,6 +88,7 @@ describe('mentorClientData', () => {
       email: 'clint@email.com',
       title: "Nuclear Electrician's Mate",
       mentorType: 'VIDEO',
+      isPublicApproved: false,
       isDirty: false,
       topicQuestions: [],
       utterances: [
