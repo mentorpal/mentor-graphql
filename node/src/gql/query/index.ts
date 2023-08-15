@@ -40,6 +40,7 @@ import users from './users';
 import uploadTask from './upload-task';
 import importTask from './import-task';
 import trainTask from './train-task';
+import answerByFieldValue from './answer-by-field';
 
 export default new GraphQLObjectType({
   name: 'Query',
@@ -79,5 +80,6 @@ export default new GraphQLObjectType({
     uploadTask,
     importTask,
     trainTask,
+    answerByFieldValue,
   },
 });
