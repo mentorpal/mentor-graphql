@@ -49,7 +49,8 @@ export const AnswerMediaSchema = new Schema({
 });
 
 export const ExternalVideoIdsSchema = new Schema({
-  wistiaId: { type: String },
+  wistiaId: { type: String, default: '' },
+  paraproId: { type: String, default: '' },
 });
 
 export const PreviousAnswerVersionSchema = new Schema({

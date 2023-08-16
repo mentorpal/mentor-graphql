@@ -52,6 +52,7 @@ describe('uploadAnswers', () => {
               transcript: 'Test Transcript: update-answers',
               externalVideoIds: {
                 wistiaId: '123',
+                paraproId: 'parapro-123',
               },
             },
             {
@@ -59,6 +60,7 @@ describe('uploadAnswers', () => {
               transcript: 'Test Transcript: update-answers',
               externalVideoIds: {
                 wistiaId: '321',
+                paraproId: 'parapro-321',
               },
             },
             {
@@ -88,6 +90,7 @@ describe('uploadAnswers', () => {
               }
               externalVideoIds{
                 wistiaId
+                paraproId
               }
             }
           }
@@ -109,6 +112,7 @@ describe('uploadAnswers', () => {
         },
         externalVideoIds: {
           wistiaId: '',
+          paraproId: '',
         },
       },
       {
@@ -122,6 +126,7 @@ describe('uploadAnswers', () => {
         },
         externalVideoIds: {
           wistiaId: '123',
+          paraproId: 'parapro-123',
         },
       },
     ]);

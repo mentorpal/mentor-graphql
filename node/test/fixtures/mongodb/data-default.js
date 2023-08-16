@@ -382,6 +382,7 @@ module.exports = {
       },
       externalVideoIds: {
         wistiaId: '5ffdf41a1ee2c62111111111-wistia-id',
+        paraproId: '5ffdf41a1ee2c62111111111-parapro-id',
       },
     },
     {

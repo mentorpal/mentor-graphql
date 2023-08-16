@@ -25,12 +25,14 @@ import { AnswerMediaInputType } from './upload-answer';
 
 export const externalVideoIdsDefault: IExternalVideoIds = {
   wistiaId: '',
+  paraproId: '',
 };
 
 export const ExternalVideoIdsObjectType = new GraphQLObjectType({
   name: 'ExternalVideoIdsObjectType',
   fields: {
     wistiaId: { type: GraphQLString },
+    paraproId: { type: GraphQLString },
   },
 });
 
@@ -38,11 +40,13 @@ export const ExternalVideoIdsInputType = new GraphQLInputObjectType({
   name: 'ExternalVideoIdsInputType',
   fields: {
     wistiaId: { type: GraphQLString },
+    paraproId: { type: GraphQLString },
   },
 });
 
 export interface IExternalVideoIds {
   wistiaId: string;
+  paraproId: string;
 }
 
 export const UploadAnswersType = new GraphQLInputObjectType({
