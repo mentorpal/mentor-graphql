@@ -24,6 +24,7 @@ export const UserQuestionType = new GraphQLObjectType({
     question: { type: GraphQLString },
     confidence: { type: GraphQLFloat },
     classifierAnswerType: { type: GraphQLString },
+    classifierUsed: { type: GraphQLString },
     feedback: { type: GraphQLString },
     mentor: {
       type: MentorType,

@@ -26,6 +26,12 @@ export enum ClassifierAnswerType {
   PARAPHRASE = 'PARAPHRASE',
 }
 
+export enum ClassifierUsed {
+  NPC_EDITOR = 'NPC_EDITOR',
+  SBERT = 'SBERT',
+  NONE_SPECIFIED = 'NONE_SPECIFIED',
+}
+
 export interface UserQuestion extends Document {
   mentor: Mentor['_id'];
   question: string;
@@ -33,6 +39,7 @@ export interface UserQuestion extends Document {
   feedback: string;
   classifierAnswer: Answer['_id'];
   classifierAnswerType: string;
+  classifierUsed: ClassifierUsed;
   graderAnswer: Answer['_id'];
   chatSessionId: string;
   dismissed: boolean;
@@ -55,6 +62,11 @@ export const UserQuestionSchema = new Schema<UserQuestion, UserQuestionModel>(
         ClassifierAnswerType.PARAPHRASE,
       ],
       default: ClassifierAnswerType.CLASSIFIER,
+    },
+    classifierUsed: {
+      type: String,
+      enum: ClassifierUsed,
+      default: ClassifierUsed.NONE_SPECIFIED,
     },
     feedback: {
       type: String,

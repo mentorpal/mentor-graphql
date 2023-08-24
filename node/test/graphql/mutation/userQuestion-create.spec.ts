@@ -115,7 +115,8 @@ describe('userQuestionCreate', () => {
             mentor: "5ffdf41a1ee2c62111111111",
             classifierAnswer: "511111111111111111111112",
             confidence: 1,      
-            chatSessionId: "1234"
+            chatSessionId: "1234",
+            classifierUsed: "NPC_EDITOR"
           }) {
             question
             mentor {
@@ -128,6 +129,7 @@ describe('userQuestionCreate', () => {
             confidence
             dismissed
             chatSessionId
+            classifierUsed
           }
         }`,
       });
@@ -144,6 +146,7 @@ describe('userQuestionCreate', () => {
       confidence: 1,
       dismissed: false,
       chatSessionId: '1234',
+      classifierUsed: 'NPC_EDITOR',
     });
   });
 });

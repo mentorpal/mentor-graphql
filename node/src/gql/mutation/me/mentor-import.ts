@@ -160,6 +160,7 @@ export const UserQuestionInputType = new GraphQLInputObjectType({
     question: { type: GraphQLString },
     confidence: { type: GraphQLFloat },
     classifierAnswerType: { type: GraphQLString },
+    classifierUsed: { type: GraphQLString },
     feedback: { type: GraphQLString },
     mentor: { type: MentorUserQuestionInputType },
     classifierAnswer: { type: AnswerUserQuestionInputType },

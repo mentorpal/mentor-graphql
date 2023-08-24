@@ -17,6 +17,7 @@ import {
   UserQuestion,
   Feedback,
   ClassifierAnswerType,
+  ClassifierUsed,
 } from '../../models/UserQuestion';
 import { UserQuestionType } from '../types/user-question';
 
@@ -25,6 +26,7 @@ export interface UserQuestionCreateInput {
   mentor: string;
   classifierAnswer: string;
   classifierAnswerType: string;
+  classifierUsed: ClassifierUsed;
   chatSessionId: string;
   confidence: number;
 }
@@ -43,6 +45,9 @@ export const UserQuestionCreateInputType = new GraphQLInputObjectType({
       type: GraphQLNonNull(GraphQLID),
     },
     classifierAnswerType: {
+      type: GraphQLString,
+    },
+    classifierUsed: {
       type: GraphQLString,
     },
     chatSessionId: {
@@ -70,6 +75,8 @@ export const userQuestionCreate = {
       classifierAnswerType:
         args.userQuestion.classifierAnswerType ||
         ClassifierAnswerType.CLASSIFIER,
+      classifierUsed:
+        args.userQuestion.classifierUsed || ClassifierUsed.NONE_SPECIFIED,
       confidence: args.userQuestion.confidence,
       graderAnswer: null,
       chatSessionId: args.userQuestion.chatSessionId || '',
