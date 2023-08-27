@@ -45,6 +45,7 @@ export const Api: GraphQLObjectType = new GraphQLObjectType({
 
 export const api = {
   type: Api,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   resolve: (_: any, args: any, context: { user: User }): { user: User } => {
     if (!context.user) {
       throw new Error('Only authenticated users');

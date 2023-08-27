@@ -92,6 +92,7 @@ export function findAll<T extends PaginatedResolveResult>(config: {
   model: HasPaginate<T>;
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   filterInvalid?: (val: PaginatedResolveResult, context: any) => Promise<T> | T;
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 }): any {
   const { nodeType, model } = config;
   return makeConnection({

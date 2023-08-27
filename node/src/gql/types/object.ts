@@ -22,6 +22,7 @@ export const ObjectType = new GraphQLScalarType({
   },
 });
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 function toObject(value: any) {
   if (typeof value === 'object') {
     return value;
@@ -32,14 +33,17 @@ function toObject(value: any) {
   return null;
 }
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 function parseObject(ast: any) {
   const value = Object.create(null);
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   ast.fields.forEach((field: any) => {
     value[field.name.value] = parseAst(field.value);
   });
   return value;
 }
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 function parseAst(ast: any) {
   switch (ast.kind) {
     case Kind.STRING:

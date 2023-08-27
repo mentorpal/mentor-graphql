@@ -86,6 +86,7 @@ export function cursorToItem(cursor: string): string {
 }
 
 export interface PaginatedResolveResult {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   results: any[];
   previous: string;
   next: string;
@@ -94,6 +95,7 @@ export interface PaginatedResolveResult {
 }
 
 export interface HasPaginationArgs {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   filter?: any;
   cursor?: string;
   limit?: number;
@@ -102,6 +104,7 @@ export interface HasPaginationArgs {
 }
 
 export interface PaginatedResolveArgs {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   parent: any;
   args: HasPaginationArgs;
   context: { user: User };
@@ -114,9 +117,11 @@ export interface PaginatedResolveFunction {
 export interface MakeConnectionArgs {
   nodeType: GraphQLObjectType;
   resolve: PaginatedResolveFunction;
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   additionalConnectionArgs?: any;
 }
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function makeConnection(args: MakeConnectionArgs): any {
   const { additionalConnectionArgs, nodeType, resolve } = args;
   return {
@@ -145,8 +150,10 @@ export function makeConnection(args: MakeConnectionArgs): any {
       ...(additionalConnectionArgs || {}),
     },
     resolve: async (
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       parent: any,
       args: {
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         filter?: any;
         cursor?: string;
         limit?: number;
@@ -157,6 +164,7 @@ export function makeConnection(args: MakeConnectionArgs): any {
     ) => {
       const paginateResult = await resolve({ parent, args, context });
       return {
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         edges: paginateResult.results.map((m: any) => {
           return {
             node: m,
