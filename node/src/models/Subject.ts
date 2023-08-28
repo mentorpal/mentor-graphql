@@ -72,6 +72,7 @@ export interface Subject extends Document {
   description: string;
   isRequired: boolean;
   isArchived: boolean;
+  deleted: boolean;
   categories: Category[];
   topics: Topic[];
   questions: SubjectQuestion[];
@@ -83,6 +84,7 @@ export interface SubjectInsert {
   description: string;
   isRequired: boolean;
   isArchived: boolean;
+  deleted: boolean;
   categories: CategoryProps[];
   topics: TopicProps[];
   questions: SubjectQuestionProps[];
@@ -97,6 +99,7 @@ export const SubjectSchema = new Schema<Subject, SubjectModel>(
     description: { type: String },
     isRequired: { type: Boolean },
     isArchived: { type: Boolean },
+    deleted: { type: Boolean },
     categories: { type: [CategorySchema] },
     topics: { type: [TopicSchema] },
     questions: { type: [SubjectQuestionSchema] },
@@ -227,6 +230,11 @@ SubjectSchema.statics.addOrUpdateQuestions = async function (
   );
   return questionUpdates;
 };
+
+SubjectSchema.pre(/find.*/, function (next) {
+  this.where({ deleted: { $ne: true } });
+  next();
+});
 
 SubjectSchema.index({ name: -1, _id: -1 });
 SubjectSchema.index({ isRequired: -1, _id: -1 });

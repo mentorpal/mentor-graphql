@@ -296,6 +296,22 @@ module.exports = {
       ],
       questions: [{ question: ObjectId('511111111111111111111115') }],
     },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ec9'),
+      name: 'Deleted Subject',
+      description: 'Testing a deleted subject.',
+      categories: [],
+      topics: [
+        {
+          id: ObjectId('5ffdf41a1ee2c62320b49ec3'),
+          name: 'Advice',
+          description:
+            'These questions will ask you to give advice to someone who is interested in your career',
+        },
+      ],
+      questions: [{ question: ObjectId('511111111111111111111115') }],
+      deleted: true,
+    },
   ],
 
   questions: [

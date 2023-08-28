@@ -81,6 +81,7 @@ export interface SubjectUpdateInput {
   description: string;
   isRequired: boolean;
   isArchived: boolean;
+  deleted: boolean;
   categories: CategoryUpdateInput[];
   topics: TopicUpdateInput[];
   questions: SubjectQuestionUpdateInput[];
@@ -95,6 +96,7 @@ export const SubjectUpdateInputType = new GraphQLInputObjectType({
     description: { type: GraphQLString },
     isRequired: { type: GraphQLBoolean },
     isArchived: { type: GraphQLBoolean },
+    deleted: { type: GraphQLBoolean },
     categories: { type: GraphQLList(CategoryInputType) },
     topics: { type: GraphQLList(TopicInputType) },
     questions: { type: GraphQLList(SubjectQuestionInputType) },
@@ -137,7 +139,10 @@ export const subjectUpdate = {
       throw new Error('Your account has been disabled');
     }
     const userCanManageArchival = canEditContent(context.user);
-    if (args.subject.isArchived && !userCanManageArchival) {
+    if (
+      (args.subject.isArchived || args.subject.deleted) &&
+      !userCanManageArchival
+    ) {
       throw new Error('User is not authorized to archive this subject.');
     }
     return await SubjectModel.updateOrCreate(args.subject);

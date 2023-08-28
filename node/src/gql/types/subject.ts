@@ -62,6 +62,12 @@ export const SubjectType = new GraphQLObjectType({
         return Boolean(subject.isArchived);
       },
     },
+    deleted: {
+      type: GraphQLBoolean,
+      resolve: async (subject: Subject) => {
+        return Boolean(subject.deleted);
+      },
+    },
     topics: { type: GraphQLList(TopicType) },
     categories: { type: GraphQLList(CategoryType) },
     questions: {

@@ -76,6 +76,33 @@ describe('subjects', () => {
     });
   });
 
+  it('does not get deleted subjects', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+        subjects {
+          edges {
+            node {
+              _id
+              name
+              isRequired
+            }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }`,
+      });
+    expect(response.status).to.equal(200);
+    const nodes = response.body.data.subjects.edges.map((e: any) => e.node);
+    nodes.forEach((n: any) => {
+      expect(n._id).to.not.equal('5ffdf41a1ee2c62320b49ec9');
+    });
+  });
+
   describe('can order list of subjects', () => {
     it('by name in ascending order', async () => {
       const response = await request(app)
