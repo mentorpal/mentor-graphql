@@ -62,7 +62,7 @@ export const mentorAnswerUrlUpdate = {
     if (!answer) {
       throw new Error('no answer found');
     }
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const update_args: any = {};
     const vttMediaNeedsTransfer = answer.vttMedia?.needsTransfer;
     let webMediaNeedsTransfer = answer.webMedia?.needsTransfer;

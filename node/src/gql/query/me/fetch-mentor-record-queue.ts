@@ -14,10 +14,10 @@ export const fetchMentorRecordQueue = {
   type: GraphQLList(GraphQLString),
   resolve: async (
     _: GraphQLObjectType,
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     args: any,
     context: { user: User }
   ): Promise<string[]> => {
-    // eslint-disable-line  @typescript-eslint/no-explicit-any
     if (!context.user) {
       throw new Error('Only authenticated users');
     }

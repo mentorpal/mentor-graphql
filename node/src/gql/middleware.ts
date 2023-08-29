@@ -13,8 +13,8 @@ import OrganizationModel, { Organization } from '../models/Organization';
 import { getRefreshedToken } from './types/user-access-token';
 import { logger } from '../utils/logging';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const extensions = ({ context }: any) => {
-  // eslint-disable-line  @typescript-eslint/no-explicit-any
   return {
     newToken: context.newToken ? context.newToken : '',
   };
@@ -24,7 +24,12 @@ function isApiReq(req: Request): boolean {
   return Boolean(req.headers['mentor-graphql-req']);
 }
 
-async function getOrg(req: Request, next: any, user: User, jwtToken = '') {
+async function getOrg(
+  req: Request,
+  next: (user: User, org: Organization, newToken?: string) => void,
+  user: User,
+  jwtToken = ''
+) {
   try {
     const origin = req.header('origin');
     if (origin) {
@@ -39,8 +44,10 @@ async function getOrg(req: Request, next: any, user: User, jwtToken = '') {
   }
 }
 
-async function refreshToken(req: Request, next: any) {
-  // eslint-disable-line  @typescript-eslint/no-explicit-any
+async function refreshToken(
+  req: Request,
+  next: (user: User, org: Organization, newToken?: string) => void
+) {
   try {
     logger.debug('refreshing token');
     const token = req.cookies[process.env.REFRESH_TOKEN_NAME];
@@ -87,12 +94,16 @@ export default graphqlHTTP((req: Request, res: Response) => {
      * but never block the call from here.
      */
     const authType = isApiReq(req) ? 'bearer' : 'jwt';
-    passport.authenticate(authType, { session: false }, (err, user) => {
-      if (err == 'token expired' || user === false) {
-        refreshToken(req, next);
-      } else {
-        getOrg(req, next, user);
+    passport.authenticate(
+      authType,
+      { session: false },
+      (err: string, user: User) => {
+        if (err === 'token expired' || !user) {
+          refreshToken(req, next);
+        } else {
+          getOrg(req, next, user);
+        }
       }
-    })(req, res, next);
+    )(req, res, next);
   });
 });

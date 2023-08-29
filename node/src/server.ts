@@ -79,6 +79,7 @@ async function serverStart() {
     appStop();
     setTimeout(() => process.exit(1), 3000);
   });
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   process.on('unhandledRejection', (reason: Error, promise: Promise<any>) => {
     logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
     if (process.env.IS_SENTRY_ENABLED === 'true') {
