@@ -1301,6 +1301,13 @@ describe('import mentor', () => {
     expect(response.body.data.questions.edges).to.eql([
       {
         node: {
+          question:
+            'This is an orphaned question (does not belong to a subject).',
+          mentor: null,
+        },
+      },
+      {
+        node: {
           question: 'New Qustion matches no text or id!?',
           mentor: '5ffdf41a1ee2c62111111111',
         },

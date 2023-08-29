@@ -165,6 +165,7 @@ export interface MentorModel extends Model<Mentor> {
     json: MentorImportJson,
     replacedMentorDataChanges: ReplacedMentorDataChanges
   ): Promise<Mentor>;
+  getOrphanedCompleteAnswers(mentor: string | Mentor): Promise<Answer[]>;
 }
 
 export const MentorSchema = new Schema<Mentor, MentorModel>(
@@ -783,6 +784,33 @@ MentorSchema.statics.getTopics = async function (
 
   const topicsIds = [...new Set(topics.map((t) => `${t.id}`))];
   return topicsIds.map((tId) => topics.find((t) => `${t.id}` === tId));
+};
+
+MentorSchema.statics.getOrphanedCompleteAnswers = async function (
+  m: string | Mentor
+): Promise<Answer[]> {
+  const mentor: Mentor = typeof m === 'string' ? await this.findById(m) : m;
+  if (!mentor) {
+    throw new Error(`mentor ${m} not found`);
+  }
+  const subjects = await SubjectModel.find({});
+  const allSubjectQuestions = subjects.reduce((acc: SubjectQuestion[], cur) => {
+    acc.push(...cur.questions);
+    return acc;
+  }, []);
+  const allSubjectQuestionIds = allSubjectQuestions.map(
+    (sq: { question: { _id: string } }) => `${sq.question._id}`
+  );
+  const allMentorAnswers = await AnswerModel.find({
+    mentor: mentor._id,
+  });
+  const allCompleteAnswers = allMentorAnswers.filter((a) =>
+    isAnswerComplete(a, undefined, mentor)
+  );
+  const orphanedCompleteAnswers = allCompleteAnswers.filter(
+    (a) => !allSubjectQuestionIds.includes(`${a.question}`)
+  );
+  return orphanedCompleteAnswers;
 };
 
 MentorSchema.statics.getQuestions = async function ({

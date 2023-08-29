@@ -209,6 +209,12 @@ export const MentorType = new GraphQLObjectType({
         });
       },
     },
+    orphanedCompleteAnswers: {
+      type: GraphQLList(AnswerType),
+      resolve: async function (mentor: Mentor) {
+        return await MentorModel.getOrphanedCompleteAnswers(mentor);
+      },
+    },
     utterances: {
       type: GraphQLList(AnswerType),
       args: {

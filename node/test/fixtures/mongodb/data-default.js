@@ -353,6 +353,11 @@ module.exports = {
       question: 'What is Aaron like?',
       type: 'QUESTION',
     },
+    {
+      _id: ObjectId('511111111111111111111193'),
+      question: 'This is an orphaned question (does not belong to a subject).',
+      type: 'QUESTION',
+    },
   ],
 
   answers: [
@@ -456,6 +461,26 @@ module.exports = {
         type: 'video',
         tag: 'mobile',
         url: 'videos/5ffdf41a1ee2c62111111114/511111111111111111111111/mobile.mp4',
+      },
+    },
+    {
+      _id: ObjectId('511111111111111111111195'),
+      mentor: ObjectId('5ffdf41a1ee2c62111111119'),
+      question: ObjectId('511111111111111111111193'),
+      hasEditedTranscript: true,
+      transcript:
+        'This is an orphaned answer (the respective question does not belong to a subject)',
+      video: 'https://idle/url',
+      status: 'COMPLETE',
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+      },
+      mobileMedia: {
+        type: 'video',
+        tag: 'mobile',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
       },
     },
   ],

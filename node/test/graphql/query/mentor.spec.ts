@@ -472,12 +472,16 @@ describe('mentor', () => {
       .post('/graphql')
       .send({
         query: `query {
-        mentor(id: "5ffdf41a1ee2c62111111111") {
+        mentor(id: "5ffdf41a1ee2c62111111119") {
+          _id
           name
           answers {
-            question {
-              question
-            }
+            _id
+            transcript
+            status
+          }
+          orphanedCompleteAnswers {
+            _id
             transcript
             status
           }
@@ -487,41 +491,41 @@ describe('mentor', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
-      name: 'Clinton Anderson',
+      _id: '5ffdf41a1ee2c62111111119',
+      name: 'Aaron Klunder',
       answers: [
         {
-          question: {
-            question: 'Who are you and what do you do?',
-          },
-          transcript: '',
-          status: 'NONE',
-        },
-        {
-          question: {
-            question: 'How old are you?',
-          },
-          transcript: '',
-          status: 'NONE',
-        },
-        {
-          question: {
-            question: 'Do you like your job?',
-          },
-          transcript: '',
-          status: 'NONE',
-        },
-        {
-          question: {
-            question: 'What is Aaron like?',
-          },
+          _id: '511111111111111111111174',
+          transcript:
+            "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
           status: 'COMPLETE',
-          transcript: 'Test Transcript',
         },
         {
-          question: {
-            question: "Don't talk and stay still.",
-          },
-          transcript: '[being still]',
+          _id: null,
+          transcript: '',
+          status: 'NONE',
+        },
+        {
+          _id: null,
+          transcript: '',
+          status: 'NONE',
+        },
+        {
+          _id: null,
+          transcript: '',
+          status: 'NONE',
+        },
+        {
+          _id: null,
+          transcript: '',
+          status: 'NONE',
+        },
+      ],
+      orphanedCompleteAnswers: [
+        {
+          _id: '511111111111111111111195',
+          transcript:
+            'This is an orphaned answer (the respective question does not belong to a subject)',
           status: 'COMPLETE',
         },
       ],

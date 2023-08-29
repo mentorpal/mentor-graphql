@@ -47,6 +47,14 @@ describe('answers', () => {
       edges: [
         {
           node: {
+            _id: '511111111111111111111195',
+            externalVideoIds: {
+              wistiaId: '',
+            },
+          },
+        },
+        {
+          node: {
             _id: '511111111111111111111174',
             externalVideoIds: {
               wistiaId: '',
@@ -102,6 +110,11 @@ describe('answers', () => {
       edges: [
         {
           node: {
+            _id: '511111111111111111111195',
+          },
+        },
+        {
+          node: {
             _id: '511111111111111111111174',
           },
         },
@@ -143,6 +156,11 @@ describe('answers', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.answers).to.eql({
       edges: [
+        {
+          node: {
+            _id: '511111111111111111111195',
+          },
+        },
         {
           node: {
             _id: '511111111111111111111174',
@@ -193,6 +211,11 @@ describe('answers', () => {
       edges: [
         {
           node: {
+            _id: '511111111111111111111195',
+          },
+        },
+        {
+          node: {
             _id: '511111111111111111111174',
           },
         },
@@ -239,6 +262,11 @@ describe('answers', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.answers).to.eql({
       edges: [
+        {
+          node: {
+            _id: '511111111111111111111195',
+          },
+        },
         {
           node: {
             _id: '511111111111111111111174',
