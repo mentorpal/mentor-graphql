@@ -59,11 +59,14 @@ export function findOne<T>(config: {
     type,
     args: argsConfEffective,
     resolve: async (
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       parent: any,
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       args: any,
       context: { user: User }
     ): Promise<T> => {
       const mArgs = Object.getOwnPropertyNames(args).reduce(
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         (acc: any, cur: string) => {
           if (cur === 'id') {
             acc._id = toObjectIdOrThrow(args[cur], cur);

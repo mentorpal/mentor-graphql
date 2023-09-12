@@ -1,15 +1,15 @@
 # syntax=docker/dockerfile:1.0.0-experimental
-FROM node:14.16-alpine as tsc-compile
+FROM node:18.13 as tsc-compile
 WORKDIR /build
 COPY package.json package-lock.json .
 RUN npm ci
 COPY . .
 RUN npm run build
-FROM node:14.16-alpine as builder
+FROM node:18.13 as builder
 WORKDIR /app
 COPY . .
 RUN npm prune --production
-FROM node:14.16-alpine
+FROM node:18.13
 COPY --from=tsc-compile /build/dist /app
 COPY --from=builder /app/node_modules /app/node_modules
 WORKDIR /app

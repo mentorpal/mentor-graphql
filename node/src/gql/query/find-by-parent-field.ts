@@ -11,9 +11,11 @@ export function findByParentFieldQuery<T>(
   gqlType: GraphQLObjectType,
   model: HasFindById<T>,
   fieldName: string
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 ): any {
   return {
     type: gqlType,
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     resolve: async (parent: any) => {
       const id = parent[fieldName];
       const item = await model.findById(id).exec();
