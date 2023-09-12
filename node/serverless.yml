@@ -29,7 +29,7 @@ custom:
   stages:
     dev:
       LOG_LEVEL: 'trace'
-      IS_SENTRY_ENABLED: false
+      IS_SENTRY_ENABLED: 'false'
       API_SECRET: ${ssm:/mentorpal/newdev/shared/api_secret, ''}
       JWT_SECRET: ${ssm:/mentorpal/newdev/shared/jwt_secret, ''}
       MONGO_URI: ${ssm:/mentorpal/graphql/dev/mongo_uri, ''}
@@ -42,7 +42,7 @@ custom:
       DOMAIN: "devmentorpal.org"
     qa:
       LOG_LEVEL: 'debug'
-      IS_SENTRY_ENABLED: true
+      IS_SENTRY_ENABLED: 'true'
       API_SECRET: ${ssm:/mentorpal/v2/shared/api_secret, ''}
       JWT_SECRET: ${ssm:/mentorpal/v2/shared/jwt_secret, ''}
       MONGO_URI: ${ssm:/mentorpal/graphql/qa/mongo_uri, ''}
@@ -55,7 +55,7 @@ custom:
       DOMAIN: "qamentorpal.org"
     prod:
       LOG_LEVEL: 'info'
-      IS_SENTRY_ENABLED: true
+      IS_SENTRY_ENABLED: 'true'
       API_SECRET: ${ssm:/mentorpal/cf/shared/api_secret, ''}
       JWT_SECRET: ${ssm:/mentorpal/cf/shared/jwt_secret, ''}
       MONGO_URI: ${ssm:/mentorpal/graphql/prod/mongo_uri, ''}
