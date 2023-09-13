@@ -14,9 +14,7 @@ import mongoose from 'mongoose';
 import {
   UserQuestion as UserQuestionModel,
   Answer as AnswerModel,
-  Question as QuestionModel,
 } from '../../models';
-import { Answer } from '../../models/Answer';
 import { UserQuestion } from '../../models/UserQuestion';
 import { UserQuestionType } from '../types/user-question';
 
