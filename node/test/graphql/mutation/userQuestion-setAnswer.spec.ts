@@ -93,7 +93,7 @@ describe('userQuestionSetAnswer', () => {
     });
   });
 
-  it(`adds graderAnswer to userQuestion and adds paraphrase to question`, async () => {
+  it(`adds graderAnswer to userQuestion`, async () => {
     const response = await request(app)
       .post('/graphql')
       .send({
@@ -111,22 +111,9 @@ describe('userQuestionSetAnswer', () => {
         _id: '511111111111111111111112',
       },
     });
-    const question = await request(app)
-      .post('/graphql')
-      .send({
-        query: `query {
-        question(id: "511111111111111111111111") {
-          paraphrases
-        }
-      }`,
-      });
-    expect(question.status).to.equal(200);
-    expect(question.body.data.question).to.eql({
-      paraphrases: ['who are you?'],
-    });
   });
 
-  it(`if no answer provided, removes graderAnswer from userQuestion and removes paraphrase from question`, async () => {
+  it(`if no answer provided, removes graderAnswer from userQuestion`, async () => {
     await request(app)
       .post('/graphql')
       .send({
@@ -152,19 +139,6 @@ describe('userQuestionSetAnswer', () => {
     expect(response.status).to.equal(200);
     expect(response.body.data.userQuestionSetAnswer).to.eql({
       graderAnswer: null,
-    });
-    const question = await request(app)
-      .post('/graphql')
-      .send({
-        query: `query {
-        question(id: "511111111111111111111111") {
-          paraphrases
-        }
-      }`,
-      });
-    expect(question.status).to.equal(200);
-    expect(question.body.data.question).to.eql({
-      paraphrases: [],
     });
   });
 });

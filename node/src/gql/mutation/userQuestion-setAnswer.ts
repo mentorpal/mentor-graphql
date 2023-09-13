@@ -32,7 +32,6 @@ export const userQuestionSetAnswer = {
     _root: GraphQLObjectType,
     args: { id: string; answer: string; question: string; mentorId: string }
   ): Promise<UserQuestion> => {
-    // Remove old answer as a paraphrase from question
     const oldUserQuestion: UserQuestion = await UserQuestionModel.findById(
       args.id
     );
@@ -43,18 +42,8 @@ export const userQuestionSetAnswer = {
       // no changes needed
       return oldUserQuestion;
     }
-    const oldAnswer: Answer = await AnswerModel.findById(
-      oldUserQuestion.graderAnswer
-    );
-    if (oldAnswer) {
-      await QuestionModel.findByIdAndUpdate(oldAnswer.question, {
-        $pull: {
-          paraphrases: oldUserQuestion.question,
-        },
-      });
-    }
     let answerId = args.answer;
-    // If no args.answer, create new answer document with question id
+    // If no args.answer but a question is provided, create new answer document with question id
     if (!answerId && args.question && args.mentorId) {
       const newAnswer = await AnswerModel.findOneAndUpdate(
         { question: args.question, mentor: args.mentorId },
@@ -63,7 +52,6 @@ export const userQuestionSetAnswer = {
       );
       answerId = newAnswer._id;
     }
-    // Add new answer as a paraphrase to question
     const userQuestion: UserQuestion =
       await UserQuestionModel.findByIdAndUpdate(
         args.id,
@@ -74,14 +62,6 @@ export const userQuestionSetAnswer = {
           new: true,
         }
       );
-    const answer: Answer = await AnswerModel.findById(answerId);
-    if (answer) {
-      await QuestionModel.findByIdAndUpdate(answer.question, {
-        $addToSet: {
-          paraphrases: userQuestion.question,
-        },
-      });
-    }
     return userQuestion;
   },
 };
