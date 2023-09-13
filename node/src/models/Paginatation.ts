@@ -37,7 +37,7 @@ export function pluginPagination<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   M extends Model<DocType, any, any> = Model<any, any, any>,
   SchemaDefinitionType = undefined,
-  TInstanceMethods = M
+  TInstanceMethods = M,
 >(s: Schema<DocType, M, SchemaDefinitionType, TInstanceMethods>): void {
   s.plugin(mongoPaging.mongoosePlugin);
 }
