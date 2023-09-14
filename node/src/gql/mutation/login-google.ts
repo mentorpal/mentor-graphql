@@ -18,6 +18,7 @@ import {
   setTokenCookie,
   generateRefreshToken,
 } from '../types/user-access-token';
+import { notifyAdminNewMentors } from '../../utils/email-admin';
 
 export interface GoogleResponse {
   id: string;
@@ -106,6 +107,10 @@ export const loginGoogle = {
             upsert: true,
           }
         );
+        const notifyAdmin = process.env.NOTIFY_ADMIN_ON_NEW_MENTOR == 'true';
+        if (notifyAdmin) {
+          await notifyAdminNewMentors();
+        }
         const mentorId = newMentor._id;
         user = await UserSchema.findOneAndUpdate(
           {
