@@ -40,6 +40,7 @@ custom:
       REFRESH_TOKEN_NAME: 'refreshTokenDev'
       WEBACL_ARN: ${ssm:/devmentorpal/api_firewall_arn, ''}
       DOMAIN: "devmentorpal.org"
+      NOTIFY_ADMIN_ON_NEW_MENTOR: "false"
     qa:
       LOG_LEVEL: 'debug'
       IS_SENTRY_ENABLED: 'true'
@@ -53,6 +54,7 @@ custom:
       REFRESH_TOKEN_NAME: 'refreshTokenQa'
       WEBACL_ARN: ${ssm:/qamentorpal/api_firewall_arn, ''}
       DOMAIN: "qamentorpal.org"
+      NOTIFY_ADMIN_ON_NEW_MENTOR: "false"
     prod:
       LOG_LEVEL: 'info'
       IS_SENTRY_ENABLED: 'true'
@@ -66,6 +68,7 @@ custom:
       REFRESH_TOKEN_NAME: 'refreshTokenProd'
       WEBACL_ARN: ${ssm:/mentorpal/api_firewall_arn, ''}
       DOMAIN: "mentorpal.org"
+      NOTIFY_ADMIN_ON_NEW_MENTOR: "true"
 
 provider:
   name: aws
@@ -107,12 +110,23 @@ provider:
     GOOGLE_CLIENT_ID: ${self:custom.stages.${self:provider.stage}.GOOGLE_CLIENT_ID}
     REFRESH_TOKEN_NAME: ${self:custom.stages.${self:provider.stage}.REFRESH_TOKEN_NAME}
     DOMAIN: ${self:custom.stages.${self:provider.stage}.DOMAIN}
+    NOTIFY_ADMIN_ON_NEW_MENTOR: ${self:custom.stages.${self:provider.stage}.NOTIFY_ADMIN_ON_NEW_MENTOR}
+    NOTIFY_ADMIN_EMAIL_FROM: ${ssm:/mentorpal/shared/notify_admin_email_from}
+    NOTIFY_ADMIN_EMAILS_LIST: ${ssm:/mentorpal/shared/notify_admin_emails_list}
 
   stackTags:
     Environment: ${self:provider.stage}
     Source: 'serverless-framework'
     Project: 'mentorpal'
     Component: 'mentor-graphql'
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - ses:SendRawEmail
+          Resource: "*"
 
 functions:
   app:
