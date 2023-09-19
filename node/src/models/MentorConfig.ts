@@ -17,7 +17,7 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-import { OrgPermissionInputType } from 'gql/mutation/me/mentor-update-privacy';
+import { OrgPermissionInputType } from '../gql/mutation/me/mentor-update-privacy';
 
 export interface MentorConfig extends Document {
   configId: string;

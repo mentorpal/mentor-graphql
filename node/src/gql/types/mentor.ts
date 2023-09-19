@@ -29,7 +29,7 @@ import SubjectType, { SubjectQuestionType, TopicType } from './subject';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 import { QuestionType as QuestionGQLType } from './question';
 import { TrainStatus } from '../../models/MentorTrainTask';
-import { MentorConfigType } from 'models/MentorConfig';
+import { MentorConfigType } from '../../models/MentorConfig';
 
 export const MentorOrgPermissionType = new GraphQLObjectType({
   name: 'MentorOrgPermissionType',
