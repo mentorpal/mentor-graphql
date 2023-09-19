@@ -10,6 +10,7 @@ import {
   User as UserSchema,
   Mentor as MentorSchema,
   Subject as SubjectSchema,
+  MentorConfig as MentorConfigModel,
 } from '../../models';
 import {
   UserAccessTokenType,
@@ -55,10 +56,11 @@ export const loginGoogle = {
   type: UserAccessTokenType,
   args: {
     accessToken: { type: GraphQLNonNull(GraphQLString) },
+    mentorConfig: { type: GraphQLString },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { accessToken: string },
+    args: { accessToken: string; mentorConfig: string },
     context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
   ): Promise<UserAccessToken> => {
     try {
@@ -90,6 +92,24 @@ export const loginGoogle = {
       if (!user.mentorIds.length) {
         // add any required subjects to mentor
         const requiredSubjects = await SubjectSchema.find({ isRequired: true });
+
+        const mentorConfig = args.mentorConfig
+          ? await MentorConfigModel.findOne({ configId: args.mentorConfig })
+          : undefined;
+        const configUpdates = {
+          ...(mentorConfig?.subjects.length
+            ? {
+                subjects: requiredSubjects
+                  .map((s) => s._id)
+                  .concat(mentorConfig.subjects),
+              }
+            : {}),
+          ...(mentorConfig?.publiclyVisible ? { isPrivate: false } : {}),
+          ...(mentorConfig?.orgPermissions.length
+            ? { orgPermissions: mentorConfig.orgPermissions }
+            : {}),
+          ...(mentorConfig ? { mentorConfig: mentorConfig._id } : {}),
+        };
         const newMentor = await MentorSchema.findOneAndUpdate(
           {
             user: user._id,
@@ -100,6 +120,7 @@ export const loginGoogle = {
               firstName: googleResponse.given_name,
               email: googleResponse.email,
               subjects: requiredSubjects.map((s) => s._id),
+              ...configUpdates,
             },
           },
           {
