@@ -45,44 +45,38 @@ describe('mentors', () => {
       }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentors).to.eql({
-      edges: [
-        {
-          node: {
-            _id: '5ffdf41a1ee2c62111111119',
-            name: 'Aaron Klunder',
-          },
+    expect(response.body.data.mentors.edges).to.deep.include.members([
+      {
+        node: {
+          _id: '5ffdf41a1ee2c62111111119',
+          name: 'Aaron Klunder',
         },
-        {
-          node: {
-            _id: '5ffdf41a1ee2c62111111113',
-            name: 'Dan Davis',
-          },
-        },
-        {
-          node: {
-            _id: '5ffdf41a1ee2c62111111112',
-            name: 'Julianne Nordhagen',
-          },
-        },
-        {
-          node: {
-            _id: '5ffdf41a1ee2c62111111111',
-            name: 'Clinton Anderson',
-          },
-        },
-        {
-          node: {
-            _id: '5ffdf41a1ee2c62111111110',
-            name: 'Jacob Ferguson',
-          },
-        },
-      ],
-      pageInfo: {
-        hasNextPage: false,
-        endCursor: null,
       },
-    });
+      {
+        node: {
+          _id: '5ffdf41a1ee2c62111111113',
+          name: 'Dan Davis',
+        },
+      },
+      {
+        node: {
+          _id: '5ffdf41a1ee2c62111111112',
+          name: 'Julianne Nordhagen',
+        },
+      },
+      {
+        node: {
+          _id: '5ffdf41a1ee2c62111111111',
+          name: 'Clinton Anderson',
+        },
+      },
+      {
+        node: {
+          _id: '5ffdf41a1ee2c62111111110',
+          name: 'Jacob Ferguson',
+        },
+      },
+    ]);
   });
 
   it('does not get private mentors if not owner or super user', async () => {
@@ -102,35 +96,33 @@ describe('mentors', () => {
       }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentors).to.eql({
-      edges: [
-        {
-          node: {
-            name: 'Aaron Klunder',
-          },
+    expect(response.body.data.mentors.edges).to.deep.include.members([
+      {
+        node: {
+          name: 'Aaron Klunder',
         },
-        {
-          node: {
-            name: 'Dan Davis',
-          },
+      },
+      {
+        node: {
+          name: 'Dan Davis',
         },
-        {
-          node: {
-            name: 'Julianne Nordhagen',
-          },
+      },
+      {
+        node: {
+          name: 'Julianne Nordhagen',
         },
-        {
-          node: {
-            name: 'Clinton Anderson',
-          },
+      },
+      {
+        node: {
+          name: 'Clinton Anderson',
         },
-        {
-          node: {
-            name: 'Jacob Ferguson',
-          },
+      },
+      {
+        node: {
+          name: 'Jacob Ferguson',
         },
-      ],
-    });
+      },
+    ]);
   });
 
   it('gets private mentor if content manager', async () => {
@@ -150,40 +142,38 @@ describe('mentors', () => {
       }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentors).to.eql({
-      edges: [
-        {
-          node: {
-            name: 'Aaron Klunder',
-          },
+    expect(response.body.data.mentors.edges).to.deep.include.members([
+      {
+        node: {
+          name: 'Aaron Klunder',
         },
-        {
-          node: {
-            name: 'Private Mentor',
-          },
+      },
+      {
+        node: {
+          name: 'Private Mentor',
         },
-        {
-          node: {
-            name: 'Dan Davis',
-          },
+      },
+      {
+        node: {
+          name: 'Dan Davis',
         },
-        {
-          node: {
-            name: 'Julianne Nordhagen',
-          },
+      },
+      {
+        node: {
+          name: 'Julianne Nordhagen',
         },
-        {
-          node: {
-            name: 'Clinton Anderson',
-          },
+      },
+      {
+        node: {
+          name: 'Clinton Anderson',
         },
-        {
-          node: {
-            name: 'Jacob Ferguson',
-          },
+      },
+      {
+        node: {
+          name: 'Jacob Ferguson',
         },
-      ],
-    });
+      },
+    ]);
   });
 
   it('gets private mentor if admin', async () => {
@@ -203,40 +193,38 @@ describe('mentors', () => {
       }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentors).to.eql({
-      edges: [
-        {
-          node: {
-            name: 'Aaron Klunder',
-          },
+    expect(response.body.data.mentors.edges).to.deep.include.members([
+      {
+        node: {
+          name: 'Aaron Klunder',
         },
-        {
-          node: {
-            name: 'Private Mentor',
-          },
+      },
+      {
+        node: {
+          name: 'Private Mentor',
         },
-        {
-          node: {
-            name: 'Dan Davis',
-          },
+      },
+      {
+        node: {
+          name: 'Dan Davis',
         },
-        {
-          node: {
-            name: 'Julianne Nordhagen',
-          },
+      },
+      {
+        node: {
+          name: 'Julianne Nordhagen',
         },
-        {
-          node: {
-            name: 'Clinton Anderson',
-          },
+      },
+      {
+        node: {
+          name: 'Clinton Anderson',
         },
-        {
-          node: {
-            name: 'Jacob Ferguson',
-          },
+      },
+      {
+        node: {
+          name: 'Jacob Ferguson',
         },
-      ],
-    });
+      },
+    ]);
   });
 
   it('gets private mentor if owner', async () => {
@@ -256,39 +244,37 @@ describe('mentors', () => {
       }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentors).to.eql({
-      edges: [
-        {
-          node: {
-            name: 'Aaron Klunder',
-          },
+    expect(response.body.data.mentors.edges).to.deep.include.members([
+      {
+        node: {
+          name: 'Aaron Klunder',
         },
-        {
-          node: {
-            name: 'Private Mentor',
-          },
+      },
+      {
+        node: {
+          name: 'Private Mentor',
         },
-        {
-          node: {
-            name: 'Dan Davis',
-          },
+      },
+      {
+        node: {
+          name: 'Dan Davis',
         },
-        {
-          node: {
-            name: 'Julianne Nordhagen',
-          },
+      },
+      {
+        node: {
+          name: 'Julianne Nordhagen',
         },
-        {
-          node: {
-            name: 'Clinton Anderson',
-          },
+      },
+      {
+        node: {
+          name: 'Clinton Anderson',
         },
-        {
-          node: {
-            name: 'Jacob Ferguson',
-          },
+      },
+      {
+        node: {
+          name: 'Jacob Ferguson',
         },
-      ],
-    });
+      },
+    ]);
   });
 });

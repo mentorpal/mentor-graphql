@@ -5,7 +5,11 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import mongoose, { Document, Model, Schema } from 'mongoose';
-import { OrgPermissionProps, OrgPermissionSchema } from './Mentor';
+import {
+  OrgPermissionProps,
+  OrgPermissionSchema,
+  OrgPermissionType,
+} from './Mentor';
 import {
   GraphQLBoolean,
   GraphQLInputObjectType,
@@ -14,7 +18,6 @@ import {
   GraphQLString,
 } from 'graphql';
 import { OrgPermissionInputType } from 'gql/mutation/me/mentor-update-privacy';
-import { OrgPermissionType } from 'gql/types/mentor';
 
 export interface MentorConfig extends Document {
   configId: string;

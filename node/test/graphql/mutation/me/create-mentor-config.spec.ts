@@ -36,7 +36,7 @@ describe('Create Mentor Config', () => {
               subjects
               publiclyVisible
               orgPermissions {
-                orgId
+                org
                 viewPermission
                 editPermission
               }
@@ -67,7 +67,7 @@ describe('Create Mentor Config', () => {
               subjects
               publiclyVisible
               orgPermissions {
-                orgId
+                org
                 viewPermission
                 editPermission
               }
@@ -103,7 +103,7 @@ describe('Create Mentor Config', () => {
               subjects
               publiclyVisible
               orgPermissions {
-                orgId
+                org
                 viewPermission
                 editPermission
               }
@@ -115,7 +115,6 @@ describe('Create Mentor Config', () => {
             response.body.data.me.mentorConfigCreateUpdate.configId,
         },
       });
-    console.log(response2.body, null, 2);
     expect(response2.status).to.equal(200);
     expect(response2.body.data.me.fetchMentorConfig).to.have.property(
       'configId',

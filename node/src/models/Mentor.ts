@@ -40,6 +40,7 @@ import { Organization } from './Organization';
 import { externalVideoIdsDefault } from '../gql/mutation/api/update-answers';
 import { TrainStatus } from './MentorTrainTask';
 import { MentorConfig } from './MentorConfig';
+import { GraphQLID, GraphQLObjectType, GraphQLString } from 'graphql';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -65,6 +66,15 @@ export interface OrgPermissionProps {
 }
 
 export interface OrgPermission extends OrgPermissionProps, Document {}
+
+export const OrgPermissionType = new GraphQLObjectType({
+  name: 'OrgPermissionType',
+  fields: {
+    org: { type: GraphQLID },
+    viewPermission: { type: GraphQLString },
+    editPermission: { type: GraphQLString },
+  },
+});
 
 export const OrgPermissionSchema = new Schema({
   org: { type: mongoose.Types.ObjectId, ref: 'Organization' },
@@ -184,6 +194,10 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
       ref: 'Subject',
     },
     numAnswersComplete: { type: Number, default: 0 },
+    mentorConfig: {
+      type: Schema.Types.ObjectId,
+      ref: 'MentorConfig',
+    },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
     keywords: { type: [String] },
     recordQueue: { type: [{ type: Schema.Types.ObjectId, ref: 'Question' }] },

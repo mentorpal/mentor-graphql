@@ -58,6 +58,10 @@ describe('mentorsByKeyword', () => {
         _id: '5ffdf41a1ee2c62111111113',
         name: 'Dan Davis',
       },
+      {
+        _id: '5ffdf41a1ee2c62119991114',
+        name: 'Locked Down Mentor',
+      },
     ]);
   });
 
@@ -95,6 +99,10 @@ describe('mentorsByKeyword', () => {
       {
         _id: '5ffdf41a1ee2c62111111113',
         name: 'Dan Davis',
+      },
+      {
+        _id: '5ffdf41a1ee2c62119991114',
+        name: 'Locked Down Mentor',
       },
     ]);
   });
@@ -138,6 +146,10 @@ describe('mentorsByKeyword', () => {
         _id: '5ffdf41a1ee2c62111111114',
         name: 'Private Mentor',
       },
+      {
+        _id: '5ffdf41a1ee2c62119991114',
+        name: 'Locked Down Mentor',
+      },
     ]);
   });
 
@@ -179,6 +191,10 @@ describe('mentorsByKeyword', () => {
       {
         _id: '5ffdf41a1ee2c62111111114',
         name: 'Private Mentor',
+      },
+      {
+        _id: '5ffdf41a1ee2c62119991114',
+        name: 'Locked Down Mentor',
       },
     ]);
   });
@@ -222,6 +238,10 @@ describe('mentorsByKeyword', () => {
         _id: '5ffdf41a1ee2c62111111114',
         name: 'Private Mentor',
       },
+      {
+        _id: '5ffdf41a1ee2c62119991114',
+        name: 'Locked Down Mentor',
+      },
     ]);
   });
 
@@ -253,6 +273,9 @@ describe('mentorsByKeyword', () => {
       {
         name: 'Julianne Nordhagen',
       },
+      {
+        name: 'Locked Down Mentor',
+      },
     ]);
   });
 
@@ -269,6 +292,9 @@ describe('mentorsByKeyword', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorsByKeyword).to.eql([
+      {
+        name: 'Locked Down Mentor',
+      },
       {
         name: 'Julianne Nordhagen',
       },
@@ -300,6 +326,9 @@ describe('mentorsByKeyword', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorsByKeyword).to.eql([
+      {
+        name: 'Locked Down Mentor',
+      },
       {
         name: 'Julianne Nordhagen',
       },
@@ -359,6 +388,9 @@ describe('mentorsByKeyword', () => {
       {
         name: 'Julianne Nordhagen',
       },
+      {
+        name: 'Locked Down Mentor',
+      },
     ]);
   });
 
@@ -391,6 +423,9 @@ describe('mentorsByKeyword', () => {
       {
         name: 'Julianne Nordhagen',
       },
+      {
+        name: 'Locked Down Mentor',
+      },
     ]);
     // sort female first
     response = await request(app)
@@ -419,6 +454,9 @@ describe('mentorsByKeyword', () => {
       },
       {
         name: 'Dan Davis',
+      },
+      {
+        name: 'Locked Down Mentor',
       },
     ]);
     // sort male + stem first
@@ -450,6 +488,9 @@ describe('mentorsByKeyword', () => {
       },
       {
         name: 'Julianne Nordhagen',
+      },
+      {
+        name: 'Locked Down Mentor',
       },
     ]);
   });
