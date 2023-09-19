@@ -30,6 +30,8 @@ import ImportTask from './ImportTask';
 import MentorTrainStatus from './MentorTrainTask';
 export { default as MentorTrainStatus } from './MentorTrainTask';
 export { default as ImportTask } from './ImportTask';
+import MentorConfig from './MentorConfig';
+export { default as MentorConfig } from './MentorConfig';
 
 export default {
   Answer,
@@ -45,4 +47,5 @@ export default {
   RefreshToken,
   ImportTask,
   MentorTrainStatus,
+  MentorConfig,
 };

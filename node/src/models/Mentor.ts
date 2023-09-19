@@ -39,6 +39,7 @@ import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
 import { Organization } from './Organization';
 import { externalVideoIdsDefault } from '../gql/mutation/api/update-answers';
 import { TrainStatus } from './MentorTrainTask';
+import { MentorConfig } from './MentorConfig';
 
 export enum MentorType {
   VIDEO = 'VIDEO',
@@ -103,6 +104,7 @@ export interface Mentor extends Document {
   thumbnail: string;
   allowContact: boolean;
   numAnswersComplete: number;
+  mentorConfig?: MentorConfig['_id'];
   defaultSubject: Subject['_id'];
   subjects: Subject['_id'][];
   keywords: string[];
