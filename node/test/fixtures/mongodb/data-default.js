@@ -17,6 +17,7 @@ module.exports = {
         '5ffdf41a1ee2c62320b49eb3', //STEM
       ],
       publiclyVisible: true,
+      mentorType: 'CHAT',
       orgPermissions: [
         {
           org: ObjectId('511111111111111111111111'),

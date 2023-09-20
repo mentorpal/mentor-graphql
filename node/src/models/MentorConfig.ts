@@ -6,6 +6,7 @@ The full terms of this copyright and license should always be found in the root 
 */
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import {
+  MentorType,
   OrgPermissionProps,
   OrgPermissionSchema,
   OrgPermissionType,
@@ -23,6 +24,7 @@ export interface MentorConfig extends Document {
   configId: string;
   subjects: string[];
   publiclyVisible: boolean;
+  mentorType: MentorType;
   orgPermissions: OrgPermissionProps[];
 }
 
@@ -31,6 +33,7 @@ export const MentorConfigSchema = new Schema(
     configId: { type: String, default: '' },
     subjects: { type: [String], default: [] },
     publiclyVisible: { type: Boolean, default: false },
+    mentorType: { type: String },
     orgPermissions: { type: [OrgPermissionSchema], default: [] },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
@@ -42,6 +45,7 @@ export const MentorConfigInputType = new GraphQLInputObjectType({
     configId: { type: GraphQLString },
     subjects: { type: GraphQLList(GraphQLString) },
     publiclyVisible: { type: GraphQLBoolean },
+    mentorType: { type: GraphQLString },
     orgPermissions: { type: GraphQLList(OrgPermissionInputType) },
   },
 });
@@ -52,6 +56,7 @@ export const MentorConfigType = new GraphQLObjectType({
     configId: { type: GraphQLString },
     subjects: { type: GraphQLList(GraphQLString) },
     publiclyVisible: { type: GraphQLBoolean },
+    mentorType: { type: GraphQLString },
     orgPermissions: { type: GraphQLList(OrgPermissionType) },
   },
 });

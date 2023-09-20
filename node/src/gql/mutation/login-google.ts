@@ -115,6 +115,9 @@ export const loginGoogle = {
               }
             : {}),
           ...(mentorConfig?.publiclyVisible ? { isPrivate: false } : {}),
+          ...(mentorConfig?.mentorType
+            ? { mentorType: mentorConfig.mentorType }
+            : {}),
           ...(mentorConfig?.orgPermissions.length
             ? { orgPermissions: mentorConfig.orgPermissions }
             : {}),

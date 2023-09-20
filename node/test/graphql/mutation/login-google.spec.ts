@@ -141,6 +141,7 @@ describe('login with google', () => {
                 name
                 isPublicApproved
                 isPrivate
+                mentorType
                 orgPermissions{
                   orgId
                   orgName
@@ -155,6 +156,7 @@ describe('login with google', () => {
                   configId
                   subjects
                   publiclyVisible
+                  mentorType
                   orgPermissions{
                     org
                     viewPermission
@@ -193,12 +195,16 @@ describe('login with google', () => {
       },
     ]);
     expect(response2.body.data.mentors.edges[0].node.isPrivate).to.equal(false);
+    expect(response2.body.data.mentors.edges[0].node.mentorType).to.equal(
+      'CHAT'
+    );
     expect(
       response2.body.data.mentors.edges[0].node.mentorConfig
     ).to.deep.equal({
       configId: '2023TestConfig',
       subjects: ['5ffdf41a1ee2c62320b49eb3'],
       publiclyVisible: true,
+      mentorType: 'CHAT',
       orgPermissions: [
         {
           org: '511111111111111111111111',

@@ -41,6 +41,7 @@ export const mentorConfigCreateUpdate = {
           subjects: args.mentorConfig.subjects,
           publiclyVisible: args.mentorConfig.publiclyVisible,
           orgPermissions: args.mentorConfig.orgPermissions,
+          mentorType: args.mentorConfig.mentorType,
         },
       },
       {
