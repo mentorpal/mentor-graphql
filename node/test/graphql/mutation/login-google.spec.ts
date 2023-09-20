@@ -104,8 +104,8 @@ describe('login with google', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `mutation LoginGoogle($accessToken: String!, $mentorConfig: String){
-        loginGoogle(accessToken: $accessToken, mentorConfig: $mentorConfig) {
+        query: `mutation LoginGoogle($accessToken: String!, $mentorConfig: String, $lockMentorToConfig: Boolean){
+        loginGoogle(accessToken: $accessToken, mentorConfig: $mentorConfig, lockMentorToConfig: $lockMentorToConfig) {
           user {
             name
             email
@@ -117,6 +117,7 @@ describe('login with google', () => {
         variables: {
           accessToken: 'anything',
           mentorConfig: '2023TestConfig',
+          lockMentorToConfig: true,
         },
       });
 

@@ -5,7 +5,12 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import axios from 'axios';
-import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLBoolean,
+} from 'graphql';
 import {
   User as UserSchema,
   Mentor as MentorSchema,
@@ -57,10 +62,15 @@ export const loginGoogle = {
   args: {
     accessToken: { type: GraphQLNonNull(GraphQLString) },
     mentorConfig: { type: GraphQLString },
+    lockMentorToConfig: { type: GraphQLBoolean },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { accessToken: string; mentorConfig: string },
+    args: {
+      accessToken: string;
+      mentorConfig: string;
+      lockMentorToConfig: boolean;
+    },
     context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
   ): Promise<UserAccessToken> => {
     try {
@@ -108,7 +118,9 @@ export const loginGoogle = {
           ...(mentorConfig?.orgPermissions.length
             ? { orgPermissions: mentorConfig.orgPermissions }
             : {}),
-          ...(mentorConfig ? { mentorConfig: mentorConfig._id } : {}),
+          ...(mentorConfig && args.lockMentorToConfig
+            ? { mentorConfig: mentorConfig._id }
+            : {}),
         };
         const newMentor = await MentorSchema.findOneAndUpdate(
           {
