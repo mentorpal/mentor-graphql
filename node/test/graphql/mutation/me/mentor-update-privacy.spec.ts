@@ -146,7 +146,7 @@ describe('updateMentorPrivacy', () => {
     expect(response.status).to.equal(500);
   });
 
-  it('throws an error if the mentor is locked', async () => {
+  it('returns false if the mentor is locked', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea2');
     const response = await request(app)
       .post('/graphql')
@@ -161,8 +161,8 @@ describe('updateMentorPrivacy', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
-      'errors[0].message',
-      'Mentor is locked.'
+      'data.me.updateMentorPrivacy',
+      false
     );
   });
 

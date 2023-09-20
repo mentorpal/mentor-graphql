@@ -54,7 +54,8 @@ export const updateMentorPrivacy = {
       throw new Error('you do not have permission to edit this mentor');
     }
     if (mentor.mentorConfig) {
-      throw new Error('Mentor is locked.');
+      console.error('mentor is locked');
+      return false;
     }
     const updated = await MentorModel.findByIdAndUpdate(
       args.mentorId,
