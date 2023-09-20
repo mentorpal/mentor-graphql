@@ -5,11 +5,17 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import axios from 'axios';
-import { GraphQLString, GraphQLObjectType, GraphQLNonNull } from 'graphql';
+import {
+  GraphQLString,
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLBoolean,
+} from 'graphql';
 import {
   User as UserSchema,
   Mentor as MentorSchema,
   Subject as SubjectSchema,
+  MentorConfig as MentorConfigModel,
 } from '../../models';
 import {
   UserAccessTokenType,
@@ -55,10 +61,16 @@ export const loginGoogle = {
   type: UserAccessTokenType,
   args: {
     accessToken: { type: GraphQLNonNull(GraphQLString) },
+    mentorConfig: { type: GraphQLString },
+    lockMentorToConfig: { type: GraphQLBoolean },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { accessToken: string },
+    args: {
+      accessToken: string;
+      mentorConfig: string;
+      lockMentorToConfig: boolean;
+    },
     context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
   ): Promise<UserAccessToken> => {
     try {
@@ -90,6 +102,29 @@ export const loginGoogle = {
       if (!user.mentorIds.length) {
         // add any required subjects to mentor
         const requiredSubjects = await SubjectSchema.find({ isRequired: true });
+
+        const mentorConfig = args.mentorConfig
+          ? await MentorConfigModel.findOne({ configId: args.mentorConfig })
+          : undefined;
+        const configUpdates = {
+          ...(mentorConfig?.subjects.length
+            ? {
+                subjects: requiredSubjects
+                  .map((s) => s._id)
+                  .concat(mentorConfig.subjects),
+              }
+            : {}),
+          ...(mentorConfig?.publiclyVisible ? { isPrivate: false } : {}),
+          ...(mentorConfig?.mentorType
+            ? { mentorType: mentorConfig.mentorType }
+            : {}),
+          ...(mentorConfig?.orgPermissions.length
+            ? { orgPermissions: mentorConfig.orgPermissions }
+            : {}),
+          ...(mentorConfig && args.lockMentorToConfig
+            ? { mentorConfig: mentorConfig._id }
+            : {}),
+        };
         const newMentor = await MentorSchema.findOneAndUpdate(
           {
             user: user._id,
@@ -100,6 +135,7 @@ export const loginGoogle = {
               firstName: googleResponse.given_name,
               email: googleResponse.email,
               subjects: requiredSubjects.map((s) => s._id),
+              ...configUpdates,
             },
           },
           {

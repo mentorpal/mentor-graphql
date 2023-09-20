@@ -4,45 +4,24 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import {
-  GraphQLObjectType,
-  GraphQLBoolean,
-  GraphQLNonNull,
-  GraphQLID,
-  GraphQLList,
-  GraphQLInputObjectType,
-  GraphQLString,
-} from 'graphql';
+import { GraphQLObjectType, GraphQLNonNull, GraphQLID } from 'graphql';
 import { Mentor as MentorModel } from '../../../models';
-import { User } from '../../../models/User';
-import { OrgPermissionProps } from '../../../models/Mentor';
-import { canEditMentorPrivacy } from '../../../utils/check-permissions';
+import { User, UserRole } from '../../../models/User';
+import { Mentor } from '../../../models/Mentor';
+import MentorType from '../../types/mentor';
 
-export const OrgPermissionInputType = new GraphQLInputObjectType({
-  name: 'OrgPermissionInputType',
-  fields: {
-    org: { type: GraphQLNonNull(GraphQLID) },
-    viewPermission: { type: GraphQLNonNull(GraphQLString) },
-    editPermission: { type: GraphQLNonNull(GraphQLString) },
-  },
-});
-
-export const updateMentorPrivacy = {
-  type: GraphQLBoolean,
+export const unlockMentor = {
+  type: MentorType,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
-    isPrivate: { type: GraphQLNonNull(GraphQLBoolean) },
-    orgPermissions: { type: GraphQLList(OrgPermissionInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
       mentorId: string;
-      isPrivate: boolean;
-      orgPermissions: OrgPermissionProps;
     },
     context: { user: User }
-  ): Promise<boolean> => {
+  ): Promise<Mentor> => {
     if (context.user?.isDisabled) {
       throw new Error('Your account has been disabled');
     }
@@ -50,18 +29,17 @@ export const updateMentorPrivacy = {
     if (!mentor) {
       throw new Error('invalid mentor id given');
     }
-    if (!(await canEditMentorPrivacy(mentor, context.user))) {
-      throw new Error('you do not have permission to edit this mentor');
-    }
-    if (mentor.mentorConfig) {
-      throw new Error('Mentor is locked.');
+    if (
+      context.user.userRole !== UserRole.ADMIN &&
+      context.user.userRole !== UserRole.SUPER_ADMIN
+    ) {
+      throw new Error('only admins may unlock mentors');
     }
     const updated = await MentorModel.findByIdAndUpdate(
       args.mentorId,
       {
-        $set: {
-          isPrivate: args.isPrivate,
-          orgPermissions: args.orgPermissions || mentor.orgPermissions,
+        $unset: {
+          mentorConfig: '',
         },
       },
       {
@@ -69,8 +47,8 @@ export const updateMentorPrivacy = {
         upsert: true,
       }
     );
-    return Boolean(updated);
+    return updated;
   },
 };
 
-export default updateMentorPrivacy;
+export default unlockMentor;

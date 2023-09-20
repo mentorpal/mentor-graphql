@@ -9,6 +9,25 @@ import { TrainStatus } from '../../constants';
 const { ObjectId } = mongoose.Types;
 
 module.exports = {
+  mentorconfigs: [
+    {
+      _id: ObjectId('5ffdf41a1ee2c62111111132'),
+      configId: '2023TestConfig',
+      subjects: [
+        '5ffdf41a1ee2c62320b49eb3', //STEM
+      ],
+      publiclyVisible: true,
+      mentorType: 'CHAT',
+      orgPermissions: [
+        {
+          org: ObjectId('511111111111111111111111'),
+          viewPermission: 'HIDDEN',
+          editPermission: 'HIDDEN',
+        },
+      ],
+    },
+  ],
+
   mentortraintasks: [
     {
       _id: ObjectId('5ffdf1231ee2c62320b49ea1'),
@@ -82,6 +101,13 @@ module.exports = {
       _id: ObjectId('5ffdf41a1ee2c62320b49ea7'),
       name: 'Private Mentor',
       email: 'private@mentor.com',
+      userRole: 'USER',
+    },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ea8'),
+      name: 'Locked Down Mentor',
+      email: 'locked@mentor.com',
+      mentorIds: ['5ffdf41a1ee2c62119991114'],
       userRole: 'USER',
     },
   ],
@@ -196,6 +222,26 @@ module.exports = {
           editPermission: 'ADMIN',
         },
       ],
+    },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62119991114'),
+      name: 'Locked Down Mentor',
+      firstName: 'Locked Down',
+      isPrivate: false,
+      user: ObjectId('5ffdf41a1ee2c62320b49ea8'),
+      subjects: [ObjectId('5ffdf41a1ee2c62320b49eb3')],
+      keywords: ['Nonbinary'],
+      orgPermissions: [
+        {
+          org: ObjectId('511111111111111111111112'),
+          viewPermission: 'SHARE',
+        },
+        {
+          org: ObjectId('511111111111111111111111'),
+          editPermission: 'ADMIN',
+        },
+      ],
+      mentorConfig: ObjectId('5ffdf41a1ee2c62111111132'),
     },
   ],
 

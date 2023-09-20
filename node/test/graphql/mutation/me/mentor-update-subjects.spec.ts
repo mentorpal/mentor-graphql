@@ -79,6 +79,31 @@ describe('updateMentorSubjects', () => {
     expect(response.status).to.equal(400);
   });
 
+  it('throws an error if the mentor is locked', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea1');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateMentorSubjects($mentor: UpdateMentorSubjectsType!, $mentorId: ID) {
+          me {
+            updateMentorSubjects(mentor: $mentor, mentorId: $mentorId)
+          }
+        }`,
+        variables: {
+          mentor: {
+            defaultSubject: '5ffdf41a1ee2c62320b49eb3',
+            subjects: ['5ffdf41a1ee2c62320b49eb3'],
+          },
+          mentorId: '5ffdf41a1ee2c62119991114',
+        },
+      });
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'Mentor is locked, please unlock them before editing'
+    );
+  });
+
   it('updates mentor subjects', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)

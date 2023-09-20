@@ -18,6 +18,7 @@ import {
   Question as QuestionModel,
   MentorTrainStatus as MentorTrainStatusModel,
   Answer as AnswerModel,
+  MentorConfig as MentorConfigModel,
 } from '../../models';
 import { Status } from '../../models/Answer';
 import { Mentor, isAnswerComplete } from '../../models/Mentor';
@@ -28,9 +29,10 @@ import SubjectType, { SubjectQuestionType, TopicType } from './subject';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 import { QuestionType as QuestionGQLType } from './question';
 import { TrainStatus } from '../../models/MentorTrainTask';
+import { MentorConfigType } from '../../models/MentorConfig';
 
-export const OrgPermissionType = new GraphQLObjectType({
-  name: 'OrgPermissionType',
+export const MentorOrgPermissionType = new GraphQLObjectType({
+  name: 'MentorOrgPermissionType',
   fields: () => ({
     orgId: { type: GraphQLID },
     orgName: { type: GraphQLString },
@@ -90,8 +92,17 @@ export const MentorType = new GraphQLObjectType({
     },
     mentorType: { type: GraphQLString },
     defaultSubject: { type: SubjectType },
+    mentorConfig: {
+      type: MentorConfigType,
+      resolve: async (mentor: Mentor) => {
+        if (mentor.mentorConfig) {
+          return MentorConfigModel.findById(mentor.mentorConfig);
+        }
+        return null;
+      },
+    },
     orgPermissions: {
-      type: GraphQLList(OrgPermissionType),
+      type: GraphQLList(MentorOrgPermissionType),
       resolve: async (mentor: Mentor) => {
         if (!mentor.orgPermissions) {
           return [];

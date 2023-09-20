@@ -55,6 +55,9 @@ export const updateMentorSubjects = {
     if (!(await canEditMentor(mentor, context.user))) {
       throw new Error('you do not have permission to edit this mentor');
     }
+    if (mentor.mentorConfig) {
+      throw new Error('Mentor is locked, please unlock them before editing');
+    }
     const updated = await MentorModel.findByIdAndUpdate(
       mentor._id,
       {

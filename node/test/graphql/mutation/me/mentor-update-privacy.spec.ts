@@ -146,6 +146,26 @@ describe('updateMentorPrivacy', () => {
     expect(response.status).to.equal(500);
   });
 
+  it('throws an error if the mentor is locked', async () => {
+    const token = getToken('5ffdf41a1ee2c62320b49ea2');
+    const response = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation UpdateMentorPrivacy($mentorId: ID!, $isPrivate: Boolean!) {
+          me {
+            updateMentorPrivacy(mentorId: $mentorId, isPrivate: $isPrivate)
+          }
+        }`,
+        variables: { mentorId: '5ffdf41a1ee2c62119991114', isPrivate: true },
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'Mentor is locked.'
+    );
+  });
+
   it('updates mentor privacy for own mentor', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea2');
     let mentor = await request(app)
