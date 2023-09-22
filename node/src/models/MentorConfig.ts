@@ -26,6 +26,12 @@ export interface MentorConfig extends Document {
   publiclyVisible: boolean;
   mentorType: MentorType;
   orgPermissions: OrgPermissionProps[];
+
+  loginHeaderText: string;
+  welcomeSlideHeader: string;
+  welcomeSlideText: string;
+  disableMyGoalSlide: boolean;
+  disableFollowups: boolean;
 }
 
 export const MentorConfigSchema = new Schema(
@@ -35,6 +41,11 @@ export const MentorConfigSchema = new Schema(
     publiclyVisible: { type: Boolean, default: false },
     mentorType: { type: String },
     orgPermissions: { type: [OrgPermissionSchema], default: [] },
+    loginHeaderText: { type: String, default: '' },
+    welcomeSlideHeader: { type: String, default: '' },
+    welcomeSlideText: { type: String, default: '' },
+    disableMyGoalSlide: { type: Boolean, default: false },
+    disableFollowups: { type: Boolean, default: false },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
@@ -47,6 +58,12 @@ export const MentorConfigInputType = new GraphQLInputObjectType({
     publiclyVisible: { type: GraphQLBoolean },
     mentorType: { type: GraphQLString },
     orgPermissions: { type: GraphQLList(OrgPermissionInputType) },
+    // do not affect mentor doc
+    loginHeaderText: { type: GraphQLString },
+    welcomeSlideHeader: { type: GraphQLString },
+    welcomeSlideText: { type: GraphQLString },
+    disableMyGoalSlide: { type: GraphQLBoolean },
+    disableFollowups: { type: GraphQLBoolean },
   },
 });
 
@@ -58,6 +75,11 @@ export const MentorConfigType = new GraphQLObjectType({
     publiclyVisible: { type: GraphQLBoolean },
     mentorType: { type: GraphQLString },
     orgPermissions: { type: GraphQLList(OrgPermissionType) },
+    loginHeaderText: { type: GraphQLString },
+    welcomeSlideHeader: { type: GraphQLString },
+    welcomeSlideText: { type: GraphQLString },
+    disableMyGoalSlide: { type: GraphQLBoolean },
+    disableFollowups: { type: GraphQLBoolean },
   },
 });
 

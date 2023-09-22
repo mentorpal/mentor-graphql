@@ -5,9 +5,8 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLObjectType, GraphQLNonNull, GraphQLID } from 'graphql';
-import { MentorConfig as MentorConfigModel } from '../../../models';
-import { User } from '../../../models/User';
-import { MentorConfig, MentorConfigType } from '../../../models/MentorConfig';
+import { MentorConfig as MentorConfigModel } from '../../models';
+import { MentorConfig, MentorConfigType } from '../../models/MentorConfig';
 
 export const fetchMentorConfig = {
   type: MentorConfigType,
@@ -18,12 +17,8 @@ export const fetchMentorConfig = {
     _root: GraphQLObjectType,
     args: {
       mentorConfigId: string;
-    },
-    context: { user: User }
-  ): Promise<MentorConfig> => {
-    if (context.user?.isDisabled) {
-      throw new Error('Your account has been disabled');
     }
+  ): Promise<MentorConfig> => {
     const mentorConfig = await MentorConfigModel.findOne({
       configId: args.mentorConfigId,
     });

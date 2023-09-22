@@ -41,6 +41,7 @@ import uploadTask from './upload-task';
 import importTask from './import-task';
 import trainTask from './train-task';
 import answerByFieldValue from './answer-by-field';
+import fetchMentorConfig from './fetch-mentor-config';
 
 export default new GraphQLObjectType({
   name: 'Query',
@@ -81,5 +82,6 @@ export default new GraphQLObjectType({
     importTask,
     trainTask,
     answerByFieldValue,
+    fetchMentorConfig,
   },
 });

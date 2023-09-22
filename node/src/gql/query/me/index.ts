@@ -11,7 +11,6 @@ import { uploadTasks } from './upload-tasks';
 import { categoryAnswers } from './category-answers';
 import { canManageContent } from './user-can-manage-content';
 import { fetchMentorRecordQueue } from './fetch-mentor-record-queue';
-import { fetchMentorConfig } from './fetch-mentor-config';
 
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeQuery',
@@ -21,7 +20,6 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
     categoryAnswers,
     canManageContent,
     fetchMentorRecordQueue,
-    fetchMentorConfig,
   },
 });
 

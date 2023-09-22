@@ -42,6 +42,11 @@ export const mentorConfigCreateUpdate = {
           publiclyVisible: args.mentorConfig.publiclyVisible,
           orgPermissions: args.mentorConfig.orgPermissions,
           mentorType: args.mentorConfig.mentorType,
+          loginHeaderText: args.mentorConfig.loginHeaderText,
+          welcomeSlideHeader: args.mentorConfig.welcomeSlideHeader,
+          welcomeSlideText: args.mentorConfig.welcomeSlideText,
+          disableMyGoalSlide: args.mentorConfig.disableMyGoalSlide,
+          disableFollowups: args.mentorConfig.disableFollowups,
         },
       },
       {

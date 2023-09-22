@@ -71,6 +71,11 @@ describe('Create Mentor Config', () => {
                 viewPermission
                 editPermission
               }
+              loginHeaderText
+              welcomeSlideHeader
+              welcomeSlideText
+              disableMyGoalSlide
+              disableFollowups
             }
           }
         }`,
@@ -86,6 +91,11 @@ describe('Create Mentor Config', () => {
                 editPermission: 'SHARE',
               },
             ],
+            loginHeaderText: 'TestLoginHeaderText',
+            welcomeSlideHeader: 'TestWelcomeSlideHeader',
+            welcomeSlideText: 'TestWelcomeSlideText',
+            disableMyGoalSlide: true,
+            disableFollowups: true,
           },
         },
       });
@@ -97,7 +107,6 @@ describe('Create Mentor Config', () => {
       .set('Authorization', `bearer ${token}`)
       .send({
         query: `query FetchMentorConfig($mentorConfigId: ID!) {
-          me {
             fetchMentorConfig(mentorConfigId: $mentorConfigId){
               configId
               subjects
@@ -107,8 +116,12 @@ describe('Create Mentor Config', () => {
                 viewPermission
                 editPermission
               }
+              loginHeaderText
+              welcomeSlideHeader
+              welcomeSlideText
+              disableMyGoalSlide
+              disableFollowups
             }
-          }
         }`,
         variables: {
           mentorConfigId:
@@ -116,9 +129,40 @@ describe('Create Mentor Config', () => {
         },
       });
     expect(response2.status).to.equal(200);
-    expect(response2.body.data.me.fetchMentorConfig).to.have.property(
+    expect(response2.body.data.fetchMentorConfig).to.have.property(
       'configId',
       response.body.data.me.mentorConfigCreateUpdate.configId
+    );
+    expect(
+      response2.body.data.fetchMentorConfig.subjects
+    ).to.deep.include.members(['TestSubject']);
+    expect(response2.body.data.fetchMentorConfig).to.have.property(
+      'publiclyVisible',
+      true
+    );
+    expect(
+      response2.body.data.fetchMentorConfig.orgPermissions[0].org
+    ).to.equal('511111111111111111111112');
+    expect(
+      response2.body.data.fetchMentorConfig.orgPermissions[0].viewPermission
+    ).to.equal('SHARE');
+    expect(
+      response2.body.data.fetchMentorConfig.orgPermissions[0].editPermission
+    ).to.equal('SHARE');
+    expect(response2.body.data.fetchMentorConfig.loginHeaderText).to.equal(
+      'TestLoginHeaderText'
+    );
+    expect(response2.body.data.fetchMentorConfig.welcomeSlideText).to.equal(
+      'TestWelcomeSlideText'
+    );
+    expect(response2.body.data.fetchMentorConfig.welcomeSlideHeader).to.equal(
+      'TestWelcomeSlideHeader'
+    );
+    expect(response2.body.data.fetchMentorConfig.disableFollowups).to.equal(
+      true
+    );
+    expect(response2.body.data.fetchMentorConfig.disableMyGoalSlide).to.equal(
+      true
     );
   });
 });
