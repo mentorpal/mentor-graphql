@@ -115,6 +115,7 @@ export interface Mentor extends Document {
   allowContact: boolean;
   numAnswersComplete: number;
   mentorConfig?: MentorConfig['_id'];
+  lockedToConfig?: boolean;
   defaultSubject: Subject['_id'];
   subjects: Subject['_id'][];
   keywords: string[];
@@ -198,6 +199,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
       type: Schema.Types.ObjectId,
       ref: 'MentorConfig',
     },
+    lockedToConfig: { type: Boolean },
     subjects: { type: [{ type: Schema.Types.ObjectId, ref: 'Subject' }] },
     keywords: { type: [String] },
     recordQueue: { type: [{ type: Schema.Types.ObjectId, ref: 'Question' }] },

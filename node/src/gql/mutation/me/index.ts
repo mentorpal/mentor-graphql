@@ -35,7 +35,7 @@ import disableUser from './user-disable';
 import mentorTrainTaskAddOrUpdate from './mentor-train-task-add-or-update';
 import updateMentorPublicApproval from './mentor-public-approval';
 import mentorConfigCreateUpdate from './create-mentor-config';
-import unlockMentor from './unlock-mentor';
+import setMentorConfigLock from './set-mentor-config-lock';
 
 export const Me: GraphQLObjectType = new GraphQLObjectType({
   name: 'MeMutation',
@@ -69,7 +69,7 @@ export const Me: GraphQLObjectType = new GraphQLObjectType({
     mentorTrainTaskAddOrUpdate,
     updateMentorPublicApproval,
     mentorConfigCreateUpdate,
-    unlockMentor,
+    setMentorConfigLock,
   }),
 });
 

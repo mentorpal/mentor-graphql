@@ -121,8 +121,11 @@ export const loginGoogle = {
           ...(mentorConfig?.orgPermissions.length
             ? { orgPermissions: mentorConfig.orgPermissions }
             : {}),
-          ...(mentorConfig && args.lockMentorToConfig
-            ? { mentorConfig: mentorConfig._id }
+          ...(mentorConfig
+            ? {
+                mentorConfig: mentorConfig._id,
+                lockedToConfig: Boolean(args.lockMentorToConfig),
+              }
             : {}),
         };
         const newMentor = await MentorSchema.findOneAndUpdate(

@@ -11,7 +11,7 @@ import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 import { getToken } from '../../../helpers';
 
-describe('Create Mentor Config', () => {
+describe('set mentor config lock', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -29,9 +29,9 @@ describe('Create Mentor Config', () => {
     const response = await request(app)
       .post('/graphql')
       .send({
-        query: `mutation UnlockMentor($mentorId: ID!) {
+        query: `mutation SetMentorConfigLock($mentorId: ID!, $lockedToConfig: Boolean!) {
           me {
-            unlockMentor(mentorId: $mentorId){
+            setMentorConfigLock(mentorId: $mentorId, lockedToConfig: $lockedToConfig){
               mentorConfig{
                 configId
               }
@@ -40,6 +40,7 @@ describe('Create Mentor Config', () => {
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62119991114',
+          lockedToConfig: false,
         },
       });
     expect(response.status).to.equal(200);
@@ -49,26 +50,48 @@ describe('Create Mentor Config', () => {
     );
   });
 
-  it('can unlock a mentor', async () => {
+  it('can unlock and lock a mentor', async () => {
     const token = getToken('5ffdf41a1ee2c62320b49ea1');
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UnlockMentor($mentorId: ID!) {
+        query: `mutation SetMentorConfigLock($mentorId: ID!, $lockedToConfig: Boolean!) {
           me {
-            unlockMentor(mentorId: $mentorId){
-              mentorConfig{
-                configId
-              }
+            setMentorConfigLock(mentorId: $mentorId, lockedToConfig: $lockedToConfig){
+              lockedToConfig
             }
           }
         }`,
         variables: {
           mentorId: '5ffdf41a1ee2c62119991114',
+          lockedToConfig: false,
         },
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.me.unlockMentor.mentorConfig).to.equal(null);
+    expect(response.body.data.me.setMentorConfigLock.lockedToConfig).to.equal(
+      false
+    );
+
+    const response2 = await request(app)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
+      .send({
+        query: `mutation SetMentorConfigLock($mentorId: ID!, $lockedToConfig: Boolean!) {
+        me {
+          setMentorConfigLock(mentorId: $mentorId, lockedToConfig: $lockedToConfig){
+            lockedToConfig
+          }
+        }
+      }`,
+        variables: {
+          mentorId: '5ffdf41a1ee2c62119991114',
+          lockedToConfig: true,
+        },
+      });
+    expect(response2.status).to.equal(200);
+    expect(response2.body.data.me.setMentorConfigLock.lockedToConfig).to.equal(
+      true
+    );
   });
 });

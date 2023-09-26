@@ -53,7 +53,7 @@ export const updateMentorPrivacy = {
     if (!(await canEditMentorPrivacy(mentor, context.user))) {
       throw new Error('you do not have permission to edit this mentor');
     }
-    if (mentor.mentorConfig) {
+    if (mentor.mentorConfig && mentor.lockedToConfig) {
       console.error('mentor is locked');
       return false;
     }

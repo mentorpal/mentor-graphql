@@ -4,21 +4,28 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType, GraphQLNonNull, GraphQLID } from 'graphql';
+import {
+  GraphQLObjectType,
+  GraphQLNonNull,
+  GraphQLID,
+  GraphQLBoolean,
+} from 'graphql';
 import { Mentor as MentorModel } from '../../../models';
 import { User, UserRole } from '../../../models/User';
 import { Mentor } from '../../../models/Mentor';
 import MentorType from '../../types/mentor';
 
-export const unlockMentor = {
+export const setMentorConfigLock = {
   type: MentorType,
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
+    lockedToConfig: { type: GraphQLNonNull(GraphQLBoolean) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     args: {
       mentorId: string;
+      lockedToConfig: boolean;
     },
     context: { user: User }
   ): Promise<Mentor> => {
@@ -38,17 +45,14 @@ export const unlockMentor = {
     const updated = await MentorModel.findByIdAndUpdate(
       args.mentorId,
       {
-        $unset: {
-          mentorConfig: '',
-        },
+        lockedToConfig: args.lockedToConfig,
       },
       {
         new: true,
-        upsert: true,
       }
     );
     return updated;
   },
 };
 
-export default unlockMentor;
+export default setMentorConfigLock;

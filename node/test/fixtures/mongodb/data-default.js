@@ -242,6 +242,7 @@ module.exports = {
         },
       ],
       mentorConfig: ObjectId('5ffdf41a1ee2c62111111132'),
+      lockedToConfig: true,
     },
   ],
 

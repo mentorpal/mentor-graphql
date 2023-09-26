@@ -163,6 +163,7 @@ describe('login with google', () => {
                     editPermission
                   }
                 }
+                lockedToConfig
               }
             }
           }
@@ -195,6 +196,9 @@ describe('login with google', () => {
       },
     ]);
     expect(response2.body.data.mentors.edges[0].node.isPrivate).to.equal(false);
+    expect(response2.body.data.mentors.edges[0].node.lockedToConfig).to.equal(
+      true
+    );
     expect(response2.body.data.mentors.edges[0].node.mentorType).to.equal(
       'CHAT'
     );

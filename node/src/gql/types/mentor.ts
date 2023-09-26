@@ -101,6 +101,7 @@ export const MentorType = new GraphQLObjectType({
         return null;
       },
     },
+    lockedToConfig: { type: GraphQLBoolean },
     orgPermissions: {
       type: GraphQLList(MentorOrgPermissionType),
       resolve: async (mentor: Mentor) => {
