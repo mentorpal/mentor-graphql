@@ -53,6 +53,8 @@ export const mentorConfigCreateUpdate = {
             args.mentorConfig.disableThumbnailRecommendation,
           disableLevelProgressDisplay:
             args.mentorConfig.disableLevelProgressDisplay,
+          completeSubjectsNotificationText:
+            args.mentorConfig.completeSubjectsNotificationText,
         },
       },
       {

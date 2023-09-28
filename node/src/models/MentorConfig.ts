@@ -35,6 +35,7 @@ export interface MentorConfig extends Document {
   disableKeywordsRecommendation: boolean;
   disableThumbnailRecommendation: boolean;
   disableLevelProgressDisplay: boolean;
+  completeSubjectsNotificationText: string;
 }
 
 export const MentorConfigSchema = new Schema(
@@ -52,6 +53,7 @@ export const MentorConfigSchema = new Schema(
     disableKeywordsRecommendation: { type: Boolean, default: false },
     disableThumbnailRecommendation: { type: Boolean, default: false },
     disableLevelProgressDisplay: { type: Boolean, default: false },
+    completeSubjectsNotificationText: { type: String, default: '' },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
@@ -73,6 +75,7 @@ export const MentorConfigInputType = new GraphQLInputObjectType({
     disableKeywordsRecommendation: { type: GraphQLBoolean },
     disableThumbnailRecommendation: { type: GraphQLBoolean },
     disableLevelProgressDisplay: { type: GraphQLBoolean },
+    completeSubjectsNotificationText: { type: GraphQLString },
   },
 });
 
@@ -92,6 +95,7 @@ export const MentorConfigType = new GraphQLObjectType({
     disableKeywordsRecommendation: { type: GraphQLBoolean },
     disableThumbnailRecommendation: { type: GraphQLBoolean },
     disableLevelProgressDisplay: { type: GraphQLBoolean },
+    completeSubjectsNotificationText: { type: GraphQLString },
   },
 });
 
