@@ -32,6 +32,9 @@ export interface MentorConfig extends Document {
   welcomeSlideText: string;
   disableMyGoalSlide: boolean;
   disableFollowups: boolean;
+  disableKeywordsRecommendation: boolean;
+  disableThumbnailRecommendation: boolean;
+  disableLevelProgressDisplay: boolean;
 }
 
 export const MentorConfigSchema = new Schema(
@@ -46,6 +49,9 @@ export const MentorConfigSchema = new Schema(
     welcomeSlideText: { type: String, default: '' },
     disableMyGoalSlide: { type: Boolean, default: false },
     disableFollowups: { type: Boolean, default: false },
+    disableKeywordsRecommendation: { type: Boolean, default: false },
+    disableThumbnailRecommendation: { type: Boolean, default: false },
+    disableLevelProgressDisplay: { type: Boolean, default: false },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
@@ -64,6 +70,9 @@ export const MentorConfigInputType = new GraphQLInputObjectType({
     welcomeSlideText: { type: GraphQLString },
     disableMyGoalSlide: { type: GraphQLBoolean },
     disableFollowups: { type: GraphQLBoolean },
+    disableKeywordsRecommendation: { type: GraphQLBoolean },
+    disableThumbnailRecommendation: { type: GraphQLBoolean },
+    disableLevelProgressDisplay: { type: GraphQLBoolean },
   },
 });
 
@@ -80,6 +89,9 @@ export const MentorConfigType = new GraphQLObjectType({
     welcomeSlideText: { type: GraphQLString },
     disableMyGoalSlide: { type: GraphQLBoolean },
     disableFollowups: { type: GraphQLBoolean },
+    disableKeywordsRecommendation: { type: GraphQLBoolean },
+    disableThumbnailRecommendation: { type: GraphQLBoolean },
+    disableLevelProgressDisplay: { type: GraphQLBoolean },
   },
 });
 

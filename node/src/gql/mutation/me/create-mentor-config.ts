@@ -47,6 +47,12 @@ export const mentorConfigCreateUpdate = {
           welcomeSlideText: args.mentorConfig.welcomeSlideText,
           disableMyGoalSlide: args.mentorConfig.disableMyGoalSlide,
           disableFollowups: args.mentorConfig.disableFollowups,
+          disableKeywordsRecommendation:
+            args.mentorConfig.disableKeywordsRecommendation,
+          disableThumbnailRecommendation:
+            args.mentorConfig.disableThumbnailRecommendation,
+          disableLevelProgressDisplay:
+            args.mentorConfig.disableLevelProgressDisplay,
         },
       },
       {

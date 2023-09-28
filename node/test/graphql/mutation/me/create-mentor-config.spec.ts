@@ -76,6 +76,9 @@ describe('Create Mentor Config', () => {
               welcomeSlideText
               disableMyGoalSlide
               disableFollowups
+              disableKeywordsRecommendation
+              disableThumbnailRecommendation
+              disableLevelProgressDisplay
             }
           }
         }`,
@@ -96,6 +99,9 @@ describe('Create Mentor Config', () => {
             welcomeSlideText: 'TestWelcomeSlideText',
             disableMyGoalSlide: true,
             disableFollowups: true,
+            disableKeywordsRecommendation: true,
+            disableThumbnailRecommendation: true,
+            disableLevelProgressDisplay: true,
           },
         },
       });
@@ -121,6 +127,9 @@ describe('Create Mentor Config', () => {
               welcomeSlideText
               disableMyGoalSlide
               disableFollowups
+              disableKeywordsRecommendation
+              disableThumbnailRecommendation
+              disableLevelProgressDisplay
             }
         }`,
         variables: {
@@ -164,5 +173,14 @@ describe('Create Mentor Config', () => {
     expect(response2.body.data.fetchMentorConfig.disableMyGoalSlide).to.equal(
       true
     );
+    expect(
+      response2.body.data.fetchMentorConfig.disableKeywordsRecommendation
+    ).to.equal(true);
+    expect(
+      response2.body.data.fetchMentorConfig.disableThumbnailRecommendation
+    ).to.equal(true);
+    expect(
+      response2.body.data.fetchMentorConfig.disableLevelProgressDisplay
+    ).to.equal(true);
   });
 });
