@@ -55,6 +55,7 @@ export const mentorConfigCreateUpdate = {
             args.mentorConfig.disableLevelProgressDisplay,
           completeSubjectsNotificationText:
             args.mentorConfig.completeSubjectsNotificationText,
+          recordTimeLimitSeconds: args.mentorConfig.recordTimeLimitSeconds,
         },
       },
       {

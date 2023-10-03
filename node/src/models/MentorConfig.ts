@@ -17,6 +17,7 @@ import {
   GraphQLList,
   GraphQLObjectType,
   GraphQLString,
+  GraphQLInt,
 } from 'graphql';
 import { OrgPermissionInputType } from '../gql/mutation/me/mentor-update-privacy';
 
@@ -36,6 +37,7 @@ export interface MentorConfig extends Document {
   disableThumbnailRecommendation: boolean;
   disableLevelProgressDisplay: boolean;
   completeSubjectsNotificationText: string;
+  recordTimeLimitSeconds: number;
 }
 
 export const MentorConfigSchema = new Schema(
@@ -54,6 +56,7 @@ export const MentorConfigSchema = new Schema(
     disableThumbnailRecommendation: { type: Boolean, default: false },
     disableLevelProgressDisplay: { type: Boolean, default: false },
     completeSubjectsNotificationText: { type: String, default: '' },
+    recordTimeLimitSeconds: { type: Number, default: 0 },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
@@ -76,6 +79,7 @@ export const MentorConfigInputType = new GraphQLInputObjectType({
     disableThumbnailRecommendation: { type: GraphQLBoolean },
     disableLevelProgressDisplay: { type: GraphQLBoolean },
     completeSubjectsNotificationText: { type: GraphQLString },
+    recordTimeLimitSeconds: { type: GraphQLInt },
   },
 });
 
@@ -96,6 +100,7 @@ export const MentorConfigType = new GraphQLObjectType({
     disableThumbnailRecommendation: { type: GraphQLBoolean },
     disableLevelProgressDisplay: { type: GraphQLBoolean },
     completeSubjectsNotificationText: { type: GraphQLString },
+    recordTimeLimitSeconds: { type: GraphQLInt },
   },
 });
 

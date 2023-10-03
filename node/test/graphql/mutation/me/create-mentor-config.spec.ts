@@ -80,6 +80,7 @@ describe('Create Mentor Config', () => {
               disableThumbnailRecommendation
               disableLevelProgressDisplay
               completeSubjectsNotificationText
+              recordTimeLimitSeconds
             }
           }
         }`,
@@ -105,6 +106,7 @@ describe('Create Mentor Config', () => {
             disableLevelProgressDisplay: true,
             completeSubjectsNotificationText:
               'TestCompleteSubjectsNotificationText',
+            recordTimeLimitSeconds: 100,
           },
         },
       });
@@ -134,6 +136,7 @@ describe('Create Mentor Config', () => {
               disableThumbnailRecommendation
               disableLevelProgressDisplay
               completeSubjectsNotificationText
+              recordTimeLimitSeconds
             }
         }`,
         variables: {
@@ -189,5 +192,8 @@ describe('Create Mentor Config', () => {
     expect(
       response2.body.data.fetchMentorConfig.completeSubjectsNotificationText
     ).to.equal('TestCompleteSubjectsNotificationText');
+    expect(
+      response2.body.data.fetchMentorConfig.recordTimeLimitSeconds
+    ).to.equal(100);
   });
 });
