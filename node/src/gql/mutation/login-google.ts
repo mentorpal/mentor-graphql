@@ -57,12 +57,18 @@ export async function authGoogle(accessToken: string): Promise<GoogleResponse> {
   return res.data;
 }
 
+export enum LoginType {
+  SIGN_IN = 'SIGN_IN',
+  SIGN_UP = 'SIGN_UP',
+}
+
 export const loginGoogle = {
   type: UserAccessTokenType,
   args: {
     accessToken: { type: GraphQLNonNull(GraphQLString) },
     mentorConfig: { type: GraphQLString },
     lockMentorToConfig: { type: GraphQLBoolean },
+    loginType: { type: GraphQLString },
   },
   resolve: async (
     _root: GraphQLObjectType,
@@ -70,10 +76,12 @@ export const loginGoogle = {
       accessToken: string;
       mentorConfig: string;
       lockMentorToConfig: boolean;
+      loginType: LoginType;
     },
     context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
   ): Promise<UserAccessToken> => {
     try {
+      const signUp = args.loginType === LoginType.SIGN_UP;
       const googleResponse = await authGoogle(args.accessToken);
       let user = await UserSchema.findOneAndUpdate(
         {
@@ -89,11 +97,11 @@ export const loginGoogle = {
         },
         {
           new: true,
-          upsert: true,
+          upsert: signUp,
         }
       );
       if (!user) {
-        throw new Error('failed to create user');
+        throw new Error('No user found for provided google email');
       }
       if (user.isDisabled) {
         throw new Error('Your account has been disabled');

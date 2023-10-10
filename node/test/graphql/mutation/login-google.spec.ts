@@ -60,7 +60,7 @@ describe('login with google', () => {
     expect(response.status).to.equal(400);
   });
 
-  it(`creates a new user and mentor for new google login`, async () => {
+  it(`if attempt to sign in with no account, throws error`, async () => {
     googleAuthFunc = (accessToken: string) =>
       Promise.resolve<GoogleResponse>({
         id: 'someid',
@@ -72,7 +72,36 @@ describe('login with google', () => {
       .post('/graphql')
       .send({
         query: `mutation {
-        loginGoogle(accessToken: "anything") {
+        loginGoogle(accessToken: "anything", loginType: "SIGN_IN") {
+          user {
+            name
+            email
+          }
+          accessToken
+          expirationDate
+        }
+      }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property(
+      'errors[0].message',
+      'Error: No user found for provided google email'
+    );
+  });
+
+  it(`if signup with no account, creates a new user and mentor for new google login`, async () => {
+    googleAuthFunc = (accessToken: string) =>
+      Promise.resolve<GoogleResponse>({
+        id: 'someid',
+        name: 'somename',
+        email: 'x@y.com',
+        given_name: 'somegivenname',
+      });
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `mutation {
+        loginGoogle(accessToken: "anything", loginType: "SIGN_UP") {
           user {
             name
             email
@@ -105,7 +134,7 @@ describe('login with google', () => {
       .post('/graphql')
       .send({
         query: `mutation LoginGoogle($accessToken: String!, $mentorConfig: String, $lockMentorToConfig: Boolean){
-        loginGoogle(accessToken: $accessToken, mentorConfig: $mentorConfig, lockMentorToConfig: $lockMentorToConfig) {
+        loginGoogle(accessToken: $accessToken, mentorConfig: $mentorConfig, lockMentorToConfig: $lockMentorToConfig, loginType: "SIGN_UP") {
           user {
             name
             email

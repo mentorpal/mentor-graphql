@@ -110,6 +110,14 @@ module.exports = {
       mentorIds: ['5ffdf41a1ee2c62119991114'],
       userRole: 'USER',
     },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49ea9'),
+      googleId: 'someidtest',
+      name: 'somenametest',
+      email: 'xtest@y.com',
+      mentorIds: ['5ffdf41a1ee2c62119991114'],
+      userRole: 'USER',
+    },
   ],
 
   mentors: [
