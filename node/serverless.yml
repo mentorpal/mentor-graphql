@@ -42,7 +42,7 @@ custom:
       DOMAIN: "devmentorpal.org"
       NOTIFY_ADMIN_ON_NEW_MENTOR: "false"
       CONCURRENT_LAMBDAS: "100"
-      GRAPHQL_CONNECTION_POOL: "5"
+      MONGO_CONNECTION_POOL_MAX: "5"
     qa:
       LOG_LEVEL: 'debug'
       IS_SENTRY_ENABLED: 'true'
@@ -58,7 +58,7 @@ custom:
       DOMAIN: "qamentorpal.org"
       NOTIFY_ADMIN_ON_NEW_MENTOR: "false"
       CONCURRENT_LAMBDAS: "100"
-      GRAPHQL_CONNECTION_POOL: "5"
+      MONGO_CONNECTION_POOL_MAX: "5"
     prod:
       LOG_LEVEL: 'info'
       IS_SENTRY_ENABLED: 'true'
@@ -74,7 +74,7 @@ custom:
       DOMAIN: "mentorpal.org"
       NOTIFY_ADMIN_ON_NEW_MENTOR: "true"
       CONCURRENT_LAMBDAS: "300"
-      GRAPHQL_CONNECTION_POOL: "5"
+      MONGO_CONNECTION_POOL_MAX: "5"
 
 provider:
   name: aws
@@ -120,7 +120,7 @@ provider:
     NOTIFY_ADMIN_EMAIL_FROM: ${ssm:/mentorpal/shared/notify_admin_email_from}
     NOTIFY_ADMIN_EMAILS_LIST: ${ssm:/mentorpal/shared/notify_admin_emails_list}
     CONCURRENT_LAMBDAS: ${self:custom.stages.${self:provider.stage}.CONCURRENT_LAMBDAS}
-    GRAPHQL_CONNECTION_POOL: ${self:custom.stages.${self:provider.stage}.GRAPHQL_CONNECTION_POOL}
+    MONGO_CONNECTION_POOL_MAX: ${self:custom.stages.${self:provider.stage}.MONGO_CONNECTION_POOL_MAX}
 
   stackTags:
     Environment: ${self:provider.stage}
