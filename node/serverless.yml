@@ -41,6 +41,8 @@ custom:
       WEBACL_ARN: ${ssm:/devmentorpal/api_firewall_arn, ''}
       DOMAIN: "devmentorpal.org"
       NOTIFY_ADMIN_ON_NEW_MENTOR: "false"
+      CONCURRENT_LAMBDAS: "100"
+      GRAPHQL_CONNECTION_POOL: "5"
     qa:
       LOG_LEVEL: 'debug'
       IS_SENTRY_ENABLED: 'true'
@@ -55,6 +57,8 @@ custom:
       WEBACL_ARN: ${ssm:/qamentorpal/api_firewall_arn, ''}
       DOMAIN: "qamentorpal.org"
       NOTIFY_ADMIN_ON_NEW_MENTOR: "false"
+      CONCURRENT_LAMBDAS: "100"
+      GRAPHQL_CONNECTION_POOL: "5"
     prod:
       LOG_LEVEL: 'info'
       IS_SENTRY_ENABLED: 'true'
@@ -69,6 +73,8 @@ custom:
       WEBACL_ARN: ${ssm:/mentorpal/api_firewall_arn, ''}
       DOMAIN: "mentorpal.org"
       NOTIFY_ADMIN_ON_NEW_MENTOR: "true"
+      CONCURRENT_LAMBDAS: "300"
+      GRAPHQL_CONNECTION_POOL: "5"
 
 provider:
   name: aws
@@ -113,6 +119,8 @@ provider:
     NOTIFY_ADMIN_ON_NEW_MENTOR: ${self:custom.stages.${self:provider.stage}.NOTIFY_ADMIN_ON_NEW_MENTOR}
     NOTIFY_ADMIN_EMAIL_FROM: ${ssm:/mentorpal/shared/notify_admin_email_from}
     NOTIFY_ADMIN_EMAILS_LIST: ${ssm:/mentorpal/shared/notify_admin_emails_list}
+    CONCURRENT_LAMBDAS: ${self:custom.stages.${self:provider.stage}.CONCURRENT_LAMBDAS}
+    GRAPHQL_CONNECTION_POOL: ${self:custom.stages.${self:provider.stage}.GRAPHQL_CONNECTION_POOL}
 
   stackTags:
     Environment: ${self:provider.stage}
@@ -132,6 +140,7 @@ functions:
   app:
     # lambda default timeout is 6 seconds, mentors can take 10+ seconds to load
     timeout: 20
+    reservedConcurrency: '${self:custom.stages.${self:provider.stage}.CONCURRENT_LAMBDAS}'
     handler: ./src/lambda.handler
     events: 
       - http: 

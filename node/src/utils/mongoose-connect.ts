@@ -25,9 +25,24 @@ export default async function mongooseConnect(uri: string): Promise<void> {
     )}@${requireEnv('MONGO_HOST')}/${requireEnv('MONGO_DB')}${
       process.env.MONGO_QUERY_STRING || ''
     }`;
+  const connectionPoolMax = parseInt(
+    process.env.MONGO_CONNECTION_POOL_MAX || '100'
+  );
   mongoose.set('strictQuery', false);
-  await mongoose.connect(mongoUri);
+  await mongoose.connect(mongoUri, {
+    maxPoolSize: connectionPoolMax,
+    minPoolSize: 0,
+  });
   logger.info(
     'mongoose: connection successful ' + mongoUri.replace(/^.*@/g, '')
   );
+  const mongoClient = mongoose.connection.getClient();
+  if (process.env.MONGO_CONNECTION_POOL_MAX) {
+    mongoClient.on('connectionCreated', (e) => {
+      console.log(`mongoose: connection created: ${e.connectionId}`);
+    });
+    mongoClient.on('connectionClosed', (e) => {
+      console.log(`mongoose: connection closed: ${e.connectionId}`);
+    });
+  }
 }
