@@ -33,7 +33,7 @@ export interface CategoryUpdateInput {
   id: string;
   name: string;
   description: string;
-  defaultTopic: string;
+  defaultTopics: string[];
 }
 
 export const CategoryInputType = new GraphQLInputObjectType({
@@ -42,7 +42,7 @@ export const CategoryInputType = new GraphQLInputObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     description: { type: GraphQLString },
-    defaultTopic: { type: GraphQLString },
+    defaultTopics: { type: GraphQLList(GraphQLString) },
   }),
 });
 

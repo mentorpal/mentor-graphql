@@ -24,7 +24,7 @@ export interface CategoryProps {
   id: string;
   name: string;
   description: string;
-  defaultTopic: string;
+  defaultTopics: string[];
 }
 
 export interface Category extends CategoryProps, Document {
@@ -35,7 +35,7 @@ const CategorySchema = new Schema({
   id: { type: String },
   name: { type: String },
   description: { type: String },
-  defaultTopic: { type: String, default: '' },
+  defaultTopics: [{ type: String, default: '' }],
 });
 
 export interface TopicProps {

@@ -36,7 +36,7 @@ describe('subjects', () => {
               name
               isRequired
               categories{
-                defaultTopic
+                defaultTopics
               }
             }
           }
@@ -65,7 +65,7 @@ describe('subjects', () => {
             isRequired: true,
             categories: [
               {
-                defaultTopic: '5ffdf41a1ee2c62320b49ec2',
+                defaultTopics: ['5ffdf41a1ee2c62320b49ec2'],
               },
             ],
           },
