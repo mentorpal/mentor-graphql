@@ -297,7 +297,6 @@ module.exports = {
           id: 'category',
           name: 'Category',
           description: 'A test category',
-          defaultTopics: ['5ffdf41a1ee2c62320b49ec2'],
         },
       ],
       topics: [
@@ -306,14 +305,12 @@ module.exports = {
           name: 'Background',
           description:
             'These questions will ask general questions about your background, that might be relevant to how people understand your career',
-          categoryParent: 'category',
         },
         {
           id: ObjectId('5ffdf41a1ee2c62320b49ec3'),
           name: 'Advice',
           description:
             'These questions will ask you to give advice to someone who is interested in your career',
-          categoryParent: 'category',
         },
       ],
       questions: [

@@ -70,7 +70,23 @@ export const SubjectType = new GraphQLObjectType({
         return Boolean(subject.deleted);
       },
     },
-    topics: { type: GraphQLList(TopicType) },
+    topics: {
+      type: GraphQLList(TopicType),
+      resolve: async function (subject: Subject) {
+        const topics = subject.topics;
+        const categories = subject.categories;
+        const updatedTopicNames = topics.map((topic) => {
+          const category = categories.find(
+            (c) => c.id === topic.categoryParent
+          );
+          if (category) {
+            topic.name = category.name;
+          }
+          return topic;
+        });
+        return updatedTopicNames;
+      },
+    },
     categories: { type: GraphQLList(CategoryType) },
     questions: {
       type: GraphQLList(SubjectQuestionType),

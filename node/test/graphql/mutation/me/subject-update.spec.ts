@@ -108,6 +108,7 @@ describe('updateSubject', () => {
           id: '5ffdf41a1ee2c62320b49ec3',
           name: 'Advice',
           description: 'updated description?',
+          categoryParent: 'newcategory',
         },
         {
           id: 'newtopic',
@@ -166,6 +167,7 @@ describe('updateSubject', () => {
                 id
                 name
                 description
+                categoryParent
               }
               questions {
                 question {
@@ -203,13 +205,15 @@ describe('updateSubject', () => {
       topics: [
         {
           id: '5ffdf41a1ee2c62320b49ec3',
-          name: 'Advice',
+          name: 'New category',
           description: 'updated description?',
+          categoryParent: 'newcategory',
         },
         {
           id: 'newtopic',
           name: 'New topic',
           description: 'new description',
+          categoryParent: '',
         },
       ],
       questions: [
@@ -224,7 +228,7 @@ describe('updateSubject', () => {
           topics: [
             {
               id: '5ffdf41a1ee2c62320b49ec3',
-              name: 'Advice',
+              name: 'New category',
             },
             {
               id: 'newtopic',
@@ -238,7 +242,7 @@ describe('updateSubject', () => {
           topics: [
             {
               id: '5ffdf41a1ee2c62320b49ec3',
-              name: 'Advice',
+              name: 'New category',
             },
           ],
         },

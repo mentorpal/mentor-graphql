@@ -35,12 +35,6 @@ describe('subjects', () => {
               _id
               name
               isRequired
-              categories{
-                defaultTopics
-              }
-              topics{
-                categoryParent
-              }
             }
           }
           pageInfo {
@@ -58,12 +52,6 @@ describe('subjects', () => {
             _id: '5ffdf41a1ee2c62320b49eb3',
             name: 'STEM',
             isRequired: false,
-            categories: [],
-            topics: [
-              {
-                categoryParent: null,
-              },
-            ],
           },
         },
         {
@@ -71,19 +59,6 @@ describe('subjects', () => {
             _id: '5ffdf41a1ee2c62320b49eb2',
             name: 'Background',
             isRequired: true,
-            categories: [
-              {
-                defaultTopics: ['5ffdf41a1ee2c62320b49ec2'],
-              },
-            ],
-            topics: [
-              {
-                categoryParent: 'category',
-              },
-              {
-                categoryParent: 'category',
-              },
-            ],
           },
         },
         {
@@ -91,12 +66,6 @@ describe('subjects', () => {
             _id: '5ffdf41a1ee2c62320b49eb1',
             name: 'Repeat After Me',
             isRequired: true,
-            categories: [],
-            topics: [
-              {
-                categoryParent: null,
-              },
-            ],
           },
         },
       ],
