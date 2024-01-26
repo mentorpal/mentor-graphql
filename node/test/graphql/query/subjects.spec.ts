@@ -38,6 +38,9 @@ describe('subjects', () => {
               categories{
                 defaultTopics
               }
+              topics{
+                categoryParent
+              }
             }
           }
           pageInfo {
@@ -56,6 +59,11 @@ describe('subjects', () => {
             name: 'STEM',
             isRequired: false,
             categories: [],
+            topics: [
+              {
+                categoryParent: null,
+              },
+            ],
           },
         },
         {
@@ -68,6 +76,14 @@ describe('subjects', () => {
                 defaultTopics: ['5ffdf41a1ee2c62320b49ec2'],
               },
             ],
+            topics: [
+              {
+                categoryParent: 'category',
+              },
+              {
+                categoryParent: 'category',
+              },
+            ],
           },
         },
         {
@@ -76,6 +92,11 @@ describe('subjects', () => {
             name: 'Repeat After Me',
             isRequired: true,
             categories: [],
+            topics: [
+              {
+                categoryParent: null,
+              },
+            ],
           },
         },
       ],

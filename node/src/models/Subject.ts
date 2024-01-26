@@ -42,6 +42,7 @@ export interface TopicProps {
   id: string;
   name: string;
   description: string;
+  categoryParent: string;
 }
 
 export interface Topic extends TopicProps, Document {
@@ -52,6 +53,7 @@ const TopicSchema = new Schema({
   id: { type: String },
   name: { type: String },
   description: { type: String },
+  categoryParent: { type: String, default: '' },
 });
 
 export interface SubjectQuestionProps {
