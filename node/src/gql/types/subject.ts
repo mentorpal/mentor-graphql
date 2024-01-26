@@ -22,6 +22,7 @@ export const CategoryType = new GraphQLObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     description: { type: GraphQLString },
+    defaultTopic: { type: GraphQLString },
   },
 });
 

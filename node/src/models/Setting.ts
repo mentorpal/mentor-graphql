@@ -248,7 +248,7 @@ SettingSchema.statics.saveConfig = async function (
       return this.findOneAndUpdate(
         { key },
         {
-          $set: { value: config[key as keyof Config] as string },
+          $set: { value: config[key as keyof Config] },
         },
         {
           upsert: true,

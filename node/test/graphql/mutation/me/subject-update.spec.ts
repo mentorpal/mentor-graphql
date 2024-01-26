@@ -100,6 +100,7 @@ describe('updateSubject', () => {
         {
           id: 'newcategory',
           name: 'New category',
+          defaultTopic: '5ffdf41a1ee2c62320b49ec3',
         },
       ],
       topics: [
@@ -159,6 +160,7 @@ describe('updateSubject', () => {
               categories {
                 id
                 name
+                defaultTopic
               }
               topics {
                 id
@@ -195,6 +197,7 @@ describe('updateSubject', () => {
         {
           id: 'newcategory',
           name: 'New category',
+          defaultTopic: '5ffdf41a1ee2c62320b49ec3',
         },
       ],
       topics: [

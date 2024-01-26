@@ -297,6 +297,7 @@ module.exports = {
           id: 'category',
           name: 'Category',
           description: 'A test category',
+          defaultTopic: '5ffdf41a1ee2c62320b49ec2',
         },
       ],
       topics: [
