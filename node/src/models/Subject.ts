@@ -60,6 +60,7 @@ export interface SubjectQuestionProps {
   question: Question['_id'];
   category: Category['id'];
   topics: Topic['id'][];
+  useDefaultTopics?: boolean;
 }
 
 export interface SubjectQuestion extends SubjectQuestionProps, Document {}
@@ -68,6 +69,7 @@ export const SubjectQuestionSchema = new Schema({
   question: { type: mongoose.Types.ObjectId, ref: 'Question' },
   category: { type: String },
   topics: { type: [String] },
+  useDefaultTopics: { type: Boolean, default: false },
 });
 
 export interface Subject extends Document {
@@ -167,6 +169,7 @@ SubjectSchema.statics.getQuestions = async function (
     question: questions.find((q) => `${q._id}` === `${sq.question}`),
     category: subject.categories.find((c) => c.id === sq.category),
     topics: subject.topics.filter((t) => sq.topics.includes(t.id)),
+    useDefaultTopics: sq.useDefaultTopics,
   }));
 };
 

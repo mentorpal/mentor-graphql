@@ -125,6 +125,7 @@ describe('subjectAddOrUpdateQuestions', () => {
               question
               category
               topics
+              useDefaultTopics
             }
           }
         }`,
@@ -143,6 +144,7 @@ describe('subjectAddOrUpdateQuestions', () => {
                   id: '5ffdf41a1ee2c62320b49ec2',
                 },
               ],
+              useDefaultTopics: true,
             },
             {
               question: {
@@ -170,11 +172,13 @@ describe('subjectAddOrUpdateQuestions', () => {
         question: '511111111111111111111116',
         category: 'category',
         topics: ['5ffdf41a1ee2c62320b49ec2'],
+        useDefaultTopics: true,
       },
       {
         question: '511111111111111111111110',
         category: 'invalid',
         topics: ['5ffdf41a1ee2c62320b49ec2'],
+        useDefaultTopics: false,
       },
     ]);
 

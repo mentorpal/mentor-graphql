@@ -123,6 +123,7 @@ describe('updateSubject', () => {
             question: 'How old are you?',
           },
           category: { id: 'newcategory' },
+          useDefaultTopics: true,
           topics: [
             {
               id: 'newtopic',
@@ -170,6 +171,7 @@ describe('updateSubject', () => {
                 categoryParent
               }
               questions {
+                useDefaultTopics
                 question {
                   question
                 }
@@ -221,6 +223,7 @@ describe('updateSubject', () => {
           question: {
             question: 'How old are you?',
           },
+          useDefaultTopics: true,
           category: {
             id: 'newcategory',
             name: 'New category',
@@ -239,6 +242,7 @@ describe('updateSubject', () => {
         {
           question: { question: 'new question' },
           category: null,
+          useDefaultTopics: false,
           topics: [
             {
               id: '5ffdf41a1ee2c62320b49ec3',

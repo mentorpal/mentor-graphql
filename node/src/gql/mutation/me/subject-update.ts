@@ -67,6 +67,7 @@ export interface SubjectQuestionUpdateInput {
   question: QuestionUpdateInput;
   category?: CategoryUpdateInput;
   topics?: TopicUpdateInput[];
+  useDefaultTopics?: boolean;
 }
 
 export const SubjectQuestionInputType = new GraphQLInputObjectType({
@@ -75,6 +76,7 @@ export const SubjectQuestionInputType = new GraphQLInputObjectType({
     question: { type: QuestionUpdateInputType },
     category: { type: CategoryInputType },
     topics: { type: GraphQLList(TopicInputType) },
+    useDefaultTopics: { type: GraphQLBoolean },
   }),
 });
 
@@ -123,6 +125,7 @@ export async function questionInputToUpdate(
   return {
     question: q._id,
     category: input.category?.id,
+    useDefaultTopics: input.useDefaultTopics || false,
     // don't include topics that are not in the subject
     topics:
       input.topics
