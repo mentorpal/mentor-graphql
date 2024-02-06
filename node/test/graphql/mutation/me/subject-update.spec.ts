@@ -9,7 +9,7 @@ import { expect } from 'chai';
 import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
-import { getToken } from '../../../helpers';
+import { UseDefaultTopics, getToken } from '../../../helpers';
 
 describe('updateSubject', () => {
   let app: Express;
@@ -123,7 +123,7 @@ describe('updateSubject', () => {
             question: 'How old are you?',
           },
           category: { id: 'newcategory' },
-          useDefaultTopics: true,
+          useDefaultTopics: UseDefaultTopics.TRUE,
           topics: [
             {
               id: 'newtopic',
@@ -223,7 +223,7 @@ describe('updateSubject', () => {
           question: {
             question: 'How old are you?',
           },
-          useDefaultTopics: true,
+          useDefaultTopics: UseDefaultTopics.TRUE,
           category: {
             id: 'newcategory',
             name: 'New category',
@@ -242,7 +242,7 @@ describe('updateSubject', () => {
         {
           question: { question: 'new question' },
           category: null,
-          useDefaultTopics: false,
+          useDefaultTopics: UseDefaultTopics.DEFAULT,
           topics: [
             {
               id: '5ffdf41a1ee2c62320b49ec3',

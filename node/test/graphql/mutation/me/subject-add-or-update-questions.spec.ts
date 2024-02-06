@@ -9,7 +9,7 @@ import { expect } from 'chai';
 import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
-import { getToken } from '../../../helpers';
+import { UseDefaultTopics, getToken } from '../../../helpers';
 
 describe('subjectAddOrUpdateQuestions', () => {
   let app: Express;
@@ -144,7 +144,7 @@ describe('subjectAddOrUpdateQuestions', () => {
                   id: '5ffdf41a1ee2c62320b49ec2',
                 },
               ],
-              useDefaultTopics: true,
+              useDefaultTopics: UseDefaultTopics.TRUE,
             },
             {
               question: {
@@ -172,13 +172,13 @@ describe('subjectAddOrUpdateQuestions', () => {
         question: '511111111111111111111116',
         category: 'category',
         topics: ['5ffdf41a1ee2c62320b49ec2'],
-        useDefaultTopics: true,
+        useDefaultTopics: UseDefaultTopics.TRUE,
       },
       {
         question: '511111111111111111111110',
         category: 'invalid',
         topics: ['5ffdf41a1ee2c62320b49ec2'],
-        useDefaultTopics: false,
+        useDefaultTopics: UseDefaultTopics.DEFAULT,
       },
     ]);
 

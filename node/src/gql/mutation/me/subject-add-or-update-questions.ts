@@ -10,7 +10,6 @@ import {
   GraphQLID,
   GraphQLList,
   GraphQLString,
-  GraphQLBoolean,
 } from 'graphql';
 import { User } from '../../../models/User';
 
@@ -19,12 +18,13 @@ import {
   SubjectQuestionInputType,
   SubjectQuestionUpdateInput,
 } from './subject-update';
+import { UseDefaultTopics } from './helpers';
 
 interface SubjectAddOrUpdateQuestionGQLType {
   question: number;
   category: string;
   topics: string[];
-  useDefaultTopics?: boolean;
+  useDefaultTopics?: UseDefaultTopics;
 }
 
 export const SubjectAddOrUpdateQuestionGQLType = new GraphQLObjectType({
@@ -33,7 +33,7 @@ export const SubjectAddOrUpdateQuestionGQLType = new GraphQLObjectType({
     category: { type: GraphQLString },
     topics: { type: GraphQLList(GraphQLID) },
     question: { type: GraphQLID },
-    useDefaultTopics: { type: GraphQLBoolean },
+    useDefaultTopics: { type: GraphQLString },
   },
 });
 

@@ -18,7 +18,7 @@ import {
   SubjectQuestionUpdateInput,
   SubjectUpdateInput,
 } from '../gql/mutation/me/subject-update';
-import { idOrNew } from '../gql/mutation/me/helpers';
+import { UseDefaultTopics, idOrNew } from '../gql/mutation/me/helpers';
 
 export interface CategoryProps {
   id: string;
@@ -60,7 +60,7 @@ export interface SubjectQuestionProps {
   question: Question['_id'];
   category: Category['id'];
   topics: Topic['id'][];
-  useDefaultTopics?: boolean;
+  useDefaultTopics?: UseDefaultTopics;
 }
 
 export interface SubjectQuestion extends SubjectQuestionProps, Document {}
@@ -69,7 +69,11 @@ export const SubjectQuestionSchema = new Schema({
   question: { type: mongoose.Types.ObjectId, ref: 'Question' },
   category: { type: String },
   topics: { type: [String] },
-  useDefaultTopics: { type: Boolean, default: false },
+  useDefaultTopics: {
+    type: String,
+    enum: UseDefaultTopics,
+    default: UseDefaultTopics.DEFAULT,
+  },
 });
 
 export interface Subject extends Document {

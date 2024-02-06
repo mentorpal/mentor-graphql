@@ -111,7 +111,7 @@ export const SubjectQuestionPreviewType = new GraphQLObjectType({
     category: { type: CategoryType },
     topics: { type: GraphQLList(TopicType) },
     question: { type: QuestionType },
-    useDefaultTopics: { type: GraphQLBoolean },
+    useDefaultTopics: { type: GraphQLString },
   },
 });
 export const AnswerPreviewType = new GraphQLObjectType({

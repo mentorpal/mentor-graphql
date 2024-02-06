@@ -41,7 +41,7 @@ export const SubjectQuestionType = new GraphQLObjectType({
   fields: {
     category: { type: CategoryType },
     topics: { type: GraphQLList(TopicType) },
-    useDefaultTopics: { type: GraphQLBoolean },
+    useDefaultTopics: { type: GraphQLString },
     question: { type: QuestionType },
   },
 });

@@ -88,3 +88,9 @@ export async function appStop(): Promise<void> {
   await app.appStop();
   await mongoUnit.drop();
 }
+
+export enum UseDefaultTopics {
+  TRUE = 'TRUE',
+  FALSE = 'FALSE',
+  DEFAULT = 'DEFAULT',
+}

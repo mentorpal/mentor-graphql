@@ -26,7 +26,7 @@ import {
   QuestionUpdateInput,
   QuestionUpdateInputType,
 } from './question-update';
-import { toUpdateProps } from './helpers';
+import { UseDefaultTopics, toUpdateProps } from './helpers';
 import { canEditContent } from '../../../utils/check-permissions';
 
 export interface CategoryUpdateInput {
@@ -67,7 +67,7 @@ export interface SubjectQuestionUpdateInput {
   question: QuestionUpdateInput;
   category?: CategoryUpdateInput;
   topics?: TopicUpdateInput[];
-  useDefaultTopics?: boolean;
+  useDefaultTopics?: UseDefaultTopics;
 }
 
 export const SubjectQuestionInputType = new GraphQLInputObjectType({
@@ -76,7 +76,7 @@ export const SubjectQuestionInputType = new GraphQLInputObjectType({
     question: { type: QuestionUpdateInputType },
     category: { type: CategoryInputType },
     topics: { type: GraphQLList(TopicInputType) },
-    useDefaultTopics: { type: GraphQLBoolean },
+    useDefaultTopics: { type: GraphQLString },
   }),
 });
 
@@ -125,7 +125,7 @@ export async function questionInputToUpdate(
   return {
     question: q._id,
     category: input.category?.id,
-    useDefaultTopics: input.useDefaultTopics || false,
+    useDefaultTopics: input.useDefaultTopics || UseDefaultTopics.DEFAULT,
     // don't include topics that are not in the subject
     topics:
       input.topics
