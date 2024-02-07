@@ -190,7 +190,8 @@ function verifyDirectLinkSecure(
   const currentTime = new Date();
   const timeDiff = currentTime.getTime() - leftHomePage.getTime();
   const secondsDiff = timeDiff / 1000;
-  return secondsDiff <= 60;
+  const hoursDiff = secondsDiff / 3600;
+  return hoursDiff <= 1;
 }
 
 export const mentorData = {

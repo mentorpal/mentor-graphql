@@ -314,10 +314,10 @@ describe('mentorClientData', () => {
       );
     });
 
-    it('Rejects if home page visited more than 1 minute ago', async () => {
-      const fiveMinutesAgoTime = new Date();
-      fiveMinutesAgoTime.setMinutes(fiveMinutesAgoTime.getMinutes() - 5);
-      const timeInPast = fiveMinutesAgoTime.toISOString();
+    it('Rejects if home page visited more than 1 hour ago', async () => {
+      const twoHoursAgo = new Date();
+      twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
+      const timeInPast = twoHoursAgo.toISOString();
       const response = await request(app)
         .post('/graphql')
         .send({
@@ -337,9 +337,9 @@ describe('mentorClientData', () => {
 
     it('Does not reject despite visited time if user owns mentor', async () => {
       const token = getToken('5ffdf41a1ee2c62320b49ea2');
-      const fiveMinutesAgoTime = new Date();
-      fiveMinutesAgoTime.setMinutes(fiveMinutesAgoTime.getMinutes() - 5);
-      const timeInPast = fiveMinutesAgoTime.toISOString();
+      const twoHoursAgo = new Date();
+      twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
+      const timeInPast = twoHoursAgo.toISOString();
       const response = await request(app)
         .post('/graphql')
         .set('Authorization', `bearer ${token}`)
@@ -360,9 +360,9 @@ describe('mentorClientData', () => {
 
     it('Does not reject despite visited time if user is admin', async () => {
       const token = getToken('5ffdf41a1ee2c62320b49ea6');
-      const fiveMinutesAgoTime = new Date();
-      fiveMinutesAgoTime.setMinutes(fiveMinutesAgoTime.getMinutes() - 5);
-      const timeInPast = fiveMinutesAgoTime.toISOString();
+      const twoHoursAgo = new Date();
+      twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
+      const timeInPast = twoHoursAgo.toISOString();
       const response = await request(app)
         .post('/graphql')
         .set('Authorization', `bearer ${token}`)
@@ -381,7 +381,7 @@ describe('mentorClientData', () => {
       });
     });
 
-    it('returns mentor if home page visited within last minute', async () => {
+    it('returns mentor if home page visited within last hour', async () => {
       const now = new Date();
       const response = await request(app)
         .post('/graphql')
