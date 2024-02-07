@@ -32,6 +32,7 @@ export const updateMentorPrivacy = {
   args: {
     mentorId: { type: GraphQLNonNull(GraphQLID) },
     isPrivate: { type: GraphQLNonNull(GraphQLBoolean) },
+    directLinkPrivate: { type: GraphQLBoolean },
     orgPermissions: { type: GraphQLList(OrgPermissionInputType) },
   },
   resolve: async (
@@ -39,6 +40,7 @@ export const updateMentorPrivacy = {
     args: {
       mentorId: string;
       isPrivate: boolean;
+      directLinkPrivate: boolean;
       orgPermissions: OrgPermissionProps;
     },
     context: { user: User }
@@ -63,6 +65,9 @@ export const updateMentorPrivacy = {
         $set: {
           isPrivate: args.isPrivate,
           orgPermissions: args.orgPermissions || mentor.orgPermissions,
+          ...(args.directLinkPrivate !== undefined
+            ? { directLinkPrivate: args.directLinkPrivate }
+            : {}),
         },
       },
       {

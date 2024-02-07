@@ -127,6 +127,7 @@ export interface Mentor extends Document {
   lastTrainStatus: TrainStatus;
   isPublicApproved: boolean;
   isPrivate: boolean;
+  directLinkPrivate: boolean;
   isArchived: boolean;
   isAdvanced: boolean;
   orgPermissions: OrgPermissionProps[];
@@ -207,6 +208,7 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     lastPreviewedAt: { type: Date },
     isDirty: { type: Boolean, default: true },
     isPrivate: { type: Boolean, default: false },
+    directLinkPrivate: { type: Boolean, default: false },
     isArchived: { type: Boolean, default: false },
     isAdvanced: { type: Boolean, default: false },
     isPublicApproved: { type: Boolean, default: false },

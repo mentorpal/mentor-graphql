@@ -51,6 +51,7 @@ export interface MentorClientData {
   virtualBackgroundUrl: string;
   isDirty: boolean;
   isPublicApproved: boolean;
+  directLinkPrivate: boolean;
 }
 
 export interface AnswerClientData {
@@ -83,6 +84,7 @@ export const MentorClientDataType = new GraphQLObjectType({
     hasVirtualBackground: { type: GraphQLBoolean },
     isDirty: { type: GraphQLBoolean },
     isPublicApproved: { type: GraphQLBoolean },
+    directLinkPrivate: { type: GraphQLBoolean },
     virtualBackgroundUrl: { type: GraphQLString },
   }),
 });
@@ -343,6 +345,7 @@ export const mentorData = {
       utterances,
       isDirty: mentor.isDirty,
       isPublicApproved: mentor.isPublicApproved,
+      directLinkPrivate: mentor.directLinkPrivate,
     };
   },
 };

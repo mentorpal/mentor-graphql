@@ -176,6 +176,7 @@ describe('updateMentorPrivacy', () => {
             me {
               mentor {
                 isPrivate
+                directLinkPrivate
               }
             }
           }`,
@@ -183,17 +184,22 @@ describe('updateMentorPrivacy', () => {
     expect(mentor.status).to.equal(200);
     expect(mentor.body.data.me.mentor).to.eql({
       isPrivate: false,
+      directLinkPrivate: false,
     });
     const response = await request(app)
       .post('/graphql')
       .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation UpdateMentorPrivacy($mentorId: ID!, $isPrivate: Boolean!) {
+        query: `mutation UpdateMentorPrivacy($mentorId: ID!, $isPrivate: Boolean!, $directLinkPrivate: Boolean) {
           me {
-            updateMentorPrivacy(mentorId: $mentorId, isPrivate: $isPrivate)
+            updateMentorPrivacy(mentorId: $mentorId, isPrivate: $isPrivate, directLinkPrivate: $directLinkPrivate)
           }
         }`,
-        variables: { mentorId: '5ffdf41a1ee2c62111111113', isPrivate: true },
+        variables: {
+          mentorId: '5ffdf41a1ee2c62111111113',
+          isPrivate: true,
+          directLinkPrivate: true,
+        },
       });
     expect(response.status).to.equal(200);
     expect(response.body).to.have.deep.nested.property(
@@ -208,6 +214,7 @@ describe('updateMentorPrivacy', () => {
             me {
               mentor {
                 isPrivate
+                directLinkPrivate
               }
             }
           }`,
@@ -215,6 +222,7 @@ describe('updateMentorPrivacy', () => {
     expect(mentor.status).to.equal(200);
     expect(mentor.body.data.me.mentor).to.eql({
       isPrivate: true,
+      directLinkPrivate: true,
     });
   });
 
