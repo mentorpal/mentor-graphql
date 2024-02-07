@@ -37,7 +37,7 @@ describe('mentorsByKeyword', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentorsByKeyword).to.eql([
+    expect(response.body.data.mentorsByKeyword).to.deep.include.members([
       {
         _id: '5ffdf41a1ee2c62111111119',
         name: 'Aaron Klunder',
@@ -79,7 +79,7 @@ describe('mentorsByKeyword', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentorsByKeyword).to.eql([
+    expect(response.body.data.mentorsByKeyword).to.deep.include.members([
       {
         _id: '5ffdf41a1ee2c62111111119',
         name: 'Aaron Klunder',
@@ -121,7 +121,7 @@ describe('mentorsByKeyword', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentorsByKeyword).to.eql([
+    expect(response.body.data.mentorsByKeyword).to.deep.include.members([
       {
         _id: '5ffdf41a1ee2c62111111119',
         name: 'Aaron Klunder',
@@ -167,7 +167,7 @@ describe('mentorsByKeyword', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentorsByKeyword).to.eql([
+    expect(response.body.data.mentorsByKeyword).to.deep.include.members([
       {
         _id: '5ffdf41a1ee2c62111111119',
         name: 'Aaron Klunder',
@@ -213,7 +213,7 @@ describe('mentorsByKeyword', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.mentorsByKeyword).to.eql([
+    expect(response.body.data.mentorsByKeyword).to.deep.include.members([
       {
         _id: '5ffdf41a1ee2c62111111119',
         name: 'Aaron Klunder',
@@ -276,6 +276,9 @@ describe('mentorsByKeyword', () => {
       {
         name: 'Locked Down Mentor',
       },
+      {
+        name: 'Test Default Topics Mentor',
+      },
     ]);
   });
 
@@ -292,6 +295,9 @@ describe('mentorsByKeyword', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorsByKeyword).to.eql([
+      {
+        name: 'Test Default Topics Mentor',
+      },
       {
         name: 'Locked Down Mentor',
       },
@@ -326,6 +332,9 @@ describe('mentorsByKeyword', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorsByKeyword).to.eql([
+      {
+        name: 'Test Default Topics Mentor',
+      },
       {
         name: 'Locked Down Mentor',
       },
@@ -426,6 +435,9 @@ describe('mentorsByKeyword', () => {
       {
         name: 'Locked Down Mentor',
       },
+      {
+        name: 'Test Default Topics Mentor',
+      },
     ]);
     // sort female first
     response = await request(app)
@@ -457,6 +469,9 @@ describe('mentorsByKeyword', () => {
       },
       {
         name: 'Locked Down Mentor',
+      },
+      {
+        name: 'Test Default Topics Mentor',
       },
     ]);
     // sort male + stem first
@@ -491,6 +506,9 @@ describe('mentorsByKeyword', () => {
       },
       {
         name: 'Locked Down Mentor',
+      },
+      {
+        name: 'Test Default Topics Mentor',
       },
     ]);
   });

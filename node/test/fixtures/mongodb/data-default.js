@@ -118,6 +118,13 @@ module.exports = {
       mentorIds: ['5ffdf41a1ee2c62119991114'],
       userRole: 'USER',
     },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62119991235'),
+      name: 'Test Default Topics User',
+      email: 'defaultTopics@mentor.com',
+      mentorIds: ['5ffdf41a1ee2c62119991234'],
+      userRole: 'USER',
+    },
   ],
 
   mentors: [
@@ -252,6 +259,17 @@ module.exports = {
       mentorConfig: ObjectId('5ffdf41a1ee2c62111111132'),
       lockedToConfig: true,
     },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62119991234'),
+      name: 'Test Default Topics Mentor',
+      firstName: 'DefaultTopics',
+      isPrivate: false,
+      user: ObjectId('5ffdf41a1ee2c62119991235'),
+      subjects: [ObjectId('5ffdf41a1ee2c62119991236')],
+      keywords: ['Nonbinary'],
+      orgPermissions: [],
+      lockedToConfig: false,
+    },
   ],
 
   mentorpanels: [
@@ -366,6 +384,57 @@ module.exports = {
       ],
       questions: [{ question: ObjectId('511111111111111111111115') }],
       deleted: true,
+    },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62119991236'),
+      name: 'Subject Topic Question Test',
+      description: 'Testing subject question test',
+      categories: [
+        {
+          id: 'category',
+          name: 'Test Category',
+          description: 'A test category',
+          defaultTopics: ['5ffdf41a1ee2c62119991237'],
+        },
+      ],
+      topics: [
+        {
+          id: ObjectId('5ffdf41a1ee2c62320b21ec3'),
+          name: 'Unused Category',
+          description: 'Unused Category',
+        },
+        {
+          id: ObjectId('5ffdf41a1ee2c62119991237'),
+          name: '(Default Topic) Test Category',
+          description: 'Categories default topic',
+        },
+      ],
+      questions: [
+        {
+          question: ObjectId('511111111111111111111115'),
+          topics: [],
+          category: 'category',
+          useDefaultTopics: 'TRUE',
+        },
+        {
+          question: ObjectId('511111111111111111111113'),
+          topics: [],
+          category: 'category',
+          // useDefaultTopics: 'DEFAULT',  should automatically be default
+        },
+        {
+          question: ObjectId('511111111111111111111117'),
+          topics: [],
+          category: 'category',
+          useDefaultTopics: 'FALSE',
+        },
+        {
+          question: ObjectId('511111111111111111111114'),
+          topics: [],
+          category: '',
+          useDefaultTopics: 'DEFAULT',
+        },
+      ],
     },
   ],
 
@@ -525,6 +594,82 @@ module.exports = {
       hasEditedTranscript: true,
       transcript:
         'This is an orphaned answer (the respective question does not belong to a subject)',
+      video: 'https://idle/url',
+      status: 'COMPLETE',
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+      },
+      mobileMedia: {
+        type: 'video',
+        tag: 'mobile',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+      },
+    },
+    {
+      _id: ObjectId('511111111111111111111196'),
+      mentor: ObjectId('5ffdf41a1ee2c62119991234'),
+      question: ObjectId('511111111111111111111115'),
+      hasEditedTranscript: true,
+      transcript: 'answer transcript',
+      video: 'https://idle/url',
+      status: 'COMPLETE',
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+      },
+      mobileMedia: {
+        type: 'video',
+        tag: 'mobile',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+      },
+    },
+    {
+      _id: ObjectId('511111111111111111111197'),
+      mentor: ObjectId('5ffdf41a1ee2c62119991234'),
+      question: ObjectId('511111111111111111111113'),
+      hasEditedTranscript: true,
+      transcript: 'answer transcript',
+      video: 'https://idle/url',
+      status: 'COMPLETE',
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+      },
+      mobileMedia: {
+        type: 'video',
+        tag: 'mobile',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+      },
+    },
+    {
+      _id: ObjectId('511111111111111111111198'),
+      mentor: ObjectId('5ffdf41a1ee2c62119991234'),
+      question: ObjectId('511111111111111111111117'),
+      hasEditedTranscript: true,
+      transcript: 'answer transcript',
+      video: 'https://idle/url',
+      status: 'COMPLETE',
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/web.mp4',
+      },
+      mobileMedia: {
+        type: 'video',
+        tag: 'mobile',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111111/mobile.mp4',
+      },
+    },
+    {
+      _id: ObjectId('511111111111111111111199'),
+      mentor: ObjectId('5ffdf41a1ee2c62119991234'),
+      question: ObjectId('511111111111111111111114'),
+      hasEditedTranscript: true,
+      transcript: 'answer transcript',
       video: 'https://idle/url',
       status: 'COMPLETE',
       webMedia: {

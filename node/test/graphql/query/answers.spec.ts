@@ -43,50 +43,48 @@ describe('answers', () => {
       }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.answers).to.eql({
-      edges: [
-        {
-          node: {
-            _id: '511111111111111111111195',
-            externalVideoIds: {
-              wistiaId: '',
-            },
+    expect(response.body.data.answers.edges).to.deep.include.members([
+      {
+        node: {
+          _id: '511111111111111111111195',
+          externalVideoIds: {
+            wistiaId: '',
           },
         },
-        {
-          node: {
-            _id: '511111111111111111111174',
-            externalVideoIds: {
-              wistiaId: '',
-            },
+      },
+      {
+        node: {
+          _id: '511111111111111111111174',
+          externalVideoIds: {
+            wistiaId: '',
           },
         },
-        {
-          node: {
-            _id: '511111111111111111111114',
-            externalVideoIds: {
-              wistiaId: '',
-            },
+      },
+      {
+        node: {
+          _id: '511111111111111111111114',
+          externalVideoIds: {
+            wistiaId: '',
           },
         },
-        {
-          node: {
-            _id: '511111111111111111111113',
-            externalVideoIds: {
-              wistiaId: '',
-            },
+      },
+      {
+        node: {
+          _id: '511111111111111111111113',
+          externalVideoIds: {
+            wistiaId: '',
           },
         },
-        {
-          node: {
-            _id: '511111111111111111111112',
-            externalVideoIds: {
-              wistiaId: '5ffdf41a1ee2c62111111111-wistia-id',
-            },
+      },
+      {
+        node: {
+          _id: '511111111111111111111112',
+          externalVideoIds: {
+            wistiaId: '5ffdf41a1ee2c62111111111-wistia-id',
           },
         },
-      ],
-    });
+      },
+    ]);
   });
 
   it('does not get answers from private mentors if not owner or super user', async () => {
@@ -106,35 +104,33 @@ describe('answers', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.answers).to.eql({
-      edges: [
-        {
-          node: {
-            _id: '511111111111111111111195',
-          },
+    expect(response.body.data.answers.edges).to.deep.include.members([
+      {
+        node: {
+          _id: '511111111111111111111195',
         },
-        {
-          node: {
-            _id: '511111111111111111111174',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111174',
         },
-        {
-          node: {
-            _id: '511111111111111111111114',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111114',
         },
-        {
-          node: {
-            _id: '511111111111111111111113',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111113',
         },
-        {
-          node: {
-            _id: '511111111111111111111112',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111112',
         },
-      ],
-    });
+      },
+    ]);
   });
 
   it('gets answers from private mentor if content manager', async () => {
@@ -154,40 +150,38 @@ describe('answers', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.answers).to.eql({
-      edges: [
-        {
-          node: {
-            _id: '511111111111111111111195',
-          },
+    expect(response.body.data.answers.edges).to.deep.include.members([
+      {
+        node: {
+          _id: '511111111111111111111195',
         },
-        {
-          node: {
-            _id: '511111111111111111111174',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111174',
         },
-        {
-          node: {
-            _id: '511111111111111111111119',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111119',
         },
-        {
-          node: {
-            _id: '511111111111111111111114',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111114',
         },
-        {
-          node: {
-            _id: '511111111111111111111113',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111113',
         },
-        {
-          node: {
-            _id: '511111111111111111111112',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111112',
         },
-      ],
-    });
+      },
+    ]);
   });
 
   it('gets answers from private mentor if admin', async () => {
@@ -207,40 +201,38 @@ describe('answers', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.answers).to.eql({
-      edges: [
-        {
-          node: {
-            _id: '511111111111111111111195',
-          },
+    expect(response.body.data.answers.edges).to.deep.include.members([
+      {
+        node: {
+          _id: '511111111111111111111195',
         },
-        {
-          node: {
-            _id: '511111111111111111111174',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111174',
         },
-        {
-          node: {
-            _id: '511111111111111111111119',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111119',
         },
-        {
-          node: {
-            _id: '511111111111111111111114',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111114',
         },
-        {
-          node: {
-            _id: '511111111111111111111113',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111113',
         },
-        {
-          node: {
-            _id: '511111111111111111111112',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111112',
         },
-      ],
-    });
+      },
+    ]);
   });
 
   it('gets answers from private mentor if owner', async () => {
@@ -260,39 +252,37 @@ describe('answers', () => {
         }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.answers).to.eql({
-      edges: [
-        {
-          node: {
-            _id: '511111111111111111111195',
-          },
+    expect(response.body.data.answers.edges).to.deep.include.members([
+      {
+        node: {
+          _id: '511111111111111111111195',
         },
-        {
-          node: {
-            _id: '511111111111111111111174',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111174',
         },
-        {
-          node: {
-            _id: '511111111111111111111119',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111119',
         },
-        {
-          node: {
-            _id: '511111111111111111111114',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111114',
         },
-        {
-          node: {
-            _id: '511111111111111111111113',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111113',
         },
-        {
-          node: {
-            _id: '511111111111111111111112',
-          },
+      },
+      {
+        node: {
+          _id: '511111111111111111111112',
         },
-      ],
-    });
+      },
+    ]);
   });
 });

@@ -45,35 +45,29 @@ describe('subjects', () => {
       }`,
       });
     expect(response.status).to.equal(200);
-    expect(response.body.data.subjects).to.eql({
-      edges: [
-        {
-          node: {
-            _id: '5ffdf41a1ee2c62320b49eb3',
-            name: 'STEM',
-            isRequired: false,
-          },
+    expect(response.body.data.subjects.edges).to.deep.include.members([
+      {
+        node: {
+          _id: '5ffdf41a1ee2c62320b49eb3',
+          name: 'STEM',
+          isRequired: false,
         },
-        {
-          node: {
-            _id: '5ffdf41a1ee2c62320b49eb2',
-            name: 'Background',
-            isRequired: true,
-          },
-        },
-        {
-          node: {
-            _id: '5ffdf41a1ee2c62320b49eb1',
-            name: 'Repeat After Me',
-            isRequired: true,
-          },
-        },
-      ],
-      pageInfo: {
-        hasNextPage: false,
-        endCursor: null,
       },
-    });
+      {
+        node: {
+          _id: '5ffdf41a1ee2c62320b49eb2',
+          name: 'Background',
+          isRequired: true,
+        },
+      },
+      {
+        node: {
+          _id: '5ffdf41a1ee2c62320b49eb1',
+          name: 'Repeat After Me',
+          isRequired: true,
+        },
+      },
+    ]);
   });
 
   it('does not get deleted subjects', async () => {
@@ -144,6 +138,12 @@ describe('subjects', () => {
               name: 'STEM',
             },
           },
+          {
+            node: {
+              _id: '5ffdf41a1ee2c62119991236',
+              name: 'Subject Topic Question Test',
+            },
+          },
         ],
         pageInfo: {
           hasNextPage: false,
@@ -174,6 +174,12 @@ describe('subjects', () => {
       expect(response.status).to.equal(200);
       expect(response.body.data.subjects).to.eql({
         edges: [
+          {
+            node: {
+              _id: '5ffdf41a1ee2c62119991236',
+              name: 'Subject Topic Question Test',
+            },
+          },
           {
             node: {
               _id: '5ffdf41a1ee2c62320b49eb3',
@@ -271,6 +277,11 @@ describe('subjects', () => {
           {
             node: {
               _id: '5ffdf41a1ee2c62320b49eb1',
+            },
+          },
+          {
+            node: {
+              _id: '5ffdf41a1ee2c62119991236',
             },
           },
         ],

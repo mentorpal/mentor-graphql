@@ -221,4 +221,52 @@ describe('mentorClientData', () => {
       utterances: [],
     });
   });
+
+  it('get mentorClientData topicsQuestions', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+        mentorClientData(mentor: "5ffdf41a1ee2c62119991234") {
+          _id
+          name
+          title
+          mentorType
+          topicQuestions {
+            topic
+            questions
+          }
+          utterances {
+            _id
+            name
+            transcript
+            webMedia {
+              type
+              tag
+              url
+            }
+            mobileMedia {
+              type
+              tag
+              url
+            }
+          }
+        }
+    }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentorClientData).to.eql({
+      _id: '5ffdf41a1ee2c62119991234',
+      name: 'Test Default Topics Mentor',
+      title: null,
+      mentorType: 'VIDEO',
+      topicQuestions: [
+        {
+          topic: '(Default Topic) Test Category',
+          questions: ['Is STEM fun?', 'How old are you?'],
+        },
+      ],
+      utterances: [],
+    });
+  });
 });

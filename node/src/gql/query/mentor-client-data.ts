@@ -22,7 +22,7 @@ import {
 import { AnswerMedia } from '../../models/Answer';
 import { Question, QuestionType } from '../../models/Question';
 import SettingModel, { Config } from '../../models/Setting';
-import { SubjectQuestion, Topic } from '../../models/Subject';
+import { Category, SubjectQuestion, Topic } from '../../models/Subject';
 import OrganizationModel, { Organization } from '../../models/Organization';
 import { User } from '../../models/User';
 import { isAnswerComplete, Mentor } from '../../models/Mentor';
@@ -36,6 +36,7 @@ import {
   IExternalVideoIds,
   externalVideoIdsDefault,
 } from '../mutation/api/update-answers';
+import { UseDefaultTopics } from 'gql/mutation/me/helpers';
 
 export interface MentorClientData {
   _id: string;
@@ -126,7 +127,8 @@ async function getQuestions(
 async function getCompletedQuestions(
   mentor: Mentor,
   sQuestions: SubjectQuestion[],
-  questions: Question[]
+  questions: Question[],
+  categories: Category[]
 ): Promise<SubjectQuestion[]> {
   let answers = await AnswerModel.find({
     mentor: mentor._id,
@@ -140,7 +142,30 @@ async function getCompletedQuestions(
     )
   );
   const questionIds = answers.map((a) => `${a.question}`);
-  return sQuestions.filter((sq) => questionIds.includes(`${sq.question}`));
+  const completedQuestions = sQuestions.filter((sq) =>
+    questionIds.includes(`${sq.question}`)
+  );
+  // Add category default topics
+  const subjectQuestionsWithUpdatedTopics: SubjectQuestion[] =
+    completedQuestions.map((sQuestion) => {
+      if (!sQuestion.category) {
+        return sQuestion;
+      }
+      const shouldAddDefaultTopics =
+        sQuestion.useDefaultTopics === UseDefaultTopics.TRUE ||
+        (sQuestion.useDefaultTopics === UseDefaultTopics.DEFAULT &&
+          sQuestion.topics.length === 0);
+      if (!shouldAddDefaultTopics) {
+        return sQuestion;
+      }
+      const category = categories.find((c) => c.id === sQuestion.category);
+      if (!category) {
+        return sQuestion;
+      }
+      sQuestion.topics = [...sQuestion.topics, ...category.defaultTopics];
+      return sQuestion;
+    });
+  return subjectQuestionsWithUpdatedTopics;
 }
 
 export const mentorData = {
@@ -191,13 +216,19 @@ export const mentorData = {
       // get recorded questions in subject order
       const sqs = subject.questions;
       questions = await getQuestions(mentor, sqs);
-      sQuestions = await getCompletedQuestions(mentor, sqs, questions);
+      sQuestions = await getCompletedQuestions(
+        mentor,
+        sqs,
+        questions,
+        subject.categories
+      );
     }
     // no specified or default subject, use all subjects
     else {
       const subjects = await SubjectModel.find({
         _id: { $in: mentor.subjects },
       });
+      const allCategories = subjects.map((s) => s.categories).flat();
       // get topics in alphabetical order
       topics = subjects.reduce((acc, cur) => {
         const newTopics = cur.topics.filter(
@@ -211,7 +242,12 @@ export const mentorData = {
       // get recorded questions in alphabetical order
       const sqs = subjects.reduce((acc, cur) => [...acc, ...cur.questions], []);
       questions = await getQuestions(mentor, sqs);
-      sQuestions = await getCompletedQuestions(mentor, sqs, questions);
+      sQuestions = await getCompletedQuestions(
+        mentor,
+        sqs,
+        questions,
+        allCategories
+      );
       sQuestions.sort((a, b) => {
         const qa = questions.find((q) => `${q._id}` === `${a.question}`);
         const qb = questions.find((q) => `${q._id}` === `${b.question}`);
