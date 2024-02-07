@@ -10,6 +10,7 @@ import { Express } from 'express';
 import { describe } from 'mocha';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
+import { getToken } from '../../helpers';
 
 describe('mentorClientData', () => {
   let app: Express;
@@ -267,6 +268,136 @@ describe('mentorClientData', () => {
         },
       ],
       utterances: [],
+    });
+  });
+
+  describe('direct link private mentor', () => {
+    beforeEach(async () => {
+      const token = getToken('5ffdf41a1ee2c62320b49ea2');
+      const response = await request(app)
+        .post('/graphql')
+        .set('Authorization', `bearer ${token}`)
+        .send({
+          query: `mutation UpdateMentorPrivacy($mentorId: ID!, $isPrivate: Boolean!, $directLinkPrivate: Boolean) {
+          me {
+            updateMentorPrivacy(mentorId: $mentorId, isPrivate: $isPrivate, directLinkPrivate: $directLinkPrivate)
+          }
+        }`,
+          variables: {
+            mentorId: '5ffdf41a1ee2c62111111113',
+            isPrivate: false,
+            directLinkPrivate: true,
+          },
+        });
+      expect(response.status).to.equal(200);
+      expect(response.body).to.have.deep.nested.property(
+        'data.me.updateMentorPrivacy',
+        true
+      );
+    });
+
+    it('Rejects if mentor is directLinkPrivate and no "leftHomePage" param provided', async () => {
+      const response = await request(app)
+        .post('/graphql')
+        .send({
+          query: `query {
+            mentorClientData(mentor: "5ffdf41a1ee2c62111111113") {
+              _id
+              name
+            }
+        }`,
+        });
+      expect(response.status).to.equal(200);
+      expect(response.body).to.have.deep.nested.property(
+        'errors[0].message',
+        'mentor can only be accessed via homepage'
+      );
+    });
+
+    it('Rejects if home page visited more than 1 minute ago', async () => {
+      const fiveMinutesAgoTime = new Date();
+      fiveMinutesAgoTime.setMinutes(fiveMinutesAgoTime.getMinutes() - 5);
+      const timeInPast = fiveMinutesAgoTime.toISOString();
+      const response = await request(app)
+        .post('/graphql')
+        .send({
+          query: `query {
+            mentorClientData(mentor: "5ffdf41a1ee2c62111111113", leftHomePageTime: "${timeInPast}") {
+              _id
+              name
+            }
+        }`,
+        });
+      expect(response.status).to.equal(200);
+      expect(response.body).to.have.deep.nested.property(
+        'errors[0].message',
+        'mentor can only be accessed via homepage'
+      );
+    });
+
+    it('Does not reject despite visited time if user owns mentor', async () => {
+      const token = getToken('5ffdf41a1ee2c62320b49ea2');
+      const fiveMinutesAgoTime = new Date();
+      fiveMinutesAgoTime.setMinutes(fiveMinutesAgoTime.getMinutes() - 5);
+      const timeInPast = fiveMinutesAgoTime.toISOString();
+      const response = await request(app)
+        .post('/graphql')
+        .set('Authorization', `bearer ${token}`)
+        .send({
+          query: `query {
+            mentorClientData(mentor: "5ffdf41a1ee2c62111111113", leftHomePageTime: "${timeInPast}") {
+              _id
+              name
+            }
+        }`,
+        });
+      expect(response.status).to.equal(200);
+      expect(response.body.data.mentorClientData).to.eql({
+        _id: '5ffdf41a1ee2c62111111113',
+        name: 'Dan Davis',
+      });
+    });
+
+    it('Does not reject despite visited time if user is admin', async () => {
+      const token = getToken('5ffdf41a1ee2c62320b49ea6');
+      const fiveMinutesAgoTime = new Date();
+      fiveMinutesAgoTime.setMinutes(fiveMinutesAgoTime.getMinutes() - 5);
+      const timeInPast = fiveMinutesAgoTime.toISOString();
+      const response = await request(app)
+        .post('/graphql')
+        .set('Authorization', `bearer ${token}`)
+        .send({
+          query: `query {
+            mentorClientData(mentor: "5ffdf41a1ee2c62111111113", leftHomePageTime: "${timeInPast}") {
+              _id
+              name
+            }
+        }`,
+        });
+      expect(response.status).to.equal(200);
+      expect(response.body.data.mentorClientData).to.eql({
+        _id: '5ffdf41a1ee2c62111111113',
+        name: 'Dan Davis',
+      });
+    });
+
+    it('returns mentor if home page visited within last minute', async () => {
+      const now = new Date();
+      const response = await request(app)
+        .post('/graphql')
+        .send({
+          query: `query {
+            mentorClientData(mentor: "5ffdf41a1ee2c62111111113", leftHomePageTime: "${now.toISOString()}") {
+              _id
+              name
+            }
+        }`,
+        });
+      expect(response.status).to.equal(200);
+      expect(response.body.data.mentorClientData).to.eql({
+        _id: '5ffdf41a1ee2c62111111113',
+        name: 'Dan Davis',
+      });
     });
   });
 });

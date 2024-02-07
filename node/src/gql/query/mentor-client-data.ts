@@ -36,7 +36,7 @@ import {
   IExternalVideoIds,
   externalVideoIdsDefault,
 } from '../mutation/api/update-answers';
-import { UseDefaultTopics } from '../mutation/me/helpers';
+import { UseDefaultTopics, userIsManagerOrAdmin } from '../mutation/me/helpers';
 
 export interface MentorClientData {
   _id: string;
@@ -170,17 +170,46 @@ async function getCompletedQuestions(
   return subjectQuestionsWithUpdatedTopics;
 }
 
+function verifyDirectLinkSecure(
+  mentor: Mentor,
+  leftHomePageTime: string,
+  user?: User
+): boolean {
+  const userOwnsMentor = user?.mentorIds.includes(mentor._id);
+  if (
+    !mentor.directLinkPrivate ||
+    userIsManagerOrAdmin(user?.userRole || '') ||
+    userOwnsMentor
+  ) {
+    return true;
+  }
+  if (!leftHomePageTime) {
+    return false;
+  }
+  const leftHomePage = new Date(leftHomePageTime);
+  const currentTime = new Date();
+  const timeDiff = currentTime.getTime() - leftHomePage.getTime();
+  const secondsDiff = timeDiff / 1000;
+  return secondsDiff <= 60;
+}
+
 export const mentorData = {
   type: MentorClientDataType,
   args: {
     mentor: { type: GraphQLNonNull(GraphQLID) },
     subject: { type: GraphQLID },
     orgAccessCode: { type: GraphQLString },
+    leftHomePageTime: { type: GraphQLString },
   },
   resolve: async (
     _root: GraphQLObjectType,
-    args: { mentor: string; subject?: string; orgAccessCode?: string },
-    context: { user: User; org: Organization }
+    args: {
+      mentor: string;
+      subject?: string;
+      orgAccessCode?: string;
+      leftHomePageTime?: string;
+    },
+    context: { user?: User; org: Organization }
   ): Promise<MentorClientData> => {
     const mentor = await MentorModel.findById(args.mentor);
     if (!mentor) {
@@ -191,6 +220,10 @@ export const mentorData = {
         `mentor is private and you do not have permission to access`
       );
     }
+    if (!verifyDirectLinkSecure(mentor, args.leftHomePageTime, context.user)) {
+      throw new Error('mentor can only be accessed via homepage');
+    }
+
     let config: Config;
     if (
       context.org &&

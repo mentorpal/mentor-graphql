@@ -4,6 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
+import { UserRole } from 'models/User';
 import mongoose from 'mongoose';
 
 interface IdAndProps<T> {
@@ -51,4 +52,13 @@ export enum UseDefaultTopics {
   TRUE = 'TRUE',
   FALSE = 'FALSE',
   DEFAULT = 'DEFAULT',
+}
+
+export function userIsManagerOrAdmin(role: string) {
+  return (
+    role === UserRole.CONTENT_MANAGER ||
+    role === UserRole.ADMIN ||
+    role === UserRole.SUPER_CONTENT_MANAGER ||
+    role === UserRole.SUPER_ADMIN
+  );
 }

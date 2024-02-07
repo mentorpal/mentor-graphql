@@ -208,6 +208,7 @@ module.exports = {
       user: ObjectId('5ffdf41a1ee2c62320b49ea2'),
       subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
       keywords: ['Male'],
+      directLinkPrivate: false,
       orgPermissions: [
         {
           org: ObjectId('511111111111111111111111'),
