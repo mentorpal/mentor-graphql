@@ -36,7 +36,7 @@ import {
   IExternalVideoIds,
   externalVideoIdsDefault,
 } from '../mutation/api/update-answers';
-import { UseDefaultTopics } from 'gql/mutation/me/helpers';
+import { UseDefaultTopics } from '../mutation/me/helpers';
 
 export interface MentorClientData {
   _id: string;
