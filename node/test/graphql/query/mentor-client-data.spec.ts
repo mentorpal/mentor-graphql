@@ -296,7 +296,7 @@ describe('mentorClientData', () => {
       );
     });
 
-    it('Rejects if mentor is directLinkPrivate and no "leftHomePage" param provided', async () => {
+    it('Rejects if mentor is directLinkPrivate and no "leftHomePageData" param provided', async () => {
       const response = await request(app)
         .post('/graphql')
         .send({
@@ -318,15 +318,24 @@ describe('mentorClientData', () => {
       const twoHoursAgo = new Date();
       twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
       const timeInPast = twoHoursAgo.toISOString();
+
+      const data = JSON.stringify({
+        time: timeInPast,
+        targetMentors: ['5ffdf41a1ee2c62111111113'],
+      });
+
       const response = await request(app)
         .post('/graphql')
         .send({
-          query: `query {
-            mentorClientData(mentor: "5ffdf41a1ee2c62111111113", leftHomePageTime: "${timeInPast}") {
+          query: `query MentorClientData($leftHomePageData: String!) {
+            mentorClientData(mentor: "5ffdf41a1ee2c62111111113", leftHomePageData: $leftHomePageData) {
               _id
               name
             }
         }`,
+          variables: {
+            leftHomePageData: data,
+          },
         });
       expect(response.status).to.equal(200);
       expect(response.body).to.have.deep.nested.property(
@@ -340,16 +349,24 @@ describe('mentorClientData', () => {
       const twoHoursAgo = new Date();
       twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
       const timeInPast = twoHoursAgo.toISOString();
+
+      const data = JSON.stringify({
+        time: timeInPast,
+        targetMentors: ['5ffdf41a1ee2c62111111113'],
+      });
       const response = await request(app)
         .post('/graphql')
         .set('Authorization', `bearer ${token}`)
         .send({
-          query: `query {
-            mentorClientData(mentor: "5ffdf41a1ee2c62111111113", leftHomePageTime: "${timeInPast}") {
+          query: `query MentorClientData($leftHomePageData: String!) {
+            mentorClientData(mentor: "5ffdf41a1ee2c62111111113", leftHomePageData: $leftHomePageData) {
               _id
               name
             }
         }`,
+          variables: {
+            leftHomePageData: data,
+          },
         });
       expect(response.status).to.equal(200);
       expect(response.body.data.mentorClientData).to.eql({
@@ -363,16 +380,24 @@ describe('mentorClientData', () => {
       const twoHoursAgo = new Date();
       twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
       const timeInPast = twoHoursAgo.toISOString();
+
+      const data = JSON.stringify({
+        time: timeInPast,
+        targetMentors: ['5ffdf41a1ee2c62111111113'],
+      });
       const response = await request(app)
         .post('/graphql')
         .set('Authorization', `bearer ${token}`)
         .send({
-          query: `query {
-            mentorClientData(mentor: "5ffdf41a1ee2c62111111113", leftHomePageTime: "${timeInPast}") {
+          query: `query MentorClientData($leftHomePageData: String!) {
+            mentorClientData(mentor: "5ffdf41a1ee2c62111111113", leftHomePageData: $leftHomePageData) {
               _id
               name
             }
         }`,
+          variables: {
+            leftHomePageData: data,
+          },
         });
       expect(response.status).to.equal(200);
       expect(response.body.data.mentorClientData).to.eql({
@@ -382,17 +407,26 @@ describe('mentorClientData', () => {
     });
 
     it('returns mentor if home page visited within last hour', async () => {
-      const now = new Date();
+      const now = new Date().toISOString();
+
+      const data = JSON.stringify({
+        time: now,
+        targetMentors: ['5ffdf41a1ee2c62111111113'],
+      });
       const response = await request(app)
         .post('/graphql')
         .send({
-          query: `query {
-            mentorClientData(mentor: "5ffdf41a1ee2c62111111113", leftHomePageTime: "${now.toISOString()}") {
+          query: `query MentorClientData($leftHomePageData: String!) {
+            mentorClientData(mentor: "5ffdf41a1ee2c62111111113", leftHomePageData: $leftHomePageData) {
               _id
               name
             }
         }`,
+          variables: {
+            leftHomePageData: data,
+          },
         });
+      console.log(JSON.stringify(response.body, null, 2));
       expect(response.status).to.equal(200);
       expect(response.body.data.mentorClientData).to.eql({
         _id: '5ffdf41a1ee2c62111111113',

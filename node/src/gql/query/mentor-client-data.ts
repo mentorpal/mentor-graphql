@@ -170,9 +170,14 @@ async function getCompletedQuestions(
   return subjectQuestionsWithUpdatedTopics;
 }
 
+interface LeftHomePageData {
+  time: string;
+  targetMentors: string[];
+}
+
 function verifyDirectLinkSecure(
   mentor: Mentor,
-  leftHomePageTime: string,
+  leftHomePageData: string,
   user?: User
 ): boolean {
   const userOwnsMentor = user?.mentorIds.includes(mentor._id);
@@ -183,12 +188,21 @@ function verifyDirectLinkSecure(
   ) {
     return true;
   }
-  if (!leftHomePageTime) {
+
+  if (!leftHomePageData) {
     return false;
   }
-  const leftHomePage = new Date(leftHomePageTime);
+
+  const homePageData: LeftHomePageData = JSON.parse(leftHomePageData);
+  if (!homePageData.time || !homePageData.targetMentors) {
+    return false;
+  }
+  if (!homePageData.targetMentors.includes(`${mentor._id}`)) {
+    return false;
+  }
+  const leftHomePageTime = new Date(homePageData.time);
   const currentTime = new Date();
-  const timeDiff = currentTime.getTime() - leftHomePage.getTime();
+  const timeDiff = currentTime.getTime() - leftHomePageTime.getTime();
   const secondsDiff = timeDiff / 1000;
   const hoursDiff = secondsDiff / 3600;
   return hoursDiff <= 1;
@@ -200,7 +214,7 @@ export const mentorData = {
     mentor: { type: GraphQLNonNull(GraphQLID) },
     subject: { type: GraphQLID },
     orgAccessCode: { type: GraphQLString },
-    leftHomePageTime: { type: GraphQLString },
+    leftHomePageData: { type: GraphQLString },
   },
   resolve: async (
     _root: GraphQLObjectType,
@@ -208,7 +222,7 @@ export const mentorData = {
       mentor: string;
       subject?: string;
       orgAccessCode?: string;
-      leftHomePageTime?: string;
+      leftHomePageData?: string;
     },
     context: { user?: User; org: Organization }
   ): Promise<MentorClientData> => {
@@ -221,7 +235,7 @@ export const mentorData = {
         `mentor is private and you do not have permission to access`
       );
     }
-    if (!verifyDirectLinkSecure(mentor, args.leftHomePageTime, context.user)) {
+    if (!verifyDirectLinkSecure(mentor, args.leftHomePageData, context.user)) {
       throw new Error('mentor can only be accessed via homepage');
     }
 
