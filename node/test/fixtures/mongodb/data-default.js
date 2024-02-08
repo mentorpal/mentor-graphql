@@ -16,6 +16,7 @@ module.exports = {
       subjects: [
         '5ffdf41a1ee2c62320b49eb3', //STEM
       ],
+      lockedToSubjects: true,
       publiclyVisible: true,
       mentorType: 'CHAT',
       orgPermissions: [

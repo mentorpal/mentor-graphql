@@ -12,7 +12,10 @@ import {
   GraphQLInputObjectType,
   GraphQLList,
 } from 'graphql';
-import { Mentor as MentorModel } from '../../../models';
+import {
+  Mentor as MentorModel,
+  MentorConfig as MentorConfigModel,
+} from '../../../models';
 import { Subject } from '../../../models/Subject';
 import { User } from '../../../models/User';
 import { canEditMentor } from '../../../utils/check-permissions';
@@ -55,8 +58,13 @@ export const updateMentorSubjects = {
     if (!(await canEditMentor(mentor, context.user))) {
       throw new Error('you do not have permission to edit this mentor');
     }
-    if (mentor.mentorConfig && mentor.lockedToConfig) {
-      throw new Error('Mentor is locked, please unlock them before editing');
+    const mentorConfig = mentor.mentorConfig
+      ? await MentorConfigModel.findById(mentor.mentorConfig)
+      : null;
+    if (mentorConfig && mentorConfig.lockedToSubjects) {
+      throw new Error(
+        'Mentor subjects are locked, please unlock them before editing'
+      );
     }
     const updated = await MentorModel.findByIdAndUpdate(
       mentor._id,

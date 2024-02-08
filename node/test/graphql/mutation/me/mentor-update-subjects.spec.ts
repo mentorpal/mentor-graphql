@@ -100,7 +100,7 @@ describe('updateMentorSubjects', () => {
       });
     expect(response.body).to.have.deep.nested.property(
       'errors[0].message',
-      'Mentor is locked, please unlock them before editing'
+      'Mentor subjects are locked, please unlock them before editing'
     );
   });
 
