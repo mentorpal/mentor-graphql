@@ -24,6 +24,7 @@ import { OrgPermissionInputType } from '../gql/mutation/me/mentor-update-privacy
 export interface MentorConfig extends Document {
   configId: string;
   subjects: string[];
+  lockedToSubjects: boolean;
   publiclyVisible: boolean;
   mentorType: MentorType;
   orgPermissions: OrgPermissionProps[];
@@ -44,6 +45,7 @@ export const MentorConfigSchema = new Schema(
   {
     configId: { type: String, default: '' },
     subjects: { type: [String], default: [] },
+    lockedToSubjects: { type: Boolean, default: false },
     publiclyVisible: { type: Boolean, default: false },
     mentorType: { type: String },
     orgPermissions: { type: [OrgPermissionSchema], default: [] },
@@ -66,6 +68,7 @@ export const MentorConfigInputType = new GraphQLInputObjectType({
   fields: {
     configId: { type: GraphQLString },
     subjects: { type: GraphQLList(GraphQLString) },
+    lockedToSubjects: { type: GraphQLBoolean },
     publiclyVisible: { type: GraphQLBoolean },
     mentorType: { type: GraphQLString },
     orgPermissions: { type: GraphQLList(OrgPermissionInputType) },
@@ -88,6 +91,7 @@ export const MentorConfigType = new GraphQLObjectType({
   fields: {
     configId: { type: GraphQLString },
     subjects: { type: GraphQLList(GraphQLString) },
+    lockedToSubjects: { type: GraphQLBoolean },
     publiclyVisible: { type: GraphQLBoolean },
     mentorType: { type: GraphQLString },
     orgPermissions: { type: GraphQLList(OrgPermissionType) },

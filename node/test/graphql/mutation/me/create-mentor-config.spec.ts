@@ -65,6 +65,7 @@ describe('Create Mentor Config', () => {
             mentorConfigCreateUpdate(mentorConfig: $mentorConfig){
               configId
               subjects
+              lockedToSubjects
               publiclyVisible
               orgPermissions {
                 org
@@ -88,6 +89,7 @@ describe('Create Mentor Config', () => {
           mentorConfig: {
             configId: 'TestConfigId',
             subjects: ['TestSubject'],
+            lockedToSubjects: true,
             publiclyVisible: true,
             orgPermissions: [
               {
@@ -121,6 +123,7 @@ describe('Create Mentor Config', () => {
             fetchMentorConfig(mentorConfigId: $mentorConfigId){
               configId
               subjects
+              lockedToSubjects
               publiclyVisible
               orgPermissions {
                 org
@@ -195,5 +198,8 @@ describe('Create Mentor Config', () => {
     expect(
       response2.body.data.fetchMentorConfig.recordTimeLimitSeconds
     ).to.equal(100);
+    expect(response2.body.data.fetchMentorConfig.lockedToSubjects).to.equal(
+      true
+    );
   });
 });

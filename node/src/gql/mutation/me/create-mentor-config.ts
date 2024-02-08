@@ -39,6 +39,7 @@ export const mentorConfigCreateUpdate = {
       {
         $set: {
           subjects: args.mentorConfig.subjects,
+          lockedToSubjects: args.mentorConfig.lockedToSubjects,
           publiclyVisible: args.mentorConfig.publiclyVisible,
           orgPermissions: args.mentorConfig.orgPermissions,
           mentorType: args.mentorConfig.mentorType,
