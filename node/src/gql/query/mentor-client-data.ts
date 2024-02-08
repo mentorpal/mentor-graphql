@@ -205,7 +205,7 @@ function verifyDirectLinkSecure(
   const timeDiff = currentTime.getTime() - leftHomePageTime.getTime();
   const secondsDiff = timeDiff / 1000;
   const hoursDiff = secondsDiff / 3600;
-  return hoursDiff <= 1;
+  return hoursDiff <= 5;
 }
 
 export const mentorData = {

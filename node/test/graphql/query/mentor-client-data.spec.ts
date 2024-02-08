@@ -314,10 +314,10 @@ describe('mentorClientData', () => {
       );
     });
 
-    it('Rejects if home page visited more than 1 hour ago', async () => {
-      const twoHoursAgo = new Date();
-      twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
-      const timeInPast = twoHoursAgo.toISOString();
+    it('Rejects if home page visited more than 5 hours ago', async () => {
+      const eightHoursAgo = new Date();
+      eightHoursAgo.setHours(eightHoursAgo.getHours() - 8);
+      const timeInPast = eightHoursAgo.toISOString();
 
       const data = JSON.stringify({
         time: timeInPast,
@@ -346,9 +346,9 @@ describe('mentorClientData', () => {
 
     it('Does not reject despite visited time if user owns mentor', async () => {
       const token = getToken('5ffdf41a1ee2c62320b49ea2');
-      const twoHoursAgo = new Date();
-      twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
-      const timeInPast = twoHoursAgo.toISOString();
+      const eightHoursAgo = new Date();
+      eightHoursAgo.setHours(eightHoursAgo.getHours() - 8);
+      const timeInPast = eightHoursAgo.toISOString();
 
       const data = JSON.stringify({
         time: timeInPast,
@@ -377,9 +377,9 @@ describe('mentorClientData', () => {
 
     it('Does not reject despite visited time if user is admin', async () => {
       const token = getToken('5ffdf41a1ee2c62320b49ea6');
-      const twoHoursAgo = new Date();
-      twoHoursAgo.setHours(twoHoursAgo.getHours() - 2);
-      const timeInPast = twoHoursAgo.toISOString();
+      const eightHoursAgo = new Date();
+      eightHoursAgo.setHours(eightHoursAgo.getHours() - 8);
+      const timeInPast = eightHoursAgo.toISOString();
 
       const data = JSON.stringify({
         time: timeInPast,
