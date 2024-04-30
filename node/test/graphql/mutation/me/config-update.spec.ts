@@ -130,6 +130,7 @@ describe('updateConfig', () => {
               featuredMentors
               featuredMentorPanels
               activeMentors
+              filterEmailMentorAddress
             }
           }
         }`,
@@ -137,6 +138,7 @@ describe('updateConfig', () => {
           config: {
             featuredMentors: ['5ffdf41a1ee2c62111111119'],
             featuredMentorPanels: ['5ffdf41a1ee2c62111111111'],
+            filterEmailMentorAddress: 'hello@gmail.com',
           },
         },
       });
@@ -146,6 +148,7 @@ describe('updateConfig', () => {
       featuredMentorPanels: ['5ffdf41a1ee2c62111111111'],
       featuredMentors: ['5ffdf41a1ee2c62111111119'],
       mentorsDefault: [],
+      filterEmailMentorAddress: 'hello@gmail.com',
     });
     response = await request(app)
       .post('/graphql')
@@ -158,6 +161,7 @@ describe('updateConfig', () => {
             featuredMentors
             featuredMentorPanels
             activeMentors
+            filterEmailMentorAddress
           }
         }
       }`,
@@ -173,6 +177,7 @@ describe('updateConfig', () => {
       featuredMentorPanels: ['5ffdf41a1ee2c62111111111'],
       featuredMentors: ['5ffdf41a1ee2c62111111119'],
       mentorsDefault: [],
+      filterEmailMentorAddress: 'hello@gmail.com',
     });
   });
 

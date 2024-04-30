@@ -250,12 +250,14 @@ describe('updateOrgConfig', () => {
             updateOrgConfig(id: $id, config: $config) {
               urlGraphql
               mentorsDefault
+              filterEmailMentorAddress
             }
           }
         }`,
         variables: {
           id: '511111111111111111111111',
           config: {
+            filterEmailMentorAddress: 'test@test.com',
             mentorsDefault: ['test'],
           },
         },
@@ -264,6 +266,7 @@ describe('updateOrgConfig', () => {
     expect(response.body.data.me.updateOrgConfig).to.eql({
       urlGraphql: '/graphql',
       mentorsDefault: ['test'],
+      filterEmailMentorAddress: 'test@test.com',
     });
     const org = await request(app)
       .post('/graphql')
@@ -274,6 +277,7 @@ describe('updateOrgConfig', () => {
             config {
               urlGraphql
               mentorsDefault
+              filterEmailMentorAddress
             }
           }
         }`,
@@ -283,6 +287,7 @@ describe('updateOrgConfig', () => {
       config: {
         urlGraphql: '/graphql',
         mentorsDefault: ['test'],
+        filterEmailMentorAddress: 'test@test.com',
       },
     });
   });

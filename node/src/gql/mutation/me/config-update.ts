@@ -77,6 +77,7 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     virtualBackgroundUrls: { type: GraphQLList(GraphQLString) },
     defaultVirtualBackground: { type: GraphQLString },
     videoRecorderMaxLength: { type: GraphQLInt },
+    filterEmailMentorAddress: { type: GraphQLString },
     // style settings
     styleHeaderTitle: { type: GraphQLString },
     styleHeaderText: { type: GraphQLString },

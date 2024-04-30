@@ -891,7 +891,6 @@ describe('addOrUpdateOrganization', () => {
               name
               subdomain
               isPrivate
-              email
               config {
                 mentorsDefault
                 urlGraphql
@@ -909,7 +908,6 @@ describe('addOrUpdateOrganization', () => {
         variables: {
           id: '511111111111111111111111',
           organization: {
-            email: 'test-email@gmail.com',
             name: 'Updated name',
             subdomain: 'usc',
             members: [{ user: '5ffdf41a1ee2c62320b49ea5', role: 'ADMIN' }],
@@ -921,7 +919,6 @@ describe('addOrUpdateOrganization', () => {
       name: 'Updated name',
       subdomain: 'usc',
       isPrivate: true,
-      email: 'test-email@gmail.com',
       config: {
         mentorsDefault: [],
         urlGraphql: '/graphql',

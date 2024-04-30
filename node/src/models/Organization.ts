@@ -44,7 +44,6 @@ export interface OrganizationProps {
   subdomain: string;
   isPrivate: boolean;
   accessCodes: string[];
-  email: string;
   members: OrgMemberProps[];
   config: OrgConfigProps[];
 }
@@ -56,7 +55,6 @@ export const OrganizationSchema = new Schema<Organization, OrganizationModel>(
     subdomain: { type: String },
     isPrivate: { type: Boolean, default: false },
     accessCodes: { type: [String], default: [] },
-    email: { type: String, default: '' },
     members: { type: [OrgMemberSchema], default: [] },
     config: { type: [OrgConfigSchema], default: [] },
   },
@@ -93,7 +91,7 @@ OrganizationSchema.statics.getConfig = async function (
     uploadLambdaEndpoint: config.uploadLambdaEndpoint,
     graphqlLambdaEndpoint: config.graphqlLambdaEndpoint,
     subjectRecordPriority: config.subjectRecordPriority,
-    filterEmailMentorAddress: 'careerfair.ai@gmail.com',
+    filterEmailMentorAddress: config.filterEmailMentorAddress,
     googleClientId: config.googleClientId,
     virtualBackgroundUrls: config.virtualBackgroundUrls,
     defaultVirtualBackground: config.defaultVirtualBackground,
