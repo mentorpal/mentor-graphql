@@ -44,6 +44,7 @@ export interface OrganizationProps {
   subdomain: string;
   isPrivate: boolean;
   accessCodes: string[];
+  email: string;
   members: OrgMemberProps[];
   config: OrgConfigProps[];
 }
@@ -55,6 +56,7 @@ export const OrganizationSchema = new Schema<Organization, OrganizationModel>(
     subdomain: { type: String },
     isPrivate: { type: Boolean, default: false },
     accessCodes: { type: [String], default: [] },
+    email: { type: String, default: '' },
     members: { type: [OrgMemberSchema], default: [] },
     config: { type: [OrgConfigSchema], default: [] },
   },

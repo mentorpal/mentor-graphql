@@ -64,6 +64,7 @@ export const AddOrUpdateOrganizationInputType = new GraphQLInputObjectType({
     name: { type: GraphQLString },
     subdomain: { type: GraphQLString },
     isPrivate: { type: GraphQLBoolean },
+    email: { type: GraphQLString },
     accessCodes: { type: GraphQLList(GraphQLString) },
     members: { type: GraphQLList(OrganizationMemberInputType) },
   },
