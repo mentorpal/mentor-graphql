@@ -57,6 +57,8 @@ export const mentorConfigCreateUpdate = {
           completeSubjectsNotificationText:
             args.mentorConfig.completeSubjectsNotificationText,
           recordTimeLimitSeconds: args.mentorConfig.recordTimeLimitSeconds,
+          idleRecordingDuration: args.mentorConfig.idleRecordingDuration,
+          introRecordingText: args.mentorConfig.introRecordingText,
         },
       },
       {

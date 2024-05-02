@@ -19,6 +19,7 @@ module.exports = {
       lockedToSubjects: true,
       publiclyVisible: true,
       mentorType: 'CHAT',
+      introRecordingText: 'TestIntroRecordingText',
       orgPermissions: [
         {
           org: ObjectId('511111111111111111111111'),

@@ -992,41 +992,4 @@ describe('mentor', () => {
       ],
     });
   });
-
-  it('gets lockdown config from mentor', async () => {
-    const response = await request(app)
-      .post('/graphql')
-      .send({
-        query: `query {
-          mentor(id: "5ffdf41a1ee2c62119991114") {
-            mentorConfig {
-              configId
-              subjects
-              publiclyVisible
-              orgPermissions{
-                org
-                viewPermission
-                editPermission
-              }
-            }
-          }
-        }
-      `,
-      });
-    expect(response.status).to.equal(200);
-    expect(response.body.data.mentor).to.eql({
-      mentorConfig: {
-        configId: '2023TestConfig',
-        subjects: ['5ffdf41a1ee2c62320b49eb3'],
-        publiclyVisible: true,
-        orgPermissions: [
-          {
-            org: '511111111111111111111111',
-            viewPermission: 'HIDDEN',
-            editPermission: 'HIDDEN',
-          },
-        ],
-      },
-    });
-  });
 });

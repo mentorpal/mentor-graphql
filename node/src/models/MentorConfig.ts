@@ -39,6 +39,8 @@ export interface MentorConfig extends Document {
   disableLevelProgressDisplay: boolean;
   completeSubjectsNotificationText: string;
   recordTimeLimitSeconds: number;
+  idleRecordingDuration: number;
+  introRecordingText: string;
 }
 
 export const MentorConfigSchema = new Schema(
@@ -59,6 +61,8 @@ export const MentorConfigSchema = new Schema(
     disableLevelProgressDisplay: { type: Boolean, default: false },
     completeSubjectsNotificationText: { type: String, default: '' },
     recordTimeLimitSeconds: { type: Number, default: 0 },
+    idleRecordingDuration: { type: Number, default: 10 },
+    introRecordingText: { type: String, default: '' },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
 );
@@ -83,6 +87,8 @@ export const MentorConfigInputType = new GraphQLInputObjectType({
     disableLevelProgressDisplay: { type: GraphQLBoolean },
     completeSubjectsNotificationText: { type: GraphQLString },
     recordTimeLimitSeconds: { type: GraphQLInt },
+    idleRecordingDuration: { type: GraphQLInt },
+    introRecordingText: { type: GraphQLString },
   },
 });
 
@@ -105,6 +111,8 @@ export const MentorConfigType = new GraphQLObjectType({
     disableLevelProgressDisplay: { type: GraphQLBoolean },
     completeSubjectsNotificationText: { type: GraphQLString },
     recordTimeLimitSeconds: { type: GraphQLInt },
+    idleRecordingDuration: { type: GraphQLInt },
+    introRecordingText: { type: GraphQLString },
   },
 });
 

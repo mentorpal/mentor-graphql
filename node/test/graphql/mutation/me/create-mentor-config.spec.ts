@@ -82,6 +82,8 @@ describe('Create Mentor Config', () => {
               disableLevelProgressDisplay
               completeSubjectsNotificationText
               recordTimeLimitSeconds
+              idleRecordingDuration
+              introRecordingText
             }
           }
         }`,
@@ -109,6 +111,8 @@ describe('Create Mentor Config', () => {
             completeSubjectsNotificationText:
               'TestCompleteSubjectsNotificationText',
             recordTimeLimitSeconds: 100,
+            idleRecordingDuration: 10,
+            introRecordingText: 'TestIntroRecordingText',
           },
         },
       });
@@ -140,6 +144,8 @@ describe('Create Mentor Config', () => {
               disableLevelProgressDisplay
               completeSubjectsNotificationText
               recordTimeLimitSeconds
+              idleRecordingDuration
+              introRecordingText
             }
         }`,
         variables: {
@@ -200,6 +206,12 @@ describe('Create Mentor Config', () => {
     ).to.equal(100);
     expect(response2.body.data.fetchMentorConfig.lockedToSubjects).to.equal(
       true
+    );
+    expect(
+      response2.body.data.fetchMentorConfig.idleRecordingDuration
+    ).to.equal(10);
+    expect(response2.body.data.fetchMentorConfig.introRecordingText).to.equal(
+      'TestIntroRecordingText'
     );
   });
 });
