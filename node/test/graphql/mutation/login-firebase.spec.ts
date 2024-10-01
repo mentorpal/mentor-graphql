@@ -5,17 +5,17 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 
-import createApp, { appStart, appStop } from "app";
-import { expect } from "chai";
-import { Express } from "express";
-import mongoUnit from "mongo-unit";
-import request from "supertest";
-import { getFirebaseToken, getToken } from "../../helpers";
+import createApp, { appStart, appStop } from 'app';
+import { expect } from 'chai';
+import { Express } from 'express';
+import mongoUnit from 'mongo-unit';
+import request from 'supertest';
+import { getFirebaseToken, getToken } from '../../helpers';
 
-describe.only("login-firebase", () => {
+describe('login firebase', () => {
   let app: Express;
   beforeEach(async () => {
-    await mongoUnit.load(require("test/fixtures/mongodb/data-default.js"));
+    await mongoUnit.load(require('test/fixtures/mongodb/data-default.js'));
     app = await createApp();
     await appStart();
   });
@@ -26,23 +26,26 @@ describe.only("login-firebase", () => {
   });
 
   it(`can log in`, async () => {
-    const token = getFirebaseToken({ uid: "5ffdf1231ee2c62320b49e99" });
+    const token = await getFirebaseToken({
+      uid: '5ffdf1231ee2c62320b49e99',
+      name: 'test',
+      email: '123@gmaikl.com',
+    });
 
     const fetchResult = await request(app)
-      .post("/graphql")
-      .set("Authorization", `bearer ${token}`)
+      .post('/graphql')
+      .set('Authorization', `bearer ${token}`)
       .send({
-        query: `mutation FirebaseLogin {
-            firebaseLogin {
-                firebaseId
+        query: `mutation LoginFirebase {
+          loginFirebase {
                 name
                 email
                 userRole
-                friends
                 lastLoginAt
           }
         }`,
       });
     expect(fetchResult.status).to.equal(200);
+    expect(fetchResult.body.data.loginFirebase.name).to.eql('test');
   });
 });

@@ -57,31 +57,33 @@ export function getToken(userId: string, expiresIn?: number): string {
   const expirationDate = new Date(Date.now() + expiresIn * 1000);
   const accessToken = jwt.sign(
     { id: userId, expirationDate },
-    process.env.JWT_SECRET || "",
+    process.env.JWT_SECRET || '',
     { expiresIn: expirationDate.getTime() - new Date().getTime() }
   );
   return accessToken;
 }
 
-export async function getFirebaseToken(user: Partial<DecodedIdToken>): Promise<string> {
+export async function getFirebaseToken(
+  user: Partial<DecodedIdToken>
+): Promise<string> {
   const emptyToken: DecodedIdToken = {
-    uid: "",
-    aud: "",
+    uid: '',
+    aud: '',
     auth_time: 0,
-    user_id: "",
-    sub: "",
+    user_id: '',
+    sub: '',
     iat: 0,
     exp: 0,
-    email: "",
+    email: '',
     email_verified: false,
     firebase: {
-      sign_in_provider: "",
+      sign_in_provider: '',
       identities: {},
     },
-    iss: "",
+    iss: '',
   };
   sinon.restore();
-  sinon.stub(helpers, "getFirebaseUserFromReqAccessToken").returns(
+  sinon.stub(helpers, 'getFirebaseUserFromReqAccessToken').returns(
     new Promise((resolve) =>
       resolve({
         ...emptyToken,
@@ -89,7 +91,7 @@ export async function getFirebaseToken(user: Partial<DecodedIdToken>): Promise<s
       })
     )
   );
-  return "token";
+  return 'token';
 }
 
 export const USER_DEFAULT = '5ffdf41a1ee2c62320b49ea1';

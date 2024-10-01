@@ -4,8 +4,8 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from "graphql";
-import { DecodedIdToken } from "firebase-admin/auth";
+import { GraphQLObjectType } from 'graphql';
+import { DecodedIdToken } from 'firebase-admin/auth';
 import UserModel, { User } from '../../models/User';
 import UserType from '../types/user';
 
@@ -13,17 +13,17 @@ export const loginFirebase = {
   type: UserType,
   resolve: async (
     _root: GraphQLObjectType,
-    args: {},
+    args: Record<string, unknown>,
     context: { firebaseUser: DecodedIdToken }
   ): Promise<User> => {
-    console.log(context.firebaseUser);
     if (!context.firebaseUser) {
-      throw new Error("unauthenticated");
+      throw new Error('unauthenticated');
     }
     const user = await UserModel.findOneAndUpdate(
       { firebaseId: context.firebaseUser.uid },
       {
-        email: context.firebaseUser.email || "",
+        email: context.firebaseUser.email || '',
+        name: context.firebaseUser.name || '',
         lastLoginAt: new Date(),
       },
       { upsert: true, new: true }
