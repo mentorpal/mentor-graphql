@@ -4,37 +4,32 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import dotenv from 'dotenv';
-import { appStop } from 'app';
-import { logger } from 'utils/logging';
-import mongoUnit from 'mongo-unit';
-import { fixturePath } from './helpers';
-import * as sinon from 'sinon';
+import { GraphQLObjectType } from "graphql";
+import { DecodedIdToken } from "firebase-admin/auth";
+import UserModel, { User } from '../../models/User';
+import UserType from '../types/user';
 
-before(() => {
-  dotenv.config({ path: fixturePath('.env') });
-  process.env.DOTENV_PATH = fixturePath('.env');
-});
+export const loginFirebase = {
+  type: UserType,
+  resolve: async (
+    _root: GraphQLObjectType,
+    args: {},
+    context: { firebaseUser: DecodedIdToken }
+  ): Promise<User> => {
+    console.log(context.firebaseUser);
+    if (!context.firebaseUser) {
+      throw new Error("unauthenticated");
+    }
+    const user = await UserModel.findOneAndUpdate(
+      { firebaseId: context.firebaseUser.uid },
+      {
+        email: context.firebaseUser.email || "",
+        lastLoginAt: new Date(),
+      },
+      { upsert: true, new: true }
+    );
+    return user;
+  },
+};
 
-after(async () => {
-  try {
-    await appStop();
-  } catch (mongooseDisconnectErr) {
-    logger.error(mongooseDisconnectErr);
-  }
-  try {
-    await mongoUnit.stop();
-  } catch (mongoUnitErr) {
-    logger.error(mongoUnitErr);
-  }
-});
-
-mongoUnit.start().then((url) => {
-  process.env.MONGO_URI = url; // this const process.env.DATABASE_URL = will keep link to fake mongo
-  run(); // this line start mocha tests
-});
-
-
-afterEach(async () => {
-  sinon.restore();
-});
+export default loginFirebase;

@@ -16,6 +16,7 @@ import userQuestionSetFeedback from './userQuestion-setFeedback';
 import userQuestionSetAnswer from './userQuestion-setAnswer';
 import mentorPreviewed from './mentor-previewed';
 import refreshAccessToken from './refresh-access-token';
+import loginFirebase from './login-firebase';
 
 export default new GraphQLObjectType({
   name: 'Mutation',
@@ -31,5 +32,6 @@ export default new GraphQLObjectType({
     userQuestionSetAnswer,
     mentorPreviewed,
     refreshAccessToken,
+    loginFirebase,
   },
 });
