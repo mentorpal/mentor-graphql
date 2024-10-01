@@ -4,31 +4,153 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
+import { GraphQLString, GraphQLObjectType, GraphQLBoolean } from 'graphql';
 import { DecodedIdToken } from 'firebase-admin/auth';
-import UserModel, { User } from '../../models/User';
-import UserType from '../types/user';
+import {
+  User as UserSchema,
+  Mentor as MentorSchema,
+  Subject as SubjectSchema,
+  MentorConfig as MentorConfigModel,
+} from '../../models';
+import {
+  UserAccessTokenType,
+  UserAccessToken,
+  generateJwtToken,
+  setTokenCookie,
+  generateRefreshToken,
+} from '../types/user-access-token';
+import { notifyAdminNewMentors } from '../../utils/email-admin';
+import { Response } from 'express';
+
+export enum LoginType {
+  SIGN_IN = 'SIGN_IN',
+  SIGN_UP = 'SIGN_UP',
+}
 
 export const loginFirebase = {
-  type: UserType,
+  type: UserAccessTokenType,
+  args: {
+    mentorConfig: { type: GraphQLString },
+    lockMentorToConfig: { type: GraphQLBoolean },
+    loginType: { type: GraphQLString },
+  },
   resolve: async (
     _root: GraphQLObjectType,
-    args: Record<string, unknown>,
-    context: { firebaseUser: DecodedIdToken }
-  ): Promise<User> => {
-    if (!context.firebaseUser) {
-      throw new Error('unauthenticated');
+    args: {
+      mentorConfig: string;
+      lockMentorToConfig: boolean;
+      loginType: LoginType;
+    },
+    context: {
+      firebaseUser: DecodedIdToken;
+      res: Response;
     }
-    const user = await UserModel.findOneAndUpdate(
-      { firebaseId: context.firebaseUser.uid },
-      {
-        email: context.firebaseUser.email || '',
-        name: context.firebaseUser.name || '',
-        lastLoginAt: new Date(),
-      },
-      { upsert: true, new: true }
-    );
-    return user;
+  ): Promise<UserAccessToken> => {
+    try {
+      if (!context.firebaseUser) {
+        throw new Error('Not authenticated');
+      }
+      const { firebaseUser } = context;
+      console.log(JSON.stringify(firebaseUser, null, 2));
+      const signUp = args.loginType === LoginType.SIGN_UP;
+      let user = await UserSchema.findOneAndUpdate(
+        {
+          firebaseId: firebaseUser.uid,
+        },
+        {
+          $set: {
+            firebaseId: firebaseUser.uid,
+            name: firebaseUser.name,
+            email: firebaseUser.email,
+            lastLoginAt: new Date(),
+          },
+        },
+        {
+          new: true,
+          upsert: signUp,
+        }
+      );
+      if (!user) {
+        throw new Error('No user found');
+      }
+      if (user.isDisabled) {
+        throw new Error('Your account has been disabled');
+      }
+      // Create/Migrate mentor to user model
+      if (!user.mentorIds.length) {
+        // add any required subjects to mentor
+        const requiredSubjects = await SubjectSchema.find({ isRequired: true });
+
+        const mentorConfig = args.mentorConfig
+          ? await MentorConfigModel.findOne({ configId: args.mentorConfig })
+          : undefined;
+        const configUpdates = {
+          ...(mentorConfig?.subjects.length
+            ? {
+                subjects: requiredSubjects
+                  .map((s) => s._id)
+                  .concat(mentorConfig.subjects),
+              }
+            : {}),
+          ...(mentorConfig?.publiclyVisible ? { isPrivate: false } : {}),
+          ...(mentorConfig?.mentorType
+            ? { mentorType: mentorConfig.mentorType }
+            : {}),
+          ...(mentorConfig?.orgPermissions.length
+            ? { orgPermissions: mentorConfig.orgPermissions }
+            : {}),
+          ...(mentorConfig
+            ? {
+                mentorConfig: mentorConfig._id,
+                lockedToConfig: Boolean(args.lockMentorToConfig),
+              }
+            : {}),
+        };
+        const newMentor = await MentorSchema.findOneAndUpdate(
+          {
+            user: user._id,
+          },
+          {
+            $set: {
+              name: firebaseUser.name,
+              firstName: firebaseUser.firstName || '',
+              email: firebaseUser.email,
+              subjects: requiredSubjects.map((s) => s._id),
+              ...configUpdates,
+            },
+          },
+          {
+            new: true,
+            upsert: true,
+          }
+        );
+        const notifyAdmin = process.env.NOTIFY_ADMIN_ON_NEW_MENTOR == 'true';
+        if (notifyAdmin) {
+          await notifyAdminNewMentors();
+        }
+        const mentorId = newMentor._id;
+        user = await UserSchema.findOneAndUpdate(
+          {
+            firebaseId: firebaseUser.uid,
+          },
+          {
+            $set: {
+              mentorIds: [mentorId],
+            },
+          },
+          {
+            new: true,
+          }
+        );
+      }
+      // authentication successful so generate jwt and refresh tokens
+      const jwtToken = await generateJwtToken(user);
+      const refreshToken = await generateRefreshToken(user);
+      setTokenCookie(context.res, refreshToken.token);
+      return jwtToken;
+    } catch (error) {
+      throw new Error(error);
+    }
   },
 };
 
