@@ -12,7 +12,7 @@ import { User } from '../../models/User';
 import { canViewMentor } from '../../utils/check-permissions';
 import AnswerType from '../types/answer';
 import findAll from './find-all';
-import { getUsersManagedOrgs } from '../mutation/me/helpers';
+import { asyncFilter, getUsersManagedOrgs } from '../mutation/me/helpers';
 
 export const answers = findAll({
   nodeType: AnswerType,
@@ -26,7 +26,8 @@ export const answers = findAll({
     );
     const mentors = await MentorModel.find({ _id: { $in: mentorIds } });
     const userOrgs = await getUsersManagedOrgs(context.user);
-    const newAnswerResults: Answer[] = paginationResults.results.filter(
+    const newAnswerResults: Answer[] = await asyncFilter(
+      paginationResults.results,
       async (a: Answer) => {
         const mentor = mentors.find((m) => `${m._id}` === `${a.mentor}`);
         if (!mentor) {
