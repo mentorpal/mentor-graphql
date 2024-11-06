@@ -11,15 +11,6 @@ import {
   PaginateQuery,
   pluginPagination,
 } from './Paginatation';
-import { GraphQLID, GraphQLObjectType, GraphQLString } from 'graphql';
-
-export const ManagedOrgType = new GraphQLObjectType({
-  name: 'ManagedOrg',
-  fields: () => ({
-    orgId: { type: GraphQLID },
-    role: { type: GraphQLString },
-  }),
-});
 export interface ManagedOrg {
   orgId: string;
   role: string;

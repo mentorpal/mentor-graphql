@@ -272,15 +272,6 @@ describe('mentorClientData', () => {
   });
 
   describe('private mentor', () => {
-    // subdomain: careerfair
-    // org ID: 511111111111111111111112
-    // org ADMIN: 5ffdf41a1ee2c62320b49ea1
-    // org CONTENT_MANAGER: 5ffdf41a1ee2c62320b49ea5
-    // org USER: 5ffdf41a1ee2c62320b49ea3
-
-    // private user: 5ffdf41a1ee2c62320b49ea7
-    // private mentor belonging to USER: 5ffdf41a1ee2c62111111114
-
     it('returns mentor if user is owner', async () => {
       const token = getToken('5ffdf41a1ee2c62320b49ea7');
       const response = await request(app)

@@ -12,7 +12,7 @@ import { Organization } from '../../models/Organization';
 import { canViewMentor } from '../../utils/check-permissions';
 import { MentorType } from '../types/mentor';
 import findAll from './find-all';
-import { getUsersManagedOrgs } from '../mutation/me/helpers';
+import { asyncFilter, getUsersManagedOrgs } from '../mutation/me/helpers';
 
 export const mentors = findAll({
   nodeType: MentorType,
@@ -23,8 +23,10 @@ export const mentors = findAll({
   ) => {
     const mentors: Mentor[] = paginationResults.results;
     const userOrgs = await getUsersManagedOrgs(context.user);
-    const newMentorList = mentors.filter(
-      async (m) => await canViewMentor(m, context.user, context.org, userOrgs)
+    const newMentorList = await asyncFilter(
+      mentors,
+      async (m: Mentor) =>
+        await canViewMentor(m, context.user, context.org, userOrgs)
     );
     return {
       ...paginationResults,
