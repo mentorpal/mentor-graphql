@@ -4,15 +4,16 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
+import { getUsersManagedOrgs } from '../gql/mutation/me/helpers';
 import {
   Mentor,
   OrgViewPermissionType,
   OrgEditPermissionType,
 } from '../models/Mentor';
 import OrganizationModel, { Organization } from '../models/Organization';
-import { User, UserRole } from '../models/User';
+import { ManagedOrg, User, UserRole } from '../models/User';
 
-function equals(a: string, b: string): boolean {
+export function equals(a: string, b: string): boolean {
   return `${a}` === `${b}`;
 }
 
@@ -52,11 +53,16 @@ export async function canEditMentorPanel(
   return false;
 }
 
-export function canViewMentor(
+/**
+ *
+ * @param _userManagedOrgs Provide this if you already have the user's managed orgs, good for when making multiple calls
+ */
+export async function canViewMentor(
   mentor: Mentor,
   user: User,
-  org?: Organization
-): boolean {
+  org?: Organization,
+  _userManagedOrgs?: ManagedOrg[]
+): Promise<boolean> {
   if (!mentor) {
     return false;
   }
@@ -72,13 +78,25 @@ export function canViewMentor(
       return false;
     }
     const userRole = user.userRole;
-    return (
+    const ownsOrAdmin =
       equals(mentor.user, user._id) ||
       user.mentorIds.includes(mentor.user) ||
       userRole === UserRole.CONTENT_MANAGER ||
       userRole === UserRole.ADMIN ||
       userRole === UserRole.SUPER_CONTENT_MANAGER ||
-      userRole === UserRole.SUPER_ADMIN
+      userRole === UserRole.SUPER_ADMIN;
+    if (ownsOrAdmin) {
+      return ownsOrAdmin;
+    }
+    const mentorSharedOrgIds: string[] = mentor.orgPermissions
+      .filter((op) => op.viewPermission === OrgViewPermissionType.SHARE)
+      .map((op) => op.org.toString());
+    const userManagedOrgs =
+      mentorSharedOrgIds.length > 0
+        ? _userManagedOrgs || (await getUsersManagedOrgs(user))
+        : [];
+    return userManagedOrgs.some((org) =>
+      mentorSharedOrgIds.includes(org.orgId)
     );
   }
   return true;

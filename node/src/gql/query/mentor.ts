@@ -17,11 +17,11 @@ export const mentorFindOne = findOne({
   model: MentorModel,
   type: MentorType,
   typeName: 'mentor',
-  checkIfInvalid: (
+  checkIfInvalid: async (
     mentor: Mentor,
     context: { user: User; org: Organization }
   ) => {
-    if (!canViewMentor(mentor, context.user, context.org)) {
+    if (!(await canViewMentor(mentor, context.user, context.org))) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );
