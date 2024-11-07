@@ -31,4 +31,5 @@ after(async () => {
 
 mongoUnit.start().then((url) => {
   process.env.MONGO_URI = url; // this const process.env.DATABASE_URL = will keep link to fake mongo
+  run(); // this line start mocha tests
 });
