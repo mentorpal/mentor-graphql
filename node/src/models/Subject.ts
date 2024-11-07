@@ -243,7 +243,10 @@ SubjectSchema.statics.addOrUpdateQuestions = async function (
 };
 
 SubjectSchema.pre(/find.*/, function (next) {
-  this.where({ deleted: { $ne: true } });
+  this.$where = {
+    ...this.$where,
+    deleted: { $ne: true },
+  };
   next();
 });
 

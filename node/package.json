@@ -7,6 +7,11 @@
     "node": ">=16.14",
     "npm": ">=6.13.1"
   },
+  "overrides": {
+    "mongo-cursor-pagination": {
+      "bson": "5.5.0"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "deps:update": "npx ncu -u",
@@ -16,7 +21,7 @@
     "format": "prettier --write '**/*.{js,jsx,json,ts,tsx}'",
     "lint:fix": "eslint src --ext ts --ext js --fix",
     "start": "tsc --traceResolution && node dist/server.js",
-    "test": "export ENV=test && export NODE_ENV=test && npx mocha -r tsconfig-paths/register -r ts-node/register -r source-map-support/register 'test/*.{spec,test}.{js,ts}' 'test/**/*.{spec,test}.{js,ts}' --timeout 10000 --full-trace --recursive --reporter spec --delay --exit",
+    "test": "export ENV=test && export NODE_ENV=test && npx mocha -r tsconfig-paths/register -r ts-node/register -r source-map-support/register 'test/*.{spec,test}.{js,ts}' 'test/**/*.{spec,test}.{js,ts}' --timeout 10000 --full-trace --recursive --reporter spec --exit",
     "test:integration": "ENV=test NODE_ENV=test npx mocha -r tsconfig-paths/register -r ts-node/register -r source-map-support/register 'test/integration/**/*.ispec.ts' --timeout 15000 --full-trace --recursive --reporter spec",
     "test:all": "npm run test:format && npm run test:lint && npm run test:audit && npm run test:types && npm test",
     "test:audit": "npm audit --audit-level=moderate --production",
@@ -35,6 +40,7 @@
     "@types/object-path": "^0.11.1",
     "axios": "^1.6.7",
     "base64url": "^3.0.1",
+    "bson": "^5.5.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "debug": "^4.3.4",
@@ -47,7 +53,7 @@
     "jsonwebtoken": "^9.0.1",
     "longjohn": "^0.2.12",
     "mongo-cursor-pagination": "^8.1.3",
-    "mongoose": "^6.9.0",
+    "mongoose": "^7.8.0",
     "mongoose-findorcreate": "^4.0.0",
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.9",

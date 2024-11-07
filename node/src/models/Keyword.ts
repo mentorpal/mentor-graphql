@@ -11,8 +11,9 @@ import {
   PaginateQuery,
   pluginPagination,
 } from './Paginatation';
+import { Types } from 'mongoose';
 
-export interface Keyword extends Document {
+export interface Keyword extends Document<Types.ObjectId> {
   type: string;
   keywords: string[];
 }
