@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Model } from 'mongoose';
 import {
   PaginatedResolveResult,
   PaginateOptions,
@@ -20,7 +20,7 @@ export const UserRole = {
   SUPER_ADMIN: 'SUPER_ADMIN',
 };
 
-export interface FirstTimeTracking extends Document {
+export interface FirstTimeTracking {
   myMentorSplash: boolean;
   tooltips: boolean;
 }
@@ -35,7 +35,7 @@ export const FirstTimeTrackingSchema = new Schema<FirstTimeTracking>({
   tooltips: { type: Boolean, default: false },
 });
 
-export interface User extends Document {
+export interface User {
   googleId: string;
   name: string;
   email: string;

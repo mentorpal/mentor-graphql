@@ -5,7 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import mongoose, { Model, Schema } from 'mongoose';
 import { Question } from './Question';
 import { Mentor } from './Mentor';
 import { AnswerMedia, AnswerMediaSchema } from './Answer';
@@ -21,7 +21,7 @@ export enum TaskFlagStatuses {
   DONE = 'DONE',
 }
 
-export interface UploadTask extends Document {
+export interface UploadTask {
   mentor: Mentor['_id'];
   question: Question['_id'];
   trimUploadTask: TaskInfo;

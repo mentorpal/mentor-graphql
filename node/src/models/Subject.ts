@@ -76,7 +76,7 @@ export const SubjectQuestionSchema = new Schema({
   },
 });
 
-export interface Subject extends Document {
+export interface Subject {
   name: string;
   type: string;
   description: string;

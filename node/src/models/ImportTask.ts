@@ -49,7 +49,7 @@ export const S3VideoMigrateType = new GraphQLObjectType({
   },
 });
 
-export interface ImportTask extends Document {
+export interface ImportTask {
   mentor: Mentor['_id'];
   graphQLUpdate: GraphQLUpdateInfo;
   s3VideoMigrate: s3VideoMigrateInfo;

@@ -71,7 +71,7 @@ export interface PreviousAnswerVersions {
   dateVersioned: string;
 }
 
-export interface Answer extends Document {
+export interface Answer {
   mentor: Mentor['_id'];
   question: Question['_id'] | Question;
   hasEditedTranscript: boolean;

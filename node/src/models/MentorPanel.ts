@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Model } from 'mongoose';
 import {
   PaginatedResolveResult,
   PaginateOptions,
@@ -15,7 +15,7 @@ import { Mentor } from './Mentor';
 import { Organization } from './Organization';
 import { Subject } from './Subject';
 
-export interface MentorPanel extends Document {
+export interface MentorPanel {
   org: Organization['_id'];
   subject: Subject['_id'];
   mentors: Mentor['_id'][];

@@ -103,8 +103,9 @@ export enum MentorDirtyReason {
   ANSWERS_ADDED = 'ANSWERS_ADDED',
   NONE = 'NONE',
 }
+// Apply this to the mentor interface ReturnType<(typeof Test)['hydrate']>;
 
-export interface Mentor extends Document {
+export interface _Mentor {
   name: string;
   firstName: string;
   title: string;
@@ -985,4 +986,7 @@ MentorSchema.index({ firstName: -1, _id: -1 });
 MentorSchema.index({ mentorType: -1, _id: -1 });
 pluginPagination(MentorSchema);
 
-export default mongoose.model<Mentor, MentorModel>('Mentor', MentorSchema);
+const MentorModelExport = mongoose.model<_Mentor, MentorModel>('Mentor', MentorSchema);
+
+export default MentorModelExport;
+
