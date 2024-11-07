@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { Document, Schema } from 'mongoose';
+import { Schema } from 'mongoose';
 import {
   GraphQLString,
   GraphQLObjectType,
@@ -23,7 +23,7 @@ export interface TaskInfoProps {
   payload: string;
 }
 
-export interface TaskInfo extends TaskInfoProps, Document {}
+export interface TaskInfo extends TaskInfoProps {}
 
 export const TaskInfoSchema = new Schema({
   task_name: { type: String },

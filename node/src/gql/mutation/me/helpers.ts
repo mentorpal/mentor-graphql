@@ -5,15 +5,15 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { UserRole } from '../../../models/User';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
 interface IdAndProps<T> {
-  _id: string;
+  _id: Types.ObjectId;
   props: Partial<T>;
 }
 
 interface HasId {
-  _id?: string;
+  _id?: Types.ObjectId;
 }
 
 export function toUpdateProps<T extends HasId>(
@@ -37,15 +37,15 @@ export function toUpdateProps<T extends HasId>(
 // check if id is a valid ObjectID:
 //  - if valid, return it
 //  - if invalid, create a valid object id
-export function idOrNew(id: string): string {
+export function idOrNew(id: Types.ObjectId): Types.ObjectId {
   if (!Boolean(id)) {
-    return `${new mongoose.Types.ObjectId()}`;
+    return new mongoose.Types.ObjectId();
   }
-  return isId(id) ? id : `${new mongoose.Types.ObjectId()}`;
+  return isId(id) ? id : new mongoose.Types.ObjectId();
 }
 
-export function isId(id: string): boolean {
-  return Boolean(id.match(/^[0-9a-fA-F]{24}$/));
+export function isId(id: Types.ObjectId): boolean {
+  return Boolean(id.toString().match(/^[0-9a-fA-F]{24}$/));
 }
 
 export enum UseDefaultTopics {

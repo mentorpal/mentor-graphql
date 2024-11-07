@@ -5,7 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import mongoose, { Model, Schema, Types } from 'mongoose';
 import { Question } from './Question';
 import { Mentor } from './Mentor';
 import {
@@ -34,7 +34,7 @@ export interface AnswerMediaProps {
   needsTransfer: boolean;
   vttText: string;
 }
-export interface AnswerMedia extends AnswerMediaProps, Document {}
+export interface AnswerMedia extends AnswerMediaProps {}
 
 export const AnswerMediaSchema = new Schema({
   type: { type: String },
@@ -72,6 +72,7 @@ export interface PreviousAnswerVersions {
 }
 
 export interface Answer {
+  _id: Types.ObjectId;
   mentor: Mentor['_id'];
   question: Question['_id'] | Question;
   hasEditedTranscript: boolean;
@@ -95,8 +96,8 @@ export interface AnswerModel extends Model<Answer> {
 
 export const AnswerSchema = new Schema<Answer, AnswerModel>(
   {
-    mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
-    question: { type: mongoose.Types.ObjectId, ref: 'Question' },
+    mentor: { type: Schema.Types.ObjectId, ref: 'Mentor' },
+    question: { type: Schema.Types.ObjectId, ref: 'Question' },
     hasEditedTranscript: { type: Boolean, default: false },
     transcript: { type: String },
     status: {

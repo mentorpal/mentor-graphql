@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose, { Model, Schema } from 'mongoose';
+import mongoose, { Model, Schema, Types } from 'mongoose';
 import {
   PaginateOptions,
   PaginatedResolveResult,
@@ -33,6 +33,7 @@ export enum ClassifierUsed {
 }
 
 export interface UserQuestion {
+  _id: Types.ObjectId;
   mentor: Mentor['_id'];
   question: string;
   confidence: number;
@@ -45,13 +46,23 @@ export interface UserQuestion {
   dismissed: boolean;
 }
 
+export interface HydratedUserQuestion
+  extends Omit<
+    UserQuestion,
+    'classifierAnswer' | 'graderAnswer' | 'mentor'
+  > {
+  classifierAnswer: Answer;
+  mentor: Mentor;
+  graderAnswer: Answer;
+}
+
 export const UserQuestionSchema = new Schema<UserQuestion, UserQuestionModel>(
   {
-    mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
+    mentor: { type: Schema.Types.ObjectId, ref: 'Mentor' },
     question: { type: String },
     confidence: { type: Number },
-    classifierAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
-    graderAnswer: { type: mongoose.Types.ObjectId, ref: 'Answer' },
+    classifierAnswer: { type: Schema.Types.ObjectId, ref: 'Answer' },
+    graderAnswer: { type: Schema.Types.ObjectId, ref: 'Answer' },
     chatSessionId: { type: String },
     classifierAnswerType: {
       type: String,

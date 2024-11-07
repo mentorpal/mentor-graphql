@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Model, Types } from 'mongoose';
 import { Question as QuestionModel, Subject } from './index';
 import {
   PaginatedResolveResult,
@@ -27,7 +27,8 @@ export interface CategoryProps {
   defaultTopics: string[];
 }
 
-export interface Category extends CategoryProps, Document {
+export interface Category extends CategoryProps {
+  _id: Types.ObjectId;
   id: string;
 }
 
@@ -45,8 +46,9 @@ export interface TopicProps {
   categoryParent: string;
 }
 
-export interface Topic extends TopicProps, Document {
+export interface Topic extends TopicProps {
   id: string;
+  _id: Types.ObjectId;
 }
 
 const TopicSchema = new Schema({
@@ -57,13 +59,13 @@ const TopicSchema = new Schema({
 });
 
 export interface SubjectQuestionProps {
-  question: Question['_id'];
-  category: Category['id'];
-  topics: Topic['id'][];
+  question: Types.ObjectId;
+  category: string;
+  topics: string[];
   useDefaultTopics?: UseDefaultTopics;
 }
 
-export interface SubjectQuestion extends SubjectQuestionProps, Document {}
+export interface SubjectQuestion extends SubjectQuestionProps {}
 
 export const SubjectQuestionSchema = new Schema({
   question: { type: mongoose.Types.ObjectId, ref: 'Question' },
@@ -77,6 +79,7 @@ export const SubjectQuestionSchema = new Schema({
 });
 
 export interface Subject {
+  _id: Types.ObjectId;
   name: string;
   type: string;
   description: string;
@@ -124,10 +127,10 @@ export interface SubjectModel extends Model<Subject> {
   ): Promise<PaginatedResolveResult<Subject>>;
   getQuestions(
     subject: string | Subject,
-    topicId?: string,
-    mentorId?: string,
+    topicId?: Types.ObjectId,
+    mentorId?: Types.ObjectId,
     type?: QuestionType,
-    categoryID?: string
+    categoryID?: Types.ObjectId
   ): SubjectQuestion[];
   addOrUpdateQuestions(
     subject: string | Subject,
@@ -139,7 +142,7 @@ export interface SubjectModel extends Model<Subject> {
 SubjectSchema.statics.getQuestions = async function (
   s: string | Subject,
   topicId?: string,
-  mentorId?: string,
+  mentorId?: Types.ObjectId,
   type?: QuestionType,
   categoryID?: string
 ) {
@@ -170,8 +173,8 @@ SubjectSchema.statics.getQuestions = async function (
     );
   }
   return sQuestions.map((sq) => ({
-    question: questions.find((q) => `${q._id}` === `${sq.question}`),
-    category: subject.categories.find((c) => c.id === sq.category),
+    question: questions.find((q) => q._id == sq.question),
+    category: subject.categories.find((c) => c.id == sq.category),
     topics: subject.topics.filter((t) => sq.topics.includes(t.id)),
     useDefaultTopics: sq.useDefaultTopics,
   }));

@@ -6,7 +6,7 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { toUpdateProps } from '../gql/mutation/me/helpers';
 import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
-import mongoose, { Model, Schema } from 'mongoose';
+import mongoose, { Model, Schema, Types } from 'mongoose';
 import { Mentor, MentorType } from './Mentor';
 import {
   PaginatedResolveResult,
@@ -21,6 +21,7 @@ export enum QuestionType {
 }
 
 export interface Question {
+  _id: Types.ObjectId;
   question: string;
   type: string;
   subType: string;

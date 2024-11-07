@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose, { Model, Schema } from 'mongoose';
+import mongoose, { Model, Schema, Types } from 'mongoose';
 import {
   MentorType,
   OrgPermissionProps,
@@ -22,6 +22,7 @@ import {
 import { OrgPermissionInputType } from '../gql/mutation/me/mentor-update-privacy';
 
 export interface MentorConfig {
+  _id: Types.ObjectId;
   configId: string;
   subjects: string[];
   lockedToSubjects: boolean;

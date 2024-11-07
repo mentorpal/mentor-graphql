@@ -5,7 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import mongoose, { Model, Schema } from 'mongoose';
 import { Mentor } from './Mentor';
 import { GraphQLString, GraphQLObjectType } from 'graphql';
 
@@ -14,7 +14,7 @@ export interface GraphQLUpdateProps {
   errorMessage: string;
 }
 
-export interface GraphQLUpdateInfo extends GraphQLUpdateProps, Document {}
+export interface GraphQLUpdateInfo extends GraphQLUpdateProps {}
 
 export const GraphQLUpdateSchema = new Schema({
   status: { type: String },
@@ -34,7 +34,7 @@ export interface s3VideoMigrateProps {
   errorMessage: string;
 }
 
-export interface s3VideoMigrateInfo extends s3VideoMigrateProps, Document {}
+export interface s3VideoMigrateInfo extends s3VideoMigrateProps {}
 
 export const s3VideoMigrateSchema = new Schema({
   status: { type: String },
@@ -58,7 +58,7 @@ export interface ImportTask {
 
 export const ImportTaskSchema = new Schema<ImportTask, ImportTaskModel>(
   {
-    mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
+    mentor: { type: Schema.Types.ObjectId, ref: 'Mentor' },
     graphQLUpdate: { type: GraphQLUpdateSchema },
     s3VideoMigrate: { type: s3VideoMigrateSchema },
     migrationErrors: { type: [String] },

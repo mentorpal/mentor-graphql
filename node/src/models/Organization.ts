@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import mongoose, { Model, Schema, Types } from 'mongoose';
 import {
   PaginatedResolveResult,
   PaginateOptions,
@@ -18,7 +18,7 @@ export interface OrgMemberProps {
   user: User['_id'];
   role: string;
 }
-export interface OrgMember extends OrgMemberProps, Document {}
+export interface OrgMember extends OrgMemberProps {}
 export const OrgMemberSchema = new Schema({
   user: { type: mongoose.Types.ObjectId, ref: 'User' },
   role: {
@@ -32,13 +32,14 @@ export interface OrgConfigProps {
   key: string;
   value: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
-export interface OrgConfig extends OrgConfigProps, Document {}
+export interface OrgConfig extends OrgConfigProps {}
 export const OrgConfigSchema = new Schema({
   key: { type: String },
   value: { type: Schema.Types.Mixed },
 });
 
 export interface OrganizationProps {
+  _id: Types.ObjectId;
   uuid: string;
   name: string;
   subdomain: string;
@@ -47,7 +48,7 @@ export interface OrganizationProps {
   members: OrgMemberProps[];
   config: OrgConfigProps[];
 }
-export interface Organization extends OrganizationProps, Document {}
+export interface Organization extends OrganizationProps {}
 export const OrganizationSchema = new Schema<Organization, OrganizationModel>(
   {
     uuid: { type: String },

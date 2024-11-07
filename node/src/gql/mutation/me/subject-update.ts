@@ -28,6 +28,7 @@ import {
 } from './question-update';
 import { UseDefaultTopics, toUpdateProps } from './helpers';
 import { canEditContent } from '../../../utils/check-permissions';
+import { Types } from 'mongoose';
 
 export interface CategoryUpdateInput {
   id: string;
@@ -81,7 +82,7 @@ export const SubjectQuestionInputType = new GraphQLInputObjectType({
 });
 
 export interface SubjectUpdateInput {
-  _id: string;
+  _id: Types.ObjectId;
   name: string;
   type: string;
   description: string;

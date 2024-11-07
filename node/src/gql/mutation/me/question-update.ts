@@ -17,16 +17,16 @@ import { User } from '../../../models/User';
 import { Question as QuestionModel } from '../../../models';
 import { Question } from '../../../models/Question';
 import QuestionType from '../../types/question';
-
+import { Types } from 'mongoose';
 export interface QuestionUpdateInput {
-  _id: string;
+  _id: Types.ObjectId;
   question: string;
   type: string;
   name: string;
   subType: string;
   clientId: string;
   paraphrases: string[];
-  mentor: string;
+  mentor: Types.ObjectId;
   mentorType: string;
   minVideoLength: number;
 }
