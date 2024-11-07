@@ -128,7 +128,7 @@ module.exports = {
       userRole: 'USER',
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49a10'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49a10'),
       name: 'Content Manager Of Org',
       email: 'contentManagerOfOrg@mentor.com',
       userRole: 'USER',
@@ -811,11 +811,11 @@ module.exports = {
           role: 'CONTENT_MANAGER',
         },
         {
-          user: ObjectId('5ffdf41a1ee2c62320b49a10'),
+          user: new ObjectId('5ffdf41a1ee2c62320b49a10'),
           role: 'CONTENT_MANAGER',
         },
         {
-          user: ObjectId('5ffdf41a1ee2c62320b49ea3'),
+          user: new ObjectId('5ffdf41a1ee2c62320b49ea3'),
           role: 'USER',
         },
       ],
