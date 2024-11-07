@@ -18,6 +18,7 @@ import { Organization } from '../../models/Organization';
 import { User } from '../../models/User';
 import { MentorType } from '../types/mentor';
 import { canViewMentor } from '../../utils/check-permissions';
+import { asyncFilter, getUsersManagedOrgs } from '../mutation/me/helpers';
 
 export const mentorsByKeyword = {
   type: GraphQLList(MentorType),
@@ -39,8 +40,9 @@ export const mentorsByKeyword = {
   ): Promise<Mentor[]> => {
     const filter = args.subject ? { subjects: { $in: [args.subject] } } : {};
     let mentors = await MentorModel.find(filter);
-    mentors = mentors.filter((m) =>
-      canViewMentor(m, context.user, context.org)
+    const userOrgs = await getUsersManagedOrgs(context.user);
+    mentors = await asyncFilter(mentors, (m) =>
+      canViewMentor(m, context.user, context.org, userOrgs)
     );
     if (args.sortBy) {
       mentors = mentors.sort((a, b) => {

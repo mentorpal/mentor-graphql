@@ -271,6 +271,84 @@ describe('mentorClientData', () => {
     });
   });
 
+  describe('private mentor', () => {
+    it('returns mentor if user is owner', async () => {
+      const token = getToken('5ffdf41a1ee2c62320b49ea7');
+      const response = await request(app)
+        .post('/graphql')
+        .set('Authorization', `bearer ${token}`)
+        .send({
+          query: `query {
+              mentorClientData(mentor: "5ffdf41a1ee2c62111111114") {
+                _id
+              }
+          }`,
+        });
+      expect(response.status).to.equal(200);
+      expect(response.body.data.mentorClientData).to.eql({
+        _id: '5ffdf41a1ee2c62111111114',
+      });
+    });
+
+    it('returns mentor if user is admin/content manager/super admin/super content manager', async () => {
+      const token = getToken('5ffdf41a1ee2c62320b49ea1'); // ADMIN
+      const response = await request(app)
+        .post('/graphql')
+        .set('Authorization', `bearer ${token}`)
+        .send({
+          // private mentor
+          query: `query {
+              mentorClientData(mentor: "5ffdf41a1ee2c62111111114") {
+                _id
+              }
+          }`,
+        });
+      expect(response.status).to.equal(200);
+      expect(response.body.data.mentorClientData).to.eql({
+        _id: '5ffdf41a1ee2c62111111114',
+      });
+    });
+
+    it('rejects if user is not owner and has no higher permissions', async () => {
+      const token = getToken('5ffdf41a1ee2c62320b49ea3'); // USER
+      const response = await request(app)
+        .post('/graphql')
+        .set('Authorization', `bearer ${token}`)
+        .send({
+          // private mentor
+          query: `query {
+              mentorClientData(mentor: "5ffdf41a1ee2c62111111114") {
+                _id
+              }
+          }`,
+        });
+      expect(response.status).to.equal(200);
+      expect(response.body).to.have.deep.nested.property(
+        'errors[0].message',
+        'mentor is private and you do not have permission to access'
+      );
+    });
+
+    it('returns mentor if requesting user manages org and has share permission', async () => {
+      const token = getToken('5ffdf41a1ee2c62320b49a10'); // CONTENT_MANAGER of the org that user shares with
+      const response = await request(app)
+        .post('/graphql')
+        .set('Authorization', `bearer ${token}`)
+        .send({
+          // private mentor
+          query: `query {
+              mentorClientData(mentor: "5ffdf41a1ee2c62111111114") {
+                _id
+              }
+          }`,
+        });
+      expect(response.status).to.equal(200);
+      expect(response.body.data.mentorClientData).to.eql({
+        _id: '5ffdf41a1ee2c62111111114',
+      });
+    });
+  });
+
   describe('direct link private mentor', () => {
     beforeEach(async () => {
       const token = getToken('5ffdf41a1ee2c62320b49ea2');
@@ -426,7 +504,6 @@ describe('mentorClientData', () => {
             leftHomePageData: data,
           },
         });
-      console.log(JSON.stringify(response.body, null, 2));
       expect(response.status).to.equal(200);
       expect(response.body.data.mentorClientData).to.eql({
         _id: '5ffdf41a1ee2c62111111113',

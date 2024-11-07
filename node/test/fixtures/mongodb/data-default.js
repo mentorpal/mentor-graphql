@@ -127,6 +127,12 @@ module.exports = {
       mentorIds: ['5ffdf41a1ee2c62119991234'],
       userRole: 'USER',
     },
+    {
+      _id: ObjectId('5ffdf41a1ee2c62320b49a10'),
+      name: 'Content Manager Of Org',
+      email: 'contentManagerOfOrg@mentor.com',
+      userRole: 'USER',
+    },
   ],
 
   mentors: [
@@ -805,7 +811,11 @@ module.exports = {
           role: 'CONTENT_MANAGER',
         },
         {
-          user: new ObjectId('5ffdf41a1ee2c62320b49ea3'),
+          user: ObjectId('5ffdf41a1ee2c62320b49a10'),
+          role: 'CONTENT_MANAGER',
+        },
+        {
+          user: ObjectId('5ffdf41a1ee2c62320b49ea3'),
           role: 'USER',
         },
       ],

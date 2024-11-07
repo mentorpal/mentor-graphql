@@ -15,7 +15,7 @@ export const organization = findOne({
   model: OrganizationModel,
   type: OrganizationType,
   typeName: 'organization',
-  checkIfInvalid: (org: Organization, context: { user: User }) => {
+  checkIfInvalid: async (org: Organization, context: { user: User }) => {
     if (!canViewOrganization(org, context.user)) {
       throw new Error(
         `organization is private and you do not have permission to access`
