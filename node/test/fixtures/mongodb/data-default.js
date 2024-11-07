@@ -4,14 +4,14 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 import { TrainStatus } from '../../constants';
-const { ObjectId } = mongoose.Types;
+const { ObjectId } = Types;
 
 module.exports = {
   mentorconfigs: [
     {
-      _id: ObjectId('5ffdf41a1ee2c62111111132'),
+      _id: new ObjectId('5ffdf41a1ee2c62111111132'),
       configId: '2023TestConfig',
       subjects: [
         '5ffdf41a1ee2c62320b49eb3', //STEM
@@ -22,7 +22,7 @@ module.exports = {
       introRecordingText: 'TestIntroRecordingText',
       orgPermissions: [
         {
-          org: ObjectId('511111111111111111111111'),
+          org: new ObjectId('511111111111111111111111'),
           viewPermission: 'HIDDEN',
           editPermission: 'HIDDEN',
         },
@@ -32,26 +32,26 @@ module.exports = {
 
   mentortraintasks: [
     {
-      _id: ObjectId('5ffdf1231ee2c62320b49ea1'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111119'),
+      _id: new ObjectId('5ffdf1231ee2c62320b49ea1'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111119'),
       status: TrainStatus.SUCCESS,
       createdAt: '2000-10-12T20:49:41.599+00:00',
     },
     {
-      _id: ObjectId('5ffdf1241ee2c62320b49ea1'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111119'),
+      _id: new ObjectId('5ffdf1241ee2c62320b49ea1'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111119'),
       status: TrainStatus.PENDING,
       createdAt: '2023-05-12T20:49:41.599+00:00',
     },
     {
-      _id: ObjectId('5ffdf1251ee2c62320b49ea1'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111110'),
+      _id: new ObjectId('5ffdf1251ee2c62320b49ea1'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111110'),
       status: TrainStatus.SUCCESS,
       createdAt: '2000-10-12T20:49:41.599+00:00',
     },
     {
-      _id: ObjectId('5ffdf1261ee2c62320b49ea1'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111110'),
+      _id: new ObjectId('5ffdf1261ee2c62320b49ea1'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111110'),
       status: TrainStatus.FAILURE,
       createdAt: '2023-05-12T20:49:41.599+00:00',
     },
@@ -59,7 +59,7 @@ module.exports = {
 
   users: [
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ea1'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49ea1'),
       name: 'Clinton Anderson',
       email: 'clint@anderson.com',
       userRole: 'SUPER_ADMIN',
@@ -69,51 +69,51 @@ module.exports = {
       },
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ea2'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49ea2'),
       name: 'Dan Davis',
       email: 'dan@davis.com',
       mentorIds: ['5ffdf41a1ee2c62111111113'],
       userRole: 'USER',
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ea3'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49ea3'),
       name: 'Julianne Nordhagen',
       email: 'julianne@nordhagen.com',
       userRole: 'USER',
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ea4'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49ea4'),
       name: 'No Mentor',
       email: 'no@mentor.com',
       userRole: 'CONTENT_MANAGER',
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ea5'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49ea5'),
       name: 'Jacob Ferguson',
       email: 'jacob@ferguson.com',
       userRole: 'SUPER_CONTENT_MANAGER',
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ea6'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49ea6'),
       name: 'Aaron Klunder',
       email: 'aaron@klunder.com',
       userRole: 'ADMIN',
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ea7'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49ea7'),
       name: 'Private Mentor',
       email: 'private@mentor.com',
       userRole: 'USER',
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ea8'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49ea8'),
       name: 'Locked Down Mentor',
       email: 'locked@mentor.com',
       mentorIds: ['5ffdf41a1ee2c62119991114'],
       userRole: 'USER',
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ea9'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49ea9'),
       googleId: 'someidtest',
       name: 'somenametest',
       email: 'xtest@y.com',
@@ -121,17 +121,23 @@ module.exports = {
       userRole: 'USER',
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62119991235'),
+      _id: new ObjectId('5ffdf41a1ee2c62119991235'),
       name: 'Test Default Topics User',
       email: 'defaultTopics@mentor.com',
       mentorIds: ['5ffdf41a1ee2c62119991234'],
+      userRole: 'USER',
+    },
+    {
+      _id: new ObjectId('5ffdf41a1ee2c62320b49a10'),
+      name: 'Content Manager Of Org',
+      email: 'contentManagerOfOrg@mentor.com',
       userRole: 'USER',
     },
   ],
 
   mentors: [
     {
-      _id: ObjectId('5ffdf41a1ee2c62111111119'),
+      _id: new ObjectId('5ffdf41a1ee2c62111111119'),
       name: 'Aaron Klunder',
       firstName: 'Aaron',
       title: 'Admin',
@@ -139,14 +145,14 @@ module.exports = {
         'mentor/thumbnails/5ffdf41a1ee2c62111111111-20210621T000000.png',
       defaultSubject: '5ffdf41a1ee2c62320b49eb1',
       subjects: [
-        ObjectId('5ffdf41a1ee2c62320b49eb1'),
-        ObjectId('5ffdf41a1ee2c62320b49eb2'),
+        new ObjectId('5ffdf41a1ee2c62320b49eb1'),
+        new ObjectId('5ffdf41a1ee2c62320b49eb2'),
       ],
       keywords: ['Male'],
-      user: ObjectId('5ffdf41a1ee2c62320b49ea6'),
+      user: new ObjectId('5ffdf41a1ee2c62320b49ea6'),
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62111111110'),
+      _id: new ObjectId('5ffdf41a1ee2c62111111110'),
       name: 'Jacob Ferguson',
       firstName: 'Jacob',
       title: 'Managing all the content',
@@ -154,14 +160,14 @@ module.exports = {
         'mentor/thumbnails/5ffdf41a1ee2c62111111111-20210621T000000.png',
       defaultSubject: '5ffdf41a1ee2c62320b49eb1',
       subjects: [
-        ObjectId('5ffdf41a1ee2c62320b49eb1'),
-        ObjectId('5ffdf41a1ee2c62320b49eb2'),
+        new ObjectId('5ffdf41a1ee2c62320b49eb1'),
+        new ObjectId('5ffdf41a1ee2c62320b49eb2'),
       ],
       keywords: ['Male'],
-      user: ObjectId('5ffdf41a1ee2c62320b49ea5'),
+      user: new ObjectId('5ffdf41a1ee2c62320b49ea5'),
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62111111111'),
+      _id: new ObjectId('5ffdf41a1ee2c62111111111'),
       name: 'Clinton Anderson',
       email: 'clint@email.com',
       firstName: 'Clint',
@@ -170,105 +176,105 @@ module.exports = {
         'mentor/thumbnails/5ffdf41a1ee2c62111111111-20210621T000000.png',
       defaultSubject: '5ffdf41a1ee2c62320b49eb1',
       subjects: [
-        ObjectId('5ffdf41a1ee2c62320b49eb1'),
-        ObjectId('5ffdf41a1ee2c62320b49eb2'),
+        new ObjectId('5ffdf41a1ee2c62320b49eb1'),
+        new ObjectId('5ffdf41a1ee2c62320b49eb2'),
       ],
       keywords: ['Male', 'STEM'],
-      user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
+      user: new ObjectId('5ffdf41a1ee2c62320b49ea1'),
       hasVirtualBackground: true,
       virtualBackgroundUrl: 'https://www.fakeurl.com',
       isAdvanced: true,
       isPublicApproved: false,
       isDirty: false,
       recordQueue: [
-        ObjectId('511111111111111111111112'),
-        ObjectId('511111111111111111111111'),
+        new ObjectId('511111111111111111111112'),
+        new ObjectId('511111111111111111111111'),
       ],
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62111111112'),
+      _id: new ObjectId('5ffdf41a1ee2c62111111112'),
       name: 'Julianne Nordhagen',
       firstName: 'Julianne',
       title: 'Pilot',
       defaultSubject: '5ffdf41a1ee2c62320b49eb2',
       subjects: [
-        ObjectId('5ffdf41a1ee2c62320b49eb1'),
-        ObjectId('5ffdf41a1ee2c62320b49eb2'),
-        ObjectId('5ffdf41a1ee2c62320b49eb3'),
+        new ObjectId('5ffdf41a1ee2c62320b49eb1'),
+        new ObjectId('5ffdf41a1ee2c62320b49eb2'),
+        new ObjectId('5ffdf41a1ee2c62320b49eb3'),
       ],
       keywords: ['Female'],
-      user: ObjectId('5ffdf41a1ee2c62320b49ea3'),
+      user: new ObjectId('5ffdf41a1ee2c62320b49ea3'),
       recordQueue: [
-        ObjectId('511111111111111111111112'),
-        ObjectId('511111111111111111111111'),
+        new ObjectId('511111111111111111111112'),
+        new ObjectId('511111111111111111111111'),
       ],
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62111111113'),
+      _id: new ObjectId('5ffdf41a1ee2c62111111113'),
       name: 'Dan Davis',
       firstName: 'Dan',
-      user: ObjectId('5ffdf41a1ee2c62320b49ea2'),
-      subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
+      user: new ObjectId('5ffdf41a1ee2c62320b49ea2'),
+      subjects: [new ObjectId('5ffdf41a1ee2c62320b49eb1')],
       keywords: ['Male'],
       directLinkPrivate: false,
       orgPermissions: [
         {
-          org: ObjectId('511111111111111111111111'),
+          org: new ObjectId('511111111111111111111111'),
           viewPermission: 'HIDDEN',
         },
         {
-          org: ObjectId('511111111111111111111112'),
+          org: new ObjectId('511111111111111111111112'),
           editPermission: 'MANAGE',
         },
       ],
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62111111114'),
+      _id: new ObjectId('5ffdf41a1ee2c62111111114'),
       name: 'Private Mentor',
       firstName: 'Private',
       isPrivate: true,
-      user: ObjectId('5ffdf41a1ee2c62320b49ea7'),
-      subjects: [ObjectId('5ffdf41a1ee2c62320b49eb1')],
+      user: new ObjectId('5ffdf41a1ee2c62320b49ea7'),
+      subjects: [new ObjectId('5ffdf41a1ee2c62320b49eb1')],
       keywords: ['Nonbinary'],
       orgPermissions: [
         {
-          org: ObjectId('511111111111111111111112'),
+          org: new ObjectId('511111111111111111111112'),
           viewPermission: 'SHARE',
         },
         {
-          org: ObjectId('511111111111111111111111'),
+          org: new ObjectId('511111111111111111111111'),
           editPermission: 'ADMIN',
         },
       ],
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62119991114'),
+      _id: new ObjectId('5ffdf41a1ee2c62119991114'),
       name: 'Locked Down Mentor',
       firstName: 'Locked Down',
       isPrivate: false,
-      user: ObjectId('5ffdf41a1ee2c62320b49ea8'),
-      subjects: [ObjectId('5ffdf41a1ee2c62320b49eb3')],
+      user: new ObjectId('5ffdf41a1ee2c62320b49ea8'),
+      subjects: [new ObjectId('5ffdf41a1ee2c62320b49eb3')],
       keywords: ['Nonbinary'],
       orgPermissions: [
         {
-          org: ObjectId('511111111111111111111112'),
+          org: new ObjectId('511111111111111111111112'),
           viewPermission: 'SHARE',
         },
         {
-          org: ObjectId('511111111111111111111111'),
+          org: new ObjectId('511111111111111111111111'),
           editPermission: 'ADMIN',
         },
       ],
-      mentorConfig: ObjectId('5ffdf41a1ee2c62111111132'),
+      mentorConfig: new ObjectId('5ffdf41a1ee2c62111111132'),
       lockedToConfig: true,
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62119991234'),
+      _id: new ObjectId('5ffdf41a1ee2c62119991234'),
       name: 'Test Default Topics Mentor',
       firstName: 'DefaultTopics',
       isPrivate: false,
-      user: ObjectId('5ffdf41a1ee2c62119991235'),
-      subjects: [ObjectId('5ffdf41a1ee2c62119991236')],
+      user: new ObjectId('5ffdf41a1ee2c62119991235'),
+      subjects: [new ObjectId('5ffdf41a1ee2c62119991236')],
       keywords: ['Nonbinary'],
       orgPermissions: [],
       lockedToConfig: false,
@@ -277,9 +283,9 @@ module.exports = {
 
   mentorpanels: [
     {
-      _id: ObjectId('5ffdf41a1ee2c62111111111'),
-      subject: ObjectId('5ffdf41a1ee2c62320b49eb3'),
-      mentors: [ObjectId('5ffdf41a1ee2c62111111112')],
+      _id: new ObjectId('5ffdf41a1ee2c62111111111'),
+      subject: new ObjectId('5ffdf41a1ee2c62320b49eb3'),
+      mentors: [new ObjectId('5ffdf41a1ee2c62111111112')],
       title: 'fake panel title',
       subtitle: 'fake panel subtitle',
     },
@@ -287,7 +293,7 @@ module.exports = {
 
   subjects: [
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49eb1'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49eb1'),
       name: 'Repeat After Me',
       type: 'UTTERANCES',
       description: "These are miscellaneous phrases you'll be asked to repeat.",
@@ -295,20 +301,20 @@ module.exports = {
       categories: [],
       topics: [
         {
-          id: ObjectId('5ffdf41a1ee2c62320b49ec1'),
+          id: new ObjectId('5ffdf41a1ee2c62320b49ec1'),
           name: 'Idle',
           description: '30-second idle clip',
         },
       ],
       questions: [
         {
-          question: ObjectId('511111111111111111111111'),
-          topics: [ObjectId('5ffdf41a1ee2c62320b49ec1')],
+          question: new ObjectId('511111111111111111111111'),
+          topics: [new ObjectId('5ffdf41a1ee2c62320b49ec1')],
         },
       ],
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49eb2'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49eb2'),
       name: 'Background',
       description:
         'These questions will ask general questions about your background that might be relevant to how people understand your career.',
@@ -322,13 +328,13 @@ module.exports = {
       ],
       topics: [
         {
-          id: ObjectId('5ffdf41a1ee2c62320b49ec2'),
+          id: new ObjectId('5ffdf41a1ee2c62320b49ec2'),
           name: 'Background',
           description:
             'These questions will ask general questions about your background, that might be relevant to how people understand your career',
         },
         {
-          id: ObjectId('5ffdf41a1ee2c62320b49ec3'),
+          id: new ObjectId('5ffdf41a1ee2c62320b49ec3'),
           name: 'Advice',
           description:
             'These questions will ask you to give advice to someone who is interested in your career',
@@ -336,60 +342,60 @@ module.exports = {
       ],
       questions: [
         {
-          question: ObjectId('511111111111111111111112'),
-          topics: [ObjectId('5ffdf41a1ee2c62320b49ec2')],
+          question: new ObjectId('511111111111111111111112'),
+          topics: [new ObjectId('5ffdf41a1ee2c62320b49ec2')],
         },
         {
-          question: ObjectId('511111111111111111111113'),
+          question: new ObjectId('511111111111111111111113'),
           category: 'category',
-          topics: [ObjectId('5ffdf41a1ee2c62320b49ec2')],
+          topics: [new ObjectId('5ffdf41a1ee2c62320b49ec2')],
         },
         {
-          question: ObjectId('511111111111111111111114'),
-          topics: [ObjectId('5ffdf41a1ee2c62320b49ec3')],
+          question: new ObjectId('511111111111111111111114'),
+          topics: [new ObjectId('5ffdf41a1ee2c62320b49ec3')],
         },
         {
-          question: ObjectId('511111111111111111111116'),
+          question: new ObjectId('511111111111111111111116'),
         },
         {
-          question: ObjectId('511111111111111111111117'),
+          question: new ObjectId('511111111111111111111117'),
           category: 'category',
         },
       ],
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49eb3'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49eb3'),
       name: 'STEM',
       description: 'These questions will ask about STEM careers.',
       categories: [],
       topics: [
         {
-          id: ObjectId('5ffdf41a1ee2c62320b49ec3'),
+          id: new ObjectId('5ffdf41a1ee2c62320b49ec3'),
           name: 'Advice',
           description:
             'These questions will ask you to give advice to someone who is interested in your career',
         },
       ],
-      questions: [{ question: ObjectId('511111111111111111111115') }],
+      questions: [{ question: new ObjectId('511111111111111111111115') }],
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ec9'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49ec9'),
       name: 'Deleted Subject',
       description: 'Testing a deleted subject.',
       categories: [],
       topics: [
         {
-          id: ObjectId('5ffdf41a1ee2c62320b49ec3'),
+          id: new ObjectId('5ffdf41a1ee2c62320b49ec3'),
           name: 'Advice',
           description:
             'These questions will ask you to give advice to someone who is interested in your career',
         },
       ],
-      questions: [{ question: ObjectId('511111111111111111111115') }],
+      questions: [{ question: new ObjectId('511111111111111111111115') }],
       deleted: true,
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62119991236'),
+      _id: new ObjectId('5ffdf41a1ee2c62119991236'),
       name: 'Subject Topic Question Test',
       description: 'Testing subject question test',
       categories: [
@@ -402,37 +408,37 @@ module.exports = {
       ],
       topics: [
         {
-          id: ObjectId('5ffdf41a1ee2c62320b21ec3'),
+          id: new ObjectId('5ffdf41a1ee2c62320b21ec3'),
           name: 'Unused Category',
           description: 'Unused Category',
         },
         {
-          id: ObjectId('5ffdf41a1ee2c62119991237'),
+          id: new ObjectId('5ffdf41a1ee2c62119991237'),
           name: '(Default Topic) Test Category',
           description: 'Categories default topic',
         },
       ],
       questions: [
         {
-          question: ObjectId('511111111111111111111115'),
+          question: new ObjectId('511111111111111111111115'),
           topics: [],
           category: 'category',
           useDefaultTopics: 'TRUE',
         },
         {
-          question: ObjectId('511111111111111111111113'),
+          question: new ObjectId('511111111111111111111113'),
           topics: [],
           category: 'category',
           // useDefaultTopics: 'DEFAULT',  should automatically be default
         },
         {
-          question: ObjectId('511111111111111111111117'),
+          question: new ObjectId('511111111111111111111117'),
           topics: [],
           category: 'category',
           useDefaultTopics: 'FALSE',
         },
         {
-          question: ObjectId('511111111111111111111114'),
+          question: new ObjectId('511111111111111111111114'),
           topics: [],
           category: '',
           useDefaultTopics: 'DEFAULT',
@@ -443,45 +449,45 @@ module.exports = {
 
   questions: [
     {
-      _id: ObjectId('511111111111111111111111'),
+      _id: new ObjectId('511111111111111111111111'),
       question: "Don't talk and stay still.",
       type: 'UTTERANCE',
       name: 'idle',
       subType: 'cant_answer',
     },
     {
-      _id: ObjectId('511111111111111111111112'),
+      _id: new ObjectId('511111111111111111111112'),
       question: 'Who are you and what do you do?',
       type: 'QUESTION',
     },
     {
-      _id: ObjectId('511111111111111111111113'),
+      _id: new ObjectId('511111111111111111111113'),
       question: 'How old are you?',
       type: 'QUESTION',
     },
     {
-      _id: ObjectId('511111111111111111111114'),
+      _id: new ObjectId('511111111111111111111114'),
       question: 'Do you like your job?',
       type: 'QUESTION',
     },
     {
-      _id: ObjectId('511111111111111111111115'),
+      _id: new ObjectId('511111111111111111111115'),
       question: 'Is STEM fun?',
       type: 'QUESTION',
     },
     {
-      _id: ObjectId('511111111111111111111116'),
+      _id: new ObjectId('511111111111111111111116'),
       question: 'Julia?',
-      mentor: ObjectId('5ffdf41a1ee2c62111111112'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111112'),
       type: 'QUESTION',
     },
     {
-      _id: ObjectId('511111111111111111111117'),
+      _id: new ObjectId('511111111111111111111117'),
       question: 'What is Aaron like?',
       type: 'QUESTION',
     },
     {
-      _id: ObjectId('511111111111111111111193'),
+      _id: new ObjectId('511111111111111111111193'),
       question: 'This is an orphaned question (does not belong to a subject).',
       type: 'QUESTION',
     },
@@ -489,9 +495,9 @@ module.exports = {
 
   answers: [
     {
-      _id: ObjectId('511111111111111111111174'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111119'),
-      question: ObjectId('511111111111111111111112'),
+      _id: new ObjectId('511111111111111111111174'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111119'),
+      question: new ObjectId('511111111111111111111112'),
       hasEditedTranscript: true,
       transcript:
         "**My** [*name*](http://clint.com) __is__ Clint __Anderson and I'm a__ **Nuclear Electrician's Mate**",
@@ -509,9 +515,9 @@ module.exports = {
       },
     },
     {
-      _id: ObjectId('511111111111111111111112'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111111'),
-      question: ObjectId('511111111111111111111111'),
+      _id: new ObjectId('511111111111111111111112'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111111'),
+      question: new ObjectId('511111111111111111111111'),
       hasEditedTranscript: true,
       transcript: '[being still]',
       video: 'https://idle/url',
@@ -534,9 +540,9 @@ module.exports = {
       },
     },
     {
-      _id: ObjectId('511111111111111111111114'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111112'),
-      question: ObjectId('511111111111111111111116'),
+      _id: new ObjectId('511111111111111111111114'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111112'),
+      question: new ObjectId('511111111111111111111116'),
       hasEditedTranscript: false,
       transcript: 'Julia transcript',
       video: 'https://test/url',
@@ -553,9 +559,9 @@ module.exports = {
       },
     },
     {
-      _id: ObjectId('511111111111111111111113'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111111'),
-      question: ObjectId('511111111111111111111117'),
+      _id: new ObjectId('511111111111111111111113'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111111'),
+      question: new ObjectId('511111111111111111111117'),
       hasEditedTranscript: false,
       transcript: 'Test Transcript',
       video: 'https://test/url',
@@ -572,9 +578,9 @@ module.exports = {
       },
     },
     {
-      _id: ObjectId('511111111111111111111119'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111114'),
-      question: ObjectId('511111111111111111111111'),
+      _id: new ObjectId('511111111111111111111119'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111114'),
+      question: new ObjectId('511111111111111111111111'),
       hasEditedTranscript: true,
       transcript: '[being still]',
       video: 'https://idle/url',
@@ -591,9 +597,9 @@ module.exports = {
       },
     },
     {
-      _id: ObjectId('511111111111111111111195'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111119'),
-      question: ObjectId('511111111111111111111193'),
+      _id: new ObjectId('511111111111111111111195'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111119'),
+      question: new ObjectId('511111111111111111111193'),
       hasEditedTranscript: true,
       transcript:
         'This is an orphaned answer (the respective question does not belong to a subject)',
@@ -611,9 +617,9 @@ module.exports = {
       },
     },
     {
-      _id: ObjectId('511111111111111111111196'),
-      mentor: ObjectId('5ffdf41a1ee2c62119991234'),
-      question: ObjectId('511111111111111111111115'),
+      _id: new ObjectId('511111111111111111111196'),
+      mentor: new ObjectId('5ffdf41a1ee2c62119991234'),
+      question: new ObjectId('511111111111111111111115'),
       hasEditedTranscript: true,
       transcript: 'answer transcript',
       video: 'https://idle/url',
@@ -630,9 +636,9 @@ module.exports = {
       },
     },
     {
-      _id: ObjectId('511111111111111111111197'),
-      mentor: ObjectId('5ffdf41a1ee2c62119991234'),
-      question: ObjectId('511111111111111111111113'),
+      _id: new ObjectId('511111111111111111111197'),
+      mentor: new ObjectId('5ffdf41a1ee2c62119991234'),
+      question: new ObjectId('511111111111111111111113'),
       hasEditedTranscript: true,
       transcript: 'answer transcript',
       video: 'https://idle/url',
@@ -649,9 +655,9 @@ module.exports = {
       },
     },
     {
-      _id: ObjectId('511111111111111111111198'),
-      mentor: ObjectId('5ffdf41a1ee2c62119991234'),
-      question: ObjectId('511111111111111111111117'),
+      _id: new ObjectId('511111111111111111111198'),
+      mentor: new ObjectId('5ffdf41a1ee2c62119991234'),
+      question: new ObjectId('511111111111111111111117'),
       hasEditedTranscript: true,
       transcript: 'answer transcript',
       video: 'https://idle/url',
@@ -668,9 +674,9 @@ module.exports = {
       },
     },
     {
-      _id: ObjectId('511111111111111111111199'),
-      mentor: ObjectId('5ffdf41a1ee2c62119991234'),
-      question: ObjectId('511111111111111111111114'),
+      _id: new ObjectId('511111111111111111111199'),
+      mentor: new ObjectId('5ffdf41a1ee2c62119991234'),
+      question: new ObjectId('511111111111111111111114'),
       hasEditedTranscript: true,
       transcript: 'answer transcript',
       video: 'https://idle/url',
@@ -690,28 +696,28 @@ module.exports = {
 
   userquestions: [
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ee1'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111111'),
-      classifierAnswer: ObjectId('511111111111111111111112'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49ee1'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111111'),
+      classifierAnswer: new ObjectId('511111111111111111111112'),
       question: 'who are you?',
       feedback: 'NEUTRAL',
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ee3'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111111'),
-      classifierAnswer: ObjectId('511111111111111111111174'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49ee3'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111111'),
+      classifierAnswer: new ObjectId('511111111111111111111174'),
       classifierAnswerType: 'OFF_TOPIC',
       question: 'who are you?',
       feedback: 'NEUTRAL',
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49ee2'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49ee2'),
       question: 'how are you?',
       feedback: 'BAD',
     },
     {
-      _id: ObjectId('5ffdf41a1ee2c62320b49e33'),
-      mentor: ObjectId('5ffdf41a1ee2c62111111113'),
+      _id: new ObjectId('5ffdf41a1ee2c62320b49e33'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111113'),
       question: 'how are you?',
       feedback: 'BAD',
     },
@@ -719,8 +725,8 @@ module.exports = {
 
   uploadtasks: [
     {
-      mentor: ObjectId('5ffdf41a1ee2c62111111111'),
-      question: ObjectId('511111111111111111111112'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111111'),
+      question: new ObjectId('511111111111111111111112'),
       transcribeTask: {
         task_name: 'transcribe',
         task_id: 'transcribe_task_id',
@@ -730,8 +736,8 @@ module.exports = {
       transcript: 'fake_transcript',
     },
     {
-      mentor: ObjectId('5ffdf41a1ee2c62111111113'),
-      question: ObjectId('511111111111111111111112'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111113'),
+      question: new ObjectId('511111111111111111111112'),
       transcribeTask: {
         task_name: 'transcribe',
         task_id: 'transcribe_task_id',
@@ -744,12 +750,12 @@ module.exports = {
 
   keywords: [
     {
-      _id: ObjectId('511111111111111111111111'),
+      _id: new ObjectId('511111111111111111111111'),
       type: 'Gender',
       keywords: ['Male', 'Female', 'Nonbinary'],
     },
     {
-      _id: ObjectId('511111111111111111111112'),
+      _id: new ObjectId('511111111111111111111112'),
       type: 'Career',
       keywords: ['STEM'],
     },
@@ -757,7 +763,7 @@ module.exports = {
 
   organizations: [
     {
-      _id: ObjectId('511111111111111111111111'),
+      _id: new ObjectId('511111111111111111111111'),
       uuid: 'usc',
       name: 'USC',
       subdomain: 'usc',
@@ -765,31 +771,31 @@ module.exports = {
       accessCodes: ['asdf', 'test'],
       members: [
         {
-          user: ObjectId('5ffdf41a1ee2c62320b49ea2'),
+          user: new ObjectId('5ffdf41a1ee2c62320b49ea2'),
           role: 'ADMIN',
         },
         {
-          user: ObjectId('5ffdf41a1ee2c62320b49ea4'),
+          user: new ObjectId('5ffdf41a1ee2c62320b49ea4'),
           role: 'CONTENT_MANAGER',
         },
         {
-          user: ObjectId('5ffdf41a1ee2c62320b49ea3'),
+          user: new ObjectId('5ffdf41a1ee2c62320b49ea3'),
           role: 'USER',
         },
       ],
       config: [
         {
           key: 'activeMentorPanels',
-          value: [ObjectId('5ffdf41a1ee2c62111111111')],
+          value: [new ObjectId('5ffdf41a1ee2c62111111111')],
         },
         {
           key: 'featuredMentorPanels',
-          value: [ObjectId('5ffdf41a1ee2c62111111111')],
+          value: [new ObjectId('5ffdf41a1ee2c62111111111')],
         },
       ],
     },
     {
-      _id: ObjectId('511111111111111111111112'),
+      _id: new ObjectId('511111111111111111111112'),
       uuid: 'csuf',
       name: 'CSUF',
       subdomain: 'careerfair',
@@ -797,26 +803,30 @@ module.exports = {
       accessCodes: [],
       members: [
         {
-          user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
+          user: new ObjectId('5ffdf41a1ee2c62320b49ea1'),
           role: 'ADMIN',
         },
         {
-          user: ObjectId('5ffdf41a1ee2c62320b49ea5'),
+          user: new ObjectId('5ffdf41a1ee2c62320b49ea5'),
           role: 'CONTENT_MANAGER',
         },
         {
-          user: ObjectId('5ffdf41a1ee2c62320b49ea3'),
+          user: new ObjectId('5ffdf41a1ee2c62320b49a10'),
+          role: 'CONTENT_MANAGER',
+        },
+        {
+          user: new ObjectId('5ffdf41a1ee2c62320b49ea3'),
           role: 'USER',
         },
       ],
       config: [
         {
           key: 'activeMentorPanels',
-          value: [ObjectId('5ffdf41a1ee2c62111111111')],
+          value: [new ObjectId('5ffdf41a1ee2c62111111111')],
         },
         {
           key: 'featuredMentorPanels',
-          value: [ObjectId('5ffdf41a1ee2c62111111111')],
+          value: [new ObjectId('5ffdf41a1ee2c62111111111')],
         },
       ],
     },
@@ -824,8 +834,8 @@ module.exports = {
 
   refreshtokens: [
     {
-      _id: ObjectId('511111111111111111111678'),
-      user: ObjectId('5ffdf41a1ee2c62320b49ea1'),
+      _id: new ObjectId('511111111111111111111678'),
+      user: new ObjectId('5ffdf41a1ee2c62320b49ea1'),
       token:
         '6c3c54a0eab05e133b2425137a11111ce0b5f0053e62140bf7086477d1111191cd2fc2679724b111',
       expires: '2100-10-12T20:49:41.599+00:00',

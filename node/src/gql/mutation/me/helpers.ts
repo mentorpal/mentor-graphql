@@ -4,8 +4,10 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { UserRole } from '../../../models/User';
+import { ManagedOrg, User, UserRole } from '../../../models/User';
+import OrganizationModel from '../../../models/Organization';
 import mongoose from 'mongoose';
+import { equals } from '../../../utils/check-permissions';
 
 interface IdAndProps<T> {
   _id: string;
@@ -61,4 +63,31 @@ export function userIsManagerOrAdmin(role: string) {
     role === UserRole.SUPER_CONTENT_MANAGER ||
     role === UserRole.SUPER_ADMIN
   );
+}
+
+export async function getUsersManagedOrgs(user?: User): Promise<ManagedOrg[]> {
+  if (!user) {
+    return [];
+  }
+  const orgs = await OrganizationModel.find({
+    members: {
+      $elemMatch: {
+        user: user._id,
+        role: { $in: [UserRole.ADMIN, UserRole.CONTENT_MANAGER] },
+      },
+    },
+  });
+  return orgs.map((org) => ({
+    orgId: org._id.toString(),
+    role:
+      org.members.find((m) => equals(m.user, user._id))?.role || 'NOT_FOUND',
+  }));
+}
+
+export async function asyncFilter<T>(
+  array: T[],
+  predicate: (value: T) => Promise<boolean>
+): Promise<T[]> {
+  const results = await Promise.all(array.map(predicate));
+  return array.filter((_, index) => results[index]);
 }

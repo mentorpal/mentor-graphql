@@ -32,7 +32,7 @@ export function findOne<T>(config: {
   disableAutoIdArg?: boolean;
   disableExceptionOnNotFound?: boolean;
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  checkIfInvalid?: (val: any, context: any) => void;
+  checkIfInvalid?: (val: any, context: any) => Promise<void>;
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 }): any {
   const {
@@ -91,7 +91,7 @@ export function findOne<T>(config: {
         );
       }
       if (config.checkIfInvalid !== undefined) {
-        config.checkIfInvalid(item, context);
+        await config.checkIfInvalid(item, context);
       }
       return item;
     },

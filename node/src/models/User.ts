@@ -11,6 +11,10 @@ import {
   PaginateQuery,
   pluginPagination,
 } from './Paginatation';
+export interface ManagedOrg {
+  orgId: string;
+  role: string;
+}
 
 export const UserRole = {
   USER: 'USER',

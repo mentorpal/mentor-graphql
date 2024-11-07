@@ -98,7 +98,7 @@ export const exportMentor = {
     context: { user: User; org: Organization }
   ): Promise<MentorExportJson> => {
     const mentor = await MentorModel.findById(args.mentor);
-    if (mentor && !canViewMentor(mentor, context.user, context.org)) {
+    if (mentor && !(await canViewMentor(mentor, context.user, context.org))) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );

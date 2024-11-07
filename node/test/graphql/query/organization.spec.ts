@@ -92,6 +92,14 @@ describe('organization', () => {
         },
         {
           user: {
+            _id: '5ffdf41a1ee2c62320b49a10',
+            name: 'Content Manager Of Org',
+            userRole: 'USER',
+          },
+          role: 'CONTENT_MANAGER',
+        },
+        {
+          user: {
             _id: '5ffdf41a1ee2c62320b49ea3',
             name: 'Julianne Nordhagen',
             userRole: 'USER',

@@ -230,7 +230,7 @@ export const mentorData = {
     if (!mentor) {
       throw new Error(`mentor ${args.mentor} not found`);
     }
-    if (!canViewMentor(mentor, context.user, context.org)) {
+    if (!(await canViewMentor(mentor, context.user, context.org))) {
       throw new Error(
         `mentor is private and you do not have permission to access`
       );
