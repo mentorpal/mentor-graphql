@@ -20,6 +20,10 @@ export interface RefreshToken extends Document {
   isActive: boolean;
 }
 
+export interface HydratedRefreshToken extends Omit<RefreshToken, 'user'> {
+  user: User;
+}
+
 export const RefreshTokenSchema = new Schema<RefreshToken, RefreshTokenModel>({
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   token: { type: String },

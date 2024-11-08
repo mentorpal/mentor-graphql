@@ -4,6 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
+import { Types } from 'mongoose';
 import { getUsersManagedOrgs } from '../gql/mutation/me/helpers';
 import {
   Mentor,
@@ -13,7 +14,10 @@ import {
 import OrganizationModel, { Organization } from '../models/Organization';
 import { ManagedOrg, User, UserRole } from '../models/User';
 
-export function equals(a: string, b: string): boolean {
+export function equals(
+  a: string | Types.ObjectId,
+  b: string | Types.ObjectId
+): boolean {
   return `${a}` === `${b}`;
 }
 
@@ -32,7 +36,7 @@ export function canEditContent(user: User): boolean {
 
 export async function canEditMentorPanel(
   user: User,
-  mentorPanelOrg?: string
+  mentorPanelOrg?: Types.ObjectId
 ): Promise<boolean> {
   if (canEditContent(user)) {
     return true;

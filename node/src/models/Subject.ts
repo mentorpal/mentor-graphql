@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Document, Model, Types } from 'mongoose';
 import { Question as QuestionModel, Subject } from './index';
 import {
   PaginatedResolveResult,
@@ -27,7 +27,7 @@ export interface CategoryProps {
   defaultTopics: string[];
 }
 
-export interface Category extends CategoryProps, Document {
+export interface Category extends CategoryProps, Document<Types.ObjectId> {
   id: string;
 }
 
@@ -65,6 +65,13 @@ export interface SubjectQuestionProps {
 
 export interface SubjectQuestion extends SubjectQuestionProps, Document {}
 
+export interface HydratedSubjectQuestion
+  extends Omit<SubjectQuestionProps, 'question' | 'category' | 'topics'> {
+  question: Question;
+  category: Category;
+  topics: Topic[];
+}
+
 export const SubjectQuestionSchema = new Schema({
   question: { type: mongoose.Types.ObjectId, ref: 'Question' },
   category: { type: String },
@@ -76,7 +83,7 @@ export const SubjectQuestionSchema = new Schema({
   },
 });
 
-export interface Subject extends Document {
+export interface Subject extends Document<Types.ObjectId> {
   name: string;
   type: string;
   description: string;
@@ -142,7 +149,7 @@ SubjectSchema.statics.getQuestions = async function (
   mentorId?: string,
   type?: QuestionType,
   categoryID?: string
-) {
+): Promise<HydratedSubjectQuestion[]> {
   const subject: Subject = typeof s === 'string' ? await this.findById(s) : s;
   if (!subject) {
     throw new Error(`subject ${s} not found`);

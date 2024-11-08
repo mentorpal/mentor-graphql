@@ -6,16 +6,16 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { ManagedOrg, User, UserRole } from '../../../models/User';
 import OrganizationModel from '../../../models/Organization';
-import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 import { equals } from '../../../utils/check-permissions';
 
 interface IdAndProps<T> {
-  _id: string;
+  _id: Types.ObjectId;
   props: Partial<T>;
 }
 
 interface HasId {
-  _id?: string;
+  _id?: Types.ObjectId;
 }
 
 export function toUpdateProps<T extends HasId>(
@@ -39,15 +39,15 @@ export function toUpdateProps<T extends HasId>(
 // check if id is a valid ObjectID:
 //  - if valid, return it
 //  - if invalid, create a valid object id
-export function idOrNew(id: string): string {
+export function idOrNew(id: string | Types.ObjectId): Types.ObjectId {
   if (!Boolean(id)) {
-    return `${new mongoose.Types.ObjectId()}`;
+    return new Types.ObjectId();
   }
-  return isId(id) ? id : `${new mongoose.Types.ObjectId()}`;
+  return isId(id) ? new Types.ObjectId(id) : new Types.ObjectId();
 }
 
-export function isId(id: string): boolean {
-  return Boolean(id.match(/^[0-9a-fA-F]{24}$/));
+export function isId(id: string | Types.ObjectId): boolean {
+  return Boolean(id.toString().match(/^[0-9a-fA-F]{24}$/));
 }
 
 export enum UseDefaultTopics {

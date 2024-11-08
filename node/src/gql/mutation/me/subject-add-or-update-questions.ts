@@ -19,9 +19,10 @@ import {
   SubjectQuestionUpdateInput,
 } from './subject-update';
 import { UseDefaultTopics } from './helpers';
+import { Types } from 'mongoose';
 
 interface SubjectAddOrUpdateQuestionGQLType {
-  question: number;
+  question: Types.ObjectId;
   category: string;
   topics: string[];
   useDefaultTopics?: UseDefaultTopics;

@@ -36,7 +36,7 @@ export const MentorTrainTaskSchema = new Schema<
   MentorTrainTaskModel
 >(
   {
-    mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
+    mentor: { type: Schema.Types.ObjectId, ref: 'Mentor' },
     status: { type: String, enum: TrainStatus, default: TrainStatus.NONE },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }

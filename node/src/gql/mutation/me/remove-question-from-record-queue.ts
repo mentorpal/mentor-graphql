@@ -48,7 +48,7 @@ export const removeQuestionFromRecordQueue = {
       { recordQueue: newRecordQueue },
       { new: true }
     );
-    return newMentor.recordQueue;
+    return newMentor.recordQueue.map((q) => `${q}`);
   },
 };
 

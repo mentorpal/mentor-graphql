@@ -4,9 +4,9 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { toUpdateProps } from '../gql/mutation/me/helpers';
+import { idOrNew, toUpdateProps } from '../gql/mutation/me/helpers';
 import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import mongoose, { Document, Model, Schema, Types } from 'mongoose';
 import { Mentor, MentorType } from './Mentor';
 import {
   PaginatedResolveResult,
@@ -20,7 +20,7 @@ export enum QuestionType {
   QUESTION = 'QUESTION',
 }
 
-export interface Question extends Document {
+export interface Question extends Document<Types.ObjectId> {
   question: string;
   type: string;
   subType: string;
@@ -70,7 +70,11 @@ export interface QuestionModel extends Model<Question> {
 QuestionSchema.statics.updateOrCreate = async function (
   question: QuestionUpdateInput
 ) {
-  const { _id, props } = toUpdateProps<Question>(question);
+  const { _id, props } = toUpdateProps<Question>({
+    ...question,
+    mentor: idOrNew(question.mentor),
+    _id: idOrNew(question._id),
+  });
   return await this.findOneAndUpdate(
     { _id: _id },
     {
