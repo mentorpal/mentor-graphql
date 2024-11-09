@@ -852,7 +852,9 @@ MentorSchema.statics.getQuestions = async function ({
   }
   const _subjectId = defaultSubject
     ? userMentor.defaultSubject
-    : new Types.ObjectId(subjectId);
+    : subjectId
+      ? new Types.ObjectId(subjectId)
+      : undefined;
   const subjectIds = _subjectId
     ? userMentor.subjects.includes(_subjectId)
       ? [subjectId]
@@ -918,14 +920,12 @@ MentorSchema.statics.getAnswers = async function ({
     question: { $in: questionIds },
   });
   answers.sort((a: Answer, b: Answer) => {
-    return (
-      questionIds.indexOf(a.question._id) - questionIds.indexOf(b.question._id)
-    );
+    return questionIds.indexOf(a.question) - questionIds.indexOf(b.question);
   });
   const answersByQid = answers.reduce((acc: Record<string, Answer>, cur) => {
     const questionId = cur.question;
-    const questionDoc = questions.find((q) => questionId === q._id);
-    cur.question = questionDoc._id || questionId;
+    const questionDoc = questions.find((q) => `${questionId}` === `${q._id}`);
+    cur.question = questionDoc?._id || questionId;
     acc[questionId.toString()] = cur;
     return acc;
   }, {});

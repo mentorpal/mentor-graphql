@@ -102,8 +102,8 @@ export const answerUpload = {
       args.answer.hasEditedTranscript !== undefined
         ? args.answer.hasEditedTranscript
         : answer
-        ? answer.hasEditedTranscript
-        : false;
+          ? answer.hasEditedTranscript
+          : false;
 
     const updates: Record<
       string,
@@ -116,8 +116,8 @@ export const answerUpload = {
         args.answer.transcript != undefined
           ? args.answer.transcript
           : answer
-          ? answer.transcript
-          : '',
+            ? answer.transcript
+            : '',
     };
     if (args.answer.externalVideoIds) {
       updates['externalVideoIds'] = args.answer.externalVideoIds;
