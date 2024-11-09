@@ -13,6 +13,7 @@ import UserType from './user';
 import DateType from './date';
 import { RefreshToken as RefreshTokenSchema } from '../../models';
 import requireEnv from '../../utils/require-env';
+import { HydratedRefreshToken } from 'models/RefreshToken';
 
 export interface UserAccessToken {
   user: User;
@@ -50,9 +51,9 @@ export async function revokeToken(token: string): Promise<void> {
 }
 
 async function getRefreshToken(token: string) {
-  const refreshToken = await RefreshTokenSchema.findOne({ token }).populate(
-    'user'
-  );
+  const refreshToken = await RefreshTokenSchema.findOne({
+    token,
+  }).populate<HydratedRefreshToken>('user');
   if (!refreshToken || !refreshToken.isActive) {
     throw 'invalid token';
   }

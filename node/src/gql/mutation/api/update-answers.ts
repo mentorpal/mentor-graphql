@@ -122,8 +122,8 @@ export const updateAnswers = {
         inputAnswer.hasEditedTranscript !== undefined
           ? inputAnswer.hasEditedTranscript
           : answer
-          ? answer.hasEditedTranscript
-          : false;
+            ? answer.hasEditedTranscript
+            : false;
 
       const argWebMedia = inputAnswer.webMedia;
       const argMobileMedia = inputAnswer.mobileMedia;
@@ -145,8 +145,8 @@ export const updateAnswers = {
           inputAnswer.transcript != undefined
             ? inputAnswer.transcript
             : answer
-            ? answer.transcript
-            : '',
+              ? answer.transcript
+              : '',
       };
       if (argWebMedia) {
         argWebMedia.needsTransfer = mediaNeedsTransfer(argWebMedia.url);

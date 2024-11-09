@@ -44,6 +44,6 @@ make format
 
 Technical Debt
 -------------
-  - mongoose
-  - delete mongo-cursor-pagination bson override once mongoose 8 upgrade is complete
+  - mongoose 8
   - track ip package fix here https://github.com/indutny/node-ip/issues/150, delete override once fixed
+  - mongo-unit is behind, either fork or switch libraries.

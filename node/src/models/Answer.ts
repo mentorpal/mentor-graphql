@@ -5,7 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import mongoose, { Document, Model, Schema, Types } from 'mongoose';
 import { Question } from './Question';
 import { Mentor } from './Mentor';
 import {
@@ -71,9 +71,9 @@ export interface PreviousAnswerVersions {
   dateVersioned: string;
 }
 
-export interface Answer extends Document {
+export interface Answer extends Document<Types.ObjectId> {
   mentor: Mentor['_id'];
-  question: Question['_id'] | Question;
+  question: Question['_id'];
   hasEditedTranscript: boolean;
   transcript: string;
   status: Status;
@@ -86,6 +86,10 @@ export interface Answer extends Document {
   previousVersions: PreviousAnswerVersions[];
 }
 
+export interface HydratedAnswer extends Omit<Answer, 'question'> {
+  question: Question;
+}
+
 export interface AnswerModel extends Model<Answer> {
   paginate(
     query?: PaginateQuery<Question>,
@@ -95,8 +99,8 @@ export interface AnswerModel extends Model<Answer> {
 
 export const AnswerSchema = new Schema<Answer, AnswerModel>(
   {
-    mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
-    question: { type: mongoose.Types.ObjectId, ref: 'Question' },
+    mentor: { type: Schema.Types.ObjectId, ref: 'Mentor' },
+    question: { type: Schema.Types.ObjectId, ref: 'Question' },
     hasEditedTranscript: { type: Boolean, default: false },
     transcript: { type: String },
     status: {

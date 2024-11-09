@@ -19,6 +19,7 @@ export function findByParentFieldQuery<T>(
     resolve: async (parent: any) => {
       const id = parent[fieldName];
       const item = await model.findById(id).exec();
+      console.log(`${fieldName} item: ${JSON.stringify(item, null, 2)}`);
       if (!item) {
         throw new Error(`${fieldName} not found for id "${id}"`);
       }

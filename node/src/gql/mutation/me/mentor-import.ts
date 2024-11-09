@@ -27,7 +27,7 @@ import {
   ExportedMentorInfo,
   ExportedMentorInfoInputType,
 } from '../../query/mentor-export';
-import { UserQuestion } from '../../../models/UserQuestion';
+import { HydratedUserQuestion } from '../../../models/UserQuestion';
 import { User } from '../../../models/User';
 import {
   ExternalVideoIdsInputType,
@@ -40,7 +40,7 @@ export interface MentorImportJson {
   subjects: SubjectUpdateInput[];
   questions: QuestionUpdateInput[];
   answers: AnswerUpdateInput[];
-  userQuestions: UserQuestion[];
+  userQuestions: HydratedUserQuestion[];
 }
 
 export const MentorImportJsonType = new GraphQLInputObjectType({

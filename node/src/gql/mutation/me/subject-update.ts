@@ -26,7 +26,7 @@ import {
   QuestionUpdateInput,
   QuestionUpdateInputType,
 } from './question-update';
-import { UseDefaultTopics, toUpdateProps } from './helpers';
+import { UseDefaultTopics, idOrNew, toUpdateProps } from './helpers';
 import { canEditContent } from '../../../utils/check-permissions';
 
 export interface CategoryUpdateInput {
@@ -113,7 +113,11 @@ export async function questionInputToUpdate(
   input: SubjectQuestionUpdateInput,
   subjectTopics: string[]
 ): Promise<SubjectQuestionProps> {
-  const { _id, props } = toUpdateProps<Question>(input.question);
+  const { _id, props } = toUpdateProps<Question>({
+    ...input.question,
+    mentor: idOrNew(input.question.mentor),
+    _id: idOrNew(input.question._id),
+  });
   const q = await QuestionModel.findOneAndUpdate(
     { _id: _id },
     { $set: props },

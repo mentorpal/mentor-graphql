@@ -16,7 +16,7 @@ import { Express } from 'express';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
 import { MentorDirtyReason } from '../../../constants';
-
+import AnswerModel from '../../../../src/models/Answer';
 const answerMutation = `mutation UploadAnswer($mentorId: ID!, $questionId: ID!, $answer: UploadAnswerType!) {
   api {
     uploadAnswer(mentorId: $mentorId, questionId: $questionId, answer: $answer)
@@ -127,6 +127,12 @@ describe('uploadAnswer', () => {
           },
         },
       });
+
+    const answers = await AnswerModel.find({
+      mentor: '5ffdf41a1ee2c62111111111',
+      question: '511111111111111111111112',
+    })
+
     expect(response.status).to.equal(200);
     expect(response.body.data.api.uploadAnswer).to.eql(true);
     const r2 = await request(app)

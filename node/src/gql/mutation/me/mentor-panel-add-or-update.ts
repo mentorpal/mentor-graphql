@@ -17,11 +17,12 @@ import MentorPanelModel, { MentorPanel } from '../../../models/MentorPanel';
 import { User } from '../../../models/User';
 import { canEditMentorPanel } from '../../../utils/check-permissions';
 import { idOrNew } from './helpers';
+import { Types } from 'mongoose';
 
 interface AddOrUpdateMentorPanelInput {
-  org: string;
-  subject: string;
-  mentors: string[];
+  org: Types.ObjectId;
+  subject: Types.ObjectId;
+  mentors: Types.ObjectId[];
   title: string;
   subtitle: string;
 }

@@ -27,7 +27,7 @@ export const fetchMentorRecordQueue = {
     if (!mentor) {
       throw new Error('Failed to find mentor for user');
     }
-    return mentor.recordQueue;
+    return mentor.recordQueue.map((r) => r.toString());
   },
 };
 

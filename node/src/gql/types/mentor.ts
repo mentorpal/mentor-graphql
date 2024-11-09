@@ -30,6 +30,7 @@ import { toAbsoluteUrl } from '../../utils/static-urls';
 import { QuestionType as QuestionGQLType } from './question';
 import { TrainStatus } from '../../models/MentorTrainTask';
 import { MentorConfigType } from '../../models/MentorConfig';
+import { Types } from 'mongoose';
 
 export const MentorOrgPermissionType = new GraphQLObjectType({
   name: 'MentorOrgPermissionType',
@@ -60,7 +61,7 @@ export const MentorType = new GraphQLObjectType({
       type: GraphQLInt,
       resolve: async function (mentor: Mentor) {
         const mentorAnswers = await AnswerModel.find({ mentor: mentor._id });
-        const questionIds: string[] = mentorAnswers.map(
+        const questionIds: Types.ObjectId[] = mentorAnswers.map(
           (answer) => answer.question
         );
         const mentorQuestions = await QuestionModel.find({

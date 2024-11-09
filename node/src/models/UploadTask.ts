@@ -37,8 +37,8 @@ export interface UploadTask extends Document {
 
 export const UploadTaskSchema = new Schema<UploadTask, UploadTaskModel>(
   {
-    mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
-    question: { type: mongoose.Types.ObjectId, ref: 'Question' },
+    mentor: { type: Schema.Types.ObjectId, ref: 'Mentor' },
+    question: { type: Schema.Types.ObjectId, ref: 'Question' },
     trimUploadTask: { type: TaskInfoSchema },
     transcodeWebTask: { type: TaskInfoSchema },
     transcodeMobileTask: { type: TaskInfoSchema },

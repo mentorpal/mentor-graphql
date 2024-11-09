@@ -22,7 +22,7 @@ export const addQuestionToRecordQueue = {
   resolve: async (
     _root: GraphQLObjectType,
     args: {
-      questionId: string;
+      questionId: Types.ObjectId;
     },
     context: { user: User }
   ): Promise<string[]> => {
@@ -53,7 +53,7 @@ export const addQuestionToRecordQueue = {
       { recordQueue: newRecordQueue },
       { new: true }
     );
-    return newMentor.recordQueue;
+    return newMentor.recordQueue.map((r) => r.toString());
   },
 };
 

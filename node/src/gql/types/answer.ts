@@ -56,8 +56,8 @@ export const AnswerMediaType = new GraphQLObjectType({
         return args.browserSupportsVbg && media.transparentVideoUrl
           ? toAbsoluteUrl(media.transparentVideoUrl)
           : media.url
-          ? toAbsoluteUrl(media.url)
-          : '';
+            ? toAbsoluteUrl(media.url)
+            : '';
       },
     },
     transparentVideoUrl: {
