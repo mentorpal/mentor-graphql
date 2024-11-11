@@ -14,7 +14,6 @@
     "mongodb-memory-server-core": {
       "bson": "6.9.0"
     },
-    "ip": "https://registry.npmjs.org/neoip/-/neoip-2.1.0.tgz",
     "@types/glob": {
       "@types/minimatch": "5.1.2"
     }
