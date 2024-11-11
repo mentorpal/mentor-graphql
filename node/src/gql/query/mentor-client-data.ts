@@ -37,6 +37,7 @@ import {
   externalVideoIdsDefault,
 } from '../mutation/api/update-answers';
 import { UseDefaultTopics, userIsManagerOrAdmin } from '../mutation/me/helpers';
+import { Types } from 'mongoose';
 
 export interface MentorClientData {
   _id: string;
@@ -219,8 +220,8 @@ export const mentorData = {
   resolve: async (
     _root: GraphQLObjectType,
     args: {
-      mentor: string;
-      subject?: string;
+      mentor: Types.ObjectId;
+      subject?: Types.ObjectId;
       orgAccessCode?: string;
       leftHomePageData?: string;
     },
@@ -379,7 +380,7 @@ export const mentorData = {
     }));
 
     return {
-      _id: mentor._id,
+      _id: mentor._id.toString(),
       name: mentor.name,
       title: mentor.title,
       email: mentor.email,

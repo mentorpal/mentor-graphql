@@ -30,6 +30,8 @@ import { toAbsoluteUrl } from '../../utils/static-urls';
 import { QuestionType as QuestionGQLType } from './question';
 import { TrainStatus } from '../../models/MentorTrainTask';
 import { MentorConfigType } from '../../models/MentorConfig';
+import { Types } from 'mongoose';
+import { validateAndConvertToObjectId } from '../mutation/me/helpers';
 
 export const MentorOrgPermissionType = new GraphQLObjectType({
   name: 'MentorOrgPermissionType',
@@ -60,7 +62,7 @@ export const MentorType = new GraphQLObjectType({
       type: GraphQLInt,
       resolve: async function (mentor: Mentor) {
         const mentorAnswers = await AnswerModel.find({ mentor: mentor._id });
-        const questionIds: string[] = mentorAnswers.map(
+        const questionIds: Types.ObjectId[] = mentorAnswers.map(
           (answer) => answer.question
         );
         const mentorQuestions = await QuestionModel.find({
@@ -166,7 +168,9 @@ export const MentorType = new GraphQLObjectType({
         return await MentorModel.getTopics({
           mentor: mentor,
           defaultSubject: args.useDefaultSubject,
-          subjectId: args.subject,
+          subjectId: args.subject
+            ? validateAndConvertToObjectId(args.subject)
+            : undefined,
         });
       },
     },
@@ -190,7 +194,9 @@ export const MentorType = new GraphQLObjectType({
         return await MentorModel.getQuestions({
           mentor: mentor,
           defaultSubject: args.useDefaultSubject,
-          subjectId: args.subject,
+          subjectId: args.subject
+            ? validateAndConvertToObjectId(args.subject)
+            : undefined,
           topicId: args.topic,
           type: args.type as QuestionType,
         });
@@ -216,7 +222,9 @@ export const MentorType = new GraphQLObjectType({
         return await MentorModel.getAnswers({
           mentor: mentor,
           defaultSubject: args.useDefaultSubject,
-          subjectId: args.subject,
+          subjectId: args.subject
+            ? validateAndConvertToObjectId(args.subject)
+            : undefined,
           topicId: args.topic,
           status: args.status as Status,
         });

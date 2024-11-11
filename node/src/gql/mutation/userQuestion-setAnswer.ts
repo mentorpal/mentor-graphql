@@ -48,7 +48,7 @@ export const userQuestionSetAnswer = {
         { question: args.question },
         { upsert: true, new: true }
       );
-      answerId = newAnswer._id;
+      answerId = newAnswer._id.toString();
     }
     const userQuestion: UserQuestion =
       await UserQuestionModel.findByIdAndUpdate(

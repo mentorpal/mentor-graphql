@@ -176,10 +176,10 @@ export const mentorImportPreview = {
         editType: !cur
           ? EditType.CREATED
           : !exportJson.subjects.find(
-              (s) => `${s._id}` === `${subjectImport._id}`
-            )
-          ? EditType.ADDED
-          : EditType.NONE,
+                (s) => `${s._id}` === `${subjectImport._id}`
+              )
+            ? EditType.ADDED
+            : EditType.NONE,
       });
     }
     // Check if the current mentor has subjects that the imported mentor does not, mark them for removal if so
@@ -218,8 +218,8 @@ export const mentorImportPreview = {
         editType: !curQuestion
           ? EditType.CREATED
           : !curMentorAlreadyHasQuestion
-          ? EditType.ADDED
-          : EditType.NONE,
+            ? EditType.ADDED
+            : EditType.NONE,
       });
     }
 
@@ -278,10 +278,10 @@ export const mentorImportPreview = {
           editType: !curAnswer
             ? EditType.CREATED
             : !exportJson.answers.find(
-                (a) => `${a.question}` === `${answerImport.question._id}`
-              )
-            ? EditType.ADDED
-            : EditType.NONE,
+                  (a) => `${a.question}` === `${answerImport.question._id}`
+                )
+              ? EditType.ADDED
+              : EditType.NONE,
         });
     }
 

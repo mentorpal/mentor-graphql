@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import mongoose, { Document, Model, Schema, Types } from 'mongoose';
 import {
   PaginatedResolveResult,
   PaginateOptions,
@@ -47,7 +47,9 @@ export interface OrganizationProps {
   members: OrgMemberProps[];
   config: OrgConfigProps[];
 }
-export interface Organization extends OrganizationProps, Document {}
+export interface Organization
+  extends OrganizationProps,
+    Document<Types.ObjectId> {}
 export const OrganizationSchema = new Schema<Organization, OrganizationModel>(
   {
     uuid: { type: String },

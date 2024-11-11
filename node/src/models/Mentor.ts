@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Document, Model, Types } from 'mongoose';
 import {
   Answer as AnswerModel,
   Subject as SubjectModel,
@@ -16,9 +16,10 @@ import {
   PaginateQuery,
   pluginPagination,
 } from './Paginatation';
-import { Answer, Status } from './Answer';
+import { Answer, HydratedAnswer, Status } from './Answer';
 import { Question, QuestionType } from './Question';
 import {
+  HydratedSubjectQuestion,
   Subject,
   SubjectQuestion,
   SubjectQuestionProps,
@@ -32,9 +33,7 @@ import {
   ReplacedMentorDataChanges,
 } from '../gql/mutation/me/mentor-import';
 import { idOrNew } from '../gql/mutation/me/helpers';
-import UserQuestion, {
-  UserQuestion as UserQuestionInterface,
-} from './UserQuestion';
+import UserQuestion, { HydratedUserQuestion } from './UserQuestion';
 import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
 import { Organization } from './Organization';
 import { externalVideoIdsDefault } from '../gql/mutation/api/update-answers';
@@ -104,7 +103,7 @@ export enum MentorDirtyReason {
   NONE = 'NONE',
 }
 
-export interface Mentor extends Document {
+export interface Mentor extends Document<Types.ObjectId> {
   name: string;
   firstName: string;
   title: string;
@@ -139,7 +138,7 @@ export interface Mentor extends Document {
 export interface GetMentorDataParams {
   mentor: string | Mentor;
   defaultSubject?: boolean;
-  subjectId?: string;
+  subjectId?: Types.ObjectId;
   topicId?: string;
   type?: QuestionType;
   status?: Status;
@@ -163,7 +162,7 @@ export interface MentorModel extends Model<Mentor> {
     topicId,
     type,
     categoryId,
-  }: GetMentorDataParams): SubjectQuestion[];
+  }: GetMentorDataParams): HydratedSubjectQuestion[];
   getAnswers({
     mentor,
     defaultSubject,
@@ -172,7 +171,7 @@ export interface MentorModel extends Model<Mentor> {
     status,
     type,
     categoryId,
-  }: GetMentorDataParams): Answer[];
+  }: GetMentorDataParams): HydratedAnswer[];
   export(mentor: string): Promise<MentorExportJson>;
   import(
     mentor: string,
@@ -229,7 +228,6 @@ export const MentorSchema = new Schema<Mentor, MentorModel>(
     user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: '{PATH} is required!',
     },
   },
   { timestamps: true, collation: { locale: 'en', strength: 2 } }
@@ -293,12 +291,13 @@ MentorSchema.statics.export = async function (
   const answerDocIds = answers.map((a) => `${a._id}`);
   userQuestions = userQuestions.filter((userQuestion) =>
     answerDocIds.find(
-      (answerDocId) => answerDocId == userQuestion.classifierAnswer?._id
+      (answerDocId) =>
+        answerDocId == userQuestion.classifierAnswer?._id.toString()
     )
   );
 
   return {
-    id: mentor._id,
+    id: mentor._id.toString(),
     mentorInfo: mentor,
     subjects,
     questions,
@@ -319,7 +318,7 @@ async function createOrFetchQuestionDocAddToArray(
     importedQDoc.mentor && `${importedQDoc.mentor}` !== `${mentorId}`;
   if (isNewMentorSpecificQuestion) {
     const qCopy: QuestionUpdateInput = JSON.parse(JSON.stringify(importedQDoc));
-    qCopy._id = idOrNew(qCopy._id);
+    qCopy._id = idOrNew(qCopy._id).toString();
     qCopy.mentor = mentorId;
     questionUpdateAndCreationDocs.push(qCopy);
     updatedOrCreatedQuestion = qCopy;
@@ -347,7 +346,7 @@ async function createOrFetchQuestionDocAddToArray(
     } else {
       // No pre-existing question documents found by text or id, so make this new question mentor specific.
       importedQDoc.mentor = mentorId;
-      importedQDoc._id = idOrNew(importedQDoc._id);
+      importedQDoc._id = idOrNew(importedQDoc._id).toString();
       questionUpdateAndCreationDocs.push(importedQDoc);
       updatedOrCreatedQuestion = importedQDoc;
     }
@@ -360,7 +359,7 @@ async function createOrFetchQuestionDocAddToArray(
 
 async function updateCreateAnswerDocumentAndUserQuestion(
   importedAnswers: AnswerUpdateInput[],
-  jsonUserQuestions: UserQuestionInterface[],
+  jsonUserQuestions: HydratedUserQuestion[],
   originalQuestionId: string,
   newCreatedQuestionId: string,
   mentorId: string
@@ -404,18 +403,18 @@ async function updateCreateAnswerDocumentAndUserQuestion(
     // Anytime an answer document is created, update related imported userQuestions that contain the imported answer document in either classifierAnswer or graderAnswer with the new answer document
     const importedUserQuestions = jsonUserQuestions.filter(
       (importedUserQuestion) =>
-        importedUserQuestion.classifierAnswer?.question?._id ==
+        importedUserQuestion.classifierAnswer?.question?._id.toString() ==
           importedAnswerDocumentForQuestion.question._id ||
-        importedUserQuestion.graderAnswer?.question?._id ==
+        importedUserQuestion.graderAnswer?.question?._id.toString() ==
           importedAnswerDocumentForQuestion.question._id
     );
     if (importedUserQuestions.length) {
       for (const importedUserQuestion of importedUserQuestions) {
         const replaceClassifierAnswer =
-          importedUserQuestion.classifierAnswer?.question?._id ==
+          importedUserQuestion.classifierAnswer?.question?._id.toString() ==
           importedAnswerDocumentForQuestion.question._id;
         const replaceGraderAnswer =
-          importedUserQuestion.graderAnswer?.question?._id ==
+          importedUserQuestion.graderAnswer?.question?._id.toString() ==
           importedAnswerDocumentForQuestion.question._id;
         if (replaceClassifierAnswer) {
           importedUserQuestion.classifierAnswer = newAnswerDocument;
@@ -596,11 +595,11 @@ MentorSchema.statics.import = async function (
             existingQuestionDocsMatchedWithImportedQuestions,
             questionUpdateAndCreationDocs,
             importedQDoc,
-            mentor._id,
+            mentor._id.toString(),
             existingSubjectQuestionDocs
           ));
 
-        const newQId = updatedOrCreatedQuestion._id;
+        const newQId = idOrNew(updatedOrCreatedQuestion._id);
 
         // If this is a pre-existing subject, then just add the question document to it
         if (existingSubject) {
@@ -617,15 +616,15 @@ MentorSchema.statics.import = async function (
           }
         } else {
           // Subject does not exist, so we update the imported json with the new question id
-          q.question._id = newQId;
+          q.question._id = newQId.toString();
         }
 
         await updateCreateAnswerDocumentAndUserQuestion(
           json.answers,
           json.userQuestions,
           originalQId,
-          newQId,
-          mentor._id
+          newQId.toString(),
+          mentor._id.toString()
         );
       }
       // Batch write all questions
@@ -819,7 +818,7 @@ MentorSchema.statics.getOrphanedCompleteAnswers = async function (
     return acc;
   }, []);
   const allSubjectQuestionIds = allSubjectQuestions.map(
-    (sq: { question: { _id: string } }) => `${sq.question._id}`
+    (sq: { question: { _id: Types.ObjectId } }) => `${sq.question._id}`
   );
   const allMentorAnswers = await AnswerModel.find({
     mentor: mentor._id,
@@ -851,7 +850,7 @@ MentorSchema.statics.getQuestions = async function ({
     ? userMentor.subjects.includes(subjectId)
       ? [subjectId]
       : []
-    : (userMentor.subjects as string[]);
+    : userMentor.subjects;
   if (subjectIds.length == 0) {
     return [];
   }
@@ -863,7 +862,13 @@ MentorSchema.statics.getQuestions = async function ({
   return (
     await Promise.all(
       subjects.map((s) =>
-        SubjectModel.getQuestions(s, topicId, userMentor._id, type, categoryId)
+        SubjectModel.getQuestions(
+          s,
+          topicId,
+          userMentor._id.toString(),
+          type,
+          categoryId
+        )
       )
     )
   ).reduce((acc: SubjectQuestion[], cur: SubjectQuestion[]) => {
@@ -896,7 +901,7 @@ MentorSchema.statics.getAnswers = async function ({
     categoryId: categoryId,
   });
   const questionIds = sQuestions.map(
-    (sq: { question: { _id: string } }) => sq.question._id
+    (sq: { question: { _id: Types.ObjectId } }) => sq.question._id
   );
   const questions: Question[] = await QuestionModel.find({
     _id: { $in: questionIds },
@@ -906,23 +911,21 @@ MentorSchema.statics.getAnswers = async function ({
     question: { $in: questionIds },
   });
   answers.sort((a: Answer, b: Answer) => {
-    return (
-      questionIds.indexOf(a.question._id) - questionIds.indexOf(b.question._id)
-    );
+    return questionIds.indexOf(a.question) - questionIds.indexOf(b.question);
   });
   const answersByQid = answers.reduce((acc: Record<string, Answer>, cur) => {
-    const questionId = `${cur.question}`;
-    const questionDoc = questions.find((q) => questionId === `${q._id}`);
-    cur.question = questionDoc || questionId;
-    acc[questionId] = cur;
+    const questionId = cur.question;
+    const questionDoc = questions.find((q) => `${questionId}` === `${q._id}`);
+    cur.question = questionDoc?._id || questionId;
+    acc[questionId.toString()] = cur;
     return acc;
   }, {});
-  const answerResult = questionIds.map((qid: string) => {
-    const questionDoc = questions.find((q) => qid == `${q._id}`);
+  const answerResult = questionIds.map((qid: Types.ObjectId) => {
+    const questionDoc = questions.find((q) => qid == q._id) || qid;
     return (
       answersByQid[`${qid}`] || {
         mentor: userMentor._id,
-        question: questionDoc || qid,
+        question: questionDoc,
         transcript: '',
         status: Status.NONE,
         webMedia: undefined,

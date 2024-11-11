@@ -58,7 +58,7 @@ export interface ImportTask extends Document {
 
 export const ImportTaskSchema = new Schema<ImportTask, ImportTaskModel>(
   {
-    mentor: { type: mongoose.Types.ObjectId, ref: 'Mentor' },
+    mentor: { type: Schema.Types.ObjectId, ref: 'Mentor' },
     graphQLUpdate: { type: GraphQLUpdateSchema },
     s3VideoMigrate: { type: s3VideoMigrateSchema },
     migrationErrors: { type: [String] },
