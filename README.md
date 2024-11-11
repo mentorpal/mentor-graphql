@@ -44,6 +44,6 @@ make format
 
 Technical Debt
 -------------
-  - mongoose 8
-  - track ip package fix here https://github.com/indutny/node-ip/issues/150, delete override once fixed
-  - mongo-unit is behind, either fork or switch libraries.
+  - mongo-unit is outdated, fork/switch libraries.
+  - mongo-cursor-pagination is outdated, fork/switch libraries.
+  - license-check-and-add is outdated, fork/switch libraries.
