@@ -4,7 +4,11 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { idOrNew, toUpdateProps } from '../gql/mutation/me/helpers';
+import {
+  idOrNew,
+  toUpdateProps,
+  validateAndConvertToObjectId,
+} from '../gql/mutation/me/helpers';
 import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
 import mongoose, { Document, Model, Schema, Types } from 'mongoose';
 import { Mentor, MentorType } from './Mentor';
@@ -72,7 +76,9 @@ QuestionSchema.statics.updateOrCreate = async function (
 ) {
   const { _id, props } = toUpdateProps<Question>({
     ...question,
-    mentor: idOrNew(question.mentor),
+    mentor: question.mentor
+      ? validateAndConvertToObjectId(question.mentor)
+      : undefined,
     _id: idOrNew(question._id),
   });
   return await this.findOneAndUpdate(
