@@ -14,7 +14,10 @@
     "mongodb-memory-server-core": {
       "bson": "6.9.0"
     },
-    "ip": "https://registry.npmjs.org/neoip/-/neoip-2.1.0.tgz"
+    "ip": "https://registry.npmjs.org/neoip/-/neoip-2.1.0.tgz",
+    "@types/glob": {
+      "@types/minimatch": "5.1.2"
+    }
   },
   "scripts": {
     "build": "tsc",
@@ -80,6 +83,7 @@
     "@types/ejson": "^2.2.0",
     "@types/express": "^4.17.17",
     "@types/jsonwebtoken": "^9.0.2",
+    "@types/minimatch": "^5.1.2",
     "@types/mocha": "^10.0.1",
     "@types/morgan": "^1.9.5",
     "@types/node": "^20.5.6",
