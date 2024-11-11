@@ -31,6 +31,7 @@ import { QuestionType as QuestionGQLType } from './question';
 import { TrainStatus } from '../../models/MentorTrainTask';
 import { MentorConfigType } from '../../models/MentorConfig';
 import { Types } from 'mongoose';
+import { validateAndConvertToObjectId } from '../mutation/me/helpers';
 
 export const MentorOrgPermissionType = new GraphQLObjectType({
   name: 'MentorOrgPermissionType',
@@ -167,7 +168,9 @@ export const MentorType = new GraphQLObjectType({
         return await MentorModel.getTopics({
           mentor: mentor,
           defaultSubject: args.useDefaultSubject,
-          subjectId: args.subject,
+          subjectId: args.subject
+            ? validateAndConvertToObjectId(args.subject)
+            : undefined,
         });
       },
     },
@@ -191,7 +194,9 @@ export const MentorType = new GraphQLObjectType({
         return await MentorModel.getQuestions({
           mentor: mentor,
           defaultSubject: args.useDefaultSubject,
-          subjectId: args.subject,
+          subjectId: args.subject
+            ? validateAndConvertToObjectId(args.subject)
+            : undefined,
           topicId: args.topic,
           type: args.type as QuestionType,
         });
@@ -217,7 +222,9 @@ export const MentorType = new GraphQLObjectType({
         return await MentorModel.getAnswers({
           mentor: mentor,
           defaultSubject: args.useDefaultSubject,
-          subjectId: args.subject,
+          subjectId: args.subject
+            ? validateAndConvertToObjectId(args.subject)
+            : undefined,
           topicId: args.topic,
           status: args.status as Status,
         });

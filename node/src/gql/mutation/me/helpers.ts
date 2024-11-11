@@ -47,7 +47,16 @@ export function idOrNew(id: string | Types.ObjectId): Types.ObjectId {
 }
 
 export function isId(id: string | Types.ObjectId): boolean {
-  return Boolean(id.toString().match(/^[0-9a-fA-F]{24}$/));
+  return Boolean(id?.toString().match(/^[0-9a-fA-F]{24}$/));
+}
+
+export function validateAndConvertToObjectId(
+  id: string | Types.ObjectId
+): Types.ObjectId {
+  if (!isId(id)) {
+    throw new Error('provided id is not a valid object id');
+  }
+  return new Types.ObjectId(id);
 }
 
 export enum UseDefaultTopics {

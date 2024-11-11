@@ -32,7 +32,7 @@ import {
   MentorImportJson,
   ReplacedMentorDataChanges,
 } from '../gql/mutation/me/mentor-import';
-import { idOrNew, isId } from '../gql/mutation/me/helpers';
+import { idOrNew } from '../gql/mutation/me/helpers';
 import UserQuestion, { HydratedUserQuestion } from './UserQuestion';
 import { QuestionUpdateInput } from '../gql/mutation/me/question-update';
 import { Organization } from './Organization';
@@ -138,7 +138,7 @@ export interface Mentor extends Document<Types.ObjectId> {
 export interface GetMentorDataParams {
   mentor: string | Mentor;
   defaultSubject?: boolean;
-  subjectId?: string;
+  subjectId?: Types.ObjectId;
   topicId?: string;
   type?: QuestionType;
   status?: Status;
@@ -755,14 +755,9 @@ MentorSchema.statics.getSubjects = async function (
 //  - one subject: sorted in subject order
 
 MentorSchema.statics.getTopics = async function (
-  { mentor, defaultSubject, subjectId: _targetSubjectId }: GetMentorDataParams,
+  { mentor, defaultSubject, subjectId: targetSubjectId }: GetMentorDataParams,
   subjects?: Subject[]
 ): Promise<Topic[]> {
-  const targetSubjectIsObjectId = isId(_targetSubjectId);
-  if (!targetSubjectIsObjectId) {
-    throw new Error('provided invalid subject id');
-  }
-  const targetSubjectId = new Types.ObjectId(_targetSubjectId);
   const userMentor: Mentor =
     typeof mentor === 'string' ? await this.findById(mentor) : mentor;
   if (!userMentor) {
@@ -850,13 +845,9 @@ MentorSchema.statics.getQuestions = async function ({
   if (!userMentor) {
     throw new Error(`mentor ${mentor} not found`);
   }
-  const _subjectId = defaultSubject
-    ? userMentor.defaultSubject
-    : subjectId
-      ? new Types.ObjectId(subjectId)
-      : undefined;
-  const subjectIds = _subjectId
-    ? userMentor.subjects.includes(_subjectId)
+  subjectId = defaultSubject ? userMentor.defaultSubject : subjectId;
+  const subjectIds = subjectId
+    ? userMentor.subjects.includes(subjectId)
       ? [subjectId]
       : []
     : userMentor.subjects;
@@ -930,7 +921,7 @@ MentorSchema.statics.getAnswers = async function ({
     return acc;
   }, {});
   const answerResult = questionIds.map((qid: Types.ObjectId) => {
-    const questionDoc = questions.find((q) => qid == q._id);
+    const questionDoc = questions.find((q) => qid == q._id) || qid;
     return (
       answersByQid[`${qid}`] || {
         mentor: userMentor._id,

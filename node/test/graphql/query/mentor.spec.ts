@@ -719,7 +719,7 @@ describe('mentor', () => {
     });
   });
 
-  it.only('mentor/answers gets mentor specific question for mentor', async () => {
+  it('mentor/answers gets mentor specific question for mentor', async () => {
     const response = await request(app)
       .post('/graphql')
       .send({

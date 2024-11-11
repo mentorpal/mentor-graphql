@@ -131,7 +131,7 @@ describe('uploadAnswer', () => {
     const answers = await AnswerModel.find({
       mentor: '5ffdf41a1ee2c62111111111',
       question: '511111111111111111111112',
-    })
+    });
 
     expect(response.status).to.equal(200);
     expect(response.body.data.api.uploadAnswer).to.eql(true);
