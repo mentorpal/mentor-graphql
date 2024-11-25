@@ -42,7 +42,7 @@ import importTask from './import-task';
 import trainTask from './train-task';
 import answerByFieldValue from './answer-by-field';
 import fetchMentorConfig from './fetch-mentor-config';
-
+import homePageData from './home-page-data';
 export default new GraphQLObjectType({
   name: 'Query',
   fields: {
@@ -83,5 +83,6 @@ export default new GraphQLObjectType({
     trainTask,
     answerByFieldValue,
     fetchMentorConfig,
+    homePageData,
   },
 });

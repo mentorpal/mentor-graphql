@@ -491,9 +491,34 @@ module.exports = {
       question: 'This is an orphaned question (does not belong to a subject).',
       type: 'QUESTION',
     },
+    {
+      _id: new ObjectId('511111111111111111111194'),
+      question: 'Please provide your intro.',
+      name: '_INTRO_',
+      type: 'QUESTION',
+    },
   ],
 
   answers: [
+    {
+      _id: new ObjectId('511111111111111111113174'),
+      mentor: new ObjectId('5ffdf41a1ee2c62111111119'),
+      question: new ObjectId('511111111111111111111194'),
+      hasEditedTranscript: true,
+      transcript: 'Here is my intro.',
+      video: 'https://idle/url',
+      status: 'COMPLETE',
+      webMedia: {
+        type: 'video',
+        tag: 'web',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111194/web.mp4',
+      },
+      mobileMedia: {
+        type: 'video',
+        tag: 'mobile',
+        url: 'videos/5ffdf41a1ee2c62111111111/511111111111111111111194/mobile.mp4',
+      },
+    },
     {
       _id: new ObjectId('511111111111111111111174'),
       mentor: new ObjectId('5ffdf41a1ee2c62111111119'),
@@ -840,6 +865,19 @@ module.exports = {
         '6c3c54a0eab05e133b2425137a11111ce0b5f0053e62140bf7086477d1111191cd2fc2679724b111',
       expires: '2100-10-12T20:49:41.599+00:00',
       created: '',
+    },
+  ],
+
+  settings: [
+    {
+      _id: new ObjectId('511111111111111111111295'),
+      key: 'activeMentors',
+      value: ['5ffdf41a1ee2c62111111119'],
+    },
+    {
+      _id: new ObjectId('511111111111111111111296'),
+      key: 'activeMentorPanels',
+      value: ['5ffdf41a1ee2c62111111111'],
     },
   ],
 };
