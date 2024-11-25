@@ -14,8 +14,8 @@ import {
   Answer as AnswerModel,
   Question as QuestionModel,
 } from '../../models';
-import { toAbsoluteUrl } from 'utils/static-urls';
-import requireEnv from 'utils/require-env';
+import { toAbsoluteUrl } from '../../utils/static-urls';
+import requireEnv from '../../utils/require-env';
 import SettingModel from '../../models/Setting';
 export const HomePageMentorPanelType = new GraphQLObjectType({
   name: 'HomePageMentorPanel',
