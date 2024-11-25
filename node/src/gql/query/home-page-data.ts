@@ -118,7 +118,7 @@ export const homePageData = {
         mentorsIntroAnswers.find(
           (answer) => answer.mentor.toString() === mentor._id.toString()
         )?.transcript || '',
-      mentorUrl: `https://${org?.name ? `${org.name}.` : ''}${domain}/chat/?mentor=${mentor._id}`,
+      mentorUrl: `https://${org?.subdomain ? `${org.subdomain}.` : ''}${domain}/chat/?mentor=${mentor._id}`,
       thumbnail: mentor.thumbnail ? toAbsoluteUrl(mentor.thumbnail) : null,
     }));
     const homePageMentorPanels: HomePageMentorPanel[] = panels.map((panel) => ({

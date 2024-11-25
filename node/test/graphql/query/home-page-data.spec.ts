@@ -127,7 +127,7 @@ describe('home-page-data', () => {
         keywords: ['Female'],
         transcript: '',
         mentorUrl:
-          'https://USC.fakedomain.org/chat/?mentor=5ffdf41a1ee2c62111111112',
+          'https://usc.fakedomain.org/chat/?mentor=5ffdf41a1ee2c62111111112',
         thumbnail: null,
       },
     ]);
