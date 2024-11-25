@@ -523,6 +523,11 @@ describe('mentor', () => {
       ],
       orphanedCompleteAnswers: [
         {
+          _id: '511111111111111111113174',
+          status: 'COMPLETE',
+          transcript: 'Here is my intro.',
+        },
+        {
           _id: '511111111111111111111195',
           transcript:
             'This is an orphaned answer (the respective question does not belong to a subject)',

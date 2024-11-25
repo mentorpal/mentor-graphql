@@ -63,7 +63,7 @@ describe('config', () => {
       mentorsDefault: [],
       featuredMentors: [],
       featuredMentorPanels: [],
-      activeMentors: [],
+      activeMentors: ['5ffdf41a1ee2c62111111119'],
       urlGraphql: '/graphql',
       urlVideo: '/video',
       styleHeaderLogo: '',

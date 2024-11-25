@@ -144,7 +144,7 @@ describe('updateConfig', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateConfig).to.eql({
-      activeMentors: [],
+      activeMentors: ['5ffdf41a1ee2c62111111119'],
       featuredMentorPanels: ['5ffdf41a1ee2c62111111111'],
       featuredMentors: ['5ffdf41a1ee2c62111111119'],
       mentorsDefault: [],
@@ -206,7 +206,7 @@ describe('updateConfig', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateConfig).to.eql({
-      activeMentors: [],
+      activeMentors: ['5ffdf41a1ee2c62111111119'],
       featuredMentorPanels: ['5ffdf41a1ee2c62111111111'],
       featuredMentors: ['5ffdf41a1ee2c62111111119'],
       mentorsDefault: [],
@@ -244,7 +244,7 @@ describe('updateConfig', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateConfig).to.eql({
-      activeMentors: [],
+      activeMentors: ['5ffdf41a1ee2c62111111119'],
       featuredMentorPanels: [],
       featuredMentors: [],
       mentorsDefault: [],
@@ -288,8 +288,8 @@ describe('updateConfig', () => {
       });
     expect(response.status).to.equal(200);
     expect(response.body.data.me.updateConfig).to.eql({
-      activeMentors: [],
-      activeMentorPanels: [],
+      activeMentors: ['5ffdf41a1ee2c62111111119'],
+      activeMentorPanels: ['5ffdf41a1ee2c62111111111'],
       featuredMentorPanels: [],
       featuredMentors: [],
       mentorsDefault: [],
