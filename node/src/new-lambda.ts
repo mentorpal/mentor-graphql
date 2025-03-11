@@ -8,53 +8,8 @@ import { APIGatewayProxyEvent } from 'aws-lambda';
 import * as Sentry from '@sentry/serverless';
 import schema from './gql/schema';
 import { graphql } from 'graphql';
-import passport from 'passport';
-import { Strategy as BearerStrategy } from 'passport-http-bearer';
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import { User as UserSchema } from './models';
-import requireEnv from './utils/require-env';
-import { User } from './models/User';
 import middleware from './new-middleware';
-import { Organization } from './models/Organization';
 import { AWSCookieHandler } from './utils/cookie-handler/aws-cookie-handler';
-
-function setupPassport() {
-  passport.use(
-    new BearerStrategy(function (token, done) {
-      const API_SECRET = requireEnv('API_SECRET');
-      if (token !== API_SECRET) {
-        return done('invalid api key');
-      } else {
-        return done(null, {});
-      }
-    })
-  );
-
-  passport.use(
-    new JwtStrategy(
-      {
-        secretOrKey: requireEnv('JWT_SECRET'),
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      },
-      async (token, done) => {
-        try {
-          if (token.expirationDate < new Date()) {
-            return done('token expired', null);
-          } else {
-            const user = await UserSchema.findById(token.id);
-            if (user) {
-              return done(null, user);
-            } else {
-              return done('token invalid', null);
-            }
-          }
-        } catch (error) {
-          return done(error);
-        }
-      }
-    )
-  );
-}
 
 async function appStart(): Promise<void> {
   const mongooseConnect = (await import('./utils/mongoose-connect')).default;
@@ -65,7 +20,6 @@ async function appStart(): Promise<void> {
  * Sets up env vars and makes mongoose connection
  */
 async function configureApp() {
-  setupPassport();
   const configureEnv = (await import('./utils/configure-env')).default;
   configureEnv();
   if (process.env.APP_DISABLE_AUTO_START !== 'true') {
@@ -80,32 +34,6 @@ const extensions = ({ context }: any) => {
   };
 };
 
-async function execute(
-  user: User,
-  org: Organization,
-  refreshToken: string,
-  newToken: string,
-  query: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  variables: any,
-  cookieHandler: AWSCookieHandler
-) {
-  // // make request to mongoose schema
-  const result = await graphql({
-    schema,
-    source: query,
-    variableValues: variables,
-    contextValue: {
-      user: user || null,
-      org: org || null,
-      newToken: newToken || '',
-      refreshToken: refreshToken || '',
-      cookieHandler: cookieHandler,
-    },
-  });
-
-  return result;
-}
 const handler = async (event: APIGatewayProxyEvent) => {
   const body = event.body ? JSON.parse(event.body) : {};
   const query = body.query;
@@ -116,23 +44,24 @@ const handler = async (event: APIGatewayProxyEvent) => {
   if (!query) {
     throw new Error('Query is required');
   }
-
   await configureApp();
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const authResult: any = await middleware(
     headers,
     requestCookies,
     async (user, org, newToken) => {
-      return await execute(
-        user,
-        org,
-        requestCookies[process.env.REFRESH_TOKEN_NAME] || '',
-        newToken,
-        query,
-        variables,
-        cookieHandler
-      );
+      return await graphql({
+        schema,
+        source: query,
+        variableValues: variables,
+        contextValue: {
+          user: user || null,
+          org: org || null,
+          newToken: newToken || '',
+          refreshToken: requestCookies[process.env.REFRESH_TOKEN_NAME] || '',
+          cookieHandler: cookieHandler,
+        },
+      });
     }
   );
   const cookiesHeader = cookieHandler.getResCookieHeader();
