@@ -24,7 +24,8 @@ async function getOrg(
 ) {
   try {
     if (origin) {
-      const subdomain = /:\/\/([^\/]+)/.exec(origin)[1].split('.')[0];
+      const originSplit = /:\/\/([^\/]+)/.exec(origin)[1];
+      const subdomain = originSplit ? originSplit.split('.')[0] : '';
       const org = await OrganizationModel.findOne({ subdomain });
       return next(user, org, jwtToken);
     } else {
@@ -68,7 +69,7 @@ async function authenticateUser(
   strategy: 'bearer' | 'jwt',
   authHeader: string
 ) {
-  const token = authHeader.split(' ')[1];
+  const token = authHeader?.split(' ')[1];
   if (!token) {
     throw new Error('no token');
   }
