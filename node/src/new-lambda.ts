@@ -16,31 +16,7 @@ import requireEnv from './utils/require-env';
 import { User } from './models/User';
 import middleware from './new-middleware';
 import { Organization } from './models/Organization';
-
-function getCookiesFromHeader(
-  headers: Record<string, string>
-): Record<string, string> {
-  if (
-    headers === null ||
-    headers === undefined ||
-    headers.Cookie === undefined
-  ) {
-    return {};
-  }
-  const list: Record<string, string> = {};
-  const rc = headers.Cookie;
-  rc &&
-    rc.split(';').forEach(function (cookie) {
-      const parts = cookie.split('=');
-      const key = parts.shift().trim();
-      const value = decodeURI(parts.join('='));
-      if (key != '') {
-        list[key] = value;
-      }
-    });
-
-  return list;
-}
+import { AWSCookieHandler } from './utils/cookie-handler/aws-cookie-handler';
 
 function setupPassport() {
   passport.use(
@@ -112,7 +88,7 @@ async function execute(
   query: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables: any,
-  addReturnCookie: (params: CookieParams) => void
+  cookieHandler: AWSCookieHandler
 ) {
   // // make request to mongoose schema
   const result = await graphql({
@@ -124,30 +100,19 @@ async function execute(
       org: org || null,
       newToken: newToken || '',
       refreshToken: refreshToken || '',
-      addReturnCookie: addReturnCookie,
+      cookieHandler: cookieHandler,
     },
   });
 
   return result;
 }
-
-export interface CookieParams {
-  name: string;
-  value: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options?: Record<string, any>;
-}
-
 const handler = async (event: APIGatewayProxyEvent) => {
   const body = event.body ? JSON.parse(event.body) : {};
   const query = body.query;
   const variables = body.variables;
-  const requestCookies = getCookiesFromHeader(event.headers);
+  const cookieHandler = new AWSCookieHandler(event);
+  const requestCookies = cookieHandler.getReqCookies();
   const headers = event.headers;
-  const cookiesToSet: Array<CookieParams> = [];
-  const addReturnCookie = (params: CookieParams) => {
-    cookiesToSet.push(params);
-  };
   if (!query) {
     throw new Error('Query is required');
   }
@@ -166,25 +131,15 @@ const handler = async (event: APIGatewayProxyEvent) => {
         newToken,
         query,
         variables,
-        addReturnCookie
+        cookieHandler
       );
     }
   );
+  const cookiesHeader = cookieHandler.getResCookieHeader();
   return {
     statusCode: 200,
     headers: {
-      'Set-Cookie': cookiesToSet
-        .map(
-          (cookie) =>
-            `${cookie.name}=${cookie.value}; ${
-              cookie.options
-                ? Object.entries(cookie.options)
-                    .map(([key, value]) => `${key}=${value}`)
-                    .join('; ')
-                : ''
-            }`
-        )
-        .join('; '),
+      ...(cookiesHeader ? { 'Set-Cookie': cookiesHeader } : {}),
     },
     body: JSON.stringify({
       ...authResult,

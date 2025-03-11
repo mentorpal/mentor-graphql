@@ -4,35 +4,31 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { GraphQLObjectType } from 'graphql';
-import { revokeToken, UserAccessTokenType } from '../types/user-access-token';
-import { CookieHandlers } from '../../utils/cookie-handler/cookie-handler';
-export const logout = {
-  type: UserAccessTokenType,
-  args: {},
-  resolve: async (
-    _root: GraphQLObjectType,
-    context: {
-      refreshToken: string;
-      cookieHandler: CookieHandlers;
-    }
-  ): Promise<void> => {
-    try {
-      const token = context.refreshToken;
-      await revokeToken(token);
-      const cookieOptions = {
-        httpOnly: true,
-        expires: new Date(Date.now()),
-      };
-      context.cookieHandler.addResCookie({
-        name: process.env.REFRESH_TOKEN_NAME,
-        value: Date.now().toString(),
-        options: cookieOptions,
-      });
-    } catch (error) {
-      throw new Error(error);
-    }
-  },
-};
+import { APIGatewayProxyEvent } from 'aws-lambda';
+import { ReqCookies, CookieHandler } from './cookie-handler';
 
-export default logout;
+export class AWSCookieHandler extends CookieHandler<APIGatewayProxyEvent> {
+  extractReqCookies(req: APIGatewayProxyEvent): ReqCookies {
+    const headers = req.headers;
+    if (
+      headers === null ||
+      headers === undefined ||
+      headers.Cookie === undefined
+    ) {
+      return {};
+    }
+    const list: Record<string, string> = {};
+    const rc = headers.Cookie;
+    rc &&
+      rc.split(';').forEach(function (cookie) {
+        const parts = cookie.split('=');
+        const key = parts.shift().trim();
+        const value = decodeURI(parts.join('='));
+        if (key != '') {
+          list[key] = value;
+        }
+      });
+
+    return list;
+  }
+}
