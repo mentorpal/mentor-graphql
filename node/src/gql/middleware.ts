@@ -73,6 +73,8 @@ async function refreshToken(
 
 export default graphqlHTTP((req: Request, res: Response) => {
   return new Promise((resolve) => {
+    // passport.authenticate --> refreshToken --> getOrg --> next(user,org)
+
     const next = (user: User, org: Organization, newToken = '') => {
       resolve({
         schema,

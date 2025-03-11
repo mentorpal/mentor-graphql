@@ -78,7 +78,7 @@ const handler = async (event: any, context: any) => {
   const app = await initPromise;
   const slsHandler = serverless(app);
   const result = await slsHandler(event, context);
-
+  console.log('result', result);
   const resErrors = JSON.parse(result['body'])['errors'];
   if (process.env.IS_SENTRY_ENABLED === 'true' && resErrors) {
     Sentry.captureException(new Error(JSON.stringify(resErrors)));

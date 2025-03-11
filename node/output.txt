@@ -1,0 +1,207 @@
+echo ENSURE you have a .env file at the root of the project with the correct values
+ENSURE you have a .env file at the root of the project with the correct values
+npx serverless offline -s offline -r us-east-1 --aws-profile mentorpal
+
+   ┌───────────────────────────────────────────────────────────────────────┐
+   │                                                                       │
+   │   GET | http://localhost:3000/offline                                 │
+   │   POST | http://localhost:3000/2015-03-31/functions/app/invocations   │
+   │   ANY | http://localhost:3000/offline/{proxy*}                        │
+   │   POST | http://localhost:3000/2015-03-31/functions/app/invocations   │
+   │                                                                       │
+   └───────────────────────────────────────────────────────────────────────┘
+
+{
+  body: '{"query":"\\n        query FetchUploadTasks($mentorId: ID) {\\n          me {\\n            uploadTasks(mentorId: $mentorId) {\\n              question {\\n                _id\\n                question\\n              }\\n              trimUploadTask{\\n                task_name\\n                status\\n              }\\n              transcodeWebTask{\\n                task_name\\n                status\\n              }\\n              transcodeMobileTask{\\n                task_name\\n                status\\n              }\\n              transcribeTask{\\n                task_name\\n                status\\n              }\\n              transcript\\n              originalMedia {\\n                type\\n                tag\\n                url\\n              }\\n              webMedia {\\n                type\\n                tag\\n                url\\n                transparentVideoUrl\\n              }\\n              mobileMedia{\\n                type\\n                tag\\n                url\\n                transparentVideoUrl\\n              }\\n              vttMedia{\\n                type\\n                tag\\n                url\\n              }\\n            }\\n          }\\n        }","variables":{\n' +
+    '  "mentorId": "610ddca016e879e3c3dc93ed"\n' +
+    '}}',
+  headers: {
+    accept: 'application/json, text/plain, */*',
+    'accept-language': 'en-US,en;q=0.9',
+    authorization: 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMGRkY2EwMTZlODc5ZTNjM2RjOTNlMyIsInJvbGUiOiJTVVBFUl9BRE1JTiIsIm1lbnRvcklkcyI6WyI2MTBkZGNhMDE2ZTg3OWUzYzNkYzkzZWQiXSwiZXhwaXJhdGlvbkRhdGUiOiIyMDI1LTA2LTA5VDAxOjU5OjE1LjQwNFoiLCJpYXQiOjE3NDE2NTgzNTUsImV4cCI6MTc0OTQzNDM1NX0.2ttu1xY6Jd6y12VTH0GcRYEjnIarXztzq2oH3MIiNgI',
+    'content-type': 'application/json',
+    origin: 'https://devmentorpal.org',
+    priority: 'u=1, i',
+    referer: 'https://devmentorpal.org/',
+    'sec-ch-ua': '"Not(A:Brand";v="99", "Google Chrome";v="133", "Chromium";v="133"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'same-site',
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
+    'Postman-Token': '07fd5201-3d72-4184-b1e8-0c78f0601526',
+    Host: 'localhost:3000',
+    'Accept-Encoding': 'gzip, deflate, br',
+    Connection: 'keep-alive',
+    'Content-Length': '1248'
+  },
+  httpMethod: 'POST',
+  isBase64Encoded: false,
+  multiValueHeaders: {
+    accept: [ 'application/json, text/plain, */*' ],
+    'accept-language': [ 'en-US,en;q=0.9' ],
+    authorization: [
+      'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMGRkY2EwMTZlODc5ZTNjM2RjOTNlMyIsInJvbGUiOiJTVVBFUl9BRE1JTiIsIm1lbnRvcklkcyI6WyI2MTBkZGNhMDE2ZTg3OWUzYzNkYzkzZWQiXSwiZXhwaXJhdGlvbkRhdGUiOiIyMDI1LTA2LTA5VDAxOjU5OjE1LjQwNFoiLCJpYXQiOjE3NDE2NTgzNTUsImV4cCI6MTc0OTQzNDM1NX0.2ttu1xY6Jd6y12VTH0GcRYEjnIarXztzq2oH3MIiNgI'
+    ],
+    'content-type': [ 'application/json' ],
+    origin: [ 'https://devmentorpal.org' ],
+    priority: [ 'u=1, i' ],
+    referer: [ 'https://devmentorpal.org/' ],
+    'sec-ch-ua': [
+      '"Not(A:Brand";v="99", "Google Chrome";v="133", "Chromium";v="133"'
+    ],
+    'sec-ch-ua-mobile': [ '?0' ],
+    'sec-ch-ua-platform': [ '"Windows"' ],
+    'sec-fetch-dest': [ 'empty' ],
+    'sec-fetch-mode': [ 'cors' ],
+    'sec-fetch-site': [ 'same-site' ],
+    'user-agent': [
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36'
+    ],
+    'Postman-Token': [ '07fd5201-3d72-4184-b1e8-0c78f0601526' ],
+    Host: [ 'localhost:3000' ],
+    'Accept-Encoding': [ 'gzip, deflate, br' ],
+    Connection: [ 'keep-alive' ],
+    'Content-Length': [ '1248' ]
+  },
+  multiValueQueryStringParameters: null,
+  path: '/graphql/graphql',
+  pathParameters: { proxy: 'graphql/graphql' },
+  queryStringParameters: null,
+  requestContext: {
+    accountId: 'offlineContext_accountId',
+    apiId: 'offlineContext_apiId',
+    authorizer: {
+      claims: [Object],
+      principalId: 'offlineContext_authorizer_principalId',
+      scopes: undefined
+    },
+    domainName: 'offlineContext_domainName',
+    domainPrefix: 'offlineContext_domainPrefix',
+    extendedRequestId: 'ee2e5299-4c9f-472b-8b43-4ddd11b6b4b9',
+    httpMethod: 'POST',
+    identity: {
+      accessKey: null,
+      accountId: 'offlineContext_accountId',
+      apiKey: 'offlineContext_apiKey',
+      apiKeyId: 'offlineContext_apiKeyId',
+      caller: 'offlineContext_caller',
+      cognitoAuthenticationProvider: 'offlineContext_cognitoAuthenticationProvider',
+      cognitoAuthenticationType: 'offlineContext_cognitoAuthenticationType',
+      cognitoIdentityId: 'offlineContext_cognitoIdentityId',
+      cognitoIdentityPoolId: 'offlineContext_cognitoIdentityPoolId',
+      principalOrgId: null,
+      sourceIp: '127.0.0.1',
+      user: 'offlineContext_user',
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
+      userArn: 'offlineContext_userArn'
+    },
+    operationName: undefined,
+    path: '/graphql/graphql',
+    protocol: 'HTTP/1.1',
+    requestId: '14a49254-4d0c-4357-9244-95ecc14adc6b',
+    requestTime: '10/Mar/2025:19:10:13 -0700',
+    requestTimeEpoch: 1741659013205,
+    resourceId: 'offlineContext_resourceId',
+    resourcePath: '/offline/{proxy*}',
+    stage: 'offline'
+  },
+  resource: '/{proxy+}',
+  stageVariables: null
+}
+headers {
+  accept: 'application/json, text/plain, */*',
+  'accept-language': 'en-US,en;q=0.9',
+  authorization: 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMGRkY2EwMTZlODc5ZTNjM2RjOTNlMyIsInJvbGUiOiJTVVBFUl9BRE1JTiIsIm1lbnRvcklkcyI6WyI2MTBkZGNhMDE2ZTg3OWUzYzNkYzkzZWQiXSwiZXhwaXJhdGlvbkRhdGUiOiIyMDI1LTA2LTA5VDAxOjU5OjE1LjQwNFoiLCJpYXQiOjE3NDE2NTgzNTUsImV4cCI6MTc0OTQzNDM1NX0.2ttu1xY6Jd6y12VTH0GcRYEjnIarXztzq2oH3MIiNgI',
+  'content-type': 'application/json',
+  origin: 'https://devmentorpal.org',
+  priority: 'u=1, i',
+  referer: 'https://devmentorpal.org/',
+  'sec-ch-ua': '"Not(A:Brand";v="99", "Google Chrome";v="133", "Chromium";v="133"',
+  'sec-ch-ua-mobile': '?0',
+  'sec-ch-ua-platform': '"Windows"',
+  'sec-fetch-dest': 'empty',
+  'sec-fetch-mode': 'cors',
+  'sec-fetch-site': 'same-site',
+  'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36',
+  'Postman-Token': '07fd5201-3d72-4184-b1e8-0c78f0601526',
+  Host: 'localhost:3000',
+  'Accept-Encoding': 'gzip, deflate, br',
+  Connection: 'keep-alive',
+  'Content-Length': '1248'
+}
+cookies {}
+mongoUri mongodb+srv://graphql-user:07LgnKqOvdQlWlh5@mentordev.d274lco.mongodb.net/?retryWrites=true&w=majority
+jwtToken {
+  id: '610ddca016e879e3c3dc93e3',
+  role: 'SUPER_ADMIN',
+  mentorIds: [ '610ddca016e879e3c3dc93ed' ],
+  expirationDate: '2025-06-09T01:59:15.404Z',
+  iat: 1741658355,
+  exp: 1749434355
+}
+mongoose: connection created: 2
+mongoose: connection created: 3
+mongoose: connection created: 4
+mongoose: connection created: 5
+found user {
+  _id: new ObjectId('610ddca016e879e3c3dc93e3'),
+  googleId: '112856592731325083114',
+  __v: 0,
+  createdAt: 2021-08-07T01:06:40.714Z,
+  email: 'ashiel408@gmail.com',
+  lastLoginAt: 2025-03-11T02:07:59.440Z,
+  name: 'Aaron Shiel',
+  updatedAt: 2025-03-11T02:07:59.441Z,
+  userRole: 'SUPER_ADMIN',
+  mentorIds: [ new ObjectId('610ddca016e879e3c3dc93ed') ],
+  firstTimeTracking: {
+    myMentorSplash: true,
+    tooltips: true,
+    _id: new ObjectId('62d5e60c8ab1180009ca145c')
+  },
+  isDisabled: false
+}
+authUser {
+  _id: new ObjectId('610ddca016e879e3c3dc93e3'),
+  googleId: '112856592731325083114',
+  __v: 0,
+  createdAt: 2021-08-07T01:06:40.714Z,
+  email: 'ashiel408@gmail.com',
+  lastLoginAt: 2025-03-11T02:07:59.440Z,
+  name: 'Aaron Shiel',
+  updatedAt: 2025-03-11T02:07:59.441Z,
+  userRole: 'SUPER_ADMIN',
+  mentorIds: [ new ObjectId('610ddca016e879e3c3dc93ed') ],
+  firstTimeTracking: {
+    myMentorSplash: true,
+    tooltips: true,
+    _id: new ObjectId('62d5e60c8ab1180009ca145c')
+  },
+  isDisabled: false
+}
+{
+  _id: new ObjectId('610ddca016e879e3c3dc93e3'),
+  googleId: '112856592731325083114',
+  __v: 0,
+  createdAt: 2021-08-07T01:06:40.714Z,
+  email: 'ashiel408@gmail.com',
+  lastLoginAt: 2025-03-11T02:07:59.440Z,
+  name: 'Aaron Shiel',
+  updatedAt: 2025-03-11T02:07:59.441Z,
+  userRole: 'SUPER_ADMIN',
+  mentorIds: [ new ObjectId('610ddca016e879e3c3dc93ed') ],
+  firstTimeTracking: {
+    myMentorSplash: true,
+    tooltips: true,
+    _id: new ObjectId('62d5e60c8ab1180009ca145c')
+  },
+  isDisabled: false
+}
+null
+{
+  data: [Object: null prototype] {
+    me: [Object: null prototype] { uploadTasks: [] }
+  }
+}
