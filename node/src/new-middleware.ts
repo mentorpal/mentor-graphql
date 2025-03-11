@@ -110,7 +110,6 @@ export default async function middleware(
   const authType = isApiReq(headers) ? 'bearer' : 'jwt';
   try {
     const authUser = await authenticateUser(authType, headers.authorization);
-    console.log('authUser', authUser);
     if (authUser) {
       return next(authUser, null, '');
     } else {

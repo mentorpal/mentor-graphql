@@ -4,7 +4,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import { APIGatewayProxyEvent } from 'aws-lambda';
 import * as Sentry from '@sentry/serverless';
 import schema from './gql/schema';
 import { graphql } from 'graphql';
@@ -16,6 +16,31 @@ import requireEnv from './utils/require-env';
 import { User } from './models/User';
 import middleware from './new-middleware';
 import { Organization } from './models/Organization';
+
+function getCookiesFromHeader(
+  headers: Record<string, string>
+): Record<string, string> {
+  if (
+    headers === null ||
+    headers === undefined ||
+    headers.Cookie === undefined
+  ) {
+    return {};
+  }
+  const list: Record<string, string> = {};
+  const rc = headers.Cookie;
+  rc &&
+    rc.split(';').forEach(function (cookie) {
+      const parts = cookie.split('=');
+      const key = parts.shift().trim();
+      const value = decodeURI(parts.join('='));
+      if (key != '') {
+        list[key] = value;
+      }
+    });
+
+  return list;
+}
 
 function setupPassport() {
   passport.use(
@@ -82,14 +107,13 @@ const extensions = ({ context }: any) => {
 async function execute(
   user: User,
   org: Organization,
+  refreshToken: string,
   newToken: string,
-  event: APIGatewayProxyEvent,
   query: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables: any,
-  headers: Record<string, string>
+  addReturnCookie: (params: CookieParams) => void
 ) {
-  console.log(user);
-  console.log(org);
   // // make request to mongoose schema
   const result = await graphql({
     schema,
@@ -99,44 +123,69 @@ async function execute(
       user: user || null,
       org: org || null,
       newToken: newToken || '',
-      // TODO: add context
+      refreshToken: refreshToken || '',
+      addReturnCookie: addReturnCookie,
     },
   });
 
   return result;
 }
 
-const handler = async (event: APIGatewayProxyEvent, context: Context) => {
-  // TODO: setup mongoose connection
-  // TODO: perform any middleware
-  // TODO: perform mongo request
-  // TODO: return response
+export interface CookieParams {
+  name: string;
+  value: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  options?: Record<string, any>;
+}
 
+const handler = async (event: APIGatewayProxyEvent) => {
   const body = event.body ? JSON.parse(event.body) : {};
   const query = body.query;
   const variables = body.variables;
-
+  const requestCookies = getCookiesFromHeader(event.headers);
   const headers = event.headers;
-  const cookies = {};
+  const cookiesToSet: Array<CookieParams> = [];
+  const addReturnCookie = (params: CookieParams) => {
+    cookiesToSet.push(params);
+  };
   if (!query) {
     throw new Error('Query is required');
   }
 
-  console.log('headers', headers);
-  console.log('cookies', cookies);
-
   await configureApp();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const authResult: any = await middleware(
     headers,
-    cookies,
-    (user, org, newToken) => {
-      return execute(user, org, newToken, event, query, variables, headers);
+    requestCookies,
+    async (user, org, newToken) => {
+      return await execute(
+        user,
+        org,
+        requestCookies[process.env.REFRESH_TOKEN_NAME] || '',
+        newToken,
+        query,
+        variables,
+        addReturnCookie
+      );
     }
   );
-  console.log(authResult);
   return {
     statusCode: 200,
+    headers: {
+      'Set-Cookie': cookiesToSet
+        .map(
+          (cookie) =>
+            `${cookie.name}=${cookie.value}; ${
+              cookie.options
+                ? Object.entries(cookie.options)
+                    .map(([key, value]) => `${key}=${value}`)
+                    .join('; ')
+                : ''
+            }`
+        )
+        .join('; '),
+    },
     body: JSON.stringify({
       ...authResult,
       extensions: extensions(authResult.extensions || {}),
