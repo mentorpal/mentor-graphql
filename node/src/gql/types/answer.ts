@@ -13,7 +13,6 @@ import {
   GraphQLFloat,
 } from 'graphql';
 import { AnswerMedia, Answer } from '../../models/Answer';
-import { Question as QuestionModel } from '../../models';
 import { toAbsoluteUrl } from '../../utils/static-urls';
 import DateType from './date';
 import removeMarkdown from 'remove-markdown';
@@ -23,7 +22,7 @@ import {
   ExternalVideoIdsObjectType,
   externalVideoIdsDefault,
 } from '../mutation/api/update-answers';
-
+import { DataLoaders } from '../data-loaders/context';
 export const PreviousAnswerVersionType = new GraphQLObjectType({
   name: 'PreviousAnswerVersionType',
   fields: {
@@ -81,15 +80,20 @@ export const AnswerType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     question: {
       type: QuestionType,
-      resolve: async function (answer: Answer) {
-        // Check if the answers question has already been resolved
-        if (isValidObjectId(`${answer.question}`)) {
-          const questionDoc = await QuestionModel.findOne({
-            _id: answer.question,
-          });
-          return questionDoc;
+      resolve: async function (
+        answer: Answer,
+        _,
+        context: {
+          dataLoaders: DataLoaders;
         }
-        return answer.question;
+      ) {
+        if (!isValidObjectId(`${answer.question}`)) {
+          return answer.question;
+        }
+
+        return context.dataLoaders.loaders.questionLoader.load(
+          answer.question.toString()
+        );
       },
     },
     hasEditedTranscript: { type: GraphQLBoolean },

@@ -257,9 +257,11 @@ MentorSchema.statics.export = async function (
 
   // Filter out the questions from subjects that do not belong to this mentor
   for (const s of subjects) {
-    s.questions = s.questions.filter((sq) =>
-      Boolean(mentorQuestions.find((q) => `${q._id}` == `${sq.question._id}`))
-    );
+    s.questions = s.questions.filter((sq) => {
+      return Boolean(
+        mentorQuestions.find((q) => `${q._id}` == `${sq.question}`)
+      );
+    });
   }
 
   const sQuestions: SubjectQuestion[] = subjects.reduce(
@@ -268,7 +270,6 @@ MentorSchema.statics.export = async function (
     },
     []
   );
-
   const questions = await QuestionModel.find({
     _id: { $in: sQuestions.map((q) => q.question) },
     $or: [
@@ -277,25 +278,20 @@ MentorSchema.statics.export = async function (
       { mentor: null }, // not sure if we need an explicit null check?
     ],
   });
-
   const answers: Answer[] = await AnswerModel.find({
     mentor: mentor._id,
     question: { $in: questions.map((q) => q._id) },
   });
-
   let userQuestions = await UserQuestion.find({
     mentor: mentor._id,
   });
-
   // Filter out any userQuestions that contain answers that do not exist within the answers we're going to send out
   const answerDocIds = answers.map((a) => `${a._id}`);
   userQuestions = userQuestions.filter((userQuestion) =>
     answerDocIds.find(
-      (answerDocId) =>
-        answerDocId == userQuestion.classifierAnswer?._id.toString()
+      (answerDocId) => answerDocId == userQuestion.classifierAnswer?.toString()
     )
   );
-
   return {
     id: mentor._id.toString(),
     mentorInfo: mentor,
@@ -477,7 +473,7 @@ MentorSchema.statics.import = async function (
     });
 
     // removing selected q's from subjects
-    const subjectIds = mentor.subjects.map((subj) => subj._id);
+    const subjectIds = mentor.subjects.map((subj) => subj);
     subjectIds.forEach(async (id) => {
       const subject = await SubjectModel.findOne({ _id: id });
       if (subject) {
@@ -485,7 +481,7 @@ MentorSchema.statics.import = async function (
           (q) =>
             !Boolean(
               questionIdsToRemove.find(
-                (qRemove) => `${qRemove}` === `${q.question._id}`
+                (qRemove) => `${qRemove}` === `${q.question}`
               )
             )
         );
@@ -521,13 +517,14 @@ MentorSchema.statics.import = async function (
       }
     });
 
-    // Safeguard: Filter out any userQuestions that contain answer documents that were not imported with this mentor, this could result in null references
+    // Safeguard: Filter down to only keep questions that have an answer document
     json.userQuestions = json.userQuestions.filter((userQuestion) =>
-      json.answers.find(
-        (a) =>
+      json.answers.find((a) => {
+        return (
           `${a.question._id}` ==
-          `${userQuestion.classifierAnswer?.question?._id}`
-      )
+          `${userQuestion.classifierAnswer?.question._id}`
+        );
+      })
     );
 
     // Start the mentor with no subjects, and we add them on as we go.
@@ -605,7 +602,7 @@ MentorSchema.statics.import = async function (
         if (existingSubject) {
           const existingSubjectAlreadyHasQuestion =
             existingSubject.questions.find(
-              (existingQ) => `${existingQ.question._id}` === `${newQId}`
+              (existingQ) => `${existingQ.question}` === `${newQId}`
             );
           if (!existingSubjectAlreadyHasQuestion) {
             subjectQuestionsToAddTosubject.push({
@@ -708,7 +705,7 @@ MentorSchema.statics.import = async function (
 
         // Check if the mentor already has the existing subject
         const mentorAlreadyHasSubject = mentor.subjects.find(
-          (subj) => subj._id === existingSubject._id
+          (subj) => subj === existingSubject._id
         );
         if (!mentorAlreadyHasSubject) {
           mentor = await this.findByIdAndUpdate(

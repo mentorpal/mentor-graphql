@@ -137,6 +137,7 @@ describe('updateMentorSubjects', () => {
                 _id
                 defaultSubject {
                   _id
+                  name
                 }
                 subjects {
                   _id
@@ -150,6 +151,7 @@ describe('updateMentorSubjects', () => {
       _id: '5ffdf41a1ee2c62111111111',
       defaultSubject: {
         _id: '5ffdf41a1ee2c62320b49eb3',
+        name: 'STEM',
       },
       subjects: [
         {

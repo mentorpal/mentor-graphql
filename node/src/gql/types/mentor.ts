@@ -19,6 +19,7 @@ import {
   MentorTrainStatus as MentorTrainStatusModel,
   Answer as AnswerModel,
   MentorConfig as MentorConfigModel,
+  Subject as SubjectModel,
 } from '../../models';
 import { Status } from '../../models/Answer';
 import { Mentor, isAnswerComplete } from '../../models/Mentor';
@@ -94,7 +95,12 @@ export const MentorType = new GraphQLObjectType({
       },
     },
     mentorType: { type: GraphQLString },
-    defaultSubject: { type: SubjectType },
+    defaultSubject: {
+      type: SubjectType,
+      resolve: async (mentor: Mentor) => {
+        return await SubjectModel.findById(mentor.defaultSubject);
+      },
+    },
     mentorConfig: {
       type: MentorConfigType,
       resolve: async (mentor: Mentor) => {

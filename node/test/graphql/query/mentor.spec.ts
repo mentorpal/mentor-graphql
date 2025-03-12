@@ -528,6 +528,12 @@ describe('mentor', () => {
           transcript: 'Here is my intro.',
         },
         {
+          _id: '511111111111111111111174',
+          status: 'COMPLETE',
+          transcript:
+            "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
+        },
+        {
           _id: '511111111111111111111195',
           transcript:
             'This is an orphaned answer (the respective question does not belong to a subject)',
