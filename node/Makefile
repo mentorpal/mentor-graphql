@@ -103,3 +103,8 @@ license-deploy: node_modules/license-check-and-add
 .PHONY: deploy-dev
 deploy-dev: 
 	sls deploy -s dev
+
+.PHONY: develop
+develop:
+	echo ENSURE you have a .env file at the root of the project with the correct values
+	npx serverless offline -s offline -r us-east-1 --aws-profile mentorpal
