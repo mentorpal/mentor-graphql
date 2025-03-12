@@ -13,12 +13,12 @@ export class AWSCookieHandler extends CookieHandler<APIGatewayProxyEvent> {
     if (
       headers === null ||
       headers === undefined ||
-      headers.Cookie === undefined
+      (headers.Cookie === undefined && headers.cookie === undefined)
     ) {
       return {};
     }
     const list: Record<string, string> = {};
-    const rc = headers.Cookie;
+    const rc = headers.Cookie ? headers.Cookie : headers.cookie;
     rc &&
       rc.split(';').forEach(function (cookie) {
         const parts = cookie.split('=');

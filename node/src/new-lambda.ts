@@ -34,6 +34,30 @@ const extensions = ({ context }: any) => {
   };
 };
 
+const CORS_ORIGIN = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',')
+  : [
+      'https://devmentorpal.org',
+      'https://qamentorpal.org',
+      'https://mentorpal.org',
+      'https://newdev.mentorpal.org',
+      'https://v2.mentorpal.org',
+      'https://careerfair.mentorpal.org',
+      'http://local.mentorpal.org:8000',
+      'http://localhost:8000',
+    ];
+
+const corsHeaders = (origin: string) => {
+  const allowedOrigin = CORS_ORIGIN.find((o) => origin.endsWith(o));
+  if (allowedOrigin) {
+    return {
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Credentials': 'true',
+    };
+  }
+  throw new Error(`${origin} not allowed by CORS`);
+};
+
 const handler = async (event: APIGatewayProxyEvent) => {
   const body = event.body ? JSON.parse(event.body) : {};
   const query = body.query;
@@ -46,7 +70,7 @@ const handler = async (event: APIGatewayProxyEvent) => {
   }
   await configureApp();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const authResult: any = await middleware(
+  const result: any = await middleware(
     headers,
     requestCookies,
     async (user, org, newToken) => {
@@ -69,10 +93,11 @@ const handler = async (event: APIGatewayProxyEvent) => {
     statusCode: 200,
     headers: {
       ...(cookiesHeader ? { 'Set-Cookie': cookiesHeader } : {}),
+      ...corsHeaders(headers.origin),
     },
     body: JSON.stringify({
-      ...authResult,
-      extensions: extensions(authResult.extensions || {}),
+      ...result,
+      extensions: extensions(result.extensions || {}),
     }),
   };
 };

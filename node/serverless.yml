@@ -194,6 +194,8 @@ functions:
               - X-Amz-Security-Token
               - X-Amz-User-Agent
               - X-Amzn-Trace-Id
+              - Access-Control-Allow-Origin
+              - Access-Control-Allow-Credentials
 
 resources:
   Resources:

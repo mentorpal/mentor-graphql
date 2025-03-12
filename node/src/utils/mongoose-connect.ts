@@ -28,7 +28,6 @@ export default async function mongooseConnect(uri: string): Promise<void> {
   const connectionPoolMax = parseInt(
     process.env.MONGO_CONNECTION_POOL_MAX || '100'
   );
-  console.log('mongoUri', mongoUri);
   mongoose.set('strictQuery', false);
   await mongoose.connect(mongoUri, {
     maxPoolSize: connectionPoolMax,

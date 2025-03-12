@@ -32,6 +32,7 @@ async function getOrg(
       return next(user, null, jwtToken);
     }
   } catch (err) {
+    console.log('error getting org', err);
     return next(user, null, jwtToken);
   }
 }
@@ -109,10 +110,13 @@ export default async function middleware(
 ) {
   const origin = headers.origin;
   const authType = isApiReq(headers) ? 'bearer' : 'jwt';
+  const authHeader = headers.authorization
+    ? headers.authorization
+    : headers.Authorization;
   try {
-    const authUser = await authenticateUser(authType, headers.authorization);
+    const authUser = await authenticateUser(authType, authHeader);
     if (authUser) {
-      return next(authUser, null, '');
+      return getOrg(origin, next, authUser, '');
     } else {
       return refreshToken(origin, cookies, next);
     }
