@@ -489,6 +489,7 @@ describe('mentor', () => {
       }
     `,
       });
+    console.log(JSON.stringify(response.body, null, 2));
     expect(response.status).to.equal(200);
     expect(response.body.data.mentor).to.eql({
       _id: '5ffdf41a1ee2c62111111119',
@@ -526,6 +527,12 @@ describe('mentor', () => {
           _id: '511111111111111111113174',
           status: 'COMPLETE',
           transcript: 'Here is my intro.',
+        },
+        {
+          _id: '511111111111111111111174',
+          status: 'COMPLETE',
+          transcript:
+            "My name is Clint Anderson and I'm a Nuclear Electrician's Mate",
         },
         {
           _id: '511111111111111111111195',
