@@ -61,9 +61,9 @@ export const MentorImportPreviewType = new GraphQLObjectType({
   name: 'MentorImportPreviewType',
   fields: () => ({
     id: { type: GraphQLString },
-    subjects: { type: GraphQLList(SubjectImportPreviewType) },
-    questions: { type: GraphQLList(QuestionImportPreviewType) },
-    answers: { type: GraphQLList(AnswerImportPreviewType) },
+    subjects: { type: new GraphQLList(SubjectImportPreviewType) },
+    questions: { type: new GraphQLList(QuestionImportPreviewType) },
+    answers: { type: new GraphQLList(AnswerImportPreviewType) },
   }),
 });
 export const SubjectImportPreviewType = new GraphQLObjectType({
@@ -100,16 +100,16 @@ export const SubjectPreviewType = new GraphQLObjectType({
     description: { type: GraphQLString },
     isRequired: { type: GraphQLBoolean },
     isArchived: { type: GraphQLBoolean },
-    topics: { type: GraphQLList(TopicType) },
-    categories: { type: GraphQLList(CategoryType) },
-    questions: { type: GraphQLList(SubjectQuestionPreviewType) },
+    topics: { type: new GraphQLList(TopicType) },
+    categories: { type: new GraphQLList(CategoryType) },
+    questions: { type: new GraphQLList(SubjectQuestionPreviewType) },
   }),
 });
 export const SubjectQuestionPreviewType = new GraphQLObjectType({
   name: 'SubjectQuestionPreview',
   fields: {
     category: { type: CategoryType },
-    topics: { type: GraphQLList(TopicType) },
+    topics: { type: new GraphQLList(TopicType) },
     question: { type: QuestionType },
     useDefaultTopics: { type: GraphQLString },
   },
@@ -141,8 +141,8 @@ export const AnswerMediaPreviewType = new GraphQLObjectType({
 export const mentorImportPreview = {
   type: MentorImportPreviewType,
   args: {
-    mentor: { type: GraphQLNonNull(GraphQLID) },
-    json: { type: GraphQLNonNull(MentorImportJsonType) },
+    mentor: { type: new GraphQLNonNull(GraphQLID) },
+    json: { type: new GraphQLNonNull(MentorImportJsonType) },
   },
   resolve: async (
     _root: GraphQLObjectType,

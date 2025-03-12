@@ -18,10 +18,10 @@ import {
 export const importMentor = {
   type: MentorType,
   args: {
-    mentor: { type: GraphQLNonNull(GraphQLID) },
-    json: { type: GraphQLNonNull(MentorImportJsonType) },
+    mentor: { type: new GraphQLNonNull(GraphQLID) },
+    json: { type: new GraphQLNonNull(MentorImportJsonType) },
     replacedMentorDataChanges: {
-      type: GraphQLNonNull(ReplacedMentorDataChangesType),
+      type: new GraphQLNonNull(ReplacedMentorDataChangesType),
     },
   },
   resolve: async (

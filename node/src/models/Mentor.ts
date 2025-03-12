@@ -150,11 +150,11 @@ export interface MentorModel extends Model<Mentor> {
     query?: PaginateQuery<Mentor>,
     options?: PaginateOptions
   ): Promise<PaginatedResolveResult<Mentor>>;
-  getSubjects(mentor: string | Mentor): Subject[];
+  getSubjects(mentor: string | Mentor): Promise<Subject[]>;
   getTopics(
     { mentor, defaultSubject, subjectId }: GetMentorDataParams,
     subjects?: Subject[]
-  ): Topic[];
+  ): Promise<Topic[]>;
   getQuestions({
     mentor,
     defaultSubject,
@@ -162,7 +162,7 @@ export interface MentorModel extends Model<Mentor> {
     topicId,
     type,
     categoryId,
-  }: GetMentorDataParams): HydratedSubjectQuestion[];
+  }: GetMentorDataParams): Promise<HydratedSubjectQuestion[]>;
   getAnswers({
     mentor,
     defaultSubject,
@@ -171,7 +171,7 @@ export interface MentorModel extends Model<Mentor> {
     status,
     type,
     categoryId,
-  }: GetMentorDataParams): HydratedAnswer[];
+  }: GetMentorDataParams): Promise<HydratedAnswer[]>;
   export(mentor: string): Promise<MentorExportJson>;
   import(
     mentor: string,
@@ -885,7 +885,7 @@ MentorSchema.statics.getAnswers = async function ({
   status,
   type,
   categoryId,
-}: GetMentorDataParams) {
+}: GetMentorDataParams): Promise<any> {
   const userMentor: Mentor =
     typeof mentor === 'string' ? await this.findById(mentor) : mentor;
   if (!userMentor) {
@@ -928,11 +928,11 @@ MentorSchema.statics.getAnswers = async function ({
         question: questionDoc,
         transcript: '',
         status: Status.NONE,
-        webMedia: undefined,
-        mobileMedia: undefined,
-        vttMedia: undefined,
+        webMedia: undefined as any,
+        mobileMedia: undefined as any,
+        vttMedia: undefined as any,
         externalVideoIds: externalVideoIdsDefault,
-        previousVersions: [],
+        previousVersions: [] as any[],
       }
     );
   });

@@ -15,9 +15,9 @@ import { Subject } from '../../models/Subject';
 import SubjectType from '../types/subject';
 
 export const subjectsById = {
-  type: GraphQLList(SubjectType),
+  type: new GraphQLList(SubjectType),
   args: {
-    ids: { type: GraphQLNonNull(GraphQLList(GraphQLID)) },
+    ids: { type: new GraphQLNonNull(new GraphQLList(GraphQLID)) },
   },
   resolve: async (
     _root: GraphQLObjectType,

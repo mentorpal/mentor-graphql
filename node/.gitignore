@@ -2,3 +2,4 @@ build
 node_modules
 .serverless
 .build
+output.txt

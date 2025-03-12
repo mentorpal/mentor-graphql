@@ -74,7 +74,7 @@ export interface ConfigUpdateInput {
 export const ConfigUpdateInputType = new GraphQLInputObjectType({
   name: 'ConfigUpdateInputType',
   fields: () => ({
-    virtualBackgroundUrls: { type: GraphQLList(GraphQLString) },
+    virtualBackgroundUrls: { type: new GraphQLList(GraphQLString) },
     defaultVirtualBackground: { type: GraphQLString },
     videoRecorderMaxLength: { type: GraphQLInt },
     filterEmailMentorAddress: { type: GraphQLString },
@@ -90,8 +90,8 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     styleHeaderLogoWidth: { type: GraphQLInt },
     homeFooterColor: { type: GraphQLString },
     homeFooterTextColor: { type: GraphQLString },
-    homeFooterImages: { type: GraphQLList(GraphQLString) },
-    homeFooterLinks: { type: GraphQLList(GraphQLString) },
+    homeFooterImages: { type: new GraphQLList(GraphQLString) },
+    homeFooterLinks: { type: new GraphQLList(GraphQLString) },
     homeBannerColor: { type: GraphQLString },
     homeBannerButtonColor: { type: GraphQLString },
     homeCarouselColor: { type: GraphQLString },
@@ -112,19 +112,19 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
     surveyButtonInDisclaimer: { type: GraphQLString },
     // client settings
     questionSortOrder: { type: GraphQLString },
-    mentorsDefault: { type: GraphQLList(GraphQLID) },
+    mentorsDefault: { type: new GraphQLList(GraphQLID) },
     postSurveyLink: { type: GraphQLString },
     postSurveyTimer: { type: GraphQLInt },
     postSurveyUserIdEnabled: { type: GraphQLBoolean },
     postSurveyReferrerEnabled: { type: GraphQLBoolean },
     minTopicQuestionSize: { type: GraphQLInt },
     // home style settings
-    activeMentors: { type: GraphQLList(GraphQLID) },
-    activeMentorPanels: { type: GraphQLList(GraphQLID) },
-    featuredMentors: { type: GraphQLList(GraphQLID) },
-    featuredMentorPanels: { type: GraphQLList(GraphQLID) },
-    featuredSubjects: { type: GraphQLList(GraphQLID) },
-    featuredKeywordTypes: { type: GraphQLList(GraphQLString) },
+    activeMentors: { type: new GraphQLList(GraphQLID) },
+    activeMentorPanels: { type: new GraphQLList(GraphQLID) },
+    featuredMentors: { type: new GraphQLList(GraphQLID) },
+    featuredMentorPanels: { type: new GraphQLList(GraphQLID) },
+    featuredSubjects: { type: new GraphQLList(GraphQLID) },
+    featuredKeywordTypes: { type: new GraphQLList(GraphQLString) },
     defaultSubject: { type: GraphQLID },
   }),
 });
@@ -132,7 +132,7 @@ export const ConfigUpdateInputType = new GraphQLInputObjectType({
 export const updateConfig = {
   type: ConfigType,
   args: {
-    config: { type: GraphQLNonNull(ConfigUpdateInputType) },
+    config: { type: new GraphQLNonNull(ConfigUpdateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,

@@ -16,7 +16,7 @@ export const KeywordType = new GraphQLObjectType({
   fields: () => ({
     _id: { type: GraphQLID },
     type: { type: GraphQLString },
-    keywords: { type: GraphQLList(GraphQLString) },
+    keywords: { type: new GraphQLList(GraphQLString) },
   }),
 });
 

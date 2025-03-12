@@ -53,8 +53,8 @@ interface OrganizationMentorInput {
 export const OrganizationMemberInputType = new GraphQLInputObjectType({
   name: 'OrganizationMemberInputType',
   fields: {
-    user: { type: GraphQLNonNull(GraphQLID) },
-    role: { type: GraphQLNonNull(GraphQLString) },
+    user: { type: new GraphQLNonNull(GraphQLID) },
+    role: { type: new GraphQLNonNull(GraphQLString) },
   },
 });
 
@@ -64,8 +64,8 @@ export const AddOrUpdateOrganizationInputType = new GraphQLInputObjectType({
     name: { type: GraphQLString },
     subdomain: { type: GraphQLString },
     isPrivate: { type: GraphQLBoolean },
-    accessCodes: { type: GraphQLList(GraphQLString) },
-    members: { type: GraphQLList(OrganizationMemberInputType) },
+    accessCodes: { type: new GraphQLList(GraphQLString) },
+    members: { type: new GraphQLList(OrganizationMemberInputType) },
   },
 });
 
@@ -73,7 +73,9 @@ export const addOrUpdateOrganization = {
   type: OrganizationType,
   args: {
     id: { type: GraphQLID },
-    organization: { type: GraphQLNonNull(AddOrUpdateOrganizationInputType) },
+    organization: {
+      type: new GraphQLNonNull(AddOrUpdateOrganizationInputType),
+    },
   },
   resolve: async (
     _root: GraphQLObjectType,

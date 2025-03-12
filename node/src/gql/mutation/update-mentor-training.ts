@@ -12,7 +12,7 @@ import { Mentor, MentorDirtyReason } from '../../models/Mentor';
 export const updateMentorTraining = {
   type: MentorType,
   args: {
-    id: { type: GraphQLNonNull(GraphQLID) },
+    id: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,

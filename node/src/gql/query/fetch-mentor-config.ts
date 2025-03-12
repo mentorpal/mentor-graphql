@@ -11,7 +11,7 @@ import { MentorConfig, MentorConfigType } from '../../models/MentorConfig';
 export const fetchMentorConfig = {
   type: MentorConfigType,
   args: {
-    mentorConfigId: { type: GraphQLNonNull(GraphQLID) },
+    mentorConfigId: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,

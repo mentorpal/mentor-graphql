@@ -18,7 +18,7 @@ import { canEditMentor } from '../../utils/check-permissions';
 export const mentorCanEdit = {
   type: GraphQLBoolean,
   args: {
-    mentor: { type: GraphQLNonNull(GraphQLID) },
+    mentor: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,

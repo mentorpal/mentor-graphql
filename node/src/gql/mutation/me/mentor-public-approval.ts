@@ -18,7 +18,7 @@ import MentorType from '../../types/mentor';
 export const updateMentorPublicApproval = {
   type: MentorType,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
     isPublicApproved: { type: GraphQLBoolean },
   },
   resolve: async (

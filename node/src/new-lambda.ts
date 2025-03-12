@@ -11,6 +11,8 @@ import { graphql } from 'graphql';
 import middleware from './new-middleware';
 import { AWSCookieHandler } from './utils/cookie-handler/aws-cookie-handler';
 
+let isConfigured = false;
+
 async function appStart(): Promise<void> {
   const mongooseConnect = (await import('./utils/mongoose-connect')).default;
   await mongooseConnect(process.env.MONGO_URI);
@@ -20,11 +22,16 @@ async function appStart(): Promise<void> {
  * Sets up env vars and makes mongoose connection
  */
 async function configureApp() {
+  if (isConfigured) {
+    return;
+  }
+  console.log('configuring app');
   const configureEnv = (await import('./utils/configure-env')).default;
   configureEnv();
   if (process.env.APP_DISABLE_AUTO_START !== 'true') {
     await appStart();
   }
+  isConfigured = true;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,8 +54,14 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN
       'http://localhost:8000',
     ];
 
-const corsHeaders = (origin: string) => {
-  const allowedOrigin = CORS_ORIGIN.find((o) => origin.endsWith(o));
+const corsHeaders = (origin: string | undefined) => {
+  if (!origin) {
+    return {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': 'true',
+    };
+  }
+  const allowedOrigin = CORS_ORIGIN.find((o) => origin?.endsWith(o));
   if (allowedOrigin) {
     return {
       'Access-Control-Allow-Origin': origin,
@@ -65,16 +78,21 @@ const handler = async (event: APIGatewayProxyEvent) => {
   const cookieHandler = new AWSCookieHandler(event);
   const requestCookies = cookieHandler.getReqCookies();
   const headers = event.headers;
+  console.log('variabless', variables);
   if (!query) {
     throw new Error('Query is required');
   }
   await configureApp();
+  const time2 = new Date().getSeconds();
+  console.log(`middleware-start-${variables.id}-${time2}`);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const result: any = await middleware(
     headers,
     requestCookies,
     async (user, org, newToken) => {
-      return await graphql({
+      const time = new Date().getSeconds();
+      console.log(`graphql-start-${variables.id}-${time}`);
+      const result = await graphql({
         schema,
         source: query,
         variableValues: variables,
@@ -86,8 +104,13 @@ const handler = async (event: APIGatewayProxyEvent) => {
           cookieHandler: cookieHandler,
         },
       });
+      const time4 = new Date().getSeconds();
+      console.log(`graphql-end-${variables.id}-${time4}`);
+      return result;
     }
   );
+  const time3 = new Date().getSeconds();
+  console.log(`middleware-end-${variables.id}-${time3}`);
   const cookiesHeader = cookieHandler.getResCookieHeader();
   return {
     statusCode: 200,

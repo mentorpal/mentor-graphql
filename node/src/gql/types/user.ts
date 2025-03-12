@@ -32,7 +32,7 @@ export const UserType = new GraphQLObjectType({
     isDisabled: { type: GraphQLBoolean },
     userRole: { type: GraphQLString },
     lastLoginAt: { type: DateType },
-    mentorIds: { type: GraphQLList(GraphQLID) },
+    mentorIds: { type: new GraphQLList(GraphQLID) },
     firstTimeTracking: { type: FirstTimeTrackingGqlType },
   }),
 });

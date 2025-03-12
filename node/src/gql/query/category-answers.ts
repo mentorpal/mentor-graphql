@@ -27,10 +27,10 @@ const categoryAnswerResponse = new GraphQLObjectType({
 });
 
 export const categoryAnswers = {
-  type: GraphQLList(categoryAnswerResponse),
+  type: new GraphQLList(categoryAnswerResponse),
   args: {
-    category: { type: GraphQLNonNull(GraphQLString) },
-    mentor: { type: GraphQLNonNull(GraphQLID) },
+    category: { type: new GraphQLNonNull(GraphQLString) },
+    mentor: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _: GraphQLObjectType,

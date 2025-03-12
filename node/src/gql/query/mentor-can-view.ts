@@ -18,7 +18,7 @@ import { canViewMentor } from '../../utils/check-permissions';
 export const mentorCanView = {
   type: GraphQLBoolean,
   args: {
-    mentor: { type: GraphQLNonNull(GraphQLID) },
+    mentor: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,

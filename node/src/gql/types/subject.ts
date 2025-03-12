@@ -22,7 +22,7 @@ export const CategoryType = new GraphQLObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     description: { type: GraphQLString },
-    defaultTopics: { type: GraphQLList(GraphQLString) },
+    defaultTopics: { type: new GraphQLList(GraphQLString) },
   },
 });
 
@@ -40,7 +40,7 @@ export const SubjectQuestionType = new GraphQLObjectType({
   name: 'SubjectQuestion',
   fields: {
     category: { type: CategoryType },
-    topics: { type: GraphQLList(TopicType) },
+    topics: { type: new GraphQLList(TopicType) },
     useDefaultTopics: { type: GraphQLString },
     question: { type: QuestionType },
   },
@@ -72,7 +72,7 @@ export const SubjectType = new GraphQLObjectType({
       },
     },
     topics: {
-      type: GraphQLList(TopicType),
+      type: new GraphQLList(TopicType),
       resolve: async function (subject: Subject) {
         const topics = subject.topics;
         const categories = subject.categories;
@@ -88,9 +88,9 @@ export const SubjectType = new GraphQLObjectType({
         return updatedTopicNames;
       },
     },
-    categories: { type: GraphQLList(CategoryType) },
+    categories: { type: new GraphQLList(CategoryType) },
     questions: {
-      type: GraphQLList(SubjectQuestionType),
+      type: new GraphQLList(SubjectQuestionType),
       args: {
         topic: { type: GraphQLID },
         mentor: { type: GraphQLID },

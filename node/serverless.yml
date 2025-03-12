@@ -99,7 +99,7 @@ provider:
   name: aws
   region: ${opt:region, 'us-east-1'}
   stage: ${opt:stage, 'dev'} # stage is dev unless otherwise specified with --stage flag
-  runtime: nodejs16.x
+  runtime: nodejs18.x
   endpointType: regional
   memorySize: 2048
   tracing:

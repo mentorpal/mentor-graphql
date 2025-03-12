@@ -22,7 +22,7 @@ export const QuestionType = new GraphQLObjectType({
     name: { type: GraphQLString },
     clientId: { type: GraphQLString },
     subType: { type: GraphQLString },
-    paraphrases: { type: GraphQLList(GraphQLString) },
+    paraphrases: { type: new GraphQLList(GraphQLString) },
     mentor: { type: GraphQLID },
     mentorType: { type: GraphQLString },
     minVideoLength: { type: GraphQLInt },

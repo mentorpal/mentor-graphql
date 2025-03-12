@@ -20,7 +20,7 @@ import { canEditMentor } from '../../../utils/check-permissions';
 export const importTaskDelete = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,

@@ -16,7 +16,7 @@ import { User } from '../../models/User';
 export const login = {
   type: UserAccessTokenType,
   args: {
-    accessToken: { type: GraphQLNonNull(GraphQLString) },
+    accessToken: { type: new GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,

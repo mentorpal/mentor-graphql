@@ -32,17 +32,19 @@ export const SubjectAddOrUpdateQuestionGQLType = new GraphQLObjectType({
   name: 'SubjectAddQuestionGQLType',
   fields: {
     category: { type: GraphQLString },
-    topics: { type: GraphQLList(GraphQLID) },
+    topics: { type: new GraphQLList(GraphQLID) },
     question: { type: GraphQLID },
     useDefaultTopics: { type: GraphQLString },
   },
 });
 
 export const subjectAddOrUpdateQuestions = {
-  type: GraphQLList(SubjectAddOrUpdateQuestionGQLType),
+  type: new GraphQLList(SubjectAddOrUpdateQuestionGQLType),
   args: {
-    subject: { type: GraphQLNonNull(GraphQLID) },
-    questions: { type: GraphQLNonNull(GraphQLList(SubjectQuestionInputType)) },
+    subject: { type: new GraphQLNonNull(GraphQLID) },
+    questions: {
+      type: new GraphQLNonNull(new GraphQLList(SubjectQuestionInputType)),
+    },
   },
   resolve: async (
     _root: GraphQLObjectType,

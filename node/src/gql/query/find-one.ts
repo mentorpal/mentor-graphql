@@ -65,6 +65,8 @@ export function findOne<T>(config: {
       args: any,
       context: { user: User }
     ): Promise<T> => {
+      console.log('findOne start');
+      console.time('findOne');
       const mArgs = Object.getOwnPropertyNames(args).reduce(
         // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         (acc: any, cur: string) => {
@@ -93,6 +95,7 @@ export function findOne<T>(config: {
       if (config.checkIfInvalid !== undefined) {
         await config.checkIfInvalid(item, context);
       }
+      console.timeEnd('findOne');
       return item;
     },
   };

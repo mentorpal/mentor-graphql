@@ -62,9 +62,9 @@ export const UploadAnswerType = new GraphQLInputObjectType({
 export const answerUpload = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
-    questionId: { type: GraphQLNonNull(GraphQLID) },
-    answer: { type: GraphQLNonNull(UploadAnswerType) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
+    questionId: { type: new GraphQLNonNull(GraphQLID) },
+    answer: { type: new GraphQLNonNull(UploadAnswerType) },
   },
   resolve: async (
     _root: GraphQLObjectType,

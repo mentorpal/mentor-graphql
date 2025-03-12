@@ -16,7 +16,7 @@ import {
 export const updateQuestion = {
   type: QuestionType,
   args: {
-    question: { type: GraphQLNonNull(QuestionUpdateInputType) },
+    question: { type: new GraphQLNonNull(QuestionUpdateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,

@@ -15,8 +15,8 @@ import AnswerType from '../types/answer';
 export const answer = {
   type: AnswerType,
   args: {
-    mentor: { type: GraphQLNonNull(GraphQLID) },
-    question: { type: GraphQLNonNull(GraphQLID) },
+    mentor: { type: new GraphQLNonNull(GraphQLID) },
+    question: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,

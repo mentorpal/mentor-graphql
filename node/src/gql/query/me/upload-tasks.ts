@@ -14,7 +14,7 @@ import { UploadTaskType } from '../../types/upload-task';
 import { canEditMentor } from '../../../utils/check-permissions';
 
 export const uploadTasks = {
-  type: GraphQLList(UploadTaskType),
+  type: new GraphQLList(UploadTaskType),
   args: { mentorId: { type: GraphQLID } },
   resolve: async (
     _: GraphQLObjectType,

@@ -16,7 +16,7 @@ import {
 export const mentorConfigCreateUpdate = {
   type: MentorConfigType,
   args: {
-    mentorConfig: { type: GraphQLNonNull(MentorConfigInputType) },
+    mentorConfig: { type: new GraphQLNonNull(MentorConfigInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,

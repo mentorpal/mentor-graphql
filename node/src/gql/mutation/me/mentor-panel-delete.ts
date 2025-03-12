@@ -13,7 +13,7 @@ import { canEditMentorPanel } from '../../../utils/check-permissions';
 
 export const deleteMentorPanel = {
   type: MentorPanelType,
-  args: { id: { type: GraphQLNonNull(GraphQLID) } },
+  args: { id: { type: new GraphQLNonNull(GraphQLID) } },
   resolve: async (
     _root: GraphQLObjectType,
     args: { id: string },

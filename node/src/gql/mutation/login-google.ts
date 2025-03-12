@@ -65,7 +65,7 @@ export enum LoginType {
 export const loginGoogle = {
   type: UserAccessTokenType,
   args: {
-    accessToken: { type: GraphQLNonNull(GraphQLString) },
+    accessToken: { type: new GraphQLNonNull(GraphQLString) },
     mentorConfig: { type: GraphQLString },
     lockMentorToConfig: { type: GraphQLBoolean },
     loginType: { type: GraphQLString },

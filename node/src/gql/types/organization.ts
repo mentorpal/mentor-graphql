@@ -33,7 +33,7 @@ export const OrganizationType = new GraphQLObjectType({
     name: { type: GraphQLString },
     subdomain: { type: GraphQLString },
     isPrivate: { type: GraphQLBoolean },
-    accessCodes: { type: GraphQLList(GraphQLString) },
+    accessCodes: { type: new GraphQLList(GraphQLString) },
     createdAt: { type: DateType },
     updatedAt: { type: DateType },
     config: {
@@ -43,7 +43,7 @@ export const OrganizationType = new GraphQLObjectType({
       },
     },
     members: {
-      type: GraphQLList(OrgMemberType),
+      type: new GraphQLList(OrgMemberType),
       resolve: async function (org: Organization) {
         const users = await UserModel.find({
           _id: { $in: org.members.map((m) => m.user) },

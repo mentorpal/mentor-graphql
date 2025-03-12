@@ -32,7 +32,7 @@ export const AddOrUpdateMentorPanelInputType = new GraphQLInputObjectType({
   fields: {
     org: { type: GraphQLID },
     subject: { type: GraphQLID },
-    mentors: { type: GraphQLList(GraphQLID) },
+    mentors: { type: new GraphQLList(GraphQLID) },
     title: { type: GraphQLString },
     subtitle: { type: GraphQLString },
   },
@@ -42,7 +42,7 @@ export const addOrUpdateMentorPanel = {
   type: MentorPanelType,
   args: {
     id: { type: GraphQLID },
-    mentorPanel: { type: GraphQLNonNull(AddOrUpdateMentorPanelInputType) },
+    mentorPanel: { type: new GraphQLNonNull(AddOrUpdateMentorPanelInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,

@@ -17,7 +17,7 @@ import {
 
 export const subjectUpdate = {
   type: SubjectType,
-  args: { subject: { type: GraphQLNonNull(SubjectUpdateInputType) } },
+  args: { subject: { type: new GraphQLNonNull(SubjectUpdateInputType) } },
   resolve: async (
     _root: GraphQLObjectType,
     args: { subject: SubjectUpdateInput }

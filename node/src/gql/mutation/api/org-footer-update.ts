@@ -19,8 +19,8 @@ export const orgFooterUpdate = {
   type: GraphQLBoolean,
   args: {
     orgId: { type: GraphQLID },
-    imgPath: { type: GraphQLNonNull(GraphQLString) },
-    imgIdx: { type: GraphQLNonNull(GraphQLInt) },
+    imgPath: { type: new GraphQLNonNull(GraphQLString) },
+    imgIdx: { type: new GraphQLNonNull(GraphQLInt) },
   },
   resolve: async (
     _root: GraphQLObjectType,

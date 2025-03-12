@@ -19,7 +19,7 @@ import {
 export const trainTask = {
   type: MentorTrainTaskType,
   args: {
-    taskId: { type: GraphQLNonNull(GraphQLID) },
+    taskId: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _: GraphQLObjectType,

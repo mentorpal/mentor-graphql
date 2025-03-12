@@ -16,8 +16,8 @@ import { Mentor as MentorModel } from '../../../models';
 export const mentorVbgUpdate = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
-    vbgPath: { type: GraphQLNonNull(GraphQLString) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
+    vbgPath: { type: new GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,

@@ -29,14 +29,14 @@ export const UpdateMentorSubjectsType = new GraphQLInputObjectType({
   name: 'UpdateMentorSubjectsType',
   fields: () => ({
     defaultSubject: { type: GraphQLID },
-    subjects: { type: GraphQLList(GraphQLID) },
+    subjects: { type: new GraphQLList(GraphQLID) },
   }),
 });
 
 export const updateMentorSubjects = {
   type: GraphQLBoolean,
   args: {
-    mentor: { type: GraphQLNonNull(UpdateMentorSubjectsType) },
+    mentor: { type: new GraphQLNonNull(UpdateMentorSubjectsType) },
     mentorId: { type: GraphQLID },
   },
   resolve: async (

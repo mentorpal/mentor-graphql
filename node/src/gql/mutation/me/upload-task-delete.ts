@@ -22,7 +22,7 @@ export const uploadTaskDelete = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLID },
-    questionId: { type: GraphQLNonNull(GraphQLID) },
+    questionId: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,

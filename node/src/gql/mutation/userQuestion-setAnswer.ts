@@ -21,7 +21,7 @@ import { UserQuestionType } from '../types/user-question';
 export const userQuestionSetAnswer = {
   type: UserQuestionType,
   args: {
-    id: { type: GraphQLNonNull(GraphQLID) },
+    id: { type: new GraphQLNonNull(GraphQLID) },
     answer: { type: GraphQLString },
     question: { type: GraphQLString },
     mentorId: { type: GraphQLID },

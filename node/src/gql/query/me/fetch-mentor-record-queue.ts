@@ -11,7 +11,7 @@ import { Mentor as MentorModel } from '../../../models';
 import { GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 
 export const fetchMentorRecordQueue = {
-  type: GraphQLList(GraphQLString),
+  type: new GraphQLList(GraphQLString),
   resolve: async (
     _: GraphQLObjectType,
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any

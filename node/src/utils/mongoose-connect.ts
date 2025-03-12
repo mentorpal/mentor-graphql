@@ -8,6 +8,8 @@ import mongoose from 'mongoose';
 import requireEnv from './require-env';
 import { logger } from './logging';
 
+let isConnected = false;
+
 /**
  * Connect mongoose using env variables:
  * MONGO_USER
@@ -17,6 +19,11 @@ import { logger } from './logging';
  * MONGO_QUERY_STRING - query string
  */
 export default async function mongooseConnect(uri: string): Promise<void> {
+  if (isConnected) {
+    return;
+  }
+  console.log('connecting to mongoose');
+
   const mongoUri =
     uri ||
     process.env.MONGO_URI ||
@@ -33,9 +40,11 @@ export default async function mongooseConnect(uri: string): Promise<void> {
     maxPoolSize: connectionPoolMax,
     minPoolSize: 0,
   });
+  isConnected = true;
   logger.info(
     'mongoose: connection successful ' + mongoUri.replace(/^.*@/g, '')
   );
+  mongoose.set('debug', true);
   const mongoClient = mongoose.connection.getClient();
   if (process.env.MONGO_CONNECTION_POOL_MAX) {
     mongoClient.on('connectionCreated', (e) => {

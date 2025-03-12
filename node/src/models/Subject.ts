@@ -161,12 +161,12 @@ SubjectSchema.statics.getQuestions = async function (
   if (categoryID) {
     sQuestions = sQuestions.filter((sq) => sq.category == categoryID);
   }
+  console.log(sQuestions);
   const questions = await QuestionModel.find({
-    ...{
-      _id: { $in: sQuestions.map((q) => q.question) },
-    },
+    _id: { $in: sQuestions.map((q) => q.question) },
     ...(type ? { type } : {}),
   });
+  console.log('starting filter');
   if (mentorId !== undefined) {
     sQuestions = sQuestions.filter((sq) =>
       questions.find(
@@ -176,6 +176,7 @@ SubjectSchema.statics.getQuestions = async function (
       )
     );
   }
+  console.log('ending filter');
   return sQuestions.map((sq) => ({
     question: questions.find((q) => `${q._id}` === `${sq.question}`),
     category: subject.categories.find((c) => c.id === sq.category),

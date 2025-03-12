@@ -20,9 +20,9 @@ import AnswerType from '../types/answer';
 export const answerByFieldValue = {
   type: AnswerType,
   args: {
-    mentor: { type: GraphQLNonNull(GraphQLID) },
-    fieldKey: { type: GraphQLNonNull(GraphQLString) }, // can be a nested value like "question._id"
-    fieldValue: { type: GraphQLNonNull(GraphQLString) },
+    mentor: { type: new GraphQLNonNull(GraphQLID) },
+    fieldKey: { type: new GraphQLNonNull(GraphQLString) }, // can be a nested value like "question._id"
+    fieldValue: { type: new GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,

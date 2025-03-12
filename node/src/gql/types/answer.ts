@@ -113,14 +113,14 @@ export const AnswerType = new GraphQLObjectType({
     },
     status: { type: GraphQLString },
     hasUntransferredMedia: { type: GraphQLBoolean },
-    media: { type: GraphQLList(AnswerMediaType) },
+    media: { type: new GraphQLList(AnswerMediaType) },
     webMedia: { type: AnswerMediaType },
     mobileMedia: { type: AnswerMediaType },
     vttMedia: { type: AnswerMediaType },
     createdAt: { type: DateType },
     updatedAt: { type: DateType },
     previousVersions: {
-      type: GraphQLList(PreviousAnswerVersionType),
+      type: new GraphQLList(PreviousAnswerVersionType),
     },
   }),
 });

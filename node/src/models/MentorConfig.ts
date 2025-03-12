@@ -71,11 +71,11 @@ export const MentorConfigInputType = new GraphQLInputObjectType({
   name: 'MentorConfigInputType',
   fields: {
     configId: { type: GraphQLString },
-    subjects: { type: GraphQLList(GraphQLString) },
+    subjects: { type: new GraphQLList(GraphQLString) },
     lockedToSubjects: { type: GraphQLBoolean },
     publiclyVisible: { type: GraphQLBoolean },
     mentorType: { type: GraphQLString },
-    orgPermissions: { type: GraphQLList(OrgPermissionInputType) },
+    orgPermissions: { type: new GraphQLList(OrgPermissionInputType) },
     // do not affect mentor doc
     loginHeaderText: { type: GraphQLString },
     welcomeSlideHeader: { type: GraphQLString },
@@ -96,11 +96,11 @@ export const MentorConfigType = new GraphQLObjectType({
   name: 'MentorConfigType',
   fields: {
     configId: { type: GraphQLString },
-    subjects: { type: GraphQLList(GraphQLString) },
+    subjects: { type: new GraphQLList(GraphQLString) },
     lockedToSubjects: { type: GraphQLBoolean },
     publiclyVisible: { type: GraphQLBoolean },
     mentorType: { type: GraphQLString },
-    orgPermissions: { type: GraphQLList(OrgPermissionType) },
+    orgPermissions: { type: new GraphQLList(OrgPermissionType) },
     loginHeaderText: { type: GraphQLString },
     welcomeSlideHeader: { type: GraphQLString },
     welcomeSlideText: { type: GraphQLString },

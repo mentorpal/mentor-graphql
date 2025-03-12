@@ -41,10 +41,10 @@ export const MentorExportJsonType = new GraphQLObjectType({
   fields: () => ({
     id: { type: GraphQLID },
     mentorInfo: { type: ExportedMentorInfoType },
-    subjects: { type: GraphQLList(SubjectType) },
-    questions: { type: GraphQLList(QuestionType) },
-    answers: { type: GraphQLList(AnswerType) },
-    userQuestions: { type: GraphQLList(UserQuestionType) },
+    subjects: { type: new GraphQLList(SubjectType) },
+    questions: { type: new GraphQLList(QuestionType) },
+    answers: { type: new GraphQLList(AnswerType) },
+    userQuestions: { type: new GraphQLList(UserQuestionType) },
   }),
 });
 
@@ -90,7 +90,7 @@ export const ExportedMentorInfoType = new GraphQLObjectType({
 export const exportMentor = {
   type: MentorExportJsonType,
   args: {
-    mentor: { type: GraphQLNonNull(GraphQLID) },
+    mentor: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,

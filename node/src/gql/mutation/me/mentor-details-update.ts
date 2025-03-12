@@ -50,7 +50,7 @@ export const UpdateMentorDetailsType = new GraphQLInputObjectType({
 export const updateMentorDetails = {
   type: GraphQLBoolean,
   args: {
-    mentor: { type: GraphQLNonNull(UpdateMentorDetailsType) },
+    mentor: { type: new GraphQLNonNull(UpdateMentorDetailsType) },
     mentorId: { type: GraphQLID },
   },
   resolve: async (

@@ -16,9 +16,9 @@ import { Answer as AnswerModel } from '../../../models';
 export const mentorVbgUpdate = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
-    questionId: { type: GraphQLNonNull(GraphQLString) },
-    vttUrl: { type: GraphQLNonNull(GraphQLString) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
+    questionId: { type: new GraphQLNonNull(GraphQLString) },
+    vttUrl: { type: new GraphQLNonNull(GraphQLString) },
     vttText: { type: GraphQLString },
   },
   resolve: async (

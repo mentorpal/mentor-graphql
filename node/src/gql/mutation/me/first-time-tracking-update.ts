@@ -29,7 +29,7 @@ export const firstTimeTrackingUpdateInputType = new GraphQLInputObjectType({
 export const firstTimeTrackingUpdate = {
   type: FirstTimeTrackingGqlType,
   args: {
-    updates: { type: GraphQLNonNull(firstTimeTrackingUpdateInputType) },
+    updates: { type: new GraphQLNonNull(firstTimeTrackingUpdateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
