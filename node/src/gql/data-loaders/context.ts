@@ -6,13 +6,13 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { createQuestionLoader } from './question-loader';
 
-export interface GraphQLContext {
+export interface DataLoaders {
   loaders: {
     questionLoader: ReturnType<typeof createQuestionLoader>;
   };
 }
 
-export function createDataLoaders(): GraphQLContext {
+export function createDataLoaders(): DataLoaders {
   return {
     loaders: {
       questionLoader: createQuestionLoader(),

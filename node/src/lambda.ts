@@ -8,7 +8,6 @@ import * as Sentry from '@sentry/serverless';
 import { createApp } from './app';
 import process from 'process';
 import logger from './utils/logging';
-import { createDataLoaders } from './gql/data-loaders/context';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const serverless = require('serverless-http');
 
@@ -72,8 +71,6 @@ const init = async () => {
 };
 
 const initPromise = init();
-
-export const dataLoaders = createDataLoaders();
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const handler = async (event: any, context: any) => {

@@ -22,8 +22,7 @@ import {
   ExternalVideoIdsObjectType,
   externalVideoIdsDefault,
 } from '../mutation/api/update-answers';
-import { dataLoaders } from '../../lambda';
-
+import { DataLoaders } from '../data-loaders/context';
 export const PreviousAnswerVersionType = new GraphQLObjectType({
   name: 'PreviousAnswerVersionType',
   fields: {
@@ -81,12 +80,18 @@ export const AnswerType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     question: {
       type: QuestionType,
-      resolve: async function (answer: Answer) {
+      resolve: async function (
+        answer: Answer,
+        _,
+        context: {
+          dataLoaders: DataLoaders;
+        }
+      ) {
         if (!isValidObjectId(`${answer.question}`)) {
           return answer.question;
         }
 
-        return dataLoaders.loaders.questionLoader.load(
+        return context.dataLoaders.loaders.questionLoader.load(
           answer.question.toString()
         );
       },

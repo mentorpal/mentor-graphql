@@ -12,6 +12,7 @@ import { User } from '../models/User';
 import OrganizationModel, { Organization } from '../models/Organization';
 import { getRefreshedToken } from './types/user-access-token';
 import { logger } from '../utils/logging';
+import { createDataLoaders } from './data-loaders/context';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const extensions = ({ context }: any) => {
@@ -72,6 +73,8 @@ async function refreshToken(
 }
 
 export default graphqlHTTP((req: Request, res: Response) => {
+  const dataLoaders = createDataLoaders();
+
   return new Promise((resolve) => {
     const next = (user: User, org: Organization, newToken = '') => {
       resolve({
@@ -85,6 +88,7 @@ export default graphqlHTTP((req: Request, res: Response) => {
           newToken: newToken || '',
           res: res,
           req: req,
+          dataLoaders,
         },
         extensions,
       });
