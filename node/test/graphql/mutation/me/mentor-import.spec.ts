@@ -13,7 +13,7 @@ import request from 'supertest';
 import { getToken } from 'test/helpers';
 import { exportMentorQuery } from '../../query/export-mentor.spec';
 
-describe.only('import mentor', () => {
+describe('import mentor', () => {
   let app: Express;
 
   beforeEach(async () => {
@@ -1492,7 +1492,7 @@ describe.only('import mentor', () => {
     expect(response.body.data.answer).to.not.eql(null);
   });
 
-  it.only(`imported userQuestions get created`, async () => {
+  it(`imported userQuestions get created`, async () => {
     const json = {
       ...uneditedJson,
       questions: [
@@ -1652,7 +1652,6 @@ describe.only('import mentor', () => {
         (userQuestion: { node: { question: string } }) =>
           userQuestion.node.question
       );
-    console.log(userQuestionsTextAfterImport);
     expect(userQuestionsTextAfterImport).to.contain(
       'new question for userQuestion test'
     );

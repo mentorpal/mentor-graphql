@@ -517,13 +517,14 @@ MentorSchema.statics.import = async function (
       }
     });
 
-    // Safeguard: Filter out any userQuestions that contain answer documents that were not imported with this mentor, this could result in null references
+    // Safeguard: Filter down to only keep questions that have an answer document
     json.userQuestions = json.userQuestions.filter((userQuestion) =>
-      json.answers.find(
-        (a) =>
+      json.answers.find((a) => {
+        return (
           `${a.question._id}` ==
-          `${userQuestion.classifierAnswer?.question}`
-      )
+          `${userQuestion.classifierAnswer?.question._id}`
+        );
+      })
     );
 
     // Start the mentor with no subjects, and we add them on as we go.

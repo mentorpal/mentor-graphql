@@ -174,7 +174,7 @@ module.exports = {
       title: "Nuclear Electrician's Mate",
       thumbnail:
         'mentor/thumbnails/5ffdf41a1ee2c62111111111-20210621T000000.png',
-      defaultSubject: '5ffdf41a1ee2c62320b49eb1',
+      defaultSubject: new ObjectId('5ffdf41a1ee2c62320b49eb1'),
       subjects: [
         new ObjectId('5ffdf41a1ee2c62320b49eb1'),
         new ObjectId('5ffdf41a1ee2c62320b49eb2'),
