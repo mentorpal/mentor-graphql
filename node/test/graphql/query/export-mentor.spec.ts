@@ -163,7 +163,6 @@ describe('export mentor', () => {
         query: exportMentorQuery,
         variables: { mentor: '5ffdf41a1ee2c62111111111' },
       });
-    console.log(JSON.stringify(response.body, null, 2));
     expect(response.status).to.equal(200);
     expect(response.body.data.mentorExport).to.eql({
       id: '5ffdf41a1ee2c62111111111',
