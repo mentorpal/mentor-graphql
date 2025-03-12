@@ -29,7 +29,7 @@ export const RefreshAccessTokenDataType = new GraphQLObjectType({
     authenticated: { type: GraphQLBoolean },
     errorMessage: { type: GraphQLString },
     userRole: { type: GraphQLString },
-    mentorIds: { type: GraphQLList(GraphQLString) },
+    mentorIds: { type: new GraphQLList(GraphQLString) },
   },
 });
 

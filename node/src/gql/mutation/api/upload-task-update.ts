@@ -52,9 +52,9 @@ export const UploadTaskInputType = new GraphQLInputObjectType({
 export const uploadTaskUpdate = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
-    questionId: { type: GraphQLNonNull(GraphQLID) },
-    status: { type: GraphQLNonNull(UploadTaskInputType) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
+    questionId: { type: new GraphQLNonNull(GraphQLID) },
+    status: { type: new GraphQLNonNull(UploadTaskInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,

@@ -11,10 +11,10 @@ export const DateType: GraphQLScalarType = new GraphQLScalarType({
   name: 'Date',
   description: 'Date custom scalar type',
   parseValue(value) {
-    return new Date(value);
+    return new Date(value as string);
   },
   serialize(value) {
-    return value.toISOString();
+    return (value as Date).toISOString();
   },
   parseLiteral(ast) {
     if (ast.kind === Kind.INT) {

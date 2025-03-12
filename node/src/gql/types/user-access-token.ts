@@ -5,7 +5,7 @@ Permission to use, copy, modify, and distribute this software and its documentat
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
 import { GraphQLString, GraphQLObjectType } from 'graphql';
-import { CookieOptions, Response } from 'express';
+import { CookieOptions } from 'express';
 import jwt from 'jsonwebtoken';
 import { randomBytes } from 'crypto';
 import { User } from '../../models/User';
@@ -14,6 +14,7 @@ import DateType from './date';
 import { RefreshToken as RefreshTokenSchema } from '../../models';
 import requireEnv from '../../utils/require-env';
 import { HydratedRefreshToken } from 'models/RefreshToken';
+import { CookieHandlers } from '../../utils/cookie-handler/cookie-handler';
 
 export interface UserAccessToken {
   user: User;
@@ -60,8 +61,11 @@ async function getRefreshToken(token: string) {
   return refreshToken;
 }
 
-// eslint-disable-next-line  @typescript-eslint/no-explicit-any
-export function setTokenCookie(res: Response, token: string): any {
+export function setTokenCookie(
+  cookieHandler: CookieHandlers,
+  token: string
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+): any {
   const domain = requireEnv('DOMAIN');
   // create http only cookie with refresh token that expires in 90 days
   const validDays = process.env['ACCESS_TOKEN_VALIDITY_DAYS']
@@ -76,7 +80,11 @@ export function setTokenCookie(res: Response, token: string): any {
     sameSite: 'strict' as CookieOptions['sameSite'],
     secure: true,
   };
-  res.cookie(process.env.REFRESH_TOKEN_NAME, token, cookieOptions);
+  cookieHandler.addResCookie({
+    name: process.env.REFRESH_TOKEN_NAME,
+    value: token,
+    options: cookieOptions,
+  });
 }
 
 function randomTokenString() {

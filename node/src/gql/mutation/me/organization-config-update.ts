@@ -15,8 +15,8 @@ import { ConfigUpdateInput, ConfigUpdateInputType } from './config-update';
 export const updateOrgConfig = {
   type: ConfigType,
   args: {
-    id: { type: GraphQLNonNull(GraphQLID) },
-    config: { type: GraphQLNonNull(ConfigUpdateInputType) },
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    config: { type: new GraphQLNonNull(ConfigUpdateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,

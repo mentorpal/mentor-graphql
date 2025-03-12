@@ -16,8 +16,8 @@ import { Mentor as MentorModel } from '../../../models';
 export const mentorThumbnailUpdate = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
-    thumbnail: { type: GraphQLNonNull(GraphQLString) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
+    thumbnail: { type: new GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,

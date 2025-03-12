@@ -68,3 +68,8 @@ test-license: LICENSE LICENSE_HEADER
 
 node_modules/license-check-and-add:
 	npm ci
+
+.PHONY: develop
+develop:
+	cd node \
+	&& make develop

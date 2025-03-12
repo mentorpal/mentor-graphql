@@ -61,6 +61,7 @@ export const MentorType = new GraphQLObjectType({
     numAnswersComplete: {
       type: GraphQLInt,
       resolve: async function (mentor: Mentor) {
+        console.time('numAnswersComplete');
         const mentorAnswers = await AnswerModel.find({ mentor: mentor._id });
         const questionIds: Types.ObjectId[] = mentorAnswers.map(
           (answer) => answer.question
@@ -75,6 +76,7 @@ export const MentorType = new GraphQLObjectType({
             mentor
           )
         );
+        console.timeEnd('numAnswersComplete');
         return completeAnswers.length;
       },
     },
@@ -98,22 +100,31 @@ export const MentorType = new GraphQLObjectType({
     mentorConfig: {
       type: MentorConfigType,
       resolve: async (mentor: Mentor) => {
+        console.time('mentorConfig');
         if (mentor.mentorConfig) {
-          return MentorConfigModel.findById(mentor.mentorConfig);
+          console.time('mentorConfig.findById');
+          const config = await MentorConfigModel.findById(mentor.mentorConfig);
+          console.timeEnd('mentorConfig.findById');
+          return config;
         }
+        console.timeEnd('mentorConfig');
         return null;
       },
     },
     lockedToConfig: { type: GraphQLBoolean },
     orgPermissions: {
-      type: GraphQLList(MentorOrgPermissionType),
+      type: new GraphQLList(MentorOrgPermissionType),
       resolve: async (mentor: Mentor) => {
+        console.time('orgPermissions');
         if (!mentor.orgPermissions) {
+          console.timeEnd('orgPermissions');
           return [];
         }
+        console.time('OrganizationModel.find');
         const orgs = await OrganizationModel.find({
           _id: { $in: mentor.orgPermissions.map((op) => op.org) },
         });
+        console.timeEnd('OrganizationModel.find');
         return mentor.orgPermissions.map((op) => ({
           orgId: op.org,
           orgName: orgs.find((o) => `${o._id}` === `${op.org}`)?.name || '',
@@ -125,38 +136,54 @@ export const MentorType = new GraphQLObjectType({
     lastTrainStatus: {
       type: GraphQLString,
       resolve: async (mentor: Mentor) => {
+        console.time('lastTrainStatus');
         const mostRecentTrainTask = await MentorTrainStatusModel.findOne(
           { mentor: mentor._id },
           {},
           { sort: { createdAt: -1 } }
         );
         if (!mostRecentTrainTask) {
+          console.timeEnd('lastTrainStatus');
           return TrainStatus.NONE;
         }
+        console.timeEnd('lastTrainStatus');
         return mostRecentTrainTask.status;
       },
     },
-    keywords: { type: GraphQLList(GraphQLString) },
+    keywords: { type: new GraphQLList(GraphQLString) },
     recordQueue: {
-      type: GraphQLList(QuestionGQLType),
+      type: new GraphQLList(QuestionGQLType),
       resolve: async (mentor: Mentor) => {
-        return await QuestionModel.find({ _id: { $in: mentor.recordQueue } });
+        console.time('recordQueue');
+        const questions = await QuestionModel.find({
+          _id: { $in: mentor.recordQueue },
+        });
+        console.timeEnd('recordQueue');
+        return questions;
       },
     },
     thumbnail: {
       type: GraphQLString,
       resolve: function (mentor: Mentor) {
-        return mentor.thumbnail ? toAbsoluteUrl(mentor.thumbnail) : '';
+        console.time('thumbnail');
+        const thumbnail = mentor.thumbnail
+          ? toAbsoluteUrl(mentor.thumbnail)
+          : '';
+        console.timeEnd('thumbnail');
+        return thumbnail;
       },
     },
     subjects: {
-      type: GraphQLList(SubjectType),
+      type: new GraphQLList(SubjectType),
       resolve: async function (mentor: Mentor) {
-        return await MentorModel.getSubjects(mentor);
+        console.time('subjects');
+        const subjects = await MentorModel.getSubjects(mentor);
+        console.timeEnd('subjects');
+        return subjects;
       },
     },
     topics: {
-      type: GraphQLList(TopicType),
+      type: new GraphQLList(TopicType),
       args: {
         subject: { type: GraphQLID },
         useDefaultSubject: { type: GraphQLBoolean },
@@ -165,17 +192,20 @@ export const MentorType = new GraphQLObjectType({
         mentor: Mentor,
         args: { subject: string; useDefaultSubject: boolean }
       ) {
-        return await MentorModel.getTopics({
+        console.time('topics');
+        const topics = await MentorModel.getTopics({
           mentor: mentor,
           defaultSubject: args.useDefaultSubject,
           subjectId: args.subject
             ? validateAndConvertToObjectId(args.subject)
             : undefined,
         });
+        console.timeEnd('topics');
+        return topics;
       },
     },
     questions: {
-      type: GraphQLList(SubjectQuestionType),
+      type: new GraphQLList(SubjectQuestionType),
       args: {
         useDefaultSubject: { type: GraphQLBoolean },
         subject: { type: GraphQLID },
@@ -191,7 +221,8 @@ export const MentorType = new GraphQLObjectType({
           type: string;
         }
       ) {
-        return await MentorModel.getQuestions({
+        console.time('questions');
+        const questions = await MentorModel.getQuestions({
           mentor: mentor,
           defaultSubject: args.useDefaultSubject,
           subjectId: args.subject
@@ -200,10 +231,12 @@ export const MentorType = new GraphQLObjectType({
           topicId: args.topic,
           type: args.type as QuestionType,
         });
+        console.timeEnd('questions');
+        return questions;
       },
     },
     answers: {
-      type: GraphQLList(AnswerType),
+      type: new GraphQLList(AnswerType),
       args: {
         useDefaultSubject: { type: GraphQLBoolean },
         subject: { type: GraphQLID },
@@ -219,7 +252,9 @@ export const MentorType = new GraphQLObjectType({
           status: string;
         }
       ) {
-        return await MentorModel.getAnswers({
+        console.log('answer start');
+        console.time('answers');
+        const answers = await MentorModel.getAnswers({
           mentor: mentor,
           defaultSubject: args.useDefaultSubject,
           subjectId: args.subject
@@ -228,26 +263,34 @@ export const MentorType = new GraphQLObjectType({
           topicId: args.topic,
           status: args.status as Status,
         });
+        console.timeEnd('answers');
+        return answers;
       },
     },
     orphanedCompleteAnswers: {
-      type: GraphQLList(AnswerType),
+      type: new GraphQLList(AnswerType),
       resolve: async function (mentor: Mentor) {
-        return await MentorModel.getOrphanedCompleteAnswers(mentor);
+        console.time('orphanedCompleteAnswers');
+        const answers = await MentorModel.getOrphanedCompleteAnswers(mentor);
+        console.timeEnd('orphanedCompleteAnswers');
+        return answers;
       },
     },
     utterances: {
-      type: GraphQLList(AnswerType),
+      type: new GraphQLList(AnswerType),
       args: {
         status: { type: GraphQLString },
       },
       resolve: async function (mentor: Mentor, args: { status: string }) {
-        return await MentorModel.getAnswers({
+        console.time('utterances');
+        const answers = await MentorModel.getAnswers({
           mentor: mentor,
           defaultSubject: false,
           status: args.status as Status,
           type: QuestionType.UTTERANCE,
         });
+        console.timeEnd('utterances');
+        return answers;
       },
     },
   }),

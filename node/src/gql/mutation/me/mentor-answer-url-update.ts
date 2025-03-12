@@ -19,8 +19,8 @@ import { AnswerType } from '../../types/answer';
 export const mentorAnswerUrlUpdate = {
   type: AnswerType,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
-    questionId: { type: GraphQLNonNull(GraphQLID) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
+    questionId: { type: new GraphQLNonNull(GraphQLID) },
     webUrl: { type: GraphQLString },
     webTransUrl: { type: GraphQLString },
     mobileUrl: { type: GraphQLString },

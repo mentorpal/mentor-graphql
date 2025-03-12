@@ -4,27 +4,31 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import {
-  GraphQLObjectType,
-  GraphQLID,
-  GraphQLList,
-  GraphQLNonNull,
-} from 'graphql';
-import { Subject as SubjectModel } from '../../models';
-import { Subject } from '../../models/Subject';
-import SubjectType from '../types/subject';
+import { APIGatewayProxyEvent } from 'aws-lambda';
+import { ReqCookies, CookieHandler } from './cookie-handler';
 
-export const subjectsById = {
-  type: new GraphQLList(SubjectType),
-  args: {
-    ids: { type: new GraphQLNonNull(new GraphQLList(GraphQLID)) },
-  },
-  resolve: async (
-    _root: GraphQLObjectType,
-    args: { ids: string[] }
-  ): Promise<Subject[]> => {
-    return await SubjectModel.find({ _id: { $in: args.ids } });
-  },
-};
+export class AWSCookieHandler extends CookieHandler<APIGatewayProxyEvent> {
+  extractReqCookies(req: APIGatewayProxyEvent): ReqCookies {
+    const headers = req.headers;
+    if (
+      headers === null ||
+      headers === undefined ||
+      (headers.Cookie === undefined && headers.cookie === undefined)
+    ) {
+      return {};
+    }
+    const list: Record<string, string> = {};
+    const rc = headers.Cookie ? headers.Cookie : headers.cookie;
+    rc &&
+      rc.split(';').forEach(function (cookie) {
+        const parts = cookie.split('=');
+        const key = parts.shift().trim();
+        const value = decodeURI(parts.join('='));
+        if (key != '') {
+          list[key] = value;
+        }
+      });
 
-export default subjectsById;
+    return list;
+  }
+}

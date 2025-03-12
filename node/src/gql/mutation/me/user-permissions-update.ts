@@ -12,8 +12,8 @@ import { User, UserRole } from '../../../models/User';
 export const updateUserPermissions = {
   type: UserType,
   args: {
-    userId: { type: GraphQLNonNull(GraphQLString) },
-    permissionLevel: { type: GraphQLNonNull(GraphQLString) },
+    userId: { type: new GraphQLNonNull(GraphQLString) },
+    permissionLevel: { type: new GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,

@@ -17,7 +17,7 @@ import { canEditMentor } from '../../utils/check-permissions';
 export const importTask = {
   type: ImportTaskType,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _: GraphQLObjectType,

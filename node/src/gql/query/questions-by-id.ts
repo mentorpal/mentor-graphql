@@ -15,9 +15,9 @@ import { Question } from '../../models/Question';
 import QuestionType from '../types/question';
 
 export const questionsById = {
-  type: GraphQLList(QuestionType),
+  type: new GraphQLList(QuestionType),
   args: {
-    ids: { type: GraphQLNonNull(GraphQLList(GraphQLID)) },
+    ids: { type: new GraphQLNonNull(new GraphQLList(GraphQLID)) },
   },
   resolve: async (
     _root: GraphQLObjectType,

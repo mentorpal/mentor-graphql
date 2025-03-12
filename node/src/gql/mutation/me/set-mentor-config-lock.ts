@@ -18,8 +18,8 @@ import MentorType from '../../types/mentor';
 export const setMentorConfigLock = {
   type: MentorType,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
-    lockedToConfig: { type: GraphQLNonNull(GraphQLBoolean) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
+    lockedToConfig: { type: new GraphQLNonNull(GraphQLBoolean) },
   },
   resolve: async (
     _root: GraphQLObjectType,

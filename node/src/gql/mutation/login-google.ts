@@ -65,7 +65,7 @@ export enum LoginType {
 export const loginGoogle = {
   type: UserAccessTokenType,
   args: {
-    accessToken: { type: GraphQLNonNull(GraphQLString) },
+    accessToken: { type: new GraphQLNonNull(GraphQLString) },
     mentorConfig: { type: GraphQLString },
     lockMentorToConfig: { type: GraphQLBoolean },
     loginType: { type: GraphQLString },
@@ -78,7 +78,8 @@ export const loginGoogle = {
       lockMentorToConfig: boolean;
       loginType: LoginType;
     },
-    context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    context: any
   ): Promise<UserAccessToken> => {
     try {
       const signUp = args.loginType === LoginType.SIGN_UP;
@@ -176,7 +177,7 @@ export const loginGoogle = {
       // authentication successful so generate jwt and refresh tokens
       const jwtToken = await generateJwtToken(user);
       const refreshToken = await generateRefreshToken(user);
-      setTokenCookie(context.res, refreshToken.token);
+      setTokenCookie(context.cookieHandler, refreshToken.token);
       return jwtToken;
     } catch (error) {
       throw new Error(error);

@@ -21,11 +21,14 @@ export const mentorFindOne = findOne({
     mentor: Mentor,
     context: { user: User; org: Organization }
   ) => {
+    console.time('canViewMentor');
     if (!(await canViewMentor(mentor, context.user, context.org))) {
+      console.timeEnd('canViewMentor');
       throw new Error(
         `mentor is private and you do not have permission to access`
       );
     }
+    console.timeEnd('canViewMentor');
   },
 });
 

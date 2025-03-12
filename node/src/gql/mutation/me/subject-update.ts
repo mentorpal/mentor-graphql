@@ -47,7 +47,7 @@ export const CategoryInputType = new GraphQLInputObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     description: { type: GraphQLString },
-    defaultTopics: { type: GraphQLList(GraphQLString) },
+    defaultTopics: { type: new GraphQLList(GraphQLString) },
   }),
 });
 
@@ -80,7 +80,7 @@ export const SubjectQuestionInputType = new GraphQLInputObjectType({
   fields: () => ({
     question: { type: QuestionUpdateInputType },
     category: { type: CategoryInputType },
-    topics: { type: GraphQLList(TopicInputType) },
+    topics: { type: new GraphQLList(TopicInputType) },
     useDefaultTopics: { type: GraphQLString },
   }),
 });
@@ -108,9 +108,9 @@ export const SubjectUpdateInputType = new GraphQLInputObjectType({
     isRequired: { type: GraphQLBoolean },
     isArchived: { type: GraphQLBoolean },
     deleted: { type: GraphQLBoolean },
-    categories: { type: GraphQLList(CategoryInputType) },
-    topics: { type: GraphQLList(TopicInputType) },
-    questions: { type: GraphQLList(SubjectQuestionInputType) },
+    categories: { type: new GraphQLList(CategoryInputType) },
+    topics: { type: new GraphQLList(TopicInputType) },
+    questions: { type: new GraphQLList(SubjectQuestionInputType) },
   }),
 });
 
@@ -147,7 +147,7 @@ export async function questionInputToUpdate(
 
 export const subjectUpdate = {
   type: SubjectType,
-  args: { subject: { type: GraphQLNonNull(SubjectUpdateInputType) } },
+  args: { subject: { type: new GraphQLNonNull(SubjectUpdateInputType) } },
   resolve: async (
     _root: GraphQLObjectType,
     args: { subject: SubjectUpdateInput },

@@ -20,8 +20,8 @@ import { canEditMentor } from '../../../utils/check-permissions';
 export const userQuestionSetDismissed = {
   type: UserQuestionType,
   args: {
-    id: { type: GraphQLNonNull(GraphQLID) },
-    dismissed: { type: GraphQLNonNull(GraphQLBoolean) },
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    dismissed: { type: new GraphQLNonNull(GraphQLBoolean) },
   },
   resolve: async (
     _root: GraphQLObjectType,

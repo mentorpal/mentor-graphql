@@ -18,7 +18,7 @@ import UserType from '../../types/user';
 export const updateUserDisable = {
   type: UserType,
   args: {
-    userId: { type: GraphQLNonNull(GraphQLID) },
+    userId: { type: new GraphQLNonNull(GraphQLID) },
     isDisabled: { type: GraphQLBoolean },
   },
   resolve: async (

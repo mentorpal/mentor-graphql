@@ -17,8 +17,8 @@ import { User } from '../../../models/User';
 export const updateKeyword = {
   type: GraphQLBoolean,
   args: {
-    type: { type: GraphQLNonNull(GraphQLString) },
-    keywords: { type: GraphQLNonNull(GraphQLList(GraphQLString)) },
+    type: { type: new GraphQLNonNull(GraphQLString) },
+    keywords: { type: new GraphQLNonNull(new GraphQLList(GraphQLString)) },
   },
   resolve: async (
     _root: GraphQLObjectType,

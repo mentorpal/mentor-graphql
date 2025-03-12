@@ -80,8 +80,8 @@ export const MentorClientDataType = new GraphQLObjectType({
     title: { type: GraphQLString },
     allowContact: { type: GraphQLBoolean },
     mentorType: { type: GraphQLString },
-    topicQuestions: { type: GraphQLList(TopicQuestionsType) },
-    utterances: { type: GraphQLList(AnswerClientDataType) },
+    topicQuestions: { type: new GraphQLList(TopicQuestionsType) },
+    utterances: { type: new GraphQLList(AnswerClientDataType) },
     hasVirtualBackground: { type: GraphQLBoolean },
     isDirty: { type: GraphQLBoolean },
     isPublicApproved: { type: GraphQLBoolean },
@@ -108,7 +108,7 @@ export const TopicQuestionsType = new GraphQLObjectType({
   name: 'TopicQuestionsType',
   fields: () => ({
     topic: { type: GraphQLID },
-    questions: { type: GraphQLList(GraphQLString) },
+    questions: { type: new GraphQLList(GraphQLString) },
   }),
 });
 
@@ -212,7 +212,7 @@ function verifyDirectLinkSecure(
 export const mentorData = {
   type: MentorClientDataType,
   args: {
-    mentor: { type: GraphQLNonNull(GraphQLID) },
+    mentor: { type: new GraphQLNonNull(GraphQLID) },
     subject: { type: GraphQLID },
     orgAccessCode: { type: GraphQLString },
     leftHomePageData: { type: GraphQLString },

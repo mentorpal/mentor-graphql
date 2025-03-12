@@ -21,10 +21,10 @@ import { canViewMentor } from '../../utils/check-permissions';
 import { asyncFilter, getUsersManagedOrgs } from '../mutation/me/helpers';
 
 export const mentorsByKeyword = {
-  type: GraphQLList(MentorType),
+  type: new GraphQLList(MentorType),
   args: {
     subject: { type: GraphQLID },
-    keywords: { type: GraphQLList(GraphQLString) },
+    keywords: { type: new GraphQLList(GraphQLString) },
     sortBy: { type: GraphQLString },
     sortAscending: { type: GraphQLBoolean },
   },

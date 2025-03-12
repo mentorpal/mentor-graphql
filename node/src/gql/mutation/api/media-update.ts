@@ -17,8 +17,8 @@ import { AnswerMediaInputType } from './upload-answer';
 export const mediaUpdate = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
-    questionId: { type: GraphQLNonNull(GraphQLID) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
+    questionId: { type: new GraphQLNonNull(GraphQLID) },
     webMedia: { type: AnswerMediaInputType },
     mobileMedia: { type: AnswerMediaInputType },
     vttMedia: { type: AnswerMediaInputType },

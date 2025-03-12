@@ -83,8 +83,8 @@ interface BulkWriteAnswer {
 export const updateAnswers = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
-    answers: { type: GraphQLList(UploadAnswersType) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
+    answers: { type: new GraphQLList(UploadAnswersType) },
   },
   resolve: async (
     _root: GraphQLObjectType,

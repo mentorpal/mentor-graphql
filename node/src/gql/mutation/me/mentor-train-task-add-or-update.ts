@@ -21,9 +21,9 @@ import { idOrNew } from './helpers';
 export const addOrUpdateTrainTask = {
   type: MentorTrainTaskType,
   args: {
-    taskDocId: { type: GraphQLNonNull(GraphQLID) },
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
-    status: { type: GraphQLNonNull(GraphQLString) },
+    taskDocId: { type: new GraphQLNonNull(GraphQLID) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
+    status: { type: new GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,

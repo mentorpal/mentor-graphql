@@ -25,10 +25,10 @@ import {
 export const importTaskUpdate = {
   type: GraphQLBoolean,
   args: {
-    mentor: { type: GraphQLNonNull(GraphQLID) },
+    mentor: { type: new GraphQLNonNull(GraphQLID) },
     graphQLUpdate: { type: GraphQLUpdateInputType },
     s3VideoMigrateUpdate: { type: S3VideoMigrationInputType },
-    migrationErrors: { type: GraphQLList(GraphQLString) },
+    migrationErrors: { type: new GraphQLList(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,

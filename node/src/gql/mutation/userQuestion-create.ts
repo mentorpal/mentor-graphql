@@ -36,13 +36,13 @@ export const UserQuestionCreateInputType = new GraphQLInputObjectType({
   description: 'Input for creating a user question',
   fields: () => ({
     question: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
     },
     mentor: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
     },
     classifierAnswer: {
-      type: GraphQLNonNull(GraphQLID),
+      type: new GraphQLNonNull(GraphQLID),
     },
     classifierAnswerType: {
       type: GraphQLString,
@@ -54,7 +54,7 @@ export const UserQuestionCreateInputType = new GraphQLInputObjectType({
       type: GraphQLString,
     },
     confidence: {
-      type: GraphQLNonNull(GraphQLFloat),
+      type: new GraphQLNonNull(GraphQLFloat),
     },
   }),
 });
@@ -62,7 +62,7 @@ export const UserQuestionCreateInputType = new GraphQLInputObjectType({
 export const userQuestionCreate = {
   type: UserQuestionType,
   args: {
-    userQuestion: { type: GraphQLNonNull(UserQuestionCreateInputType) },
+    userQuestion: { type: new GraphQLNonNull(UserQuestionCreateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,

@@ -21,19 +21,19 @@ import { canEditMentorPrivacy } from '../../../utils/check-permissions';
 export const OrgPermissionInputType = new GraphQLInputObjectType({
   name: 'OrgPermissionInputType',
   fields: {
-    org: { type: GraphQLNonNull(GraphQLID) },
-    viewPermission: { type: GraphQLNonNull(GraphQLString) },
-    editPermission: { type: GraphQLNonNull(GraphQLString) },
+    org: { type: new GraphQLNonNull(GraphQLID) },
+    viewPermission: { type: new GraphQLNonNull(GraphQLString) },
+    editPermission: { type: new GraphQLNonNull(GraphQLString) },
   },
 });
 
 export const updateMentorPrivacy = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
-    isPrivate: { type: GraphQLNonNull(GraphQLBoolean) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
+    isPrivate: { type: new GraphQLNonNull(GraphQLBoolean) },
     directLinkPrivate: { type: GraphQLBoolean },
-    orgPermissions: { type: GraphQLList(OrgPermissionInputType) },
+    orgPermissions: { type: new GraphQLList(OrgPermissionInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,

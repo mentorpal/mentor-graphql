@@ -18,7 +18,7 @@ import MentorType from '../../types/mentor';
 export const mentorSetAdvanced = {
   type: MentorType,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
     isAdvanced: { type: GraphQLBoolean },
   },
   resolve: async (

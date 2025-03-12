@@ -12,7 +12,7 @@ import { Mentor } from '../../models/Mentor';
 export const mentorPreviewed = {
   type: MentorType,
   args: {
-    id: { type: GraphQLNonNull(GraphQLID) },
+    id: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,

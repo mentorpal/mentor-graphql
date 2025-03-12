@@ -35,7 +35,7 @@ export const UpdateAnswerInputType = new GraphQLInputObjectType({
   fields: () => ({
     transcript: { type: GraphQLString },
     status: { type: GraphQLString },
-    previousVersions: { type: GraphQLList(PreviousAnswerVersionInputType) },
+    previousVersions: { type: new GraphQLList(PreviousAnswerVersionInputType) },
   }),
 });
 
@@ -55,8 +55,8 @@ export const updateAnswer = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLID },
-    questionId: { type: GraphQLNonNull(GraphQLID) },
-    answer: { type: GraphQLNonNull(UpdateAnswerInputType) },
+    questionId: { type: new GraphQLNonNull(GraphQLID) },
+    answer: { type: new GraphQLNonNull(UpdateAnswerInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,

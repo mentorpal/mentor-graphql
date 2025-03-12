@@ -57,10 +57,10 @@ export interface UploadTaskStatusUpdateInput {
 export const uploadTaskStatusUpdate = {
   type: GraphQLBoolean,
   args: {
-    mentorId: { type: GraphQLNonNull(GraphQLID) },
-    questionId: { type: GraphQLNonNull(GraphQLID) },
+    mentorId: { type: new GraphQLNonNull(GraphQLID) },
+    questionId: { type: new GraphQLNonNull(GraphQLID) },
     uploadTaskStatusInput: {
-      type: GraphQLNonNull(UploadTaskStatusUpdateInputType),
+      type: new GraphQLNonNull(UploadTaskStatusUpdateInputType),
     },
   },
   resolve: async (

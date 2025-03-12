@@ -21,7 +21,7 @@ export const ImportTaskType = new GraphQLObjectType({
     mentor: mentorField,
     graphQLUpdate: { type: GraphQLUpdateType },
     s3VideoMigrate: { type: S3VideoMigrateType },
-    migrationErrors: { type: GraphQLList(GraphQLString) },
+    migrationErrors: { type: new GraphQLList(GraphQLString) },
     createdAt: { type: DateType },
     updatedAt: { type: DateType },
   }),

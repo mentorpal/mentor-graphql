@@ -17,8 +17,8 @@ import { UserQuestionType } from '../types/user-question';
 export const userQuestionSetFeedback = {
   type: UserQuestionType,
   args: {
-    id: { type: GraphQLNonNull(GraphQLID) },
-    feedback: { type: GraphQLNonNull(GraphQLString) },
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    feedback: { type: new GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,

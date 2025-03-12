@@ -15,9 +15,9 @@ import { Mentor as MentorModel } from '../../../models';
 import { Types } from 'mongoose';
 
 export const removeQuestionFromRecordQueue = {
-  type: GraphQLList(GraphQLID),
+  type: new GraphQLList(GraphQLID),
   args: {
-    questionId: { type: GraphQLNonNull(GraphQLID) },
+    questionId: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,

@@ -18,7 +18,7 @@ export const orgHeaderUpdate = {
   type: GraphQLBoolean,
   args: {
     orgId: { type: GraphQLID },
-    imgPath: { type: GraphQLNonNull(GraphQLString) },
+    imgPath: { type: new GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,

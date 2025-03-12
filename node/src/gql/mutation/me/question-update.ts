@@ -40,7 +40,7 @@ export const QuestionUpdateInputType = new GraphQLInputObjectType({
     name: { type: GraphQLString },
     clientId: { type: GraphQLString },
     subType: { type: GraphQLString },
-    paraphrases: { type: GraphQLList(GraphQLString) },
+    paraphrases: { type: new GraphQLList(GraphQLString) },
     mentor: { type: GraphQLID },
     mentorType: { type: GraphQLString },
     minVideoLength: { type: GraphQLInt },
@@ -50,7 +50,7 @@ export const QuestionUpdateInputType = new GraphQLInputObjectType({
 export const updateQuestion = {
   type: QuestionType,
   args: {
-    question: { type: GraphQLNonNull(QuestionUpdateInputType) },
+    question: { type: new GraphQLNonNull(QuestionUpdateInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,

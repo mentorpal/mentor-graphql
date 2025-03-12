@@ -6,26 +6,29 @@ The full terms of this copyright and license should always be found in the root 
 */
 import { GraphQLObjectType } from 'graphql';
 import { revokeToken, UserAccessTokenType } from '../types/user-access-token';
-
+import { CookieHandlers } from '../../utils/cookie-handler/cookie-handler';
 export const logout = {
   type: UserAccessTokenType,
   args: {},
   resolve: async (
     _root: GraphQLObjectType,
-    context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
+    context: {
+      refreshToken: string;
+      cookieHandler: CookieHandlers;
+    }
   ): Promise<void> => {
     try {
-      const token = context.req.cookies[process.env.REFRESH_TOKEN_NAME];
+      const token = context.refreshToken;
       await revokeToken(token);
       const cookieOptions = {
         httpOnly: true,
         expires: new Date(Date.now()),
       };
-      context.res.cookie(
-        process.env.REFRESH_TOKEN_NAME,
-        Date.now(),
-        cookieOptions
-      );
+      context.cookieHandler.addResCookie({
+        name: process.env.REFRESH_TOKEN_NAME,
+        value: Date.now().toString(),
+        options: cookieOptions,
+      });
     } catch (error) {
       throw new Error(error);
     }

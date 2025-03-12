@@ -19,7 +19,7 @@ export const updateMentorKeywords = {
   type: GraphQLBoolean,
   args: {
     mentorId: { type: GraphQLID },
-    keywords: { type: GraphQLList(GraphQLString) },
+    keywords: { type: new GraphQLList(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,

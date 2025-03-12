@@ -20,7 +20,7 @@ const response = new GraphQLObjectType({
 });
 
 export const categoryAnswers = {
-  type: GraphQLList(response),
+  type: new GraphQLList(response),
   args: {
     category: { type: GraphQLString },
   },

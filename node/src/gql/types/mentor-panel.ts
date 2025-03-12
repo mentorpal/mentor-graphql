@@ -22,14 +22,14 @@ export const MentorPanelType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     org: { type: GraphQLID },
     subject: { type: GraphQLID },
-    mentors: { type: GraphQLList(GraphQLID) },
+    mentors: { type: new GraphQLList(GraphQLID) },
     title: { type: GraphQLString },
     subtitle: { type: GraphQLString },
     createdAt: { type: DateType },
     updatedAt: { type: DateType },
     deleted: { type: GraphQLBoolean },
     mentorData: {
-      type: GraphQLList(MentorType),
+      type: new GraphQLList(MentorType),
       resolve: async (mp: MentorPanel) => {
         const mentors = await MentorModel.find({
           _id: { $in: mp.mentors },

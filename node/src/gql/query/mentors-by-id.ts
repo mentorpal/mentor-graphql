@@ -15,9 +15,9 @@ import { Mentor } from '../../models/Mentor';
 import MentorType from '../types/mentor';
 
 export const mentorsById = {
-  type: GraphQLList(MentorType),
+  type: new GraphQLList(MentorType),
   args: {
-    ids: { type: GraphQLNonNull(GraphQLList(GraphQLID)) },
+    ids: { type: new GraphQLNonNull(new GraphQLList(GraphQLID)) },
   },
   resolve: async (
     _root: GraphQLObjectType,

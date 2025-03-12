@@ -11,16 +11,19 @@ import {
   UserAccessToken,
   generateAccessToken,
 } from '../types/user-access-token';
+import { User } from '../../models/User';
 
 export const login = {
   type: UserAccessTokenType,
   args: {
-    accessToken: { type: GraphQLNonNull(GraphQLString) },
+    accessToken: { type: new GraphQLNonNull(GraphQLString) },
   },
   resolve: async (
     _root: GraphQLObjectType,
     _args: { accessToken: string },
-    context: any // eslint-disable-line  @typescript-eslint/no-explicit-any
+    context: {
+      user: User;
+    }
   ): Promise<UserAccessToken> => {
     try {
       if (!context.user) {

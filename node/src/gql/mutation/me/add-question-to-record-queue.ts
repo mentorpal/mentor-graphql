@@ -15,9 +15,9 @@ import { Mentor as MentorModel, Answer as AnswerModel } from '../../../models';
 import { Types } from 'mongoose';
 
 export const addQuestionToRecordQueue = {
-  type: GraphQLList(GraphQLID),
+  type: new GraphQLList(GraphQLID),
   args: {
-    questionId: { type: GraphQLNonNull(GraphQLID) },
+    questionId: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve: async (
     _root: GraphQLObjectType,

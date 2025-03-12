@@ -37,9 +37,9 @@ export const S3VideoMigrationInputType = new GraphQLInputObjectType({
 export const importTaskCreate = {
   type: GraphQLBoolean,
   args: {
-    mentor: { type: GraphQLNonNull(GraphQLID) },
-    graphQLUpdate: { type: GraphQLNonNull(GraphQLUpdateInputType) },
-    s3VideoMigrate: { type: GraphQLNonNull(S3VideoMigrationInputType) },
+    mentor: { type: new GraphQLNonNull(GraphQLID) },
+    graphQLUpdate: { type: new GraphQLNonNull(GraphQLUpdateInputType) },
+    s3VideoMigrate: { type: new GraphQLNonNull(S3VideoMigrationInputType) },
   },
   resolve: async (
     _root: GraphQLObjectType,
