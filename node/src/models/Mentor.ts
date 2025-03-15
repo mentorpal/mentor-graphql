@@ -919,8 +919,12 @@ MentorSchema.statics.getAnswers = async function ({
   }, {});
   const answerResult = questionIds.map((qid: Types.ObjectId) => {
     const questionDoc = questions.find((q) => qid == q._id) || qid;
+    const answer = answersByQid[`${qid}`];
+    if (answer) {
+      answer['docExists'] = true;
+    }
     return (
-      answersByQid[`${qid}`] || {
+      answer || {
         mentor: userMentor._id,
         question: questionDoc,
         transcript: '',
@@ -930,6 +934,7 @@ MentorSchema.statics.getAnswers = async function ({
         vttMedia: undefined,
         externalVideoIds: externalVideoIdsDefault,
         previousVersions: [],
+        docExists: false,
       }
     );
   });
