@@ -921,7 +921,7 @@ MentorSchema.statics.getAnswers = async function ({
     const questionDoc = questions.find((q) => qid == q._id) || qid;
     const answer = answersByQid[`${qid}`];
     if (answer) {
-      answer['docExists'] = true;
+      answer['docMissing'] = false;
     }
     return (
       answer || {
@@ -934,7 +934,7 @@ MentorSchema.statics.getAnswers = async function ({
         vttMedia: undefined,
         externalVideoIds: externalVideoIdsDefault,
         previousVersions: [],
-        docExists: false,
+        docMissing: true,
       }
     );
   });
