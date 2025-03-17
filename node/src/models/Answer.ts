@@ -84,6 +84,7 @@ export interface Answer extends Document<Types.ObjectId> {
   hasUntransferredMedia: boolean;
   externalVideoIds: IExternalVideoIds;
   previousVersions: PreviousAnswerVersions[];
+  docMissing: boolean;
 }
 
 export interface HydratedAnswer extends Omit<Answer, 'question'> {

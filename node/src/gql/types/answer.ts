@@ -126,6 +126,7 @@ export const AnswerType = new GraphQLObjectType({
     previousVersions: {
       type: GraphQLList(PreviousAnswerVersionType),
     },
+    docMissing: { type: GraphQLBoolean },
   }),
 });
 
