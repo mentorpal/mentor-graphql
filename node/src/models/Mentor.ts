@@ -815,7 +815,7 @@ MentorSchema.statics.getOrphanedCompleteAnswers = async function (
     return acc;
   }, []);
   const allSubjectQuestionIds = allSubjectQuestions.map(
-    (sq: { question: { _id: Types.ObjectId } }) => `${sq.question._id}`
+    (sq: { question: Types.ObjectId }) => `${sq.question}`
   );
   const allMentorAnswers = await AnswerModel.find({
     mentor: mentor._id,
