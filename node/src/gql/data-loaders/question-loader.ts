@@ -9,11 +9,16 @@ import QuestionModel from '../../models/Question';
 import { Types } from 'mongoose';
 
 export const createQuestionLoader = () => {
-  return new DataLoader(async (questionIds: readonly string[]) => {
-    const objectIds = questionIds.map((id) => new Types.ObjectId(id));
-    const questions = await QuestionModel.find({ _id: { $in: objectIds } });
-    return questionIds.map(
-      (id) => questions.find((q) => q._id.toString() === id) || null
-    );
-  });
+  return new DataLoader(
+    async (questionIds: readonly string[]) => {
+      const objectIds = questionIds.map((id) => new Types.ObjectId(id));
+      const questions = await QuestionModel.find({ _id: { $in: objectIds } });
+      return questionIds.map(
+        (id) => questions.find((q) => q._id.toString() === id) || null
+      );
+    },
+    {
+      cache: false,
+    }
+  );
 };
