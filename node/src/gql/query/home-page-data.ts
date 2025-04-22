@@ -92,9 +92,14 @@ export const homePageData = {
       : await SettingModel.getConfig();
     const activeMentors = config.activeMentors || [];
     const activeMentorPanels = config.activeMentorPanels || [];
-    const panels = await MentorPanelModel.find({
+    const _panels = await MentorPanelModel.find({
       _id: { $in: activeMentorPanels },
     });
+    const panels = _panels.sort(
+      (a, b) =>
+        activeMentorPanels.indexOf(a._id.toString()) -
+        activeMentorPanels.indexOf(b._id.toString())
+    );
     const panelMentors = panels.flatMap((panel) => panel.mentors);
     const mentors = await MentorModel.find({
       _id: { $in: [...activeMentors, ...panelMentors] },

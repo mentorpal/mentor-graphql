@@ -10,6 +10,8 @@ import { Express } from 'express';
 import { describe } from 'mocha';
 import mongoUnit from 'mongo-unit';
 import request from 'supertest';
+import MentorPanelModel from '../../../src/models/MentorPanel';
+import OrganizationModel from '../../../src/models/Organization';
 
 describe('home-page-data', () => {
   let app: Express;
@@ -91,6 +93,23 @@ describe('home-page-data', () => {
   });
 
   it('returns data for specified org', async () => {
+    await MentorPanelModel.create({
+      _id: '5ffdf41a1ee2c62111111116',
+      subject: '5ffdf41a1ee2c62320b49eb3',
+      mentors: ['5ffdf41a1ee2c62111111112'],
+      title: 'fake panel title 2',
+      subtitle: 'fake panel subtitle 2',
+    });
+    await OrganizationModel.saveConfig('511111111111111111111111', {
+      activeMentorPanels: [
+        '5ffdf41a1ee2c62111111111',
+        '5ffdf41a1ee2c62111111116',
+      ],
+      featuredMentorPanels: [
+        '5ffdf41a1ee2c62111111111',
+        '5ffdf41a1ee2c62111111116',
+      ],
+    });
     const res = await request(app)
       .post('/graphql')
       .send({
@@ -132,16 +151,22 @@ describe('home-page-data', () => {
       },
     ]);
     expect(res.body).to.have.deep.nested.property('data.homePageData.panels');
-    expect(res.body.data.homePageData.panels).to.have.length(1);
-    expect(res.body.data.homePageData.panels).to.deep.include.members([
-      {
-        _id: '5ffdf41a1ee2c62111111111',
-        org: null,
-        subject: '5ffdf41a1ee2c62320b49eb3',
-        mentors: ['5ffdf41a1ee2c62111111112'],
-        title: 'fake panel title',
-        subtitle: 'fake panel subtitle',
-      },
-    ]);
+    expect(res.body.data.homePageData.panels).to.have.length(2);
+    expect(res.body.data.homePageData.panels[0]).to.deep.equal({
+      _id: '5ffdf41a1ee2c62111111111',
+      org: null,
+      subject: '5ffdf41a1ee2c62320b49eb3',
+      mentors: ['5ffdf41a1ee2c62111111112'],
+      title: 'fake panel title',
+      subtitle: 'fake panel subtitle',
+    });
+    expect(res.body.data.homePageData.panels[1]).to.deep.equal({
+      _id: '5ffdf41a1ee2c62111111116',
+      org: null,
+      subject: '5ffdf41a1ee2c62320b49eb3',
+      mentors: ['5ffdf41a1ee2c62111111112'],
+      title: 'fake panel title 2',
+      subtitle: 'fake panel subtitle 2',
+    });
   });
 });
