@@ -132,6 +132,7 @@ describe('home-page-data', () => {
             title
             subtitle
           }
+          activeMentorIds
         }
       }`,
         variables: { orgId: '511111111111111111111111' },
@@ -168,5 +169,9 @@ describe('home-page-data', () => {
       title: 'fake panel title 2',
       subtitle: 'fake panel subtitle 2',
     });
+    expect(res.body.data.homePageData.activeMentorIds).to.deep.include.members([
+      '5ffdf41a1ee2c62111111112',
+      '5ffdf41a1ee2c62111111113',
+    ]);
   });
 });

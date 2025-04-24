@@ -817,6 +817,13 @@ module.exports = {
           key: 'featuredMentorPanels',
           value: [new ObjectId('5ffdf41a1ee2c62111111111')],
         },
+        {
+          key: 'activeMentors',
+          value: [
+            new ObjectId('5ffdf41a1ee2c62111111113'),
+            new ObjectId('5ffdf41a1ee2c62111111112'),
+          ],
+        },
       ],
     },
     {

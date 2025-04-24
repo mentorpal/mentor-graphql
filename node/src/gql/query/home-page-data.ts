@@ -66,12 +66,14 @@ export const HomePageDataType = new GraphQLObjectType({
   fields: () => ({
     panels: { type: new GraphQLList(HomePageMentorPanelType) },
     mentors: { type: new GraphQLList(HomePageMentorType) },
+    activeMentorIds: { type: new GraphQLList(GraphQLString) },
   }),
 });
 
 export interface HomePageData {
   panels: HomePageMentorPanel[];
   mentors: HomePageMentor[];
+  activeMentorIds: string[];
 }
 
 export const homePageData = {
@@ -134,7 +136,11 @@ export const homePageData = {
       title: panel.title,
       subtitle: panel.subtitle,
     }));
-    return { mentors: homePageMentors, panels: homePageMentorPanels };
+    return {
+      mentors: homePageMentors,
+      panels: homePageMentorPanels,
+      activeMentorIds: activeMentors.map((mentor) => mentor.toString()),
+    };
   },
 };
 
