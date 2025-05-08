@@ -48,6 +48,7 @@ describe('home-page-data', () => {
             mentors
             title
             subtitle
+            panelUrl
           }
         }
       }`,
@@ -88,6 +89,8 @@ describe('home-page-data', () => {
         mentors: ['5ffdf41a1ee2c62111111112'],
         title: 'fake panel title',
         subtitle: 'fake panel subtitle',
+        panelUrl:
+          'https://fakedomain.org/chat/?mentor=5ffdf41a1ee2c62111111112',
       },
     ]);
   });

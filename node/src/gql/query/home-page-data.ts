@@ -26,6 +26,7 @@ export const HomePageMentorPanelType = new GraphQLObjectType({
     mentors: { type: GraphQLList(GraphQLID) },
     title: { type: GraphQLString },
     subtitle: { type: GraphQLString },
+    panelUrl: { type: GraphQLString },
   }),
 });
 
@@ -36,6 +37,7 @@ export interface HomePageMentorPanel {
   mentors: string[];
   title: string;
   subtitle: string;
+  panelUrl: string;
 }
 
 export const HomePageMentorType = new GraphQLObjectType({
@@ -135,6 +137,7 @@ export const homePageData = {
       mentors: panel.mentors.map((mentor) => mentor.toString()),
       title: panel.title,
       subtitle: panel.subtitle,
+      panelUrl: `https://${org?.subdomain ? `${org.subdomain}.` : ''}${domain}/chat/?${panel.mentors.map((mentor) => `mentor=${mentor.toString()}`).join('&')}`,
     }));
     return {
       mentors: homePageMentors,
