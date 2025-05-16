@@ -93,10 +93,10 @@ export async function canViewMentor(
       return ownsOrAdmin;
     }
     const mentorSharedOrgIds: string[] = mentor.orgPermissions
-      .filter((op) => op.viewPermission === OrgViewPermissionType.SHARE)
+      ?.filter((op) => op.viewPermission === OrgViewPermissionType.SHARE)
       .map((op) => op.org.toString());
     const userManagedOrgs =
-      mentorSharedOrgIds.length > 0
+      mentorSharedOrgIds?.length > 0
         ? _userManagedOrgs || (await getUsersManagedOrgs(user))
         : [];
     return userManagedOrgs.some((org) =>
