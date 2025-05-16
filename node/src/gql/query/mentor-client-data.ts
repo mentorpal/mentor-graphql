@@ -227,6 +227,7 @@ export const mentorData = {
     },
     context: { user?: User; org: Organization }
   ): Promise<MentorClientData> => {
+    console.log("graphql query starting")
     const mentor = await MentorModel.findById(args.mentor);
     if (!mentor) {
       throw new Error(`mentor ${args.mentor} not found`);
@@ -240,21 +241,21 @@ export const mentorData = {
       throw new Error('mentor can only be accessed via homepage');
     }
 
-    let config: Config;
-    if (
-      context.org &&
-      canViewOrganization(context.org, context.user, args.orgAccessCode)
-    ) {
-      config = await OrganizationModel.getConfig(context.org);
-    } else {
-      config = await SettingModel.getConfig();
-    }
+    // Get config and utterance questions in parallel
+    const [config, utteranceQuestions] = await Promise.all([
+      context.org && canViewOrganization(context.org, context.user, args.orgAccessCode)
+        ? OrganizationModel.getConfig(context.org)
+        : SettingModel.getConfig(),
+      QuestionModel.find({ type: QuestionType.UTTERANCE })
+    ]);
 
+    console.log("after config")
     let topicQuestions: TopicQuestions[] = [];
     let sQuestions: SubjectQuestion[] = [];
     let questions: Question[] = [];
     let topics: Topic[] = [];
-    // use a single subject, either specified or default
+
+    // Process subject data
     if (
       (args.subject && mentor.subjects.includes(args.subject)) ||
       (mentor.defaultSubject && mentor.subjects.includes(mentor.defaultSubject))
@@ -262,10 +263,10 @@ export const mentorData = {
       const subject = await SubjectModel.findById(
         args.subject || mentor.defaultSubject
       );
-      // get topics in subject order
       topics = subject.topics;
-      // get recorded questions in subject order
       const sqs = subject.questions;
+      
+      // Get questions first, then get completed questions
       questions = await getQuestions(mentor, sqs);
       sQuestions = await getCompletedQuestions(
         mentor,
@@ -273,24 +274,27 @@ export const mentorData = {
         questions,
         subject.categories
       );
-    }
-    // no specified or default subject, use all subjects
-    else {
+      console.log("after get completed questions 1")
+    } else {
+      // Get all subjects and their data in parallel
       const subjects = await SubjectModel.find({
         _id: { $in: mentor.subjects },
       });
+      console.log("after get subjects")
+      
       const allCategories = subjects.map((s) => s.categories).flat();
-      // get topics in alphabetical order
+      console.log("after get all categories")
+      
+      // Get topics in alphabetical order
       topics = subjects.reduce((acc, cur) => {
         const newTopics = cur.topics.filter(
           (ct) => !acc.find((t) => t._id === ct._id)
         );
         return [...acc, ...newTopics];
       }, []);
-      topics.sort((a, b) => {
-        return a.name.localeCompare(b.name);
-      });
-      // get recorded questions in alphabetical order
+      topics.sort((a, b) => a.name.localeCompare(b.name));
+
+      // Get questions first, then get completed questions
       const sqs = subjects.reduce((acc, cur) => [...acc, ...cur.questions], []);
       questions = await getQuestions(mentor, sqs);
       sQuestions = await getCompletedQuestions(
@@ -299,38 +303,43 @@ export const mentorData = {
         questions,
         allCategories
       );
+      console.log("after get completed questions 2")
+
+      // Create a lookup table for questions
+      const questionsMap = new Map(questions.map(q => [`${q._id}`, q]));
       sQuestions.sort((a, b) => {
-        const qa = questions.find((q) => `${q._id}` === `${a.question}`);
-        const qb = questions.find((q) => `${q._id}` === `${b.question}`);
+        const qa = questionsMap.get(`${a.question}`);
+        const qb = questionsMap.get(`${b.question}`);
         return (
           qa.question.localeCompare(qb.question) *
           (config.questionSortOrder ? 1 : -1)
         );
       });
+      console.log("after sort questions")
     }
 
+    // Sort topics and questions based on config
     if (config.questionSortOrder === 'Alphabetical') {
-      topics.sort((a, b) => {
-        return a.name.localeCompare(b.name);
-      });
+      topics.sort((a, b) => a.name.localeCompare(b.name));
+      const questionsMap = new Map(questions.map(q => [`${q._id}`, q]));
       sQuestions.sort((a, b) => {
-        const qa = questions.find((q) => `${q._id}` === `${a.question}`);
-        const qb = questions.find((q) => `${q._id}` === `${b.question}`);
+        const qa = questionsMap.get(`${a.question}`);
+        const qb = questionsMap.get(`${b.question}`);
         return qa.question.localeCompare(qb.question);
       });
-    }
-    if (config.questionSortOrder === 'Reverse-Alphabetical') {
-      topics.sort((a, b) => {
-        return a.name.localeCompare(b.name) * -1;
-      });
+      console.log("after sort topics and questions")
+    } else if (config.questionSortOrder === 'Reverse-Alphabetical') {
+      topics.sort((a, b) => a.name.localeCompare(b.name) * -1);
+      const questionsMap = new Map(questions.map(q => [`${q._id}`, q]));
       sQuestions.sort((a, b) => {
-        const qa = questions.find((q) => `${q._id}` === `${a.question}`);
-        const qb = questions.find((q) => `${q._id}` === `${b.question}`);
+        const qa = questionsMap.get(`${a.question}`);
+        const qb = questionsMap.get(`${b.question}`);
         return qa.question.localeCompare(qb.question) * -1;
       });
+      console.log("after sort topics and questions reverse")
     }
 
-    // get questions in topic in order
+    // Process topic questions
     const topicQuestionRecord: Record<string, string[]> = {};
     for (const topic of topics) {
       topicQuestionRecord[topic.id] = [];
@@ -343,30 +352,35 @@ export const mentorData = {
         }
       }
     }
+    console.log("after topicQuestionRecord")
+
     topicQuestions = Object.keys(topicQuestionRecord)
-      .filter((key) => topicQuestionRecord[key].length > 0) // don't return empty topics
+      .filter((key) => topicQuestionRecord[key].length > 0)
       .map((key) => ({
         topic: topics.find((t) => `${t.id}` === key)?.name,
         questions: topicQuestionRecord[key].map(
           (tq) => questions.find((q) => `${q._id}` === tq)?.question
         ),
       }));
+    console.log("after topicQuestions")
 
-    const utteranceQuestions = await QuestionModel.find({
-      type: QuestionType.UTTERANCE,
-    });
-    let utteranceAnswers = await AnswerModel.find({
+    // Get utterance answers in parallel with other operations
+    const utteranceAnswers = await AnswerModel.find({
       mentor: mentor._id,
       question: { $in: utteranceQuestions.map((q) => q.id) },
     });
-    utteranceAnswers = utteranceAnswers.filter((a) =>
+    console.log("after utteranceAnswers")
+
+    const filteredUtteranceAnswers = utteranceAnswers.filter((a) =>
       isAnswerComplete(
         a,
         utteranceQuestions.find((q) => `${q._id}` === `${a.question}`),
         mentor
       )
     );
-    const utterances: AnswerClientData[] = utteranceAnswers.map((u) => ({
+    console.log("after utteranceAnswers filter")
+
+    const utterances: AnswerClientData[] = filteredUtteranceAnswers.map((u) => ({
       _id: u.id,
       name: utteranceQuestions.find((q) => `${q.id}` === `${u.question}`)?.name,
       transcript: u.transcript,
@@ -378,6 +392,7 @@ export const mentorData = {
         utteranceQuestions.find((q) => `${q.id}` === `${u.question}`)
           ?.subType || '',
     }));
+    console.log("graphql query ending asd asdfsad")
 
     return {
       _id: mentor._id.toString(),
