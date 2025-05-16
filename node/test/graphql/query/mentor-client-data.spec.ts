@@ -271,6 +271,33 @@ describe('mentorClientData', () => {
     });
   });
 
+  it('get mentorClientData ignoreTopicQuestions', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+        mentorClientData(mentor: "5ffdf41a1ee2c62119991234", ignoreTopicQuestions: true) {
+          _id
+          name
+          title
+          mentorType
+          topicQuestions {
+            topic
+            questions
+          }
+        }
+    }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body.data.mentorClientData).to.eql({
+      _id: '5ffdf41a1ee2c62119991234',
+      name: 'Test Default Topics Mentor',
+      title: null,
+      mentorType: 'VIDEO',
+      topicQuestions: [],
+    });
+  });
+
   describe('private mentor', () => {
     it('returns mentor if user is owner', async () => {
       const token = getToken('5ffdf41a1ee2c62320b49ea7');

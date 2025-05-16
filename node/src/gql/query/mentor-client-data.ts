@@ -171,6 +171,115 @@ async function getCompletedQuestions(
   return subjectQuestionsWithUpdatedTopics;
 }
 
+async function getTopicQuestions(
+  mentor: Mentor,
+  config: Config,
+  subjectId?: Types.ObjectId
+): Promise<TopicQuestions[]> {
+  let topicQuestions: TopicQuestions[] = [];
+  let sQuestions: SubjectQuestion[] = [];
+  let questions: Question[] = [];
+  let topics: Topic[] = [];
+  // use a single subject, either specified or default
+  if (
+    (subjectId && mentor.subjects.includes(subjectId)) ||
+    (mentor.defaultSubject && mentor.subjects.includes(mentor.defaultSubject))
+  ) {
+    const subject = await SubjectModel.findById(
+      subjectId || mentor.defaultSubject
+    );
+    // get topics in subject order
+    topics = subject.topics;
+    // get recorded questions in subject order
+    const sqs = subject.questions;
+    questions = await getQuestions(mentor, sqs);
+    sQuestions = await getCompletedQuestions(
+      mentor,
+      sqs,
+      questions,
+      subject.categories
+    );
+  }
+  // no specified or default subject, use all subjects
+  else {
+    const subjects = await SubjectModel.find({
+      _id: { $in: mentor.subjects },
+    });
+    const allCategories = subjects.map((s) => s.categories).flat();
+    // get topics in alphabetical order
+    topics = subjects.reduce((acc, cur) => {
+      const newTopics = cur.topics.filter(
+        (ct) => !acc.find((t) => t._id === ct._id)
+      );
+      return [...acc, ...newTopics];
+    }, []);
+    topics.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
+    // get recorded questions in alphabetical order
+    const sqs = subjects.reduce((acc, cur) => [...acc, ...cur.questions], []);
+    questions = await getQuestions(mentor, sqs);
+    sQuestions = await getCompletedQuestions(
+      mentor,
+      sqs,
+      questions,
+      allCategories
+    );
+    sQuestions.sort((a, b) => {
+      const qa = questions.find((q) => `${q._id}` === `${a.question}`);
+      const qb = questions.find((q) => `${q._id}` === `${b.question}`);
+      return (
+        qa.question.localeCompare(qb.question) *
+        (config.questionSortOrder ? 1 : -1)
+      );
+    });
+  }
+
+  if (config.questionSortOrder === 'Alphabetical') {
+    topics.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
+    sQuestions.sort((a, b) => {
+      const qa = questions.find((q) => `${q._id}` === `${a.question}`);
+      const qb = questions.find((q) => `${q._id}` === `${b.question}`);
+      return qa.question.localeCompare(qb.question);
+    });
+  }
+  if (config.questionSortOrder === 'Reverse-Alphabetical') {
+    topics.sort((a, b) => {
+      return a.name.localeCompare(b.name) * -1;
+    });
+    sQuestions.sort((a, b) => {
+      const qa = questions.find((q) => `${q._id}` === `${a.question}`);
+      const qb = questions.find((q) => `${q._id}` === `${b.question}`);
+      return qa.question.localeCompare(qb.question) * -1;
+    });
+  }
+
+  // get questions in topic in order
+  const topicQuestionRecord: Record<string, string[]> = {};
+  for (const topic of topics) {
+    topicQuestionRecord[topic.id] = [];
+    const topicQuestions = sQuestions.filter((sq) =>
+      sq.topics.includes(topic.id)
+    );
+    for (const tQuestion of topicQuestions) {
+      if (!topicQuestionRecord[topic.id].includes(`${tQuestion.question}`)) {
+        topicQuestionRecord[topic.id].push(`${tQuestion.question}`);
+      }
+    }
+  }
+  topicQuestions = Object.keys(topicQuestionRecord)
+    .filter((key) => topicQuestionRecord[key].length > 0) // don't return empty topics
+    .map((key) => ({
+      topic: topics.find((t) => `${t.id}` === key)?.name,
+      questions: topicQuestionRecord[key].map(
+        (tq) => questions.find((q) => `${q._id}` === tq)?.question
+      ),
+    }));
+  return topicQuestions;
+}
+
 interface LeftHomePageData {
   time: string;
   targetMentors: string[];
@@ -216,6 +325,7 @@ export const mentorData = {
     subject: { type: GraphQLID },
     orgAccessCode: { type: GraphQLString },
     leftHomePageData: { type: GraphQLString },
+    ignoreTopicQuestions: { type: GraphQLBoolean },
   },
   resolve: async (
     _root: GraphQLObjectType,
@@ -224,6 +334,7 @@ export const mentorData = {
       subject?: Types.ObjectId;
       orgAccessCode?: string;
       leftHomePageData?: string;
+      ignoreTopicQuestions?: boolean;
     },
     context: { user?: User; org: Organization }
   ): Promise<MentorClientData> => {
@@ -249,108 +360,6 @@ export const mentorData = {
     } else {
       config = await SettingModel.getConfig();
     }
-
-    let topicQuestions: TopicQuestions[] = [];
-    let sQuestions: SubjectQuestion[] = [];
-    let questions: Question[] = [];
-    let topics: Topic[] = [];
-    // use a single subject, either specified or default
-    if (
-      (args.subject && mentor.subjects.includes(args.subject)) ||
-      (mentor.defaultSubject && mentor.subjects.includes(mentor.defaultSubject))
-    ) {
-      const subject = await SubjectModel.findById(
-        args.subject || mentor.defaultSubject
-      );
-      // get topics in subject order
-      topics = subject.topics;
-      // get recorded questions in subject order
-      const sqs = subject.questions;
-      questions = await getQuestions(mentor, sqs);
-      sQuestions = await getCompletedQuestions(
-        mentor,
-        sqs,
-        questions,
-        subject.categories
-      );
-    }
-    // no specified or default subject, use all subjects
-    else {
-      const subjects = await SubjectModel.find({
-        _id: { $in: mentor.subjects },
-      });
-      const allCategories = subjects.map((s) => s.categories).flat();
-      // get topics in alphabetical order
-      topics = subjects.reduce((acc, cur) => {
-        const newTopics = cur.topics.filter(
-          (ct) => !acc.find((t) => t._id === ct._id)
-        );
-        return [...acc, ...newTopics];
-      }, []);
-      topics.sort((a, b) => {
-        return a.name.localeCompare(b.name);
-      });
-      // get recorded questions in alphabetical order
-      const sqs = subjects.reduce((acc, cur) => [...acc, ...cur.questions], []);
-      questions = await getQuestions(mentor, sqs);
-      sQuestions = await getCompletedQuestions(
-        mentor,
-        sqs,
-        questions,
-        allCategories
-      );
-      sQuestions.sort((a, b) => {
-        const qa = questions.find((q) => `${q._id}` === `${a.question}`);
-        const qb = questions.find((q) => `${q._id}` === `${b.question}`);
-        return (
-          qa.question.localeCompare(qb.question) *
-          (config.questionSortOrder ? 1 : -1)
-        );
-      });
-    }
-
-    if (config.questionSortOrder === 'Alphabetical') {
-      topics.sort((a, b) => {
-        return a.name.localeCompare(b.name);
-      });
-      sQuestions.sort((a, b) => {
-        const qa = questions.find((q) => `${q._id}` === `${a.question}`);
-        const qb = questions.find((q) => `${q._id}` === `${b.question}`);
-        return qa.question.localeCompare(qb.question);
-      });
-    }
-    if (config.questionSortOrder === 'Reverse-Alphabetical') {
-      topics.sort((a, b) => {
-        return a.name.localeCompare(b.name) * -1;
-      });
-      sQuestions.sort((a, b) => {
-        const qa = questions.find((q) => `${q._id}` === `${a.question}`);
-        const qb = questions.find((q) => `${q._id}` === `${b.question}`);
-        return qa.question.localeCompare(qb.question) * -1;
-      });
-    }
-
-    // get questions in topic in order
-    const topicQuestionRecord: Record<string, string[]> = {};
-    for (const topic of topics) {
-      topicQuestionRecord[topic.id] = [];
-      const topicQuestions = sQuestions.filter((sq) =>
-        sq.topics.includes(topic.id)
-      );
-      for (const tQuestion of topicQuestions) {
-        if (!topicQuestionRecord[topic.id].includes(`${tQuestion.question}`)) {
-          topicQuestionRecord[topic.id].push(`${tQuestion.question}`);
-        }
-      }
-    }
-    topicQuestions = Object.keys(topicQuestionRecord)
-      .filter((key) => topicQuestionRecord[key].length > 0) // don't return empty topics
-      .map((key) => ({
-        topic: topics.find((t) => `${t.id}` === key)?.name,
-        questions: topicQuestionRecord[key].map(
-          (tq) => questions.find((q) => `${q._id}` === tq)?.question
-        ),
-      }));
 
     const utteranceQuestions = await QuestionModel.find({
       type: QuestionType.UTTERANCE,
@@ -378,7 +387,6 @@ export const mentorData = {
         utteranceQuestions.find((q) => `${q.id}` === `${u.question}`)
           ?.subType || '',
     }));
-
     return {
       _id: mentor._id.toString(),
       name: mentor.name,
@@ -390,7 +398,9 @@ export const mentorData = {
         : '',
       mentorType: mentor.mentorType,
       allowContact: mentor.allowContact,
-      topicQuestions,
+      topicQuestions: args.ignoreTopicQuestions
+        ? []
+        : await getTopicQuestions(mentor, config, args.subject),
       utterances,
       isDirty: mentor.isDirty,
       isPublicApproved: mentor.isPublicApproved,
