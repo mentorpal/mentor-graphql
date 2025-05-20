@@ -130,19 +130,15 @@ async function getQuestions(
 async function getCompletedQuestions(
   mentor: Mentor,
   sQuestions: SubjectQuestion[],
-  questions: Question[],
+  questionDict: Record<string, Question>,
   categories: Category[]
 ): Promise<SubjectQuestion[]> {
   let answers = await AnswerModel.find({
     mentor: mentor._id,
-    question: { $in: questions.map((q) => q.id) },
+    question: { $in: Object.keys(questionDict) },
   });
   answers = answers.filter((a) =>
-    isAnswerComplete(
-      a,
-      questions.find((q) => `${q._id}` === `${a.question}`),
-      mentor
-    )
+    isAnswerComplete(a, questionDict[`${a.question}`], mentor)
   );
   const questionIds = answers.map((a) => `${a.question}`);
   const completedQuestions = sQuestions.filter((sq) =>
@@ -171,6 +167,16 @@ async function getCompletedQuestions(
   return subjectQuestionsWithUpdatedTopics;
 }
 
+function getQuestionsDict(questions: Question[]): Record<string, Question> {
+  return questions.reduce(
+    (acc, q) => {
+      acc[`${q.id}`] = q;
+      return acc;
+    },
+    {} as Record<string, Question>
+  );
+}
+
 async function getTopicQuestions(
   mentor: Mentor,
   config: Config,
@@ -179,6 +185,7 @@ async function getTopicQuestions(
   let topicQuestions: TopicQuestions[] = [];
   let sQuestions: SubjectQuestion[] = [];
   let questions: Question[] = [];
+  let questionDict: Record<string, Question> = {};
   let topics: Topic[] = [];
   // use a single subject, either specified or default
   if (
@@ -193,10 +200,11 @@ async function getTopicQuestions(
     // get recorded questions in subject order
     const sqs = subject.questions;
     questions = await getQuestions(mentor, sqs);
+    questionDict = getQuestionsDict(questions);
     sQuestions = await getCompletedQuestions(
       mentor,
       sqs,
-      questions,
+      questionDict,
       subject.categories
     );
   }
@@ -219,15 +227,16 @@ async function getTopicQuestions(
     // get recorded questions in alphabetical order
     const sqs = subjects.reduce((acc, cur) => [...acc, ...cur.questions], []);
     questions = await getQuestions(mentor, sqs);
+    questionDict = getQuestionsDict(questions);
     sQuestions = await getCompletedQuestions(
       mentor,
       sqs,
-      questions,
+      questionDict,
       allCategories
     );
     sQuestions.sort((a, b) => {
-      const qa = questions.find((q) => `${q._id}` === `${a.question}`);
-      const qb = questions.find((q) => `${q._id}` === `${b.question}`);
+      const qa = questionDict[`${a.question}`];
+      const qb = questionDict[`${b.question}`];
       return (
         qa.question.localeCompare(qb.question) *
         (config.questionSortOrder ? 1 : -1)
@@ -240,8 +249,8 @@ async function getTopicQuestions(
       return a.name.localeCompare(b.name);
     });
     sQuestions.sort((a, b) => {
-      const qa = questions.find((q) => `${q._id}` === `${a.question}`);
-      const qb = questions.find((q) => `${q._id}` === `${b.question}`);
+      const qa = questionDict[`${a.question}`];
+      const qb = questionDict[`${b.question}`];
       return qa.question.localeCompare(qb.question);
     });
   }
@@ -250,8 +259,8 @@ async function getTopicQuestions(
       return a.name.localeCompare(b.name) * -1;
     });
     sQuestions.sort((a, b) => {
-      const qa = questions.find((q) => `${q._id}` === `${a.question}`);
-      const qb = questions.find((q) => `${q._id}` === `${b.question}`);
+      const qa = questionDict[`${a.question}`];
+      const qb = questionDict[`${b.question}`];
       return qa.question.localeCompare(qb.question) * -1;
     });
   }
@@ -274,7 +283,7 @@ async function getTopicQuestions(
     .map((key) => ({
       topic: topics.find((t) => `${t.id}` === key)?.name,
       questions: topicQuestionRecord[key].map(
-        (tq) => questions.find((q) => `${q._id}` === tq)?.question
+        (tq) => questionDict[`${tq}`]?.question
       ),
     }));
   return topicQuestions;
