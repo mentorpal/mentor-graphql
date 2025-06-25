@@ -38,7 +38,7 @@ custom:
       MONGO_URI: ${ssm:/mentorpal/graphql/dev/mongo_uri, ''}
       NODE_ENV: 'careerfair-dev'
       STATIC_URL_BASE: 'https://static.devmentorpal.org/'
-      CORS_ORIGIN: 'https://newdev.mentorpal.org,https://devmentorpal.org,.mentorpal.org,.devmentorpal.org,http://mentorpallocal.org,http://mentorpallocal.org/,.mentorpallocal.org,http://localhost:3000,http://localhost:3000/,https://chic-mousse-b794cb.netlify.app,https://chic-mousse-b794cb.netlify.app/'
+      CORS_ORIGIN: 'https://newdev.mentorpal.org,https://devmentorpal.org,.mentorpal.org,.devmentorpal.org,http://mentorpallocal.org,http://mentorpallocal.org/,.mentorpallocal.org,http://localhost:3000,http://localhost:3000/,https://chic-mousse-b794cb.netlify.app,https://chic-mousse-b794cb.netlify.app/,https://quiet-axolotl-e7c64a.netlify.app/'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenDev'
       WEBACL_ARN: ${ssm:/devmentorpal/api_firewall_arn, ''}
@@ -54,7 +54,7 @@ custom:
       MONGO_URI: ${ssm:/mentorpal/graphql/dev/mongo_uri, ''}
       NODE_ENV: 'careerfair-dev'
       STATIC_URL_BASE: 'https://static.devmentorpal.org/'
-      CORS_ORIGIN: 'https://newdev.mentorpal.org,https://devmentorpal.org,.mentorpal.org,.devmentorpal.org,http://mentorpallocal.org,http://mentorpallocal.org/,.mentorpallocal.org,http://localhost:3000,http://localhost:3000/,https://chic-mousse-b794cb.netlify.app,https://chic-mousse-b794cb.netlify.app/'
+      CORS_ORIGIN: 'https://newdev.mentorpal.org,https://devmentorpal.org,.mentorpal.org,.devmentorpal.org,http://mentorpallocal.org,http://mentorpallocal.org/,.mentorpallocal.org,http://localhost:3000,http://localhost:3000/,https://chic-mousse-b794cb.netlify.app,https://chic-mousse-b794cb.netlify.app/,https://quiet-axolotl-e7c64a.netlify.app/'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenDev'
       WEBACL_ARN: ${ssm:/devmentorpal/api_firewall_arn, ''}
@@ -86,7 +86,7 @@ custom:
       MONGO_URI: ${ssm:/mentorpal/graphql/prod/mongo_uri, ''}
       NODE_ENV: 'careerfair'
       STATIC_URL_BASE: 'https://static.mentorpal.org/'
-      CORS_ORIGIN: 'https://careerfair.mentorpal.org,https://mentorpal.org,.mentorpal.org,https://chic-mousse-b794cb.netlify.app,https://chic-mousse-b794cb.netlify.app/'
+      CORS_ORIGIN: 'https://careerfair.mentorpal.org,https://mentorpal.org,.mentorpal.org,https://chic-mousse-b794cb.netlify.app,https://chic-mousse-b794cb.netlify.app/,https://quiet-axolotl-e7c64a.netlify.app/'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/prod/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenProd'
       WEBACL_ARN: ${ssm:/mentorpal/api_firewall_arn, ''}
@@ -175,6 +175,8 @@ functions:
               - 'http://localhost:3000/'
               - 'https://chic-mousse-b794cb.netlify.app'
               - 'https://chic-mousse-b794cb.netlify.app/'
+              - 'https://quiet-axolotl-e7c64a.netlify.app'
+              - 'https://quiet-axolotl-e7c64a.netlify.app/'
               - 'http://*.mentorpallocal.org'
               - 'http://mentorpallocal.org'
               - 'http://mentorpallocal.org/'
