@@ -997,4 +997,58 @@ describe('mentor', () => {
       ],
     });
   });
+
+  it("can't fetch private mentor from incorrect origin", async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .send({
+        query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111114") {
+          _id
+        }
+      }`,
+      });
+    console.log(JSON.stringify(response.body, null, 2));
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.deep.nested.property('errors[0].message');
+    expect(response.body.errors[0].message).to.equal(
+      'mentor is private and you do not have permission to access'
+    );
+  });
+
+  it('can fetch private mentor from correct origin', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .set('origin', 'https://careerfair.mentorpal.org')
+      .send({
+        query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111114") {
+          _id
+        }
+      }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.not.have.deep.nested.property('errors[0].message');
+    expect(response.body.data.mentor).to.eql({
+      _id: '5ffdf41a1ee2c62111111114',
+    });
+  });
+
+  it('can fetch private mentor from custom external origin', async () => {
+    const response = await request(app)
+      .post('/graphql')
+      .set('custom-external-origin', 'https://careerfair.mentorpal.org')
+      .send({
+        query: `query {
+        mentor(id: "5ffdf41a1ee2c62111111114") {
+          _id
+        }
+      }`,
+      });
+    expect(response.status).to.equal(200);
+    expect(response.body).to.not.have.deep.nested.property('errors[0].message');
+    expect(response.body.data.mentor).to.eql({
+      _id: '5ffdf41a1ee2c62111111114',
+    });
+  });
 });

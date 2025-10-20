@@ -33,9 +33,19 @@ async function getOrg(
 ) {
   try {
     const origin = req.header('origin');
-    if (origin) {
-      const subdomain = /:\/\/([^\/]+)/.exec(origin)[1].split('.')[0];
-      const org = await OrganizationModel.findOne({ subdomain });
+    const custom_external_origin = req.header('custom-external-origin');
+    if (origin || custom_external_origin) {
+      const subdomain = origin
+        ? /:\/\/([^\/]+)/.exec(origin)[1].split('.')[0]
+        : undefined;
+      const custom_subdomain = custom_external_origin
+        ? /:\/\/([^\/]+)/.exec(custom_external_origin)[1].split('.')[0]
+        : undefined;
+      const org = await OrganizationModel.findOne({
+        subdomain: custom_subdomain || subdomain,
+      });
+      logger.info(`org: ${org?.name}`);
+      console.log(`org: ${org?.name}`);
       return next(user, org, jwtToken);
     } else {
       return next(user, null, jwtToken);
