@@ -41,11 +41,13 @@ async function getOrg(
       const custom_subdomain = custom_external_origin
         ? /:\/\/([^\/]+)/.exec(custom_external_origin)[1].split('.')[0]
         : undefined;
-      const org = await OrganizationModel.findOne({
-        subdomain: custom_subdomain || subdomain,
-      });
-      logger.info(`org: ${org?.name}`);
-      console.log(`org: ${org?.name}`);
+      const org = custom_subdomain
+        ? await OrganizationModel.findOne({
+            subdomain: custom_subdomain,
+          })
+        : await OrganizationModel.findOne({
+            subdomain: subdomain,
+          });
       return next(user, org, jwtToken);
     } else {
       return next(user, null, jwtToken);
