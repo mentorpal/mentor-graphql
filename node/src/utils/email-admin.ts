@@ -4,15 +4,17 @@ Permission to use, copy, modify, and distribute this software and its documentat
 
 The full terms of this copyright and license should always be found in the root directory of this software deliverable as "license.txt" and if these terms are not found with this software, please contact the USC Stevens Center for the full license.
 */
-import { SES, SendRawEmailCommand } from '@aws-sdk/client-ses';
+import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
 import nodemailer from 'nodemailer';
 
-const ses = new SES();
+const sesClient = new SESv2Client({
+  region: process.env.AWS_REGION || 'us-east-1',
+});
 
 const transporter = nodemailer.createTransport({
   SES: {
-    ses,
-    aws: { SendRawEmailCommand },
+    sesClient,
+    SendEmailCommand,
   },
 });
 
