@@ -54,7 +54,7 @@ custom:
       MONGO_URI: ${ssm:/mentorpal/graphql/dev/mongo_uri, ''}
       NODE_ENV: 'careerfair-dev'
       STATIC_URL_BASE: 'https://static.devmentorpal.org/'
-      CORS_ORIGIN: 'https://newdev.mentorpal.org,https://devmentorpal.org,.mentorpal.org,.devmentorpal.org,http://mentorpallocal.org,http://mentorpallocal.org/,.mentorpallocal.org,http://localhost:3000,http://localhost:3000/,https://chic-mousse-b794cb.netlify.app,https://chic-mousse-b794cb.netlify.app/,https://lovely-entremet-3c968e.netlify.app/,https://lovely-entremet-3c968e.netlify.app,.devpsychologypathways.org,https://dev.devpsychologypathways.org,https://dev.devpsychologypathways.org/'
+      CORS_ORIGIN: 'https://newdev.mentorpal.org,https://devmentorpal.org,.mentorpal.org,.devmentorpal.org,http://mentorpallocal.org,http://mentorpallocal.org/,.mentorpallocal.org,http://localhost:3000,http://localhost:3000/,https://chic-mousse-b794cb.netlify.app,https://chic-mousse-b794cb.netlify.app/,https://lovely-entremet-3c968e.netlify.app/,https://lovely-entremet-3c968e.netlify.app,.devpsychologypathways.org,https://dev.devpsychologypathways.org,https://dev.devpsychologypathways.org/,.psychologypathways.org,https://dev.psychologypathways.org,https://dev.psychologypathways.org/'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenDev'
       WEBACL_ARN: ${ssm:/devmentorpal/api_firewall_arn, ''}
@@ -70,7 +70,7 @@ custom:
       MONGO_URI: ${ssm:/mentorpal/graphql/qa/mongo_uri, ''}
       NODE_ENV: 'careerfair-v2'
       STATIC_URL_BASE: 'https://static.qamentorpal.org/'
-      CORS_ORIGIN: 'https://v2.mentorpal.org,https://qamentorpal.org,.mentorpal.org,.qamentorpal.org,.devpsychologypathways.org,https://qa.devpsychologypathways.org,https://qa.devpsychologypathways.org/'
+      CORS_ORIGIN: 'https://v2.mentorpal.org,https://qamentorpal.org,.mentorpal.org,.qamentorpal.org,.devpsychologypathways.org,https://qa.devpsychologypathways.org,https://qa.devpsychologypathways.org/,.psychologypathways.org,https://qa.psychologypathways.org,https://qa.psychologypathways.org/'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/qa/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenQa'
       WEBACL_ARN: ${ssm:/qamentorpal/api_firewall_arn, ''}
@@ -86,7 +86,7 @@ custom:
       MONGO_URI: ${ssm:/mentorpal/graphql/prod/mongo_uri, ''}
       NODE_ENV: 'careerfair'
       STATIC_URL_BASE: 'https://static.mentorpal.org/'
-      CORS_ORIGIN: 'https://careerfair.mentorpal.org,https://mentorpal.org,.mentorpal.org,https://chic-mousse-b794cb.netlify.app,https://chic-mousse-b794cb.netlify.app/,https://lovely-entremet-3c968e.netlify.app/,https://lovely-entremet-3c968e.netlify.app,https://devpsychologypathways.org,https://devpsychologypathways.org/,.devpsychologypathways.org'
+      CORS_ORIGIN: 'https://careerfair.mentorpal.org,https://mentorpal.org,.mentorpal.org,https://chic-mousse-b794cb.netlify.app,https://chic-mousse-b794cb.netlify.app/,https://lovely-entremet-3c968e.netlify.app/,https://lovely-entremet-3c968e.netlify.app,https://devpsychologypathways.org,https://devpsychologypathways.org/,.devpsychologypathways.org,https://psychologypathways.org,https://psychologypathways.org/,.psychologypathways.org'
       GOOGLE_CLIENT_ID: ${ssm:/mentorpal/prod/shared/GOOGLE_CLIENT_ID, ''}
       REFRESH_TOKEN_NAME: 'refreshTokenProd'
       WEBACL_ARN: ${ssm:/mentorpal/api_firewall_arn, ''}
@@ -158,7 +158,7 @@ provider:
 functions:
   app:
     # lambda default timeout is 6 seconds, mentors can take 10+ seconds to load
-    timeout: 20
+    timeout: 30
     reservedConcurrency: '${self:custom.stages.${self:provider.stage}.CONCURRENT_LAMBDAS}'
     handler: ./src/lambda.handler
     events: 
@@ -193,6 +193,10 @@ functions:
               - 'https://devpsychologypathways.org/'
               - 'https://*.devpsychologypathways.org'
               - 'https://*.devpsychologypathways.org/'
+              - 'https://psychologypathways.org'
+              - 'https://psychologypathways.org/'
+              - 'https://*.psychologypathways.org'
+              - 'https://*.psychologypathways.org/'
             allowCredentials: true
             headers:
               - Content-Type
