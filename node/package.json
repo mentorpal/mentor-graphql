@@ -44,7 +44,7 @@
     "@aws-sdk/client-sesv2": "^3.410.0",
     "@sentry/serverless": "^7.64.0",
     "@types/object-path": "^0.11.1",
-    "axios": "^1.12.2",
+    "axios": "^1.13.5",
     "base64url": "^3.0.1",
     "bson": "^6.9.0",
     "cookie-parser": "^1.4.6",
