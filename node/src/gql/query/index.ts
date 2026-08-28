@@ -43,6 +43,7 @@ import trainTask from './train-task';
 import answerByFieldValue from './answer-by-field';
 import fetchMentorConfig from './fetch-mentor-config';
 import homePageData from './home-page-data';
+import validateAccessCode from './validate-access-code';
 export default new GraphQLObjectType({
   name: 'Query',
   fields: {
@@ -84,5 +85,6 @@ export default new GraphQLObjectType({
     answerByFieldValue,
     fetchMentorConfig,
     homePageData,
+    validateAccessCode,
   },
 });
